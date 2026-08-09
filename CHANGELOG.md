@@ -2,6 +2,14 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-08-09 — phased-harness added to _incubator
+
+- New skill `phased-harness`: interviews for end-state invariant, irreversible
+  step, and standing authorizations, then scaffolds a gated multi-phase project
+  harness (CONFIG/STATE/end-state/runbooks/dispatch skill). Distilled from the
+  skill-migration retro; doctrine and templates included. Incubator — graduates
+  after scaffolding two real projects.
+
 ## 2026-08-09 — Phase 3 migration
 
 - **foundry-core** (evidence-report, proof-of-work), **turn-reduction**
