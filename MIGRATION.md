@@ -210,3 +210,11 @@ checks passed; Gate B deletions confirmed by the user and executed (both retired
 source repos, the duplicate gfm-foundry and the-michiana-trail clones, all
 project-side `.migrated-off` items, the orphan zip, and the stale gfm-foundry
 plugin cache). This file is the permanent historical record.
+
+---
+
+**Migration completed 2026-08-09.** All 63 rows executed or ruled; Gate B deletions
+confirmed and performed (3 retired source repos, 5 project-side `.migrated-off`
+items, the orphan zip, and the duplicate the-michiana-trail clone). Post-deletion
+smoke test: validator green (37 skills), fresh-context resolution confirmed. This
+file is the permanent historical record.
