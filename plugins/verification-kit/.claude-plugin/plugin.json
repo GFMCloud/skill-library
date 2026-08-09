@@ -1,0 +1,6 @@
+{
+  "name": "verification-kit",
+  "description": "Pre-delivery verification and proof-of-work enforcement",
+  "author": { "name": "Graham" },
+  "dependencies": ["foundry-core"]
+}
