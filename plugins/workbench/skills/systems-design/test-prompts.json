@@ -1,0 +1,58 @@
+[
+  {
+    "prompt": "I want to launch a customer referral program for our B2B SaaS product. Help me design the system.",
+    "expected_behaviors": [
+      "Triggers systems-design skill",
+      "Asks for measurable end state (not just 'more referrals')",
+      "Works backwards to identify what must be true",
+      "Runs premortem to identify failure modes",
+      "Identifies sprint-ready modules",
+      "Creates visual diagram with grouped blocks",
+      "Produces summary document"
+    ]
+  },
+  {
+    "prompt": "/systemsdesign - I need to build out our AWS practice at the consulting firm",
+    "expected_behaviors": [
+      "Triggers systems-design skill via explicit command",
+      "Asks about measurable outcomes (revenue, certifications, customer count)",
+      "Maps dependencies (training, partnerships, go-to-market)",
+      "Identifies failure modes specific to professional services",
+      "Groups into logical modules (capability building, GTM, operations)",
+      "Creates diagram showing practice development stages"
+    ]
+  },
+  {
+    "prompt": "Work backwards with me - I want to hit $1M ARR by end of Q4 2026",
+    "expected_behaviors": [
+      "Triggers on 'work backwards' phrase",
+      "Defines what evidence proves $1M ARR achieved",
+      "Maps backwards from revenue to customer acquisition to product-market fit",
+      "Pressure tests timeline feasibility",
+      "Identifies critical path vs parallel workstreams",
+      "Highlights early wins that validate model"
+    ]
+  },
+  {
+    "prompt": "Help me think through building a content marketing engine that drives inbound leads",
+    "expected_behaviors": [
+      "Triggers on 'help me think through'",
+      "Pushes for specific lead targets and conversion metrics",
+      "Maps content production → distribution → conversion funnel",
+      "Identifies feedback loops (content quality → engagement → more content ideas)",
+      "Runs premortem on failure modes (inconsistent publishing, wrong audience, SEO misses)",
+      "Groups into modules like content creation, distribution, measurement"
+    ]
+  },
+  {
+    "prompt": "I have an idea for a fantasy baseball app that aggregates rosters across platforms. Validate this for me.",
+    "expected_behaviors": [
+      "Triggers on 'validate this'",
+      "Asks what success looks like (user count, engagement, retention)",
+      "Maps technical dependencies (API access, data sync, auth)",
+      "Identifies failure modes (API rate limits, platform changes, user adoption)",
+      "Defines MVP vs full build modules",
+      "Creates technical architecture diagram with implementation phases"
+    ]
+  }
+]
