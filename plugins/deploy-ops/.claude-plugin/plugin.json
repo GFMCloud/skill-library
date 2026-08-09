@@ -1,0 +1,6 @@
+{
+  "name": "deploy-ops",
+  "description": "Deploy and release operations; owns the deploy-verify-fix loop",
+  "author": { "name": "Graham" },
+  "dependencies": ["foundry-core"]
+}
