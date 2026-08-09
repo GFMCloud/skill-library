@@ -1,0 +1,13 @@
+# Copy to .github/workflows/validate.yml in the skill-library repo.
+name: validate-skills
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate skills
+        run: STRICT=0 bash scripts/validate-skills.sh
