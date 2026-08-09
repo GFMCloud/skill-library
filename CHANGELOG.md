@@ -2,6 +2,12 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-08-09 — phased-harness promoted to workbench
+
+- `phased-harness` promoted out of `_incubator` into **workbench** (`git mv`,
+  content unchanged), entering as `stable` 1.0.0. Promoted by user ruling ahead
+  of the two-real-projects guideline. workbench bumped to 0.2.0.
+
 ## 2026-08-09 — phased-harness added to _incubator
 
 - New skill `phased-harness`: interviews for end-state invariant, irreversible

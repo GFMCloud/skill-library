@@ -9,7 +9,9 @@ description: >-
   gates", "multi-session plan I can resume", or any effort spanning several
   sessions that ends in an irreversible step.
 metadata:
-  maturity: incubator
+  maturity: stable
+  version: 1.0.0
+  reviewed: 2026-08-09
 ---
 
 # Phased harness — scaffold a gated, resumable project
