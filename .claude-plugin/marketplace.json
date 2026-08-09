@@ -6,9 +6,54 @@
   },
   "metadata": {
     "description": "Canonical library of reusable Claude Code skills, organized as plugins by install unit.",
-    "version": "0.1.0"
+    "version": "1.0.0"
   },
   "plugins": [
+    {
+      "name": "foundry-core",
+      "source": "./plugins/foundry-core",
+      "description": "Core delivery discipline: evidence-report and proof-of-work. Wanted on ~every project."
+    },
+    {
+      "name": "turn-reduction",
+      "source": "./plugins/turn-reduction",
+      "description": "Fewer wasted turns: capability-preflight, output-lint, standing-authorization."
+    },
+    {
+      "name": "data-wrangler",
+      "source": "./plugins/data-wrangler",
+      "description": "Data movement and matching: identity-resolution skill plus the data-pipeline-owner agent."
+    },
+    {
+      "name": "verification-kit",
+      "source": "./plugins/verification-kit",
+      "description": "Verification helpers: fact-currency-check plus the pre-delivery-verifier agent."
+    },
+    {
+      "name": "consistency-checker",
+      "source": "./plugins/consistency-checker",
+      "description": "Spec-vs-artifact consistency: spec-artifact-diff plus the cross-document-checker agent."
+    },
+    {
+      "name": "deploy-ops",
+      "source": "./plugins/deploy-ops",
+      "description": "Deploy loop discipline: deploy-verify-fix plus the deploy-loop-owner agent."
+    },
+    {
+      "name": "decks",
+      "source": "./plugins/decks",
+      "description": "Build and critique slide decks: scaffolding, charts, HTML diagrams, PPTX export, layout and sales-lens review."
+    },
+    {
+      "name": "frontend-design",
+      "source": "./plugins/frontend-design",
+      "description": "Frontend visual design judgment: design taste, image taste, minimalist UI, redesigns, and UI-polish review guidance."
+    },
+    {
+      "name": "workbench",
+      "source": "./plugins/workbench",
+      "description": "Graham's general-purpose working skills: project setup and review, handoffs, knowledge bases, skill discovery, code review, systems design, personal voice."
+    },
     {
       "name": "_incubator",
       "source": "./plugins/_incubator",
