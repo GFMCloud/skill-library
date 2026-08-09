@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>[Deck Name] - Layout Map</title>
+<style>
+  /* The hex colors and font in this file are neutral, accessible placeholder
+     defaults, not a real brand. Swap in the project's own design tokens or
+     brand kit if one exists; otherwise these are fine to keep, but say so. */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    /* 'Montserrat' below is a neutral placeholder for the deck font - swap in
+       the project's own design-system font if one is defined. */
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5; padding: 24px; color: #14263D;
+  }
+  h1 { font-size: 16px; font-weight: 700; color: #1E3A5F; margin-bottom: 4px; }
+  .subtitle { font-size: 11px; color: #5A6B82; margin-bottom: 20px; }
+  .legend { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #5A6B82; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .sections-grid { display: flex; flex-direction: column; gap: 10px; }
+  .section-row { display: flex; align-items: flex-start; gap: 8px; }
+  .section-label { width: 165px; flex-shrink: 0; padding-top: 4px; }
+  .section-name { font-size: 11px; font-weight: 700; color: #14263D; line-height: 1.3; }
+  .section-meta { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+  .slides-row { display: flex; gap: 4px; flex-wrap: wrap; align-items: flex-start; }
+  .slide-card {
+    width: 92px; border-radius: 5px; padding: 6px 7px; position: relative;
+    border: 1px solid #E2E9F2; background: #fff;
+  }
+  /* slide-type coloring: headline vs depth vs transitional */
+  .headline { background: #1E3A5F; border-color: #1E3A5F; }
+  .headline .slide-num, .headline .slide-title, .headline .slide-type { color: #fff; }
+  .depth { background: #F2F6FA; border-color: #E2E9F2; }
+  .transitional { background: #EAF3FF; border-color: #BcdCFb; }
+  .slide-num { font-size: 9px; font-weight: 700; opacity: 0.6; margin-bottom: 3px; }
+  .slide-title { font-size: 9.5px; font-weight: 600; line-height: 1.35; color: #14263D; }
+  .slide-type { font-size: 8.5px; margin-top: 4px; font-style: italic; color: #5A6B82; }
+  /* new/edited marker */
+  .edited::after {
+    content: 'NEW'; position: absolute; top: 4px; right: 5px;
+    font-size: 7px; font-weight: 800; color: #B45309;
+  }
+</style>
+</head>
+<body>
+  <h1>[Deck Name] - Layout Map</h1>
+  <div class="subtitle">Version [N] - [Date] - [N slides across M sections]</div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#1E3A5F"></span>Headline slide (presenter carries)</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#F2F6FA;border:1px solid #E2E9F2"></span>Depth slide (self-service)</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#EAF3FF"></span>Transitional</div>
+    <div class="legend-item"><span style="color:#B45309;font-weight:800;font-size:9px">NEW</span> = new/edited this version</div>
+  </div>
+
+  <div class="sections-grid">
+
+    <!-- Repeat one section-row per section. Set each slide-card class to headline | depth | transitional. Add 'edited' class for new/changed slides. -->
+    <div class="section-row">
+      <div class="section-label">
+        <div class="section-name">[N. Section Name]</div>
+        <div class="section-meta">[X slides - always runs / pulled]</div>
+      </div>
+      <div class="slides-row">
+        <div class="slide-card headline">
+          <div class="slide-num">[N.1]</div>
+          <div class="slide-title">[Slide name]</div>
+          <div class="slide-type">[layout letter]</div>
+        </div>
+        <div class="slide-card depth edited">
+          <div class="slide-num">[N.2]</div>
+          <div class="slide-title">[Slide name]</div>
+          <div class="slide-type">[layout letter]</div>
+        </div>
+        <!-- more slide-cards -->
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

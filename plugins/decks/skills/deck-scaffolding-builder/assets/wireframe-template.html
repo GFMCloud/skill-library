@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>[Deck Name] - Wireframe</title>
+<!--
+  LOW-FI WIREFRAME - for rough structural tweaking before Claude Design builds the real thing.
+  This is disposable. Keep it low fidelity: real headlines and structure, placeholder body.
+  Each slide is a 16:9 frame with the standard chrome and one of the eight layouts (A-H).
+  Drop the deck's actual eyebrow/headline text in where known; leave [placeholder] for body.
+  Mark unknown content with a [NEEDS YOUR INPUT] block so it's visible at a glance.
+  To add a slide: copy a .frame block, set its mode class (light/lightwash/dark/deep),
+  pick a layout, fill the stage. Don't chase pixel accuracy - that's Claude Design's job.
+
+  BRAND VALUES ARE PLACEHOLDERS: the colors, font, and wordmark below are neutral,
+  accessible defaults, not a real brand. Swap in the project's own design tokens or
+  brand kit if one exists (a tokens file, CSS variables file, style guide). If none
+  exists, these defaults are a reasonable fallback - say so to the user rather than
+  presenting them as an actual brand.
+-->
+<style>
+  :root{
+    --primary:#0A3971; --primary-bg:#0D2F63; --primary-dark:#0A2546; --primary-dark-bg:#0D203C;
+    --accent:#2287FD; --highlight:#FEC234; --muted-blue:#48709F;
+    --card-light:#F2F6FA; --card-light-border:#E2E9F2; --body-gray:#5A6B82;
+    --panel-dark:#1B3B6C; --panel-dark-border:#2A4A7C;
+    --frame-w:880px; --frame-h:495px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  /* 'Deck Sans' below is a placeholder - swap in the project's own deck font,
+     or leave the system-font fallback if none is defined. */
+  body{font-family:'Deck Sans','Montserrat',Arial,sans-serif;background:#EEF1F5;color:#1f2a3a;padding:40px 24px 80px;}
+  .page-head{max-width:var(--frame-w);margin:0 auto 32px;}
+  .page-head h1{font-size:22px;font-weight:600;color:var(--primary);}
+  .page-head p{font-size:12px;color:var(--body-gray);margin-top:6px;}
+  .slug{max-width:var(--frame-w);margin:0 auto 10px;font-size:12px;font-weight:600;color:var(--primary);}
+  .slug .type{font-weight:400;color:var(--body-gray);font-style:italic;margin-left:8px;}
+  .frame{position:relative;width:var(--frame-w);height:var(--frame-h);margin:0 auto 40px;border-radius:6px;overflow:hidden;box-shadow:0 2px 14px rgba(10,37,70,.14);}
+  .frame.light{background:#fff;} .frame.lightwash{background:var(--card-light);}
+  .frame.dark{background:var(--primary-bg);} .frame.deep{background:var(--primary-dark-bg);}
+  /* chrome - on every frame */
+  .chrome-top{position:absolute;top:0;left:0;right:0;height:6px;background:var(--primary);z-index:5;}
+  .chrome-foot{position:absolute;bottom:0;left:0;right:0;height:18px;background:var(--primary-dark);z-index:5;}
+  .chrome-accent{position:absolute;bottom:18px;left:0;right:0;height:3px;background:var(--highlight);z-index:5;}
+  .logo{position:absolute;top:18px;right:30px;z-index:6;font-size:12px;font-weight:700;letter-spacing:.5px;}
+  .logo .dot{color:var(--highlight);}
+  .frame.light .logo,.frame.lightwash .logo{color:var(--primary);}
+  .frame.dark .logo,.frame.deep .logo{color:#fff;}
+  .stage{position:absolute;top:40px;left:48px;right:48px;bottom:36px;z-index:2;}
+  /* type */
+  .eyebrow{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;}
+  .eyebrow.blue{color:var(--accent);} .eyebrow.gold{color:var(--highlight);}
+  h2.headline{font-size:30px;font-weight:600;line-height:1.12;margin-top:9px;letter-spacing:-.5px;}
+  .frame.light h2.headline,.frame.lightwash h2.headline{color:var(--primary);}
+  .frame.dark h2.headline,.frame.deep h2.headline{color:#fff;}
+  .accent-blue{color:var(--accent);} .accent-gold{color:var(--highlight);}
+  .intro{font-size:12px;line-height:1.5;margin-top:14px;max-width:62%;color:var(--body-gray);}
+  .frame.dark .intro,.frame.deep .intro{color:#C5D2E6;}
+  /* placeholder block - low-fi gray bars for unfilled body */
+  .ph{background:repeating-linear-gradient(45deg,#e7ecf2,#e7ecf2 8px,#eef2f7 8px,#eef2f7 16px);border:1px dashed #c4cedb;border-radius:6px;color:#8595a8;font-size:10px;display:flex;align-items:center;justify-content:center;padding:8px;}
+  .needs{background:#FFF6E0;border:1px dashed var(--highlight);border-radius:6px;color:#8a6d1f;font-size:10px;padding:8px 10px;font-weight:600;}
+  /* layouts */
+  .grid{display:grid;gap:12px;margin-top:20px;} .g4{grid-template-columns:repeat(4,1fr);} .g3{grid-template-columns:repeat(3,1fr);}
+  .card{border-radius:10px;padding:14px;min-height:120px;}
+  .frame.light .card,.frame.lightwash .card{background:var(--card-light);border:1px solid var(--card-light-border);border-left:3px solid var(--accent);}
+  .frame.dark .card,.frame.deep .card{background:var(--panel-dark);border:1px solid var(--panel-dark-border);border-left:3px solid var(--accent);}
+  .card .ceyebrow{font-size:8px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);}
+  .card h3{font-size:13px;font-weight:600;margin:5px 0 6px;}
+  .frame.light .card h3,.frame.lightwash .card h3{color:var(--primary);} .frame.dark .card h3,.frame.deep .card h3{color:#fff;}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:20px;}
+  .callout{background:var(--primary-bg);border-radius:12px;padding:18px;}
+  .callout .ce{font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--highlight);}
+  .callout h3{color:#fff;font-size:16px;font-weight:600;margin:7px 0 12px;}
+  .nlist{margin-top:18px;} .nrow{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:8px;margin-bottom:7px;background:var(--card-light);border-left:3px solid var(--accent);}
+  .nrow .num{font-size:20px;font-weight:600;color:var(--accent);min-width:30px;}
+  .nrow h4{font-size:12px;font-weight:600;color:var(--primary);}
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>[Deck Name] - Wireframe</h1>
+    <p>Low-fi structural mockup for tweaking before Claude Design. Version [N] - [Date].</p>
+  </div>
+
+  <!-- ============ EXAMPLE: Layout A - opener / statement (dark) ============ -->
+  <div class="slug">Slide [N.1] - [Slide name]<span class="type">headline · layout A · dark</span></div>
+  <div class="frame dark">
+    <div class="chrome-top"></div>
+    <div class="logo">YOUR<span class="dot">•</span>LOGO</div>
+    <div class="stage">
+      <div class="eyebrow gold">[EYEBROW]</div>
+      <h2 class="headline">[Headline claim - <span class="accent-gold">accent word</span> carries the point]</h2>
+      <p class="intro">[one or two recognition lines - or a placeholder]</p>
+    </div>
+    <div class="chrome-accent"></div><div class="chrome-foot"></div>
+  </div>
+
+  <!-- ============ EXAMPLE: Layout B - card grid (light) ============ -->
+  <div class="slug">Slide [N.2] - [Slide name]<span class="type">depth · layout B · light</span></div>
+  <div class="frame light">
+    <div class="chrome-top"></div>
+    <div class="logo">YOUR<span class="dot">•</span>LOGO</div>
+    <div class="stage">
+      <div class="eyebrow blue">[EYEBROW]</div>
+      <h2 class="headline">[Headline claim]</h2>
+      <div class="grid g3">
+        <div class="card"><div class="ceyebrow">[LABEL]</div><h3>[Card sub-head]</h3><div class="ph" style="height:34px">body placeholder</div></div>
+        <div class="card"><div class="ceyebrow">[LABEL]</div><h3>[Card sub-head]</h3><div class="needs">NEEDS YOUR INPUT: real customer pattern</div></div>
+        <div class="card"><div class="ceyebrow">[LABEL]</div><h3>[Card sub-head]</h3><div class="ph" style="height:34px">body placeholder</div></div>
+      </div>
+    </div>
+    <div class="chrome-accent"></div><div class="chrome-foot"></div>
+  </div>
+
+  <!-- ============ EXAMPLE: Layout C - two-panel split (lightwash) ============ -->
+  <div class="slug">Slide [N.3] - [Slide name]<span class="type">depth · layout C · lightwash</span></div>
+  <div class="frame lightwash">
+    <div class="chrome-top"></div>
+    <div class="logo">YOUR<span class="dot">•</span>LOGO</div>
+    <div class="stage">
+      <div class="eyebrow blue">[EYEBROW]</div>
+      <h2 class="headline">[Headline claim]</h2>
+      <div class="split">
+        <div><div class="ph" style="height:120px">left panel - explanation placeholder</div></div>
+        <div class="callout"><div class="ce">[CALLOUT LABEL]</div><h3>[Callout header]</h3><div class="ph" style="height:60px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:#cdd9ec">example / stat placeholder</div></div>
+      </div>
+    </div>
+    <div class="chrome-accent"></div><div class="chrome-foot"></div>
+  </div>
+
+  <!-- Duplicate a .frame block per slide. Layouts available: A statement, B card grid (g3/g4),
+       C split, D numbered list (.nlist/.nrow), E stat callout, F table, G mini-chart, H full-width statement. -->
+
+</body>
+</html>

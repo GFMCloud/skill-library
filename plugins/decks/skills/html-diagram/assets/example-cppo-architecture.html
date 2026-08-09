@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPPO Automation - Architecture</title>
+<script>
+  (function () {
+    const saved = localStorage.getItem('diagram-theme');
+    const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', dark);
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Neutral, accessible default palette - light. Placeholder, not a real
+       brand - swap for the project's own design tokens if it has them. */
+    --bg: #F7F9FC; --surface: #FFFFFF; --surface2: #EDF1F7;
+    --ink: #17212B; --body: #2A3645; --muted: #6B7A8D;
+    --line: #D4DCE6; --line-soft: #E6EBF2;
+    --accent: #2563EB; --accent-soft: rgba(37,99,235,0.10);
+    --gold: #B45309; --gold-soft: rgba(217,119,6,0.16);
+    --teal: #0E8074; --teal-soft: rgba(14,128,116,0.14);
+    --slate: #48709F;
+    --zone: rgba(23,33,43,0.03); --zone-line: #CBD5E2;
+    --diagram-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --sans: var(--diagram-font);
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  html.dark {
+    /* Neutral default palette - dark. Same placeholder rule applies. */
+    --bg: #14202E; --surface: #1B2B3D; --surface2: #223649;
+    --ink: #F4F8FD; --body: #C3D2E2; --muted: #8194A8;
+    --line: #33475C; --line-soft: #263A4D;
+    --accent: #5B8DEF; --accent-soft: rgba(91,141,239,0.16);
+    --gold: #E0A030; --gold-soft: rgba(224,160,48,0.18);
+    --teal: #3FB6A8; --teal-soft: rgba(63,182,168,0.16);
+    --slate: #7C9BC4;
+    --zone: rgba(255,255,255,0.025); --zone-line: #33475C;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); color: var(--body); font-family: var(--sans);
+    -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* ── top bar ─────────────────────────────── */
+  .bar {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 12px 22px; border-bottom: 1px solid var(--line-soft); flex: none;
+  }
+  .brand { display: flex; align-items: baseline; gap: 14px; }
+  .wordmark { font-family: var(--sans); font-weight: 700; font-size: 18px; letter-spacing: 0.01em; color: var(--ink); }
+  .wordmark .num { color: var(--gold); }
+  .titlewrap h1 { font-family: var(--sans); font-weight: 600; font-size: 16px; color: var(--ink); letter-spacing: -0.01em; }
+  .titlewrap .sub { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .rule { width: 1px; height: 30px; background: var(--line); }
+  .spacer { flex: 1; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--sans); font-weight: 500; font-size: 11.5px; letter-spacing: 0.02em;
+    padding: 6px 13px; border: 1px solid var(--line); border-radius: 999px;
+    background: transparent; color: var(--muted); cursor: pointer; transition: all .15s ease;
+  }
+  .chip:hover { color: var(--ink); border-color: var(--accent); }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  #themeToggle {
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 6px 11px; border: 1px solid var(--line); border-radius: 6px;
+    background: transparent; color: var(--muted); cursor: pointer;
+  }
+  #themeToggle:hover { color: var(--ink); border-color: var(--accent); }
+
+  /* ── stage ───────────────────────────────── */
+  .stage { flex: 1; position: relative; min-height: 0; }
+  .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* zones */
+  .zone rect { fill: var(--zone); stroke: var(--zone-line); stroke-width: 1; stroke-dasharray: 5 5; rx: 16; }
+  .zone .ztitle { font-family: var(--sans); font-weight: 600; font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--muted); }
+  .zone .zsub { font-family: var(--mono); font-size: 10.5px; fill: var(--muted); opacity: 0.8; }
+
+  /* nodes */
+  .node { cursor: pointer; }
+  .node rect { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; rx: 10; transition: stroke .15s ease, filter .15s ease; }
+  .node:hover rect { stroke: var(--accent); }
+  .node.sel rect { stroke: var(--accent) !important; stroke-width: 2.5; }
+  .node .t  { font-family: var(--sans); font-size: 14.5px; font-weight: 600; fill: var(--ink); pointer-events: none; }
+  .node .m  { font-family: var(--mono); font-size: 11px; fill: var(--muted); pointer-events: none; }
+  .node .k  { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; fill: var(--gold); pointer-events: none; }
+  .node.hero rect { fill: var(--gold-soft); stroke: var(--gold); stroke-width: 2; }
+  .node.store rect { fill: var(--surface2); }
+  .node.entity rect { fill: var(--teal-soft); stroke: var(--teal); }
+  .node.ext rect { stroke-dasharray: 6 3; }
+
+  /* edges */
+  .edge { stroke: var(--muted); stroke-width: 1.6; fill: none; marker-end: url(#a-mut); transition: opacity .2s ease, stroke .2s ease; }
+  .edge.dash { stroke-dasharray: 5 4; }
+  .elbl { font-family: var(--mono); font-size: 10.5px; fill: var(--muted); transition: opacity .2s ease; }
+
+  /* flow highlighting */
+  .stage.flowing .edge { opacity: 0.12; }
+  .stage.flowing .elbl { opacity: 0.12; }
+  .stage.flowing .node { opacity: 0.28; }
+  .stage.flowing .zone { opacity: 0.45; }
+  .stage.flowing .edge.lit {
+    opacity: 1; stroke: var(--accent); marker-end: url(#a-acc);
+    stroke-dasharray: 7 5; animation: march 0.9s linear infinite;
+  }
+  .stage.flowing .elbl.lit { opacity: 1; fill: var(--accent); }
+  .stage.flowing .node.lit { opacity: 1; }
+  .stage.flowing .node.lit rect { stroke: var(--accent); }
+  @keyframes march { to { stroke-dashoffset: -12; } }
+  @media (prefers-reduced-motion: reduce) { .stage.flowing .edge.lit { animation: none; } }
+
+  /* ── floating cards ──────────────────────── */
+  .card {
+    position: absolute; max-width: 380px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 15px 17px; box-shadow: 0 8px 28px rgba(10,37,70,0.12);
+  }
+  #detail { right: 18px; bottom: 18px; width: 350px; }
+  #detail h3 { font-family: var(--sans); font-weight: 600; font-size: 16px; color: var(--ink); margin-bottom: 3px; }
+  #detail .meta { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-bottom: 9px; }
+  #detail p { font-size: 13px; line-height: 1.58; }
+  #detail p code, #flowcap code { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+  #detail p b, #flowcap b { color: var(--ink); font-weight: 600; }
+  #flowcap { left: 18px; bottom: 18px; max-width: 480px; display: none; }
+  #flowcap.show { display: block; }
+  #flowcap .fname { font-family: var(--sans); font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 7px; }
+  #flowcap ol { margin-left: 18px; }
+  #flowcap li { font-size: 13px; line-height: 1.58; margin-bottom: 2px; }
+  .src { position: absolute; top: 12px; right: 18px; font-family: var(--mono); font-size: 10px; color: var(--muted); opacity: 0.8; }
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    .stage { min-height: 72vh; }
+    #detail { position: static; width: auto; margin: 10px 18px; }
+    #flowcap { position: static; margin: 0 18px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="brand">
+    <span class="wordmark">YOUR<span class="num">•</span>ORG</span>
+    <div class="rule"></div>
+    <div class="titlewrap">
+      <h1>CPPO Automation - the stack</h1>
+      <div class="sub">form in · live offer out · rep notified</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="chips" id="chips">
+    <button class="chip on" data-flow="all">Everything</button>
+    <button class="chip" data-flow="submit">Submit</button>
+    <button class="chip" data-flow="create">Create offer</button>
+    <button class="chip" data-flow="notify">Notify rep</button>
+    <button class="chip" data-flow="creds">Credentials</button>
+  </div>
+  <button id="themeToggle">Theme</button>
+</div>
+
+<div class="stage" id="stage">
+<svg viewBox="0 0 1560 980" preserveAspectRatio="xMidYMid meet" role="img" aria-label="CPPO automation architecture diagram">
+  <defs>
+    <marker id="a-mut" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--muted)"/>
+    </marker>
+    <marker id="a-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--accent)"/>
+    </marker>
+  </defs>
+
+  <!-- ── zones ─────────────────────────────── -->
+  <g class="zone" id="z-intake">
+    <rect x="40" y="120" width="250" height="560"/>
+    <text class="ztitle" x="60" y="150">Sales Intake</text>
+    <text class="zsub" x="60" y="168">no AWS console needed</text>
+  </g>
+  <g class="zone" id="z-m365">
+    <rect x="330" y="120" width="320" height="720"/>
+    <text class="ztitle" x="350" y="150">Microsoft 365</text>
+    <text class="zsub" x="350" y="168">Power Automate · Teams · our tenant</text>
+  </g>
+  <g class="zone" id="z-aws">
+    <rect x="690" y="120" width="390" height="720"/>
+    <text class="ztitle" x="710" y="150">AWS Integration</text>
+    <text class="zsub" x="710" y="168">the glue we own</text>
+  </g>
+  <g class="zone" id="z-mp">
+    <rect x="1120" y="120" width="400" height="720"/>
+    <text class="ztitle" x="1140" y="150">AWS Marketplace</text>
+    <text class="zsub" x="1140" y="168">the system of record for the offer</text>
+  </g>
+
+  <!-- ── edges ─────────────────────────────── -->
+  <!-- submit -->
+  <path class="edge" id="e-repform"  d="M165,265 L165,330"/>
+  <path class="edge" id="e-formflow" d="M265,377 C 310,377 320,238 355,238"/>
+  <!-- create -->
+  <path class="edge" id="e-flowapi"     d="M625,225 C 662,225 678,225 710,225"/>
+  <path class="edge" id="e-apilambda"   d="M885,265 L885,330"/>
+  <path class="edge dash" id="e-lambdasec" d="M820,450 L820,520"/>
+  <path class="edge" id="e-lambdacat"   d="M1060,372 C 1102,372 1112,232 1140,232"/>
+  <path class="edge" id="e-catoffer"    d="M1320,280 L1320,340"/>
+  <path class="edge dash" id="e-resoffer" d="M1320,510 L1320,450"/>
+  <!-- notify -->
+  <path class="edge" id="e-lambdaflow"  d="M710,408 C 668,408 660,300 625,272"/>
+  <path class="edge" id="e-flowteams"   d="M490,295 L490,680"/>
+  <path class="edge" id="e-teamsrep"    d="M355,712 C 250,712 165,420 165,265"/>
+
+  <!-- edge labels -->
+  <text class="elbl" data-e="e-repform"   x="175" y="302">fills it out</text>
+  <text class="elbl" data-e="e-formflow"  x="300" y="300">on submit</text>
+  <text class="elbl" data-e="e-flowapi"   x="668" y="214">HTTPS · payload</text>
+  <text class="elbl" data-e="e-apilambda" x="895" y="302">invoke</text>
+  <text class="elbl" data-e="e-lambdasec" x="830" y="492">assume role</text>
+  <text class="elbl" data-e="e-lambdacat" x="1090" y="300" text-anchor="middle">StartChangeSet</text>
+  <text class="elbl" data-e="e-catoffer"  x="1332" y="316">creates</text>
+  <text class="elbl" data-e="e-resoffer"  x="1332" y="492">built on</text>
+  <text class="elbl" data-e="e-lambdaflow" x="648" y="360" text-anchor="end">offer URL → flow</text>
+  <text class="elbl" data-e="e-flowteams" x="500" y="500">post message</text>
+  <text class="elbl" data-e="e-teamsrep"  x="178" y="430">@mention · link</text>
+
+  <!-- ── nodes: intake ─────────────────────── -->
+  <g class="node" data-k="rep">
+    <rect x="65" y="180" width="200" height="85"/>
+    <text class="t" x="85" y="210">Sales Rep</text>
+    <text class="m" x="85" y="232">needs a private offer</text>
+    <text class="m" x="85" y="250">no Marketplace access</text>
+  </g>
+  <g class="node" data-k="form">
+    <rect x="65" y="330" width="200" height="95"/>
+    <text class="t" x="85" y="360">SharePoint Form</text>
+    <text class="m" x="85" y="382">offer intake</text>
+    <text class="m" x="85" y="400">customer · product</text>
+    <text class="m" x="85" y="416">price · terms · EULA</text>
+  </g>
+
+  <!-- ── nodes: m365 ───────────────────────── -->
+  <g class="node" data-k="flow">
+    <rect x="355" y="185" width="270" height="110"/>
+    <text class="t" x="375" y="215">Power Automate</text>
+    <text class="m" x="375" y="237">triggers on submit</text>
+    <text class="m" x="375" y="255">validates · maps fields</text>
+    <text class="m" x="375" y="273">calls AWS · handles reply</text>
+  </g>
+  <g class="node" data-k="teams">
+    <rect x="355" y="680" width="270" height="95"/>
+    <text class="t" x="375" y="710">Teams</text>
+    <text class="m" x="375" y="732">confirms to the rep</text>
+    <text class="m" x="375" y="750">offer URL - or the error</text>
+  </g>
+
+  <!-- ── nodes: aws integration ────────────── -->
+  <g class="node" data-k="apigw">
+    <rect x="710" y="185" width="350" height="80"/>
+    <text class="t" x="730" y="215">API Gateway</text>
+    <text class="m" x="730" y="237">HTTPS entry · API-key auth</text>
+    <text class="m" x="730" y="253">the only door into AWS</text>
+  </g>
+  <g class="node hero" data-k="lambda">
+    <rect x="710" y="330" width="350" height="120"/>
+    <text class="t" x="730" y="360">Offer Lambda</text>
+    <text class="k" x="730" y="380">the one integration point</text>
+    <text class="m" x="730" y="402">Python · boto3</text>
+    <text class="m" x="730" y="420">builds the ChangeSet request</text>
+    <text class="m" x="730" y="438">polls status · returns the URL</text>
+  </g>
+  <g class="node store" data-k="secrets">
+    <rect x="710" y="520" width="350" height="85"/>
+    <text class="t" x="730" y="550">Secrets Manager / IAM Role</text>
+    <text class="m" x="730" y="572">scoped Marketplace permissions</text>
+    <text class="m" x="730" y="590">least-privilege · no static keys</text>
+  </g>
+
+  <!-- ── nodes: marketplace ────────────────── -->
+  <g class="node" data-k="catalog">
+    <rect x="1140" y="185" width="360" height="95"/>
+    <text class="t" x="1160" y="215">Catalog API</text>
+    <text class="m" x="1160" y="237">StartChangeSet · DescribeChangeSet</text>
+    <text class="m" x="1160" y="255">CreatePrivateOffer change type</text>
+    <text class="m" x="1160" y="271">async - returns a ChangeSet id</text>
+  </g>
+  <g class="node entity" data-k="offer">
+    <rect x="1140" y="340" width="360" height="110"/>
+    <text class="t" x="1160" y="370">Private Offer (CPPO)</text>
+    <text class="m" x="1160" y="392">live offer · pricing + EULA</text>
+    <text class="m" x="1160" y="410">buyer-specific · time-boxed</text>
+    <text class="m" x="1160" y="428">returns offer URL + ARN</text>
+  </g>
+  <g class="node store ext" data-k="resaleauth">
+    <rect x="1140" y="510" width="360" height="95"/>
+    <text class="t" x="1160" y="540">Resale Authorization</text>
+    <text class="m" x="1160" y="562">granted by the ISV</text>
+    <text class="m" x="1160" y="580">the CPPO is built on top of it</text>
+  </g>
+</svg>
+
+  <div class="src">CPPO automation · reference architecture · v0.1</div>
+
+  <div class="card" id="flowcap">
+    <div class="fname" id="f-name"></div>
+    <ol id="f-steps"></ol>
+  </div>
+
+  <div class="card" id="detail">
+    <h3 id="d-title">Click anything</h3>
+    <div class="meta" id="d-meta">node detail</div>
+    <p id="d-body">Every box is clickable. The chips up top light the request paths - Submit, Create offer, Notify rep, Credentials. The Offer Lambda (gold) is the one place in-house code talks to AWS Marketplace.</p>
+  </div>
+</div>
+
+<script>
+const DETAIL = {
+  rep:        { t:"Sales Rep", m:"intake · no AWS access", b:"The rep who closed the deal and needs a private offer cut. They never touch the Marketplace console, IAM, or the Catalog API - the whole point is to hand them a <b>form, not a runbook</b>." },
+  form:       { t:"SharePoint Form", m:"intake · structured submission", b:"The single front door. Captures everything a CPPO needs: customer AWS account, product, negotiated price, term, and EULA choice. Structured fields mean Power Automate gets <b>clean input</b> instead of a free-text email to interpret." },
+  flow:       { t:"Power Automate", m:"orchestrator · M365 tenant", b:"Fires on form submit. Validates the payload, maps SharePoint fields to the shape the Lambda expects, calls AWS, then routes the response to Teams. The orchestration lives <b>where the form already is</b> - no extra infra to run." },
+  teams:      { t:"Teams", m:"notification · closes the loop", b:"Where the rep finds out it worked. A success post drops the live offer URL they can send the customer; a failure post says what to fix. The rep never has to go <b>check somewhere else</b> for status." },
+  apigw:      { t:"API Gateway", m:"AWS edge · API-key auth", b:"The only ingress into AWS. Power Automate hits one HTTPS endpoint with an API key; everything past this point is private. Keeps the Lambda <b>off the public internet</b> and gives you a throttle + audit point." },
+  lambda:     { t:"Offer Lambda", m:"the ONE integration point", b:"The heart of it. Assembles the <code>StartChangeSet</code> request for a <code>CreatePrivateOffer</code>, submits it, polls <code>DescribeChangeSet</code> until the offer is live, then returns the offer URL. <b>This is the only in-house code that talks to Marketplace</b> - one place to test, log, and harden." },
+  secrets:    { t:"Secrets Manager / IAM Role", m:"least-privilege access", b:"How the Lambda gets Marketplace permissions without static keys living anywhere. The execution role is scoped to <b>just the Catalog actions it needs</b> - create offers, read change sets, nothing else." },
+  catalog:    { t:"Catalog API", m:"AWS Marketplace · async", b:"The real API behind every private offer. <code>StartChangeSet</code> kicks off an async job and hands back a ChangeSet id; <code>DescribeChangeSet</code> tells you when it's <code>SUCCEEDED</code> or <code>FAILED</code>. The async shape is <b>why the Lambda polls</b> instead of getting an instant answer." },
+  offer:      { t:"Private Offer (CPPO)", m:"the live artifact", b:"What the whole system exists to produce. A buyer-specific offer with the negotiated price, term, and EULA, valid for a set window. Once it's live the API returns the <b>offer URL and ARN</b> - the URL is what the rep sends the customer." },
+  resaleauth: { t:"Resale Authorization", m:"granted by the ISV · external", b:"The thing that makes a CPPO legal. The ISV authorizes the reseller to resell their product at a set wholesale cost; the channel partner private offer is <b>built on top of that authorization</b>. No auth, no CPPO - worth validating before the form ever gets submitted." },
+};
+
+const FLOWS = {
+  submit: {
+    name: "Submit - form in, no runbook",
+    edges: ["e-repform","e-formflow"],
+    nodes: ["rep","form","flow"],
+    steps: [
+      "Rep fills the SharePoint form: customer, product, price, term, EULA",
+      "Submit fires the Power Automate trigger automatically",
+      "The flow has clean, structured fields - no email parsing, no guesswork"
+    ]
+  },
+  create: {
+    name: "Create offer - the Catalog API path",
+    edges: ["e-flowapi","e-apilambda","e-lambdasec","e-lambdacat","e-catoffer","e-resoffer"],
+    nodes: ["flow","apigw","lambda","secrets","catalog","offer","resaleauth"],
+    steps: [
+      "Power Automate calls API Gateway over HTTPS with the offer payload",
+      "Gateway invokes the Offer Lambda; the Lambda assumes its scoped role",
+      "Lambda submits <code>StartChangeSet</code> for a <code>CreatePrivateOffer</code>, built on the ISV resale authorization",
+      "It polls <code>DescribeChangeSet</code> until the CPPO is live, then grabs the offer URL + ARN"
+    ]
+  },
+  notify: {
+    name: "Notify rep - close the loop",
+    edges: ["e-lambdaflow","e-flowteams","e-teamsrep"],
+    nodes: ["lambda","flow","teams","rep"],
+    steps: [
+      "Lambda returns the offer URL (or a clean error) to Power Automate",
+      "The flow posts to Teams - success drops the live link, failure says what broke",
+      "The rep gets an @mention with the URL to send the customer - no hunting for status"
+    ]
+  },
+  creds: {
+    name: "Credentials - least-privilege access",
+    edges: ["e-lambdasec"],
+    nodes: ["lambda","secrets"],
+    steps: [
+      "The Lambda runs under an IAM role scoped to just the Catalog actions it needs",
+      "No static AWS keys live in Power Automate or the form",
+      "One place to rotate and audit Marketplace access"
+    ]
+  }
+};
+
+const stage = document.getElementById('stage');
+const nodes = document.querySelectorAll('.node');
+const edges = document.querySelectorAll('.edge');
+const elbls = document.querySelectorAll('.elbl');
+const chips = document.querySelectorAll('.chip');
+const fcap = document.getElementById('flowcap');
+
+function setFlow(key) {
+  chips.forEach(c => c.classList.toggle('on', c.dataset.flow === key));
+  edges.forEach(e => e.classList.remove('lit'));
+  elbls.forEach(l => l.classList.remove('lit'));
+  nodes.forEach(n => n.classList.remove('lit'));
+  if (key === 'all') { stage.classList.remove('flowing'); fcap.classList.remove('show'); return; }
+  const f = FLOWS[key];
+  stage.classList.add('flowing');
+  f.edges.forEach(id => document.getElementById(id)?.classList.add('lit'));
+  elbls.forEach(l => { if (f.edges.includes(l.dataset.e)) l.classList.add('lit'); });
+  f.nodes.forEach(k => document.querySelector(`.node[data-k="${k}"]`)?.classList.add('lit'));
+  document.getElementById('f-name').textContent = f.name;
+  document.getElementById('f-steps').innerHTML = f.steps.map(s => `<li>${s}</li>`).join('');
+  fcap.classList.add('show');
+}
+chips.forEach(c => c.addEventListener('click', () => setFlow(c.dataset.flow)));
+
+nodes.forEach(n => n.addEventListener('click', () => {
+  nodes.forEach(x => x.classList.remove('sel'));
+  n.classList.add('sel');
+  const d = DETAIL[n.dataset.k];
+  if (!d) return;
+  document.getElementById('d-title').textContent = d.t;
+  document.getElementById('d-meta').textContent = d.m;
+  document.getElementById('d-body').innerHTML = d.b;
+}));
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const dark = !document.documentElement.classList.contains('dark');
+  document.documentElement.classList.toggle('dark', dark);
+  localStorage.setItem('diagram-theme', dark ? 'dark' : 'light');
+});
+</script>
+</body>
+</html>

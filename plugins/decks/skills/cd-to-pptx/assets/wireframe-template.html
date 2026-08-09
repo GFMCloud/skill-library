@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deck Wireframe Template</title>
+
+  <!--
+  =====================================================================
+  DECK WIREFRAME TEMPLATE - for Claude Design -> PPTX conversion
+  =====================================================================
+
+  WHAT THIS IS
+  A constrained starting structure you hand to Claude Design so the
+  exported HTML converts to an editable PPTX with minimal guessing.
+  It mirrors how Claude Design's own deck-stage export is built
+  (1920x1080 stage, <section> per slide, a single deck font, px type
+  scale) but adds the discipline the conversion needs: a fixed type
+  scale, chrome constants, a safe zone, and brand tokens - each
+  annotated with its PowerPoint inch/point equivalent.
+
+  BRAND VALUES ARE PLACEHOLDERS
+  The colors, font, and logo file names below are neutral, accessible
+  defaults, not a real brand. Before using this template on a real
+  deck, swap in the project's own design tokens or brand kit if one
+  exists (a tokens file, a CSS variables file, a style guide). If none
+  exists, these defaults are a reasonable fallback - just say so to
+  the user rather than presenting them as an actual brand.
+
+  HOW TO USE IT
+  1. Hand this file (or its :root block and the two sample slides) to
+     Claude Design as the structural starting point for a new deck.
+  2. Tell Claude Design: keep the 1920x1080 stage, keep the :root
+     token + scale + chrome + safe-zone block intact, and build each
+     slide as a <section> that places content inside the safe zone
+     using the named scale - not new one-off font sizes.
+  3. Ask for region-shaped layouts (columns, card rows, header strip),
+     not free-flowing text around images.
+  4. Export the project, then follow conversion-playbook.md.
+
+  THE TWO CONVERSIONS (memorize these - they are different numbers)
+    GEOMETRY:  px / 144 = inches   (1920px / 13.333in = 144 px per inch)
+    FONTS:     px x 0.5 = points   (144 px/in canvas, 72 pt/in PowerPoint)
+  A 72px title is 36pt. A 30px body line is 15pt. Do not use one ratio
+  for both.
+
+  NOTE ON deck-stage.js
+  The live Claude Design export references <script src="deck-stage.js">.
+  That runtime file scales the stage to the viewport for preview. It is
+  NOT content. The conversion ignores it. This template omits it so the
+  file renders as a tall scroll of slides for inspection; Claude Design
+  will re-attach its own runtime on export.
+  =====================================================================
+  -->
+
+  <style>
+    /* ── Local fonts (point @font-face at the TTFs shipped in the project) ──
+       'Deck Sans' is a placeholder name. Swap in the project's actual deck
+       font and its TTF paths. If the project has no brand font, a neutral
+       widely-available sans-serif (system UI, Arial) is a fine fallback -
+       just say so rather than presenting a made-up font as the brand. */
+    @font-face { font-family: 'Deck Sans'; font-weight: 400; src: url('fonts/DeckSans-Regular.ttf')   format('truetype'); }
+    @font-face { font-family: 'Deck Sans'; font-weight: 500; src: url('fonts/DeckSans-Medium.ttf')    format('truetype'); }
+    @font-face { font-family: 'Deck Sans'; font-weight: 600; src: url('fonts/DeckSans-SemiBold.ttf')  format('truetype'); }
+    @font-face { font-family: 'Deck Sans'; font-weight: 700; src: url('fonts/DeckSans-Bold.ttf')      format('truetype'); }
+    @font-face { font-family: 'Deck Sans'; font-weight: 800; src: url('fonts/DeckSans-ExtraBold.ttf') format('truetype'); }
+
+    :root {
+      /* ── Brand tokens (use var(), never literal hex) ──
+         Neutral accessible defaults. Replace with the project's own design
+         tokens or brand kit if one exists; otherwise these are safe to keep
+         and should be called out to the user as an assumption, not a brand. */
+      --primary:      #0A3971;   /* dominant ~25% */
+      --primary-dark: #0A2546;   /* darkest, full-bleed bg */
+      --accent:       #2287FD;   /* links / secondary accent ~15% */
+      --highlight:    #FEC234;   /* single warm accent - one per slide max */
+      --highlight-alt:#DF9925;
+      --muted-blue:   #48709F;
+      --soft-teal:    #80CCCD;
+      --white:        #FFFFFF;
+      --off-white:    #F4F7FB;
+      --border:       #CED8E6;
+      --divider:      #E6ECF3;
+      --fg-muted:     #6B89AE;
+
+      --font: 'Deck Sans', system-ui, sans-serif;
+
+      /* ── Type scale @ 1920x1080 - PPTX points in comments (px x 0.5) ── */
+      --type-hero:     120px;  /* 60pt - one-word/statement slides only */
+      --type-title:     72px;  /* 36pt */
+      --type-subtitle:  46px;  /* 23pt */
+      --type-body:      30px;  /* 15pt */
+      --type-small:     26px;  /* 13pt */
+      --type-micro:     24px;  /* 12pt */
+      --type-eyebrow:   24px;  /* 12pt - uppercase, 0.18em tracking */
+
+      /* ── Chrome constants - identical on every slide. PPTX equivalents in comments ── */
+      --chrome-footer-top:    1008px; /* top=Inches(7.0)    | 1008/144 */
+      --chrome-footer-height:   72px; /* height=Inches(0.5) | 72/144 */
+      --chrome-accent-top:    1000px; /* top=Inches(6.94)   | 1000/144 */
+      --chrome-accent-height:    6px; /* height=Inches(0.04)| 6/144 */
+      --logo-left:              58px; /* left=Inches(0.40)  | 58/144 */
+      --logo-top:               43px; /* top=Inches(0.30)   | 43/144 */
+      --logo-width:            288px; /* width=Inches(2.0)  | 288/144 */
+
+      /* ── Content safe zone - all content lives inside. PPTX equivalents in comments ── */
+      --content-top:    144px; /* Inches(1.00) | below logo/header */
+      --content-left:   100px; /* Inches(0.69) | left margin */
+      --content-right: 1820px; /* Inches(12.64)| right margin */
+      --content-bottom: 980px; /* Inches(6.81) | above accent line */
+      --col-gap:         64px; /* Inches(0.44) | gap between columns */
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Each slide is a 1920x1080 section. In the live export deck-stage
+       sizes these to fill the stage; here we give them explicit size so
+       the template renders as a scroll of full slides for inspection. */
+    section.slide {
+      width: 1920px;
+      height: 1080px;
+      position: relative;          /* scope absolute children to the slide */
+      font-family: var(--font);
+      overflow: hidden;
+      color: var(--primary-dark);
+      background: var(--white);
+      margin: 0 auto 24px;         /* spacing for template inspection only */
+    }
+    section.slide.dark { background: var(--primary-dark); color: var(--white); }
+
+    /* ── Reusable chrome ── */
+    .logo {
+      position: absolute;
+      left: var(--logo-left); top: var(--logo-top); width: var(--logo-width);
+    }
+    .accent-line {
+      position: absolute; left: 0; right: 0;
+      top: var(--chrome-accent-top); height: var(--chrome-accent-height);
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 60%, transparent 100%);
+    }
+    .footer {
+      position: absolute; left: var(--content-left); right: var(--content-left);
+      top: var(--chrome-footer-top); height: var(--chrome-footer-height);
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: var(--type-micro); color: var(--fg-muted);
+    }
+    .dark .footer { color: var(--text-muted, #CED8E6); }
+
+    /* ── Text rhythm ── */
+    .eyebrow {
+      font-size: var(--type-eyebrow); font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+    }
+    .dark .eyebrow { color: var(--highlight); }
+    .title    { font-size: var(--type-title);    font-weight: 600; letter-spacing: -0.02em; line-height: 1.05; }
+    .subtitle { font-size: var(--type-subtitle);  font-weight: 500; line-height: 1.15; }
+    .body     { font-size: var(--type-body);      font-weight: 400; line-height: 1.45; }
+    .small    { font-size: var(--type-small);     font-weight: 400; line-height: 1.4; }
+
+    /* ── Content region helpers (region-shaped layouts convert cleanly) ── */
+    .region {
+      position: absolute;
+      left: var(--content-left);
+      top: var(--content-top);
+      width: calc(var(--content-right) - var(--content-left));
+    }
+    .two-col {
+      position: absolute;
+      left: var(--content-left);
+      top: var(--content-top);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--col-gap);
+      width: calc(var(--content-right) - var(--content-left));
+      height: calc(var(--content-bottom) - var(--content-top));
+    }
+    .card {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+    }
+    .dark .card {
+      background: var(--primary);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    /* ── Optional: visible measurement overlay for the spec version.
+         Toggle by adding class="show-measure" to a section. ── */
+    .measure { display: none; }
+    .show-measure .measure {
+      display: block; position: absolute;
+      font-size: 16px; color: var(--highlight-alt); font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================= -->
+  <!-- SAMPLE SLIDE 1 - Punchy headline slide (dark, presenter-led)   -->
+  <!-- Front-of-section style: minimal copy, narrator carries context -->
+  <!-- ============================================================= -->
+  <section class="slide dark show-measure">
+    <!-- chrome -->
+    <img class="logo" src="assets/logos/logo-horizontal-invert.png" alt="[Your Logo]">
+    <div class="accent-line"></div>
+
+    <!-- content region -->
+    <div class="region" style="top: var(--content-top);">
+      <span class="eyebrow">FinOps &amp; Cost Optimization</span>
+      <h1 class="title" style="margin-top: 24px; max-width: 1400px; font-size: var(--type-hero);">
+        The waste is visible.<br>The action isn't.
+      </h1>
+      <p class="subtitle" style="margin-top: 40px; max-width: 1200px; color: var(--text-muted, #CED8E6);">
+        Most teams can see the bill. Fixing what it shows is where programs stall.
+      </p>
+    </div>
+
+    <!-- footer chrome -->
+    <div class="footer">
+      <span>[Your Org / Practice Name]</span>
+      <span>01</span>
+    </div>
+
+    <!-- measurement annotations (spec version only) -->
+    <div class="measure" style="top:144px; left:8px;">content-top 144px / 1.00in</div>
+    <div class="measure" style="top:1000px; left:8px;">accent-line 1000px / 6.94in</div>
+    <div class="measure" style="top:1008px; left:8px;">footer 1008px / 7.00in</div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- SAMPLE SLIDE 2 - Two-column depth slide (light, self-service)  -->
+  <!-- Back-of-section style: more copy, readable without a presenter -->
+  <!-- ============================================================= -->
+  <section class="slide show-measure">
+    <!-- chrome -->
+    <img class="logo" src="assets/logos/logo-horizontal-color.png" alt="[Your Logo]">
+    <div class="accent-line"></div>
+
+    <!-- eyebrow + title sit in their own region above the columns -->
+    <div class="region" style="top: var(--content-top);">
+      <span class="eyebrow">Our Approach</span>
+      <h2 class="title" style="margin-top: 20px; max-width: 1500px;">
+        Find the waste. Fix it before you commit to paying for it.
+      </h2>
+    </div>
+
+    <!-- two equal columns, each a clean box -->
+    <div class="two-col" style="top: 360px; height: calc(var(--content-bottom) - 360px);">
+      <div class="card">
+        <span class="eyebrow" style="color: var(--accent);">Platform alone</span>
+        <p class="body" style="margin-top: 16px;">
+          A dashboard surfaces findings. They pile up. Engineering stays heads-down.
+          The bill keeps growing because nobody owns the remediation.
+        </p>
+      </div>
+      <div class="card" style="background: var(--primary); color: var(--white); border-color: var(--primary);">
+        <span class="eyebrow" style="color: var(--highlight);">Platform + ownership</span>
+        <p class="body" style="margin-top: 16px;">
+          We deploy the platform and own the fix. Findings get resolved, not just
+          documented - and the savings show up in the bill, not just the dashboard.
+        </p>
+      </div>
+    </div>
+
+    <!-- footer chrome -->
+    <div class="footer">
+      <span>[Your Org / Practice Name]</span>
+      <span>02</span>
+    </div>
+
+    <!-- measurement annotations (spec version only) -->
+    <div class="measure" style="top:144px; left:8px;">content-top 144px / 1.00in</div>
+    <div class="measure" style="top:360px; left:8px;">columns start 360px / 2.50in</div>
+    <div class="measure" style="top:980px; left:8px;">content-bottom 980px / 6.81in</div>
+  </section>
+
+</body>
+</html>
