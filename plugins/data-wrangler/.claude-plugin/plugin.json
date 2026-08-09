@@ -1,0 +1,6 @@
+{
+  "name": "data-wrangler",
+  "description": "Data wrangling, identity resolution, ETL",
+  "author": { "name": "Graham" },
+  "dependencies": ["foundry-core"]
+}
