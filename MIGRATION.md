@@ -202,3 +202,11 @@ same commit `0b0a897`). FM = frontmatter completeness ("n+d" = name + desc ≥40
   regardless. Informational.
 - **A10** — Every one of the 88 swept skills lacks the target `metadata:` block
   (maturity/version/reviewed). Blanket normalization in Phase 3, not per-row drift.
+
+---
+
+**Migration completed 2026-08-09.** All 63 rows executed or ruled; all six Phase 5
+checks passed; Gate B deletions confirmed by the user and executed (both retired
+source repos, the duplicate gfm-foundry and the-michiana-trail clones, all
+project-side `.migrated-off` items, the orphan zip, and the stale gfm-foundry
+plugin cache). This file is the permanent historical record.
