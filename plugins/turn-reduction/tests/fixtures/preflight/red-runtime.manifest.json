@@ -1,0 +1,74 @@
+{
+  "milestone": "known-bad fixture — four recorded failure modes, one per capability",
+  "capabilities": [
+    {
+      "name": "directory that does not exist",
+      "population": "every file under $PREFLIGHT_TEST_DIR/absent",
+      "excludes": "nothing — the path is the whole population",
+      "remedy": "create the directory, or correct the path in the manifest",
+      "read": {
+        "cmd": "ls -1 \"$PREFLIGHT_TEST_DIR/absent\"",
+        "evidence": "nonempty"
+      },
+      "write": {
+        "cmd": "printf x > \"$PREFLIGHT_TEST_DIR/absent/probe\"",
+        "evidence": "nonempty"
+      },
+      "negative_control": {
+        "cmd": "ls -1 \"$PREFLIGHT_TEST_DIR/also-absent\"",
+        "expect": "nonzero_exit",
+        "why": "a missing path must not list"
+      }
+    },
+    {
+      "name": "counted nothing and called it green",
+      "population": "records in the scratch dir carrying a prior-season slot",
+      "excludes": "records with no prior-season slot — which is every case this check exists to catch",
+      "remedy": "widen the population to all records, then re-run",
+      "read": {
+        "cmd": "printf '0\\n'",
+        "evidence": "count>0"
+      },
+      "write": {
+        "cmd": "printf 'wrote' && printf ''",
+        "evidence": "contains:wrote"
+      },
+      "negative_control": {
+        "cmd": "false",
+        "expect": "nonzero_exit",
+        "why": "always fails"
+      }
+    },
+    {
+      "name": "api auth that a public endpoint answers",
+      "population": "the one league id the probe names",
+      "excludes": "every other league; every other endpoint on the API",
+      "remedy": "probe an endpoint that returns 401 without a credential, then re-run",
+      "read": {
+        "cmd": "printf '200 league=example\\n'",
+        "evidence": "contains:200"
+      },
+      "write": {
+        "cmd": "printf '201 created\\n'",
+        "evidence": "contains:201"
+      },
+      "negative_control": {
+        "cmd": "printf '200 league=example\\n'",
+        "expect": "not_contains:200",
+        "why": "the same request with no credential must not succeed"
+      }
+    },
+    {
+      "name": "device bridge filed as a tooling limit",
+      "population": "the bridge mount at $PREFLIGHT_TEST_DIR",
+      "excludes": "every other transport",
+      "remedy": "connect the folder in the bridge's settings — this was never a tooling limit",
+      "declared_unreachable": {
+        "why": "structural under current tooling",
+        "probe": {
+          "cmd": "test -d \"$PREFLIGHT_TEST_DIR\""
+        }
+      }
+    }
+  ]
+}

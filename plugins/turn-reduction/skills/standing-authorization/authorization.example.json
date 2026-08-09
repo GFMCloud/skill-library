@@ -1,0 +1,104 @@
+{
+  "project": "EXAMPLE — copy to the project repo root as authorization.json and edit",
+  "ceilings": {
+    "commits_before_review": {
+      "value": 10,
+      "unit": "commits on one branch",
+      "note": "the only place this number exists; reference it, never restate it"
+    },
+    "fix_attempts": {
+      "value": 3,
+      "unit": "attempts at one failing check",
+      "note": "on the fourth failure, stop and report what was tried"
+    },
+    "command_runtime": {
+      "value": 600,
+      "unit": "seconds for a single command",
+      "note": "longer than this, ask before starting it"
+    }
+  },
+  "granted": [
+    {
+      "action": "read anything on this machine the shell can reach, and run any read-only command",
+      "match": ["can i read", "may i read", "should i look at", "ok to inspect", "ok to check"],
+      "log_to": "nothing — reads are not logged"
+    },
+    {
+      "action": "create, edit, and delete files inside the project working tree",
+      "match": ["should i create", "shall i write", "want me to add a file", "ok to edit", "ok to delete the file"],
+      "log_to": "PROGRESS.md"
+    },
+    {
+      "action": "commit to a branch that is not the default branch, up to the commit ceiling",
+      "match": ["should i commit", "shall i commit", "want me to commit", "ok to commit"],
+      "ceiling": "commits_before_review",
+      "log_to": "git history plus a PROGRESS.md line"
+    },
+    {
+      "action": "push a non-default branch to a remote Graham owns",
+      "match": ["should i push", "shall i push", "want me to push", "ok to push"],
+      "log_to": "PROGRESS.md"
+    },
+    {
+      "action": "open a draft pull request on a repo Graham owns",
+      "match": ["should i open a pr", "shall i open a pull request", "want me to raise a pr"],
+      "log_to": "PROGRESS.md, with the PR number"
+    },
+    {
+      "action": "install, update, or remove a plugin from the gfm-foundry marketplace",
+      "match": ["should i install the plugin", "ok to update the plugin", "want me to reinstall"],
+      "log_to": "PROGRESS.md"
+    },
+    {
+      "action": "run tests, linters, formatters, and builds, and fix what they report within the attempt ceiling",
+      "match": ["should i run the tests", "shall i run the linter", "want me to fix the failing", "ok to rerun"],
+      "ceiling": ["fix_attempts", "command_runtime"],
+      "log_to": "PROGRESS.md, with the failing output that prompted the fix"
+    },
+    {
+      "action": "choose between implementations that are equivalent on the stated requirements",
+      "match": ["which approach do you prefer", "which of these two", "do you have a preference", "which one should i use"],
+      "log_to": "PROGRESS.md, naming the choice and what made it equivalent"
+    },
+    {
+      "action": "name files, functions, branches, and columns",
+      "match": ["what should i call", "what name do you want", "how should i name"],
+      "log_to": "nothing — the name is in the artifact"
+    },
+    {
+      "action": "write and update the project's own documentation and progress files",
+      "match": ["should i update the readme", "want me to document", "shall i write this up"],
+      "log_to": "the document itself"
+    }
+  ],
+  "stop": [
+    {
+      "action": "rewrite history — force-push, rebase a pushed branch, amend a pushed commit, delete a branch or tag",
+      "match": ["force-push", "force push", "--force", "rewrite history", "rebase onto", "delete the branch", "reset --hard"]
+    },
+    {
+      "action": "anything that spends money or starts a billable resource",
+      "match": ["spend", "billing", "paid plan", "upgrade the account", "provision an instance", "costs"]
+    },
+    {
+      "action": "handle a raw credential, or write a secret anywhere on disk",
+      "match": ["api key", "access token", "password", "credential", "private key", "paste the secret"]
+    },
+    {
+      "action": "touch production — deploy to it, read from it, or write to it",
+      "match": ["production", "prod database", "live environment", "customer data"]
+    },
+    {
+      "action": "act outside the project working tree, or delete anything not created by this work",
+      "match": ["outside the repo", "rm -rf /", "home directory", "delete the folder"]
+    },
+    {
+      "action": "publish anything, or make a private thing public",
+      "match": ["make it public", "publish", "post to", "share externally", "open source it"]
+    },
+    {
+      "action": "change what the work is for — scope, goal, or definition of done",
+      "match": ["change the scope", "instead of what you asked", "drop the requirement", "redefine done"]
+    }
+  ]
+}

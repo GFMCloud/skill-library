@@ -1,0 +1,56 @@
+{
+  "milestone": "known-good fixture — every capability is genuinely reachable",
+  "capabilities": [
+    {
+      "name": "scratch working directory",
+      "population": "every entry directly inside $PREFLIGHT_TEST_DIR",
+      "excludes": "nested directories below the first level; anything outside the scratch dir",
+      "remedy": "create the scratch directory and make it writable before re-running",
+      "read": {
+        "cmd": "ls -1 \"$PREFLIGHT_TEST_DIR\" | wc -l",
+        "evidence": "count>0"
+      },
+      "write": {
+        "cmd": "printf 'probe-ok' > \"$PREFLIGHT_TEST_DIR/.preflight-probe\" && cat \"$PREFLIGHT_TEST_DIR/.preflight-probe\" && rm \"$PREFLIGHT_TEST_DIR/.preflight-probe\"",
+        "evidence": "contains:probe-ok"
+      },
+      "negative_control": {
+        "cmd": "ls -1 \"$PREFLIGHT_TEST_DIR/definitely-absent\"",
+        "expect": "nonzero_exit",
+        "why": "listing a path that does not exist must fail; if it succeeds the read probe is not reading what it claims"
+      }
+    },
+    {
+      "name": "scratch git object store",
+      "population": "the object database of the scratch repo at $PREFLIGHT_TEST_DIR/repo",
+      "excludes": "remotes, refs, and every other repo on this machine",
+      "remedy": "initialise the scratch repo, or point the manifest at the repo the milestone actually writes to",
+      "read": {
+        "cmd": "git -C \"$PREFLIGHT_TEST_DIR/repo\" rev-parse --git-dir",
+        "evidence": "nonempty"
+      },
+      "write": {
+        "cmd": "printf 'preflight write probe' | git -C \"$PREFLIGHT_TEST_DIR/repo\" hash-object -w --stdin",
+        "evidence": "nonempty"
+      },
+      "negative_control": {
+        "cmd": "git -C \"$PREFLIGHT_TEST_DIR\" rev-parse --git-dir",
+        "expect": "nonzero_exit",
+        "why": "the scratch dir is not a repo; if this resolves, the read probe is answering from some other repo up the tree"
+      }
+    },
+    {
+      "name": "removable volume the milestone does not depend on",
+      "population": "the mount point $PREFLIGHT_TEST_DIR/not-mounted",
+      "excludes": "every other volume",
+      "remedy": "connect the volume if a later milestone needs it; this one is planned around it",
+      "declared_unreachable": {
+        "why": "the volume is not mounted on this host",
+        "blocking": false,
+        "probe": {
+          "cmd": "test -d \"$PREFLIGHT_TEST_DIR/not-mounted\" && ls -1 \"$PREFLIGHT_TEST_DIR/not-mounted\""
+        }
+      }
+    }
+  ]
+}

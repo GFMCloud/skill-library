@@ -1,0 +1,36 @@
+{
+  "project": "known-bad fixture — six structural defects, all recorded",
+  "ceilings": {
+    "review_ceiling": {
+      "unit": "commits on one branch",
+      "note": "cross-referenced from four documents and never given a number"
+    },
+    "unused_ceiling": {
+      "value": 5,
+      "unit": "retries"
+    }
+  },
+  "granted": [
+    {
+      "action": "commit to a branch that is not the default branch, within the turn ceiling",
+      "match": ["should i commit", "ok to commit"],
+      "ceiling": "turn_ceiling",
+      "log_to": "PROGRESS.md"
+    },
+    {
+      "action": "keep retrying a failing check up to the retry limit",
+      "match": ["should i retry"],
+      "log_to": "PROGRESS.md"
+    },
+    {
+      "action": "push a branch to a remote Graham owns",
+      "match": ["should i push", "force push"]
+    }
+  ],
+  "stop": [
+    {
+      "action": "rewrite history — force-push, rebase a pushed branch, amend a pushed commit",
+      "match": ["force push", "--force", "rewrite history"]
+    }
+  ]
+}

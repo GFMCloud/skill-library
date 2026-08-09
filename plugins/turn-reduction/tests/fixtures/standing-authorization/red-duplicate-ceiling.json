@@ -1,0 +1,18 @@
+{
+  "project": "known-bad fixture — the same ceiling defined twice, which JSON would silently collapse",
+  "ceilings": {
+    "commits_before_review": { "value": 10, "unit": "commits on one branch" },
+    "commits_before_review": { "value": 25, "unit": "commits on one branch" }
+  },
+  "granted": [
+    {
+      "action": "commit to a branch that is not the default branch",
+      "match": ["should i commit"],
+      "ceiling": "commits_before_review",
+      "log_to": "PROGRESS.md"
+    }
+  ],
+  "stop": [
+    { "action": "rewrite history", "match": ["force push"] }
+  ]
+}

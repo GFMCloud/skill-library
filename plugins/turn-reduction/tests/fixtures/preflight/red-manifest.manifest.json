@@ -1,0 +1,27 @@
+{
+  "milestone": "known-bad fixture — rejected before any probe runs",
+  "capabilities": [
+    {
+      "name": "green tick for a directory that does not exist",
+      "population": "the plugin cache",
+      "remedy": "remove the || and let the probe fail",
+      "read": {
+        "cmd": "grep -r skill \"$PREFLIGHT_TEST_DIR/absent\" || echo \"✓\"",
+        "evidence": "nonempty"
+      },
+      "write": {
+        "cmd": "printf x > \"$PREFLIGHT_TEST_DIR/probe\"; true",
+        "evidence": "nonempty"
+      }
+    },
+    {
+      "name": "unreachable asserted, never tested",
+      "population": "the device bridge",
+      "excludes": "nothing",
+      "remedy": "attach a probe that the running system can refute",
+      "declared_unreachable": {
+        "why": "structural under current tooling"
+      }
+    }
+  ]
+}

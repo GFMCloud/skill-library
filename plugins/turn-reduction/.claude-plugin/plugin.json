@@ -1,0 +1,6 @@
+{
+  "name": "turn-reduction",
+  "description": "Removes the two turn categories a nine-session audit showed dominate: capability pre-flight for relays, output lint for process corrections, standing authorization for approvals.",
+  "author": { "name": "Graham" },
+  "dependencies": ["foundry-core"]
+}
