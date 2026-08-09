@@ -24,7 +24,7 @@ preserved in the migration harness session scratchpad.
 | `deploy-ops` | deploy-verify-fix + agent deploy-loop-owner | gfm-foundry (not installed) |
 | `decks` | deck-build (4) + deck-critique (2) merged: cd-to-pptx, chart-discipline, deck-scaffolding-builder, html-diagram, layout-critique, sales-lens-review | gfmcloud-skills |
 | `frontend-design` | design-taste-frontend, image-taste-frontend, minimalist-ui, redesign-existing-projects, frontend-design (from SCL v2 repo), emil-design-eng (from Documents archive) | gfmcloud-skills + strays |
-| `scl` | scl-keeper-logic-validator, scl-module-deploy-checklist, scl-session-startup-enforcer | gfmcloud-skills (spans multiple SCL repos → plugin, not project skill) |
+| ~~`scl`~~ | ~~scl-keeper-logic-validator, scl-module-deploy-checklist, scl-session-startup-enforcer~~ | **Dropped at Gate A** — user ruled SCL skills stay project-local in sloshball-champions-league-v2 |
 | `workbench` | adhd, capability-index, fable-project-review, folder-to-repo, handoff, llama-offload, model-effort-advisor, project-kb-builder, project-setup-wizard, skill-discovery, supahcode-review, systems-design, graham-voice | gfmcloud-skills (voice folded in) |
 | `_incubator` | pipeline-foundry, devshell-init, new-project | unproven/unlisted/orphan |
 
@@ -42,79 +42,79 @@ same commit `0b0a897`). FM = frontmatter completeness ("n+d" = name + desc ≥40
 
 | ✓ | Skill | Current path | Consumed via | FM | Lines | Drift | Proposed | Ruling |
 |---|-------|--------------|--------------|----|-------|-------|----------|--------|
-| ☐ | evidence-report | foundry/plugins/foundry-core/skills/… | installed plugin | n+d | 66 | — | library:foundry-core — installed, in daily use | |
-| ☐ | proof-of-work | foundry/plugins/foundry-core/skills/… | installed plugin | n+d | 68 | — | library:foundry-core | |
-| ☐ | capability-preflight | foundry/plugins/turn-reduction/skills/… | installed plugin | n+d | 130 | — | library:turn-reduction | |
-| ☐ | output-lint | foundry/plugins/turn-reduction/skills/… | installed plugin | n+d | 86 | — | library:turn-reduction | |
-| ☐ | standing-authorization | foundry/plugins/turn-reduction/skills/… | installed plugin | n+d | 104 | — | library:turn-reduction | |
-| ☐ | identity-resolution | foundry/plugins/data-wrangler/skills/… | installed plugin | n+d | 73 | — | library:data-wrangler | |
-| ☐ | data-pipeline-owner (agent) | foundry/plugins/data-wrangler/agents/… | installed plugin | n+d | 93 | — | library:data-wrangler — moves with its plugin | |
-| ☐ | fact-currency-check | foundry/plugins/verification-kit/skills/… | marketplace clone only | n+d | 62 | — | library:verification-kit | |
-| ☐ | pre-delivery-verifier (agent) | foundry/plugins/verification-kit/agents/… | marketplace clone only | n+d | — | — | library:verification-kit | |
-| ☐ | spec-artifact-diff | foundry/plugins/consistency-checker/skills/… | marketplace clone only | n+d | 156 | — | library:consistency-checker | |
-| ☐ | cross-document-checker (agent) | foundry/plugins/consistency-checker/agents/… | marketplace clone only | n+d | — | — | library:consistency-checker | |
-| ☐ | deploy-verify-fix | foundry/plugins/deploy-ops/skills/… | marketplace clone only | n+d | 87 | — | library:deploy-ops | |
-| ☐ | deploy-loop-owner (agent) | foundry/plugins/deploy-ops/agents/… | marketplace clone only | n+d | — | — | library:deploy-ops | |
-| ☐ | pipeline-foundry | foundry/plugins/pipeline-foundry/skills/… | orphan (unlisted in marketplace.json — A1) | n+d | 374 | — | library:_incubator — content complete but never installable, unproven | |
-| ☐ | cd-to-pptx | gfmcloud/plugins/deck-build/skills/… | marketplace clone (never installed) | n+d | 127 | — | library:decks | |
-| ☐ | chart-discipline | gfmcloud/plugins/deck-build/skills/… | marketplace clone (never installed) | n+d | 102 | — | library:decks | |
-| ☐ | deck-scaffolding-builder | gfmcloud/plugins/deck-build/skills/… | marketplace clone (never installed) | n+d | 121 | — | library:decks | |
-| ☐ | html-diagram | gfmcloud/plugins/deck-build/skills/… | marketplace clone (never installed) | n+d | 99 | — | library:decks | |
-| ☐ | layout-critique | gfmcloud/plugins/deck-critique/skills/… | marketplace clone (never installed) | n+d | 65 | — | library:decks | |
-| ☐ | sales-lens-review | gfmcloud/plugins/deck-critique/skills/… | marketplace clone (never installed) | n+d | 239 | — | library:decks | |
-| ☐ | design-taste-frontend | gfmcloud/plugins/frontend-design/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 241 | — | library:frontend-design — fix YAML quoting in normalization | |
-| ☐ | image-taste-frontend | gfmcloud/plugins/frontend-design/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 199 | — | library:frontend-design | |
-| ☐ | minimalist-ui | gfmcloud/plugins/frontend-design/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 91 | — | library:frontend-design | |
-| ☐ | redesign-existing-projects | gfmcloud/plugins/frontend-design/skills/… | marketplace clone (never installed) | n+d | 182 | — | library:frontend-design | |
-| ☐ | frontend-design (skill) | sloshball-champions-league-v2/.claude/skills/frontend-design | project copy | n+d + license | 50 | — | library:frontend-design — generic (not SCL-specific); carries LICENSE.txt with it | |
-| ☐ | emil-design-eng | Documents/…/SCL-MIGRATED-2026-08-04-DO-NOT-EDIT/.claude/skills/… | orphan in frozen archive | n+d | 675 | — | library:frontend-design — reusable UI-review guidance stranded in a do-not-edit folder (A4); body >500 → split to references/ | |
-| ☐ | scl-keeper-logic-validator | gfmcloud/plugins/scl/skills/… (+3 stale copies) | marketplace clone (never installed) | n+d | 199 | D1 | library:scl, winner: library (marketplace copy) | |
-| ☐ | scl-session-startup-enforcer | gfmcloud/plugins/scl/skills/… (+2 stale copies) | marketplace clone (never installed) | n+d | 166 | D2 | library:scl, winner: library | |
-| ☐ | scl-module-deploy-checklist | gfmcloud/plugins/scl/skills/… (+2 stale copies) | marketplace clone (never installed) | n+d | 219 | D3 | library:scl, winner: library (structural superset) | |
-| ☐ | graham-voice | gfmcloud/plugins/voice/skills/… | marketplace clone (never installed) | n+d | 269 | zip echo (D8) | library:workbench — voice folded in; alt: keep 1-skill voice plugin | |
-| ☐ | adhd | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 126 | — | library:workbench | |
-| ☐ | capability-index | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 57 | — | library:workbench — premise mismatch noted (A5) | |
-| ☐ | fable-project-review | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 94 | zip echo (D8) | library:workbench | |
-| ☐ | folder-to-repo | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 189 | — | library:workbench | |
-| ☐ | handoff | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 234 | zip echo (D8) | library:workbench | |
-| ☐ | llama-offload | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 85 | — | library:workbench | |
-| ☐ | model-effort-advisor | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 106 | — | library:workbench | |
-| ☐ | project-kb-builder | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 210 | — | library:workbench | |
-| ☐ | project-setup-wizard | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 236 | — | library:workbench | |
-| ☐ | skill-discovery | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 382 | — | library:workbench | |
-| ☐ | supahcode-review | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 170 | — | library:workbench | |
-| ☐ | systems-design | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 266 | — | library:workbench — adjacent systems-design.skill zip is a build artifact, superseded | |
-| ☐ | new-project | ~/work/new-project.skill (packaged zip, no source) | orphan | n+d (inside zip) | ~200 | — | library:_incubator — unpack; real skill (scaffolder + 4 archetype refs), zip is its only home | |
-| ☐ | devshell-init | ~/src/mac-setup/.claude/skills/devshell-init | project copy | n+d | 60 | — | library:_incubator — promote: targets arbitrary repos, not mac-setup itself; alt: project | |
+| ☐ | evidence-report | foundry/plugins/foundry-core/skills/… | installed plugin | n+d | 66 | — | library:foundry-core — installed, in daily use | as proposed |
+| ☐ | proof-of-work | foundry/plugins/foundry-core/skills/… | installed plugin | n+d | 68 | — | library:foundry-core | as proposed |
+| ☐ | capability-preflight | foundry/plugins/turn-reduction/skills/… | installed plugin | n+d | 130 | — | library:turn-reduction | as proposed |
+| ☐ | output-lint | foundry/plugins/turn-reduction/skills/… | installed plugin | n+d | 86 | — | library:turn-reduction | as proposed |
+| ☐ | standing-authorization | foundry/plugins/turn-reduction/skills/… | installed plugin | n+d | 104 | — | library:turn-reduction | as proposed |
+| ☐ | identity-resolution | foundry/plugins/data-wrangler/skills/… | installed plugin | n+d | 73 | — | library:data-wrangler | as proposed |
+| ☐ | data-pipeline-owner (agent) | foundry/plugins/data-wrangler/agents/… | installed plugin | n+d | 93 | — | library:data-wrangler — moves with its plugin | as proposed |
+| ☐ | fact-currency-check | foundry/plugins/verification-kit/skills/… | marketplace clone only | n+d | 62 | — | library:verification-kit | as proposed |
+| ☐ | pre-delivery-verifier (agent) | foundry/plugins/verification-kit/agents/… | marketplace clone only | n+d | — | — | library:verification-kit | as proposed |
+| ☐ | spec-artifact-diff | foundry/plugins/consistency-checker/skills/… | marketplace clone only | n+d | 156 | — | library:consistency-checker | as proposed |
+| ☐ | cross-document-checker (agent) | foundry/plugins/consistency-checker/agents/… | marketplace clone only | n+d | — | — | library:consistency-checker | as proposed |
+| ☐ | deploy-verify-fix | foundry/plugins/deploy-ops/skills/… | marketplace clone only | n+d | 87 | — | library:deploy-ops | as proposed |
+| ☐ | deploy-loop-owner (agent) | foundry/plugins/deploy-ops/agents/… | marketplace clone only | n+d | — | — | library:deploy-ops | as proposed |
+| ☐ | pipeline-foundry | foundry/plugins/pipeline-foundry/skills/… | orphan (unlisted in marketplace.json — A1) | n+d | 374 | — | library:_incubator — content complete but never installable, unproven | as proposed |
+| ☐ | cd-to-pptx | gfmcloud/plugins/deck-build/skills/… | marketplace clone (never installed) | n+d | 127 | — | library:decks | as proposed |
+| ☐ | chart-discipline | gfmcloud/plugins/deck-build/skills/… | marketplace clone (never installed) | n+d | 102 | — | library:decks | as proposed |
+| ☐ | deck-scaffolding-builder | gfmcloud/plugins/deck-build/skills/… | marketplace clone (never installed) | n+d | 121 | — | library:decks | as proposed |
+| ☐ | html-diagram | gfmcloud/plugins/deck-build/skills/… | marketplace clone (never installed) | n+d | 99 | — | library:decks | as proposed |
+| ☐ | layout-critique | gfmcloud/plugins/deck-critique/skills/… | marketplace clone (never installed) | n+d | 65 | — | library:decks | as proposed |
+| ☐ | sales-lens-review | gfmcloud/plugins/deck-critique/skills/… | marketplace clone (never installed) | n+d | 239 | — | library:decks | as proposed |
+| ☐ | design-taste-frontend | gfmcloud/plugins/frontend-design/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 241 | — | library:frontend-design — fix YAML quoting in normalization | as proposed |
+| ☐ | image-taste-frontend | gfmcloud/plugins/frontend-design/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 199 | — | library:frontend-design | as proposed |
+| ☐ | minimalist-ui | gfmcloud/plugins/frontend-design/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 91 | — | library:frontend-design | as proposed |
+| ☐ | redesign-existing-projects | gfmcloud/plugins/frontend-design/skills/… | marketplace clone (never installed) | n+d | 182 | — | library:frontend-design | as proposed |
+| ☐ | frontend-design (skill) | sloshball-champions-league-v2/.claude/skills/frontend-design | project copy | n+d + license | 50 | — | library:frontend-design — generic (not SCL-specific); carries LICENSE.txt with it | as proposed |
+| ☐ | emil-design-eng | Documents/…/SCL-MIGRATED-2026-08-04-DO-NOT-EDIT/.claude/skills/… | orphan in frozen archive | n+d | 675 | — | library:frontend-design — reusable UI-review guidance stranded in a do-not-edit folder (A4); body >500 → split to references/ | as proposed |
+| ☐ | scl-keeper-logic-validator | gfmcloud/plugins/scl/skills/… (+3 stale copies) | marketplace clone (never installed) | n+d | 199 | D1 | library:scl, winner: library (marketplace copy) | **OVERRIDDEN: project** — SCL stays project-local in sloshball-champions-league-v2; marketplace copy retires with repo (recoverable on GitHub) |
+| ☐ | scl-session-startup-enforcer | gfmcloud/plugins/scl/skills/… (+2 stale copies) | marketplace clone (never installed) | n+d | 166 | D2 | library:scl, winner: library | **OVERRIDDEN: project** — same ruling |
+| ☐ | scl-module-deploy-checklist | gfmcloud/plugins/scl/skills/… (+2 stale copies) | marketplace clone (never installed) | n+d | 219 | D3 | library:scl, winner: library (structural superset) | **OVERRIDDEN: project** — same ruling; note the references/ refactor stays behind with the retired repo |
+| ☐ | graham-voice | gfmcloud/plugins/voice/skills/… | marketplace clone (never installed) | n+d | 269 | zip echo (D8) | library:workbench — voice folded in; alt: keep 1-skill voice plugin | as proposed |
+| ☐ | adhd | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 126 | — | library:workbench | as proposed |
+| ☐ | capability-index | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 57 | — | library:workbench — premise mismatch noted (A5) | as proposed |
+| ☐ | fable-project-review | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 94 | zip echo (D8) | library:workbench | as proposed |
+| ☐ | folder-to-repo | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 189 | — | library:workbench | as proposed |
+| ☐ | handoff | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d, **broken YAML** (A2) | 234 | zip echo (D8) | library:workbench | as proposed |
+| ☐ | llama-offload | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 85 | — | library:workbench | as proposed |
+| ☐ | model-effort-advisor | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 106 | — | library:workbench | as proposed |
+| ☐ | project-kb-builder | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 210 | — | library:workbench | as proposed |
+| ☐ | project-setup-wizard | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 236 | — | library:workbench | as proposed |
+| ☐ | skill-discovery | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 382 | — | library:workbench | as proposed |
+| ☐ | supahcode-review | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 170 | — | library:workbench | as proposed |
+| ☐ | systems-design | gfmcloud/plugins/workbench/skills/… | marketplace clone (never installed) | n+d | 266 | — | library:workbench — adjacent systems-design.skill zip is a build artifact, superseded | as proposed |
+| ☐ | new-project | ~/work/new-project.skill (packaged zip, no source) | orphan | n+d (inside zip) | ~200 | — | library:_incubator — unpack; real skill (scaffolder + 4 archetype refs), zip is its only home | as proposed |
+| ☐ | devshell-init | ~/src/mac-setup/.claude/skills/devshell-init | project copy | n+d | 60 | — | library:_incubator — promote: targets arbitrary repos, not mac-setup itself; alt: project | as proposed |
 
 ## Inventory — `project` rows (stay where they are)
 
 | ✓ | Skill | Current path | Kind | FM | Lines | Drift | Proposed | Ruling |
 |---|-------|--------------|------|----|-------|-------|----------|--------|
-| ☐ | phase | ref/skill-organization/.claude/skills/phase | skill | full | 70 | D5 | project — the migration harness itself | |
-| ☐ | setup-next | src/mac-setup/.claude/skills/setup-next | skill | n+d | 55 | — | project — bound to mac-setup runbook | |
-| ☐ | setup-status | src/mac-setup/.claude/skills/setup-status | skill | n+d | 28 | — | project — bound to mac-setup runbook | |
-| ☐ | seam-advisor | work/scoreboard-ipad/.claude/agents/ | agent | n+d | 20 | — | project — scoreboard-specific | |
-| ☐ | contract-advisor | work/scoreboard-ipad/.claude/agents/ | agent | n+d | 26 | — | project — scoreboard-specific | |
-| ☐ | load-advisor | work/scoreboard-ipad/.claude/agents/ | agent | n+d | 24 | — | project — scoreboard-specific | |
-| ☐ | panel-advisor | work/scoreboard-ipad/.claude/agents/ | agent | n+d | 26 | — | project — scoreboard-specific | |
-| ☐ | content-builder | work/GitHub/the-michiana-trail/.claude/agents/ | agent | n+d | 28 | D4 | project, winner: work/GitHub clone (superset) | |
-| ☐ | fable-advisor | work/GitHub/the-michiana-trail/.claude/agents/ | agent | n+d | 6 | D6 (identical) | project | |
-| ☐ | project-constants | work/GitHub/sloshball-ff/.claude/skills/ | skill | n+d | 1188 | — | project — sloshball-ff-specific; oversize noted (A7), cleanup belongs to that project | |
-| ☐ | buzz-cli | ~/.buzz/.agents/skills/buzz-cli (symlinked into .claude/.codex/.goose) | skill | n+d | 167 | — | project — cross-tool nest shared with Codex/Goose (A6); moving it breaks other tools | |
-| ☐ | gfmcloud-estate-map | ~/.claude/scheduled-tasks/gfmcloud-estate-map | scheduled-task skill | n+d | 56 | — | project — belongs to the scheduler runtime, not plugin distribution | |
+| ☐ | phase | ref/skill-organization/.claude/skills/phase | skill | full | 70 | D5 | project — the migration harness itself | as proposed |
+| ☐ | setup-next | src/mac-setup/.claude/skills/setup-next | skill | n+d | 55 | — | project — bound to mac-setup runbook | as proposed |
+| ☐ | setup-status | src/mac-setup/.claude/skills/setup-status | skill | n+d | 28 | — | project — bound to mac-setup runbook | as proposed |
+| ☐ | seam-advisor | work/scoreboard-ipad/.claude/agents/ | agent | n+d | 20 | — | project — scoreboard-specific | as proposed |
+| ☐ | contract-advisor | work/scoreboard-ipad/.claude/agents/ | agent | n+d | 26 | — | project — scoreboard-specific | as proposed |
+| ☐ | load-advisor | work/scoreboard-ipad/.claude/agents/ | agent | n+d | 24 | — | project — scoreboard-specific | as proposed |
+| ☐ | panel-advisor | work/scoreboard-ipad/.claude/agents/ | agent | n+d | 26 | — | project — scoreboard-specific | as proposed |
+| ☐ | content-builder | work/GitHub/the-michiana-trail/.claude/agents/ | agent | n+d | 28 | D4 | project, winner: work/GitHub clone (superset) | as proposed |
+| ☐ | fable-advisor | work/GitHub/the-michiana-trail/.claude/agents/ | agent | n+d | 6 | D6 (identical) | project | as proposed |
+| ☐ | project-constants | work/GitHub/sloshball-ff/.claude/skills/ | skill | n+d | 1188 | — | project — sloshball-ff-specific; oversize noted (A7), cleanup belongs to that project | as proposed |
+| ☐ | buzz-cli | ~/.buzz/.agents/skills/buzz-cli (symlinked into .claude/.codex/.goose) | skill | n+d | 167 | — | project — cross-tool nest shared with Codex/Goose (A6); moving it breaks other tools | as proposed |
+| ☐ | gfmcloud-estate-map | ~/.claude/scheduled-tasks/gfmcloud-estate-map | scheduled-task skill | n+d | 56 | — | project — belongs to the scheduler runtime, not plugin distribution | as proposed |
 
 ## Inventory — `archive` rows (leave recoverable; no active use)
 
 | ✓ | Skill | Current path | FM | Lines | Drift | Proposed | Ruling |
 |---|-------|--------------|----|-------|-------|----------|--------|
-| ☐ | scl-keeper-logic-validator (stale) | Documents/…/sloshy/.claude/skills/ | n+d (frontmatter claims authority; body says SUPERSEDED) | 386 | D1 | archive — recoverable in sloshy git history; rename `.migrated-off` in Phase 3, remove at Gate B | |
-| ☐ | scl-keeper-logic-validator (v2 project copy) | work/GitHub/sloshball-champions-league-v2/.claude/skills/ | n+d | 186 | D1 | archive — superseded by library:scl; `.migrated-off` in Phase 3 (recoverable in v2 git history) | |
-| ☐ | scl-session-startup-enforcer (v2 project copy) | same repo | n+d | 161 | D2 | archive — superseded by library:scl | |
-| ☐ | scl-module-deploy-checklist (v2 project copy) | same repo | n+d | 218 | D3 | archive — superseded by library:scl | |
-| ☐ | SCL archive sources ×3 | Documents/…/SCL-MIGRATED…/04 Skills/ | — | 399/152/204 | D1–D3 (oldest generation) | archive — already frozen in do-not-edit folder; no action, not touched | |
-| ☐ | .skill zip exports ×6 | Documents/…/SCL-MIGRATED…/09 Migration/skills/ | — | — | D8 | archive — stale 2026-07-15 exports of live marketplace skills; no action, not touched | |
-| ☐ | systems-design.skill | gfmcloud/plugins/workbench/skills/systems-design/ | — | — | — | archive — build artifact beside its own source; superseded when repo migrates | |
+| ☐ | scl-keeper-logic-validator (stale) | Documents/…/sloshy/.claude/skills/ | n+d (frontmatter claims authority; body says SUPERSEDED) | 386 | D1 | archive — recoverable in sloshy git history; rename `.migrated-off` in Phase 3, remove at Gate B | as proposed |
+| ☐ | scl-keeper-logic-validator (v2 project copy) | work/GitHub/sloshball-champions-league-v2/.claude/skills/ | n+d | 186 | D1 | archive — superseded by library:scl; `.migrated-off` in Phase 3 (recoverable in v2 git history) | **OVERRIDDEN: project — stays live**; SCL skills remain project-local (Gate A) |
+| ☐ | scl-session-startup-enforcer (v2 project copy) | same repo | n+d | 161 | D2 | archive — superseded by library:scl | **OVERRIDDEN: project — stays live** |
+| ☐ | scl-module-deploy-checklist (v2 project copy) | same repo | n+d | 218 | D3 | archive — superseded by library:scl | **OVERRIDDEN: project — stays live** |
+| ☐ | SCL archive sources ×3 | Documents/…/SCL-MIGRATED…/04 Skills/ | — | 399/152/204 | D1–D3 (oldest generation) | archive — already frozen in do-not-edit folder; no action, not touched | as proposed |
+| ☐ | .skill zip exports ×6 | Documents/…/SCL-MIGRATED…/09 Migration/skills/ | — | — | D8 | archive — stale 2026-07-15 exports of live marketplace skills; no action, not touched | as proposed |
+| ☐ | systems-design.skill | gfmcloud/plugins/workbench/skills/systems-design/ | — | — | — | archive — build artifact beside its own source; superseded when repo migrates | as proposed |
 
 ## Out of scope (upstream-owned or runtime artifacts — no rows, no action)
 
