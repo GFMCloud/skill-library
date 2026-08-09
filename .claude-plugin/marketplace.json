@@ -1,0 +1,18 @@
+{
+  "name": "skill-library",
+  "owner": {
+    "name": "GFMCloud",
+    "url": "https://github.com/GFMCloud"
+  },
+  "metadata": {
+    "description": "Canonical library of reusable Claude Code skills, organized as plugins by install unit.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "_incubator",
+      "source": "./plugins/_incubator",
+      "description": "New and unproven skills. No stability promise; skills here may change or disappear without notice."
+    }
+  ]
+}
