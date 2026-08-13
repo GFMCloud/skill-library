@@ -1,16 +1,16 @@
+General working agreements live in ~/.claude/CLAUDE.md. This file adds only what is specific to skill-library.
+
 # skill-library — authoring rules
 
 This repo is the canonical home of every reusable Claude Code skill on this account,
-structured as a plugin marketplace. **This repo is the only editable surface** for
-these skills — never edit installed plugin caches (`~/.claude/plugins/**`) or any
-other copy; changes land here and reach machines via plugin updates.
+structured as a plugin marketplace.
 
 ## Rules for sessions editing this repo
 
 - Follow [docs/authoring-standard.md](docs/authoring-standard.md) for every skill.
   Start new skills from [templates/SKILL.template.md](templates/SKILL.template.md).
-- **New skills start in `plugins/_incubator/`** with `maturity: incubator`. Promotion
-  to a real plugin is a `git mv` plus a CHANGELOG line — never a copy.
+- **New skills start in `plugins/_incubator/`** with `maturity: incubator`, and get a
+  CHANGELOG entry on promotion to a real plugin.
 - **Stable-skill changes** bump `metadata.version`, update `metadata.reviewed`, and
   get a CHANGELOG entry describing the behavior change (not the wording change).
 - **Run the validator before committing:**
