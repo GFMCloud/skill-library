@@ -18,9 +18,8 @@ turn-reduction:capability-preflight, do not assume it.>`
    fans out: one subagent per <unit>, each given only its own subtree, an explicit
    do-not-touch list, and the guardrails restated. Results written to files before
    the orchestrator proceeds.>`
-4. `<Step. Where a step supersedes something, it is RENAMED with the
-   `<.SUFFIX>` suffix — never deleted. Deletion happens only in the final phase,
-   after Gate B.>`
+4. `<Step. Where a step supersedes something, it is RENAMED with the .superseded
+   suffix — never deleted. Deletion happens only in the final phase, after Gate B.>`
 5. Record executed evidence in `STATE.md` as you go — the command and its actual
    output, not a checkmark. Check items off in the tracking file **as you go**: that
    file is the resume point if the session dies mid-phase.

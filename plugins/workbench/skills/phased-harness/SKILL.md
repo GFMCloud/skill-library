@@ -10,8 +10,8 @@ description: >-
   sessions that ends in an irreversible step.
 metadata:
   maturity: stable
-  version: 1.0.0
-  reviewed: 2026-08-09
+  version: 1.1.0
+  reviewed: 2026-08-12
 ---
 
 # Phased harness — scaffold a gated, resumable project
@@ -101,6 +101,12 @@ Rules while instantiating:
 
 - **Replace every `<PLACEHOLDER>`.** A placeholder surviving into the generated
   harness is a bug — grep the tree for `<` before finishing.
+- **The generated CLAUDE.md opens with the pointer line** to `~/.claude/CLAUDE.md` and
+  carries only what is specific to this project. Where a guardrail is an instance of a
+  global working agreement (move-never-copy, `.superseded`, executed evidence,
+  proven-by-deliberate-failure), state the project-specific binding and let the global
+  file own the rule. A generated harness that restates a global rule in its own words
+  creates the second editable copy these projects exist to eliminate.
 - **Parameters the user did not supply stay literally `TBD`** in CONFIG.md, and the
   generated CLAUDE.md + dispatch skill both stop on `TBD`. Never invent a value.
 - **One runbook per phase**, each carrying: nature, prerequisite phase, numbered
@@ -119,7 +125,14 @@ runbooks exist in CONFIG.md. Report the tree with line counts.
 
 These are not optional flavor. Every generated harness carries all of them.
 
-### Exactly two gates
+### Gates: two by default, more only when earned
+
+Every harness has at least Gate A and Gate B. Add a further gate **only** when the
+project has a second decision of the same weight: another irreversible step, or a
+separate certification the user alone can sign off (scl-player-model has three, because
+go-live and sell-board certification are distinct). When you do, the generated CLAUDE.md,
+CONFIG.md and dispatch skill must **enumerate** the gates rather than assert a count;
+a hardcoded "the two gates" goes stale the moment a third exists.
 
 - **Gate A** — after the survey/proposal phase. Every decision the user must make is
   presented in **ONE batch**, each with Claude's recommendation and one line of
@@ -129,16 +142,20 @@ These are not optional flavor. Every generated harness carries all of them.
 - **Gate B** — before the irreversible step. The **enumerated** list of what will be
   done, plus where each item remains recoverable, and explicit confirmation. Never
   pre-authorizable, never covered by a standing authorization.
-- Between gates the run **never asks "shall I continue?"**. Anomalies are logged in
-  STATE.md with a one-line recommendation and reviewed at the next gate. A genuine
-  blocker — something a runbook did not anticipate that cannot be safely deferred —
-  is the only other permitted interruption, and only after the obvious fix is tried.
+- Between and after gates the run **never asks "shall I continue?"**. Anomalies are
+  logged in STATE.md with a one-line recommendation and reviewed at the next gate. A
+  genuine blocker — something a runbook did not anticipate that cannot be safely
+  deferred — is the only other permitted interruption, and only after the obvious fix
+  is tried.
 
 ### Reversibility until Gate B
 
 - Nothing is deleted before the final verification passes. Superseded items are
-  **renamed with a suffix** (`.migrated-off`, `.retired`, `.superseded` — pick one and
-  use it consistently) so every step is undoable.
+  **renamed with the `.superseded` suffix**, the machine-wide convention declared in
+  `~/.claude/CLAUDE.md`, so every step is undoable. Do not offer or invent an
+  alternative suffix; the point is that one grep finds every retired item everywhere.
+  The one exception: a repo with its own established retirement convention (e.g. an
+  `archive/` directory) keeps it. Say so in the harness rather than force-renaming.
 - **Move, never copy.** Two editable copies of the same thing is the failure mode most
   of these projects exist to eliminate.
 

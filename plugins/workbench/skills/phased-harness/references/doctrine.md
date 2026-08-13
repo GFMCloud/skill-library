@@ -12,7 +12,7 @@ Long-horizon work fails in three specific ways, and each has a structural fix:
 | Failure | Fix |
 |---|---|
 | Context dies mid-run; the next session cannot reconstruct where it was | Files are the source of truth; `STATE.md` is a single resume point kept current *during* work |
-| The model asks permission constantly, or asks for none and does something unwanted | Standing authorizations in a file, plus exactly two designed stop points |
+| The model asks permission constantly, or asks for none and does something unwanted | Standing authorizations in a file, plus a short enumerated list of designed stop points (two by default) |
 | Ambiguity is resolved differently in phase 4 than in phase 1 | One end-state doc, named in advance as the tiebreaker |
 
 A harness is worth its overhead only when the work actually spans sessions and ends
@@ -27,7 +27,7 @@ and it decided a dozen small questions mid-run that no runbook had covered. Any
 project whose end state cannot be phrased this way is not a harness candidate; it is
 exploration, and the gates have nothing to bind to.
 
-## Why exactly two gates
+## Why two gates is the default
 
 Every additional gate is a session boundary the user has to be present for. Two is the
 minimum that covers the two genuinely different kinds of decision:
@@ -46,6 +46,12 @@ continue?" there converts a continuous run back into a stop-start one for no
 information gain. Anomalies encountered mid-run are the pressure that makes people add
 a third gate; logging them with a recommendation and reviewing them at the next gate
 relieves that pressure without spending an interruption.
+
+A third gate is still right when the project genuinely has a second decision of Gate
+B's weight: a second irreversible step, or a certification only the user can sign.
+What is never right is a harness that *asserts a count*: "the two gates" hardcoded in
+a generated CLAUDE.md is wrong the day a third is added, and nothing rereads it. The
+dispatch skill's interruption policy is the one place gates are enumerated.
 
 ## Why reversibility until Gate B
 

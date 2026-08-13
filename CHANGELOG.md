@@ -2,6 +2,31 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-08-12 — phased-harness 1.1.0: generated harnesses defer to the global rules
+
+Four changes referred from the `claude-md-consolidation` project, which found that
+generated harnesses were emitting their own variants of rules the global
+`~/.claude/CLAUDE.md` now owns. workbench bumped to 0.3.0.
+
+- **Generated CLAUDE.md now opens with the pointer line** to `~/.claude/CLAUDE.md` and
+  states only the project-specific *binding* of a global rule (move-never-copy,
+  `.superseded`, executed evidence, proven-by-deliberate-failure) instead of
+  restating the rule. A restated global rule is the second editable copy these
+  projects exist to eliminate.
+- **`.superseded` is now the only retirement suffix the skill offers.** The former
+  menu (`.migrated-off` / `.retired` / `.superseded`, pick one) is retired; one
+  suffix means one grep finds every retired item on the machine. A repo with its own
+  established convention (e.g. `archive/`) keeps it, declared in the harness.
+- **Nothing in a generated harness asserts a gate count.** Two gates remain the
+  default, a third is legitimate when a project has a second decision of Gate B's
+  weight (scl-player-model has three); the dispatch skill's interruption policy is now
+  the single place gates are enumerated. Previously "the two gates" was hardcoded into
+  every generated CLAUDE.md and went stale silently.
+- **Harness-dir git conventions are pre-filled** with the default that was being
+  hand-written near-identically into every project (no commits unless asked;
+  `workbench:folder-to-repo` if it should become a repo). The open slot now asks only
+  about the repos the project *changes*.
+
 ## 2026-08-09 — phased-harness promoted to workbench
 
 - `phased-harness` promoted out of `_incubator` into **workbench** (`git mv`,

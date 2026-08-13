@@ -30,8 +30,10 @@ each question against this table before asking the user anything.
 **Never pre-authorizable:**
 
 - `<IRREVERSIBLE-STEP>` — always requires explicit confirmation of the enumerated
-  list at Gate B. This is one of the two designed stop points.
-- `<any other never-pre-authorized action>`
+  list at Gate B. It is a designed stop point; the full set is enumerated in the
+  `/phase` skill's interruption policy.
+- `<any other never-pre-authorized action; one line each, including any gate beyond
+  A and B this project defines>`
 
 Actions taken under a standing authorization are still **logged** in `STATE.md` —
 authorization removes the question, not the record.

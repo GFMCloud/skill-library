@@ -63,6 +63,10 @@ The user has asked not to be consulted except where their ruling is required:
 - **Gate B (Phase `<FINAL-PHASE-N>`):** present the enumerated `<IRREVERSIBLE-STEP>`
   list, with where each item remains recoverable, and wait for explicit confirmation.
   Never pre-authorized.
+- `<Any further gate this project defines; one bullet each, same shape: name, the
+  phase it sits at, what is presented, what confirmation is required. Delete this line
+  if there are only two. This list is the authoritative enumeration of the project's
+  gates; nothing elsewhere in the harness states a gate COUNT.>`
 - **Blockers:** something a runbook did not anticipate that cannot be logged as an
   anomaly and safely deferred. Try the obvious fix first; interrupt only if genuinely
   stuck.
