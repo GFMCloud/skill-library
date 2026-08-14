@@ -24,6 +24,22 @@ turn-reduction:capability-preflight, do not assume it.>`
    output, not a checkmark. Check items off in the tracking file **as you go**: that
    file is the resume point if the session dies mid-phase.
 
+<!-- For a PHASE 0 (greenfield / setup) runbook, the Steps list above is REQUIRED to
+     include these, not optional additions:
+     - Prove every capability this project depends on, in Phase 0, before any of it is
+       needed: one real read and one real write per target system named in CONFIG.md,
+       each with a negative control that must fail. Compose
+       `turn-reduction:capability-preflight`. Record the command and its actual
+       output. A capability assumed in Phase 0 and discovered dead in Phase 5 costs
+       the whole run.
+     - Run `/fewer-permission-prompts` against each active target repo and write the
+       allow rules before the first phase that deploys, not reactively at cutover.
+     - Before assuming exclusive access to the target tree, check whether another
+       harness or session is already on it: list live sessions on those paths, read
+       the recent commits, and check file mtimes against the last recorded run. Treat
+       an unexplained recent change as possibly-live work by someone else, not as
+       history. -->
+
 <!-- For a GATE phase, replace the steps above with:
      ## Present
      One consolidated package, in ONE batch: (1) summary counts; (2) the short list of

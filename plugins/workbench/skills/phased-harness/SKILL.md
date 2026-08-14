@@ -10,8 +10,8 @@ description: >-
   sessions that ends in an irreversible step.
 metadata:
   maturity: stable
-  version: 1.1.0
-  reviewed: 2026-08-12
+  version: 1.2.0
+  reviewed: 2026-08-13
 ---
 
 # Phased harness — scaffold a gated, resumable project
@@ -45,8 +45,15 @@ Build a harness only when **all four** hold:
   dynamic-workflow job, not a harness.
 - Nothing irreversible ever happens → Gate B is empty; the ceremony buys nothing.
 
-State the failing criterion plainly and stop. Do not scaffold a harness "just in
-case" — an unused harness is pure overhead the user has to read past.
+State the failing criterion plainly, then route in the same breath rather than
+leaving the user at a dead end:
+
+- Multi-session and reversible, no irreversible finish: hand to `workbench:handoff`.
+- One irreversible step, otherwise short: a single gated runbook, not a harness.
+- Neither: build it directly, and say so.
+
+Do not scaffold a harness "just in case". An unused harness is pure overhead the
+user has to read past, but a bare decline is a dropped user.
 
 ## Step 2 — Interview
 
@@ -134,6 +141,12 @@ go-live and sell-board certification are distinct). When you do, the generated C
 CONFIG.md and dispatch skill must **enumerate** the gates rather than assert a count;
 a hardcoded "the two gates" goes stale the moment a third exists.
 
+The same rule binds every count a generated harness states, not only gate counts. Item
+counts, phase counts, repo counts, and rule counts are enumerated in exactly one file
+(usually the tracking file named in CONFIG.md), and every other document points at
+that enumeration instead of restating the number. A count restated in two documents
+is one scope change away from being wrong in one of them.
+
 - **Gate A** — after the survey/proposal phase. Every decision the user must make is
   presented in **ONE batch**, each with Claude's recommendation and one line of
   reasoning. Rows the user does not object to are ratified as proposed. Execution
@@ -158,6 +171,12 @@ a hardcoded "the two gates" goes stale the moment a third exists.
   `archive/` directory) keeps it. Say so in the harness rather than force-renaming.
 - **Move, never copy.** Two editable copies of the same thing is the failure mode most
   of these projects exist to eliminate.
+- `.superseded` is only reversible if the tree is under version control. Before
+  scaffolding, check each target directory named in CONFIG.md for a git root, and for
+  any target that has none, put a `git init` step in the Phase 0 runbook ahead of the
+  first phase that renames toward deletion. Include the secret scan and a `.gitignore`
+  in that step, per `workbench:folder-to-repo`. A one-way delete in an untracked
+  directory is not recoverable by any later gate.
 
 ### Orchestration
 
@@ -205,6 +224,8 @@ restating them:
 - `foundry-core:proof-of-work` and `foundry-core:evidence-report` — evidence format
   for STATE.md and gate presentations.
 - `verification-kit:pre-delivery-verifier` — the final-phase verification pass.
+- `consistency-checker:cross-document-checker`: any check that compares documents
+  against each other or against the artifacts they describe.
 
 Reference them by name; do not copy their content into the harness.
 

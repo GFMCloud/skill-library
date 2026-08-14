@@ -18,6 +18,11 @@ Long-horizon work fails in three specific ways, and each has a structural fix:
 A harness is worth its overhead only when the work actually spans sessions and ends
 in something irreversible. Below that, it is ceremony — hence the fit test.
 
+Prefer ending a session at a phase or gate boundary over grinding one session long.
+Resume is disk-based and free; a 400 to 600 message session is not. This is not a
+"shall I continue?" prompt, which stays banned. It is the harness closing cleanly at a
+seam it already has, with STATE.md current, so the next `/phase` picks up cold.
+
 ## Why the invariant is stated as a state, not tasks
 
 A task list tells you what to do; it cannot tell you whether you are done, and it

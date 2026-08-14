@@ -74,3 +74,7 @@ The user has asked not to be consulted except where their ruling is required:
 Everything else proceeds under the standing authorizations in `CONFIG.md`. Do not ask
 "shall I continue?" between phases. Anomalies get logged in `STATE.md` with a
 recommendation and reviewed at the next gate, not raised one-by-one.
+
+Prefer ending this session at a phase or gate boundary over grinding one session long;
+resume is disk-based and free. This is not a "shall I continue?" prompt: it is
+closing cleanly with `STATE.md` current so the next `/phase` picks up cold.

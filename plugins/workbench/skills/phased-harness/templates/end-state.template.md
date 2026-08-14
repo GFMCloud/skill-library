@@ -49,6 +49,13 @@ Anything checkable should be checked; anything not checkable lives in CLAUDE.md.
 
 ## Definition of done (final-phase gate)
 
+Route these checks to the installed agents rather than hand-authoring a prompt: a
+fresh-context verification pass goes to `verification-kit:pre-delivery-verifier`, and
+any check that compares documents against each other or against the artifacts they
+describe goes to `consistency-checker:cross-document-checker`. Hand-authoring the
+prompt each time is how three separate sessions ended up with three different
+verifiers.
+
 The final phase re-verifies each of these **from scratch**, in a fresh context — not
 by re-reading earlier notes:
 
