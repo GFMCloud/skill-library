@@ -1,0 +1,4 @@
+id	target	poisoned	notes
+item-0001	<TARGET-1>	no
+item-0002	<TARGET-2>	no
+item-9999	<TARGET-THAT-MUST-FAIL>	yes	deliberate failure: proves the gate; must land in failures.md
