@@ -2,6 +2,38 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-08-14 - Session-review wave: eight skill edits, five new builds
+
+From the 2026-08-13 session-review backlog, executed via the claude-improvements
+harness. Pack bumps: workbench 0.4.0, decks 0.2.0, frontend-design 0.2.0,
+consistency-checker 0.1.0 (its first version stamp; the manifest had no version key
+at all), _incubator 0.2.0.
+
+- **phased-harness 1.2.0** (SL-1, SL-3, SL-6, SL-7): a routing front-door section so
+  sessions land in the right mode; the Phase 0 truth-pass fixes as adjusted (derived
+  counts, git-init check on unversioned deletion targets, a mandatory Phase 0 write
+  preflight with negative controls, and an mtime check for a parallel harness already
+  in flight); generated templates now name their subagent types; new doctrine line:
+  prefer ending a session at a phase or gate boundary over grinding one session long.
+- **handoff** (SL-2): gains the claim protocol and a live-state check that verifies
+  deploy state, not just git state, before writing the handoff. Now versioned 0.1.0,
+  `reviewed: 2026-08-13`; stays `maturity: incubator` per the Gate A ruling.
+- **skill-discovery** (SL-4): its five scanner spawn sites pin `model: sonnet`
+  instead of inheriting the parent model, and the inline scanner spec (75 lines) is
+  replaced by a pointer to the new `workbench:transcript-scanner` agent.
+- **New agent `workbench:transcript-scanner`** (SL-5): reusable session-transcript
+  scanning agent; locates sessions by content and metadata, never trusting a
+  reported session id as a filename, and reports discrepancies instead of
+  reconciling them silently.
+- **New agent `frontend-design:frontend-surface-builder`** (WL-2): builds frontend
+  surfaces under the pack's design-skill constraints.
+- **New incubator skills** (SL-8, WL-1, WL-3): `cloudflare-pages-migration` (with a
+  worked example; unverified limits are marked as such and dated rather than
+  asserted), `retro` (gated on-demand retrospective, plus template),
+  `sweep-harness`, `rulings-harness`, and `experiment-harness` (the three harness
+  archetypes; experiment-harness's scaffold is fresh design from recovered intent,
+  and its doctrine file marks invented versus recovered elements explicitly).
+
 ## 2026-08-12 — phased-harness 1.1.0: generated harnesses defer to the global rules
 
 Four changes referred from the `claude-md-consolidation` project, which found that

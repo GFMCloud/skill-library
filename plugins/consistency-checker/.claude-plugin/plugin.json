@@ -1,6 +1,11 @@
 {
   "name": "consistency-checker",
   "description": "Cross-document and spec-artifact consistency checking",
-  "author": { "name": "Graham" },
-  "dependencies": ["foundry-core"]
+  "author": {
+    "name": "Graham"
+  },
+  "dependencies": [
+    "foundry-core"
+  ],
+  "version": "0.1.0"
 }
