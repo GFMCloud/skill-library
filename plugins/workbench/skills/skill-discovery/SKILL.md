@@ -52,89 +52,25 @@ Split the returned sessions into batches of 10. Up to 5 batches.
 ## Phase 1 - Fan-out batch scanners
 
 Spin up one agent per batch simultaneously (all in a single message, multiple Agent
-tool calls). Each agent uses the Phase 1 prompt below with its batch of session IDs.
+tool calls), each pinned to `model: sonnet`. This is bounded mechanical transcript
+extraction, not judgment, so it does not need the session's model.
 
-### Phase 1 agent prompt
-
----
-
-You are a workflow extraction agent. Scan each session transcript and extract
-structured information about what workflow was performed. Your job is pure extraction -
-no assessment of whether something should be a skill. That happens later.
-
-**Sessions to scan:**
-[SESSION_ID_LIST_FOR_THIS_BATCH]
-
-**For each session:**
-
-There is no single call that returns a whole transcript, so reconstruct enough of
-each session from three tools:
-
-1. Call `mcp__ccd_session_mgmt__get_session` for orientation - title, creation time,
-   model, and branch/worktree info. This is metadata only, no conversation content.
-2. Call `mcp__ccd_session_mgmt__list_events` with a limit of around 40 and no
-   `before_uuid` to get the most recent slice of the transcript (it returns events
-   most-recent-last).
-3. If that slice isn't enough to identify the workflow or judge re-setup cost, page
-   backward: call `list_events` again with `before_uuid` set to the earliest event's
-   uuid from the previous call. Repeat up to two more times (roughly 150 events total,
-   mirroring the old "first 150 turns" budget) or stop earlier once a call returns
-   fewer events than the limit - that means you've reached the start of the session.
-   Read the batches in chronological order (oldest batch first) once you're done
-   paging, since each new page you fetch is further in the past than the last.
-4. If it's clearly a single-action task within the first slice (roughly the "20 turns"
-   equivalent), stop paging and move on - no need to page backward on a short session.
-5. If CONTINUATION status is still unclear after reading the events you gathered, use
-   `mcp__ccd_session_mgmt__search_session_transcripts` with a query like "continuing
-   from" or "picking up where we left off" and check whether this session's title
-   shows up among the hits.
-
-This reconstruction is an approximation, not a guaranteed full transcript - if you hit
-the paging budget before reaching a clear task boundary, note that in RE_SETUP_DETAIL
-(e.g., "partial context only, paging budget exhausted") so Phase 2 can weight it
-appropriately.
-
-**Extract this structure for every session:**
-
-```
-SESSION: [title]
-CONTINUATION: [yes / no] - was this explicitly picking up from a previous session?
-  (look for: handoff references, "continuing from", "picking up where we left off")
-TASK: [one sentence - what was the actual goal?]
-STEPS: [numbered sequence - what happened in what order, at a high level]
-INPUT_TYPE: [document | conversation/notes | raw data | URL/web | code | verbal brief | other]
-OUTPUT_TYPE: [document | analysis | communication | automation | code | research | planning | other]
-RE_SETUP: [high / medium / low / none]
-  high   = Graham pasted substantial background context, re-explained something
-            he'd clearly explained before, or said "like we did before" then
-            had to re-setup anyway
-  medium = some context establishment but not excessive
-  low    = minimal - Claude had context or task was self-contained
-  none   = no re-setup needed at all
-RE_SETUP_DETAIL: [what specifically did Graham have to re-establish? one sentence, or "n/a"]
-FRICTION: [what slowed it down, required rework, or caused repeated clarification?
-           or "none observed"]
-DURATION: [single-turn | short (2-10 turns) | medium (10-40 turns) | long (40+ turns)]
-```
-
-For sessions with no workflow (pure Q&A, single-turn factual questions, trivial
-one-liners):
-
-```
-SESSION: [title]
-SKIP: [one sentence - e.g., "single-turn factual question, no workflow to extract"]
-```
-
-**Output:** All session extractions in order, then a blank line, then this line:
-`EXTRACTED: [N] sessions | SKIPPED: [N] sessions | CONTINUATIONS: [N] flagged`
-
----
+Dispatch each batch to `workbench:transcript-scanner`, passing it this batch's
+session IDs. That agent owns the extraction prompt: the three-tool session
+reconstruction procedure, the per-session `SESSION`/`CONTINUATION`/`TASK`/`STEPS`/
+`INPUT_TYPE`/`OUTPUT_TYPE`/`RE_SETUP`/`RE_SETUP_DETAIL`/`FRICTION`/`DURATION`
+structure, the skip format for workflow-less sessions, and the closing
+`EXTRACTED: [N] sessions | SKIPPED: [N] sessions | CONTINUATIONS: [N] flagged` line -
+versioned there so the prompt is defined once instead of restated per caller. Phase
+1.5 and Phase 2 below consume its output directly.
 
 ## Phase 1.5 - Compression pass (conditional)
 
 After all Phase 1 agents return, count the total word count of their combined output.
 
-**If total output exceeds 12,000 words:** Run a compression agent before Phase 2.
+**If total output exceeds 12,000 words:** Run a compression agent before Phase 2,
+pinned to `model: sonnet` - reducing extraction text to a compact format is
+mechanical reformatting, not judgment.
 
 ### Compression agent prompt
 
@@ -165,7 +101,9 @@ directly to Phase 2.
 ## Phase 2 - Synthesis
 
 Pass all Phase 1 output (or compressed output from Phase 1.5) to a single synthesis
-agent using the prompt below.
+agent using the prompt below. Leave this agent on the session model, deliberately -
+clustering and ranking candidates is judgment, not mechanical extraction, so it does
+not get pinned to a cheaper tier.
 
 ### Phase 2 synthesis agent prompt
 

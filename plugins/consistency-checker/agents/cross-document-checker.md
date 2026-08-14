@@ -1,6 +1,7 @@
 ---
 name: "cross-document-checker"
 description: "Check a set of documents against each other and against the spec they implement, reporting contradictions, drifted counts, and stale cross-references. Use whenever more than one artifact states the same fact."
+model: "sonnet"
 disallowedTools: ["Write", "Edit", "NotebookEdit"]
 ---
 

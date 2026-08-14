@@ -91,7 +91,7 @@ For section-of-master decks, keep slide masters and layouts consistent with the 
 
 ## Step 5 - Self-QA (per deck)
 
-Render the built PPTX through `pptx -> PDF -> PNG` and compare slide-by-slide against the reference PDF - QA the PPTX, never the HTML. Use a fresh-eyes subagent for the visual comparison. Distinguish real file defects from QA-renderer artifacts (the preview is not PowerPoint). Read `references/pptx-review-playbook.md` for the structural + visual checklist.
+Render the built PPTX through `pptx -> PDF -> PNG` and compare slide-by-slide against the reference PDF - QA the PPTX, never the HTML. Use a fresh-eyes subagent pinned to `model: sonnet` for the visual comparison. Distinguish real file defects from QA-renderer artifacts (the preview is not PowerPoint). Read `references/pptx-review-playbook.md` for the structural + visual checklist.
 
 ## Step 6 - Hand off
 

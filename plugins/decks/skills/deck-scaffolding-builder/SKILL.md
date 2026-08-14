@@ -96,7 +96,7 @@ Report as a short punch list, not prose. Verify:
 - **Length sane** - flag bloat against the right-sizing POV.
 - **Chart split complete** - every visual/diagram slide categorized, if the build plan was produced.
 
-For a large or high-stakes deck, run this pass as a subagent against the files for a fresh-eyes check.
+For a large or high-stakes deck, run this pass as a subagent pinned to `model: sonnet` against the files for a fresh-eyes check.
 
 ---
 
