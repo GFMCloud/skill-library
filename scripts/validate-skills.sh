@@ -5,7 +5,9 @@
 #   STALE_MONTHS=6  staleness threshold for W1
 # Checks every plugins/*/skills/*/ skill (or just the given plugin's).
 set -uo pipefail
-cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+# Resolve the repo root from this script's own location, never from the cwd:
+# a cwd-derived root inside any other repo found zero skills and exited 0 (A-11).
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 exec python3 - "${1:-plugins}" <<'PY'
 import os, re, sys, datetime
 
@@ -144,6 +146,8 @@ for d in skill_dirs:
     if sup and sup not in names:
         fails.append(f"F11 {d}: supersedes '{sup}' names no existing skill")
 
+if not skill_dirs:
+    fails.append("F0: zero skills found; a green run that checked nothing is a false green")
 for f in fails: print(f"FAIL {f}")
 for w in warns: print(f"WARN {w}")
 print(f"\n{len(skill_dirs)} skills checked: {len(fails)} failures, {len(warns)} warnings")
