@@ -1,60 +1,66 @@
 ---
 name: capability-index
 description: >-
-  Points at skills that are installed but disabled to keep them out of context. Consult whenever the user asks for something no loaded skill covers, specifically: planning, blueprinting, scaffolding or wireframing a slide deck; converting a deck or HTML design export into PowerPoint; choosing a chart type or fixing a busy chart; building a system, architecture, or flow diagram; checking whether a slide reads clearly or whether an asset would land with a sales audience; or anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys. Do not attempt those tasks unaided. Tell the user which pack covers it and offer to enable it.
+  Points at capability that exists on this machine but is not loaded in the current session, so it does not become invisible. Consult whenever the user asks for something no loaded skill covers, specifically: anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys; or a workflow that one of the unreleased `_incubator` skills covers (session retros, sweep and rulings and experiment harnesses, a Cloudflare Pages migration, devshell or new-project scaffolding). Do not attempt those tasks unaided. Say what covers it and where it lives, and offer to load it.
 metadata:
   maturity: incubator
+  reviewed: 2026-08-15
 ---
 
 # Capability index
 
-Some skill packs are installed but disabled on purpose. Their content sits on disk; only their
-descriptions are kept out of context, because loading all of them costs roughly 2,900 tokens in every
-session and most sessions need none of them.
+Not every skill on this machine is loaded in every session. Some packs are not
+installed; some skills are project-scoped and only load inside their own repo. This
+skill exists so that capability does not become invisible: when a request matches
+something unloaded, say so and offer to load it rather than improvising a worse
+answer.
 
-This skill exists so that capability does not become invisible. When a request matches a disabled
-pack, say so and offer to enable it rather than improvising a worse answer.
+## What is not loaded, and where it actually lives
 
-## What is disabled and what it covers
+Verified against `claude plugin list` and `~/.claude/plugins/installed_plugins.json`
+on 2026-08-15.
 
-| Pack | Enable when the user wants to | Skills |
-|---|---|---|
-| `deck-build` | Plan or build a deck, convert a design export to PowerPoint, make a chart, or draw an architecture or flow diagram | cd-to-pptx, chart-discipline, deck-scaffolding-builder, html-diagram |
-| `deck-critique` | Pressure-test a slide: does it read clearly, would it land with a sales audience | layout-critique, sales-lens-review |
-| `scl` | Do anything with the Sloshball Champions League V2 project | scl-keeper-logic-validator, scl-session-startup-enforcer, scl-module-deploy-checklist |
+| Not loaded | Covers | Where it lives | How to reach it |
+|---|---|---|---|
+| `_incubator` pack | cloudflare-pages-migration, devshell-init, experiment-harness, new-project, pipeline-foundry, retro, rulings-harness, sweep-harness | `skill-library` repo, published to the marketplace but **not installed** | `claude plugin install _incubator@skill-library` |
+| SCL project skills | keeper rules, session startup, module deploy checklist | **project-scoped** in `~/work/GitHub/sloshball-champions-league-v2/.claude/skills/`, not a plugin and not installable | open a session in that repo, where they load automatically |
 
 ## How to respond
 
 When a request matches, do not silently proceed. Say what covers it and offer:
 
-> That is covered by the `deck-build` pack, which is installed but disabled to save context.
-> Enable it? `claude plugin enable deck-build@gfmcloud-skills`
+> That is covered by the `_incubator` pack, which is published but not installed.
+> Install it? `claude plugin install _incubator@skill-library`
 
-If the user agrees, run the command, then continue with the now-loaded skill. The change takes effect
-for subsequent sessions, so if the skill does not appear immediately, tell the user to restart rather
-than proceeding without it.
+If the user agrees, run the command. The change takes effect for subsequent sessions,
+so if the skill does not appear immediately, tell the user to restart rather than
+proceeding without it.
 
-To disable again afterwards:
-
-```
-claude plugin disable deck-build@gfmcloud-skills
-```
+For the SCL skills there is nothing to install. They are project-scoped, so the only
+way to reach them is a session opened in the SCL v2 repo. Say that plainly instead of
+offering an install command that does not exist.
 
 ## Do not
 
-- Do not attempt deck planning, PowerPoint conversion, chart selection, or architecture diagrams
-  unaided when `deck-build` would cover it. The whole point of these skills is that unaided output is
-  measurably worse, and the user cannot tell from the result that a skill failed to fire.
-- Do not guess at SCL keeper rules under any circumstances. `scl-keeper-logic-validator` is the single
-  source of truth and getting it wrong corrupts downstream work. Enable the pack or stop.
-- Do not enable a pack without asking first. The user disabled these deliberately.
+- Do not guess at SCL keeper rules under any circumstances. `scl-keeper-logic-validator`
+  is the single source of truth, and getting it wrong corrupts downstream work. Work in
+  the SCL v2 repo, or stop.
+- Do not assume a skill named in another project's notes is reachable from the project
+  you are in. Project-scoped skills load only inside their own repo.
+- Do not install a pack without asking first.
 
 ## Keeping this list correct
 
-This list is maintained by hand and will drift if packs are added or renamed. Check it against
-reality with:
+This list is maintained by hand and drifts whenever packs are added, renamed, merged,
+or installed. It has drifted badly before: it once named packs `deck-build` and
+`deck-critique` that had been merged into `decks`, and a marketplace `gfmcloud-skills`
+that had been superseded by `skill-library`. Check it against reality with:
 
-```
-python scripts/list-skills.py
+```bash
 claude plugin list
+cat ~/.claude/plugins/installed_plugins.json
+ls ~/skill-library/plugins/
 ```
+
+A pack that appears in `claude plugin list` as enabled does **not** belong in the table
+above. The table is only for capability that a current session cannot reach.

@@ -16,6 +16,16 @@ First cycle of the `claude-improvements-weekly` maintainer. Pack bump: workbench
   `references/doctrine.md` prose is
   deliberately left alone, since the global rule exempts pre-existing text from
   retroactive restyling; only the generator was changed.
+- **capability-index**: rewritten against live plugin state, because every structural
+  claim it made was false. It named packs `deck-build` and `deck-critique`, merged into `decks`
+  during the migration to this repo; it pointed at marketplace `gfmcloud-skills`,
+  superseded by `skill-library`; it described the deck skills as installed but
+  disabled when `claude plugin list` shows `decks@skill-library` installed and
+  enabled, which falsified the skill's whole premise; it listed an `scl` pack that is
+  not installed at all; and it told the reader to verify with `scripts/list-skills.py`,
+  which does not exist. The table now holds only capability a session genuinely cannot
+  reach: the uninstalled `_incubator` pack, and the SCL skills, which are
+  project-scoped in the SCL v2 repo and therefore have no install command at all.
 
 ## 2026-08-14 - Session-review wave: eight skill edits, five new builds
 
