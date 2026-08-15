@@ -2,6 +2,21 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-08-15 - Weekly maintainer cycle 1
+
+First cycle of the `claude-improvements-weekly` maintainer. Pack bump: workbench
+0.5.0.
+
+- **phased-harness 1.2.1**: the six scaffolding templates no longer emit em dashes.
+  They were copied verbatim into every harness the skill scaffolds, so each new
+  project started life violating the global no-em-dash rule and had to be hand
+  corrected. 59 occurrences across 54 lines: 58 became ` - `, and one became a full
+  stop, which forced a single `this` to `This`. No word was added, removed, or
+  reordered, and no placeholder changed. The skill's own `SKILL.md` and
+  `references/doctrine.md` prose is
+  deliberately left alone, since the global rule exempts pre-existing text from
+  retroactive restyling; only the generator was changed.
+
 ## 2026-08-14 - Session-review wave: eight skill edits, five new builds
 
 From the 2026-08-13 session-review backlog, executed via the claude-improvements

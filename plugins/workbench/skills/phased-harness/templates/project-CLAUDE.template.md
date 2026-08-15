@@ -1,20 +1,20 @@
 General working agreements live in `~/.claude/CLAUDE.md`. This file adds only what is
 specific to `<PROJECT-NAME>`.
 
-# `<PROJECT-NAME>` — session instructions
+# `<PROJECT-NAME>` - session instructions
 
 This directory is the harness for `<GOAL, one sentence>`. You are here to execute one
 phase of it.
 
 ## Orientation (do this first, every session)
 
-The normal entry point is the `/phase` skill (`.claude/skills/phase/`) — if the user
+The normal entry point is the `/phase` skill (`.claude/skills/phase/`) - if the user
 invoked it, follow its dispatch. If they asked for project work without it, do the
 same by hand:
 
-1. Read `STATE.md` — it says which phases are complete and holds the decision log,
+1. Read `STATE.md` - it says which phases are complete and holds the decision log,
    the evidence, and the anomalies.
-2. Read `CONFIG.md` — parameters and standing authorizations. **If any field is still
+2. Read `CONFIG.md` - parameters and standing authorizations. **If any field is still
    `TBD`, stop and ask the user to fill it in before doing anything else.**
 3. Load the runbook for the first incomplete phase from `prompts/phase-N-*.md` and
    execute it. If the user asks for a specific phase, confirm its predecessors are
@@ -23,11 +23,11 @@ same by hand:
    instruction here or in a prompt seems ambiguous, the end-state doc is the
    tiebreaker.
 
-## Hard guardrails — these override convenience, always
+## Hard guardrails - these override convenience, always
 
 - **Phase `<READ-ONLY-PHASE-N>` is strictly read-only.** Survey only. Do not modify,
   move, rename, or delete anything found during it. Prefer plan mode.
-- **Never touch `<OFF-LIMITS-PATHS>`.** `<One line on why — the structural reason.>`
+- **Never touch `<OFF-LIMITS-PATHS>`.** `<One line on why - the structural reason.>`
 - **Move, never copy** (global rule; here it binds `<The thing being migrated/changed>`,
   which must not remain in its old location).
 - **Nothing is deleted until Phase `<FINAL-PHASE-N>` verification passes.** Until
@@ -35,26 +35,26 @@ same by hand:
   so every step is reversible.
 - **Decisions are proposed by Claude, ratified by the user.** The survey phase
   produces a fully proposed decision table; the user rules on it in ONE batch
-  (Gate A) before execution. Execution phases run only ratified rows — unratified
+  (Gate A) before execution. Execution phases run only ratified rows - unratified
   rows are skipped and reported, never guessed at.
 - **`<IRREVERSIBLE-STEP>` requires explicit confirmation of an enumerated list**
   (Gate B). It is never covered by a standing authorization.
 - **Continuous by default.** `/phase` runs all remaining phases end-to-end, updating
   `STATE.md` as it goes. Interruptions are limited to the gates enumerated in the
-  `/phase` skill and the blocker policy defined there — never "shall I continue?"
+  `/phase` skill and the blocker policy defined there - never "shall I continue?"
   between phases.
 
 ## Working conventions
 
 - `STATE.md` is the single resume point. Keep it current as you work, not just at the
-  end — if the session dies, the next one must be able to continue from it. Files are
+  end - if the session dies, the next one must be able to continue from it. Files are
   the source of truth; conversation memory is not.
 - Record **executed evidence** in `STATE.md` per the global evidence rule, formatted
   per `foundry-core:proof-of-work` / `foundry-core:evidence-report`. Prove this
   project's own gates and validators by deliberate failure before trusting them.
 - Anomalies (things that do not fit, drifted duplicates, situations the prompts did
   not anticipate) get logged in `STATE.md` under Anomalies with a one-line
-  recommendation — they do not get silently resolved, and they are reviewed at the
+  recommendation - they do not get silently resolved, and they are reviewed at the
   next gate rather than raised one-by-one.
 - Delegated work never weakens a guardrail: every subagent prompt restates the
   guardrails that bind it, plus an explicit do-not-touch list.

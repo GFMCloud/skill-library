@@ -1,17 +1,17 @@
-# Phase `<N>` — `<PHASE-NAME>`
+# Phase `<N>` - `<PHASE-NAME>`
 
 **Nature:** `<one of: greenfield build | STRICTLY READ-ONLY survey | decision gate |
 execution of ratified decisions | verification | irreversible finish>`. `<One line
-spelling out what that nature forbids — e.g. "The only writes permitted are the two
+spelling out what that nature forbids - e.g. "The only writes permitted are the two
 output files listed at the bottom.">`
 
 **Prerequisite:** Phase `<N-1>` marked complete in `STATE.md`. `<Plus any capability
-that must be preflighted before this phase starts — prove it with
+that must be preflighted before this phase starts - prove it with
 turn-reduction:capability-preflight, do not assume it.>`
 
 ## Steps
 
-1. `<Step — imperative, concrete, naming the exact paths/commands/files involved.>`
+1. `<Step - imperative, concrete, naming the exact paths/commands/files involved.>`
 2. `<Step. Where a step interpolates a parameter, name the CONFIG.md key:
    "per `<param_1>` in CONFIG.md".>`
 3. `<Step. Where a step is bulk mechanical work, say so explicitly and say how it
@@ -19,8 +19,8 @@ turn-reduction:capability-preflight, do not assume it.>`
    do-not-touch list, and the guardrails restated. Results written to files before
    the orchestrator proceeds.>`
 4. `<Step. Where a step supersedes something, it is RENAMED with the .superseded
-   suffix — never deleted. Deletion happens only in the final phase, after Gate B.>`
-5. Record executed evidence in `STATE.md` as you go — the command and its actual
+   suffix - never deleted. Deletion happens only in the final phase, after Gate B.>`
+5. Record executed evidence in `STATE.md` as you go - the command and its actual
    output, not a checkmark. Check items off in the tracking file **as you go**: that
    file is the resume point if the session dies mid-phase.
 
@@ -48,22 +48,22 @@ turn-reduction:capability-preflight, do not assume it.>`
      ratified by default unless the user objects. Use AskUserQuestion where choices
      enumerate. Wait for the rulings.
      ## Record
-     Write every ruling — including "as proposed" — into the tracking file and the
+     Write every ruling - including "as proposed" - into the tracking file and the
      STATE.md decision log. For any ruling that OVERRIDES a proposal, explicitly
      reassign that proposal's side effects (cleanup, retirement, suffix-renaming) to a
      named owner in a later phase; they vanish silently otherwise.
-     Then proceed directly to the next phase — no further confirmation. -->
+     Then proceed directly to the next phase - no further confirmation. -->
 
 ## Anomalies
 
 Anything this runbook did not anticipate gets logged in `STATE.md` under Anomalies
 with a one-line recommendation, and is reviewed at the next gate. Do not silently
-resolve it; do not interrupt the run for it. Interrupt only for a genuine blocker —
-something that cannot be safely deferred — and only after trying the obvious fix.
+resolve it; do not interrupt the run for it. Interrupt only for a genuine blocker -
+something that cannot be safely deferred - and only after trying the obvious fix.
 
 ## Done when
 
-- `<Checkable condition 1 — an observable state, not "did the work".>`
+- `<Checkable condition 1 - an observable state, not "did the work".>`
 - `<Checkable condition 2.>`
 - `<Checkable condition 3.>`
 - `STATE.md`: Phase `<N>` checked, evidence recorded, anomalies logged, session log
