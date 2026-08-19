@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scrollback page</title>
+
+<!-- Berkeley Mono is licensed per seat and cannot be linked. JetBrains Mono is
+     the open fallback and the only face a webfont link can supply. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap">
+
+<!-- Linked here so this template runs in place. For a self-contained page
+     (Artifact, single file, email preview) INLINE the whole file inside a
+     <style> block instead: a strict CSP blocks external stylesheets, and
+     Google Fonts is the one exception. Either way the copy is generated
+     output; fix references/scrollback.css first. -->
+<link rel="stylesheet" href="../references/scrollback.css">
+</head>
+<body>
+
+<div class="stack">
+
+  <header class="mast">
+    <div class="wm"><span class="bk">[</span>Project<span class="bk">]</span></div>
+    <div class="mastrule"></div>
+    <p class="lead">One line saying what this surface reports. Sentence case, no
+    marketing verbs, nothing that exists to set a mood.</p>
+    <div class="strip">
+      <span>Designator <b>PR-01</b></span>
+      <span>Revision <b>1.0</b></span>
+      <span>Status <span class="pill live">LIVE</span></span>
+    </div>
+  </header>
+
+  <section class="frame">
+    <span class="c tl">+</span><span class="c tr">+</span>
+    <span class="c bl">+</span><span class="c br">+</span>
+    <span class="ttl">01 · Section</span>
+    <div class="rows wide">
+
+      <p>One idea per frame. Two ideas means two frames. Prose is capped at 72
+      characters by <code>--measure</code>, so the column stays wider than the
+      text on purpose.</p>
+
+      <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Label</th><th class="r">Value</th><th class="r">Time</th></tr>
+          <tr class="rule"><td colspan="3"><span></span></td></tr>
+        </thead>
+        <tbody>
+          <tr><td>First row</td><td class="r">115,207</td><td class="r">16m</td></tr>
+          <tr><td>Second row</td><td class="r">135,218</td><td class="r">16m</td></tr>
+          <tr class="rule"><td colspan="3"><span></span></td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td>Total</td><td class="r">250,425</td><td class="r">~32m</td></tr>
+        </tfoot>
+      </table>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="rows tight">
+        <div class="eyebrow">Rules</div>
+        <ul class="plain">
+          <li>Every gap is a multiple of 8px.</li>
+          <li>Emphasis is <span class="br">--bright</span>, never bold.</li>
+          <li>Radius is 0, everywhere.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
