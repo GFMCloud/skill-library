@@ -2,6 +2,37 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-08-20 - Weekly maintainer cycle 2
+
+Second cycle of the `claude-improvements-weekly` maintainer. Pack bump: workbench
+0.5.1.
+
+- **transcript-scanner**: the agent may no longer fan its assignment out to nested
+  sub-agents, and may no longer report its own work as running in the background. Both
+  failure modes are observed, not hypothetical. On 2026-08-15 a scanner split a six
+  file batch across nested agents and the caller received results for two of the six,
+  noticing only by counting. On 2026-08-20 a scanner replied that its work was running
+  in the background, produced no output file at all, and a nested child of that same
+  call surfaced minutes later and wrote over the redo's output. Two writers, one path.
+  Enforced twice over: a hard-rule section in the body, and `disallowedTools:
+  ["Agent"]` in the frontmatter, because a rule in prose can be reasoned around and a
+  tool the agent does not have cannot. An assignment too large to finish is now
+  reported as named partial coverage instead.
+- **phased-harness 1.2.2**: the skill no longer tells every harness it scaffolds to
+  read its standing-authorizations markdown table with `turn-reduction:standing-authorization`.
+  That skill's `authz.py` calls `json.load` and rejects the table with "authorization
+  file is not valid JSON", so the instruction could not be carried out by any harness
+  the skill has ever produced. Both sites that made the claim, `SKILL.md` and
+  `templates/CONFIG.template.md`, now say that the table is the human-readable
+  authority `/phase` reads directly, and that a project wanting the `check`/`validate`
+  tooling also keeps `authorization.json` at its root, copied from that skill's
+  example. The table is declared the winner if the two ever disagree.
+- **capability-index**: the `_incubator` row listed eight skills against nine on disk.
+  `scrollback` was added 2026-08-18 and was missing from both the table and the
+  description, and `pipeline-foundry` was missing from the description. The row now
+  matches `ls plugins/_incubator/skills` exactly, checked as a sorted set rather than
+  by eye.
+
 ## 2026-08-15 - Weekly maintainer cycle 1
 
 First cycle of the `claude-improvements-weekly` maintainer. Pack bump: workbench
