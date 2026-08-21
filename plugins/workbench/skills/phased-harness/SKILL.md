@@ -10,8 +10,8 @@ description: >-
   sessions that ends in an irreversible step.
 metadata:
   maturity: stable
-  version: 1.2.1
-  reviewed: 2026-08-15
+  version: 1.2.2
+  reviewed: 2026-08-20
 ---
 
 # Phased harness — scaffold a gated, resumable project
@@ -218,8 +218,10 @@ the run this skill generalizes (see doctrine).
 The generated harness **points at** these library skills where installed rather than
 restating them:
 
-- `turn-reduction:standing-authorization` — reading authorizations out of CONFIG.md
-  instead of asking.
+- `turn-reduction:standing-authorization`: resolving a question against granted
+  authority instead of asking. Its `authz.py` reads a JSON file, not the CONFIG.md
+  table, so a harness that wants the `check`/`validate` tooling keeps
+  `authorization.json` at the project root as well. See the CONFIG template.
 - `turn-reduction:capability-preflight` — the per-phase capability proofs.
 - `foundry-core:proof-of-work` and `foundry-core:evidence-report` — evidence format
   for STATE.md and gate presentations.

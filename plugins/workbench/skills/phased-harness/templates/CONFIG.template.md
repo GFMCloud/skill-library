@@ -24,8 +24,15 @@ to `no` to force a pause at that step instead.
 | `auth_<area_2>` | `yes` | |
 | `auth_<area_3>` | `no` | `<set to no → the run pauses and asks before this>` |
 
-Read these with `turn-reduction:standing-authorization` if it is installed: resolve
-each question against this table before asking the user anything.
+Resolve every question against this table before asking the user anything. `/phase`
+reads the table directly, so the table alone is enough to run continuously.
+
+The table is human-readable only. `turn-reduction:standing-authorization` ships
+`authz.py`, which parses JSON and will reject this file with "authorization file is not
+valid JSON". To get its `check` and `validate` tooling as well, copy that skill's
+`authorization.example.json` to the project root as `authorization.json` and cut it
+down to the same grants. Two files, one meaning: if they ever disagree, this table
+wins and the JSON is corrected to match.
 
 **Never pre-authorizable:**
 
