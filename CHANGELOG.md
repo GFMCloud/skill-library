@@ -49,6 +49,21 @@ Third cycle of the `claude-improvements-weekly` maintainer. Pack bump: workbench
   a rule that reaches a harness only through the generating model's discretion is the
   same silent-prose failure these two rules exist to prevent.
 
+## 2026-08-26 - Source intake pipeline and inventory gate
+
+- **validator**: new check F13. `docs/inventory.md` (one line per skill, emitted
+  by the new `scripts/generate-inventory.sh`) must match the tree on every full
+  run; a stale or missing inventory fails locally and in CI. The frontmatter
+  parser moved from the validator's inline heredoc into `scripts/skill_meta.py`,
+  shared by both scripts, so it has one editable home. Gate proven by deliberate
+  failure: missing file failed, poisoned file failed, regenerated file passed,
+  single-plugin runs skip it.
+- **New incubator skills**: `source-review` (read-only review of incoming
+  articles/repos/papers; emits a committed verdict note under a versioned v1
+  contract) and `source-harvest` (parses a note's harvest block, gates through
+  plan-gate, applies skill and context changes). Notes live in the private
+  `GFMCloud/personal-source-reviews` repo.
+
 ## 2026-08-20 - Weekly maintainer cycle 2
 
 Second cycle of the `claude-improvements-weekly` maintainer. Pack bump: workbench
