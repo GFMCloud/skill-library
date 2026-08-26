@@ -11,54 +11,14 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 exec python3 - "${1:-plugins}" <<'PY'
 import os, re, sys, datetime
 
+sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
+# Parser lives in skill_meta.py, shared with generate-inventory.sh: one editable home.
+from skill_meta import parse_frontmatter, skill_rows, render_inventory
+
 root = sys.argv[1]
 STRICT = os.environ.get("STRICT", "0") == "1"
 STALE_MONTHS = int(os.environ.get("STALE_MONTHS", "6"))
 fails, warns = [], []
-
-def parse_frontmatter(text):
-    """Minimal YAML-subset parser: scalars, one nested map level, >-/|/> blocks."""
-    if not text.startswith("---"):
-        return None
-    end = text.find("\n---", 3)
-    if end < 0:
-        return None
-    data, ctx = {}, None  # ctx = name of open nested map
-    block_key, block_lines, block_ctx, block_indent = None, [], None, -1
-    for line in text[3:end].splitlines():
-        if not line.strip() or line.lstrip().startswith("#"):
-            continue
-        indent = len(line) - len(line.lstrip())
-        if block_key is not None:
-            if indent > block_indent:
-                block_lines.append(line.strip())
-                continue
-            tgt = data[block_ctx] if block_ctx else data
-            tgt[block_key] = " ".join(block_lines)
-            block_key, block_lines, block_ctx = None, [], None
-        m = re.match(r"^(\s*)([\w.-]+):\s*(.*)$", line)
-        if not m:
-            continue
-        key, val = m.group(2), m.group(3).strip()
-        if indent == 0:
-            ctx = None
-        if val in (">-", ">", "|", "|-"):
-            block_key, block_ctx, block_indent = key, ctx, indent
-        elif val == "":
-            if indent == 0:
-                data[key], ctx = {}, key
-            else:
-                (data[ctx] if ctx else data)[key] = ""
-        else:
-            val = val.strip("'\"")
-            if indent == 0:
-                data[key] = val
-            elif ctx:
-                data[ctx][key] = val
-    if block_key is not None:
-        tgt = data[block_ctx] if block_ctx else data
-        tgt[block_key] = " ".join(block_lines)
-    return data, text[end + 4:]
 
 skill_dirs = sorted(
     os.path.join(p, s)
@@ -145,6 +105,17 @@ for d in skill_dirs:
     sup = str(meta.get("supersedes", "")).strip() if isinstance(meta, dict) else ""
     if sup and sup not in names:
         fails.append(f"F11 {d}: supersedes '{sup}' names no existing skill")
+
+# F13: docs/inventory.md must match the tree (full runs only; a single-plugin
+# run cannot judge a whole-library file).
+if root == "plugins":
+    inv_path = os.path.join("docs", "inventory.md")
+    expected = render_inventory(skill_rows("plugins"))
+    actual = (open(inv_path, encoding="utf-8").read()
+              if os.path.isfile(inv_path) else None)
+    if actual != expected:
+        fails.append("F13 docs/inventory.md missing or stale; "
+                     "run: bash scripts/generate-inventory.sh")
 
 if not skill_dirs:
     fails.append("F0: zero skills found; a green run that checked nothing is a false green")
