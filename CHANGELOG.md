@@ -2,6 +2,28 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-08-28 - Ratify execution (same-day, interactive)
+
+Graham ruled the full pending queue and asked for immediate execution. Pack bumps:
+workbench 0.6.0, graham-voice 1.0.0 (new), standing-authorization 1.1.0.
+
+- **graham-voice split out of workbench** (ruled Q-2026-08-28-5): the skill moved
+  unchanged to its own single-skill plugin `graham-voice`, so it can be installed
+  from the marketplace alone; workbench drops "personal voice" from its
+  description. This is a move, not a copy. Anyone with workbench installed loses
+  `workbench:graham-voice` on their next plugin update and enables
+  `graham-voice@skill-library` instead.
+- **standing-authorization 1.1.0, `authz.py init`** (ruled Q-2026-08-20-2, rebuilt
+  per Q-2026-08-28-7 after the first build was reverted): generates a starter
+  `authorization.json` by parameterizing `authorization.example.json` (project
+  name plus the three ceiling values; the granted and stop lists come through
+  verbatim, keeping the example as the single editable home). Refuses to
+  overwrite. Never invents a grant, and deliberately has no generic
+  keep-going/proceed/continue entry: under the substring matcher those bare verbs
+  auto-granted 10 of 10 dangerous probe asks in the reverted version. The rebuilt
+  version's generated file scores 0 of 10 on the same probe suite (9 STOP-LISTED,
+  1 NOT-COVERED), verified by execution before commit.
+
 ## 2026-08-28 - Weekly maintainer cycle 3
 
 Third cycle of the `claude-improvements-weekly` maintainer. Pack bump: workbench 0.5.2.

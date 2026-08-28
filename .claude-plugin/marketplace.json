@@ -52,7 +52,12 @@
     {
       "name": "workbench",
       "source": "./plugins/workbench",
-      "description": "Graham's general-purpose working skills: project setup and review, phased project harnesses, handoffs, knowledge bases, skill discovery, code review, systems design, personal voice."
+      "description": "Graham's general-purpose working skills: project setup and review, phased project harnesses, handoffs, knowledge bases, skill discovery, code review, systems design."
+    },
+    {
+      "name": "graham-voice",
+      "source": "./plugins/graham-voice",
+      "description": "Graham's personal writing voice, as its own single-skill install unit. Split out of workbench so it can be installed alone."
     },
     {
       "name": "_incubator",
