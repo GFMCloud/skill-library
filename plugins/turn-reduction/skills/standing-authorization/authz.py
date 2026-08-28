@@ -10,17 +10,20 @@ Subcommands:
   validate FILE            structural check of the authorization file
   list FILE                print the granted and stop lists, for reading at session start
   check FILE --ask TEXT    classify a proposed ask
+  init FILE                generate a starter file from authorization.example.json
 
 Exit codes:
-  0  fine — file valid, or the ask is legitimate
-  1  defect — file invalid, or the ask is for something already granted
+  0  fine: file valid, the ask is legitimate, or init succeeded
+  1  defect: file invalid, the ask is already granted, or init would overwrite
   2  the file could not be read
 
 Stdlib only. Runs on Python 3.9+.
 """
 
 import argparse
+import copy
 import json
+import os
 import re
 import sys
 
@@ -282,6 +285,95 @@ def cmd_check(doc, ask, out):
     return 0
 
 
+EXAMPLE_BASENAME = "authorization.example.json"
+
+# init's ceilings interview covers exactly the ceilings the example defines.
+INIT_CEILINGS = [
+    ("commits_before_review", "commits", "commits on one branch before review"),
+    ("fix_attempts", "fix_attempts", "attempts at one failing check"),
+    ("command_runtime", "runtime_seconds", "seconds for a single command"),
+]
+
+
+def _prompt(question, default):
+    sys.stderr.write("%s [%s]: " % (question, default))
+    sys.stderr.flush()
+    answer = sys.stdin.readline().strip()
+    return answer or str(default)
+
+
+def cmd_init(args, out):
+    """Generate a starter authorization file by parameterizing the shipped example.
+
+    The example file is the single editable home of the starter granted and stop
+    lists. init copies it verbatim apart from 'project' and the ceiling values, so
+    the generated file inherits the example's safety property: every match token is
+    a multi-word phrase, and the dangerous-probe suite grants none of them. init
+    never invents a grant. There is deliberately no generic keep-going/proceed/
+    continue entry: those are the verbs of every confirmation question, and under
+    the substring matcher they would grant nearly anything (the reverted first
+    version of this command proved it, 10 of 10 dangerous probes auto-granted).
+    """
+    target = args.file
+    if os.path.exists(target):
+        sys.stderr.write("refusing to overwrite %s. Edit it, or delete it first if you "
+                         "really want a fresh start\n" % target)
+        return 1
+
+    example_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                EXAMPLE_BASENAME)
+    try:
+        with open(example_path, "r") as handle:
+            doc = json.load(handle, object_pairs_hook=_no_duplicate_keys)
+    except (IOError, OSError, ValueError) as exc:
+        sys.stderr.write("cannot read the starter example at %s: %s\n"
+                         % (example_path, exc))
+        return 2
+
+    interactive = sys.stdin.isatty() and not args.yes
+
+    project = args.project
+    if project is None:
+        default = os.path.basename(os.getcwd()) or "this project"
+        project = _prompt("project this file governs", default) if interactive else default
+    doc["project"] = project
+
+    for ceiling_key, flag_name, unit_hint in INIT_CEILINGS:
+        value = getattr(args, flag_name)
+        if value is None and interactive:
+            current = doc["ceilings"][ceiling_key]["value"]
+            answer = _prompt("%s (%s)" % (ceiling_key, unit_hint), current)
+            try:
+                value = int(answer)
+            except ValueError:
+                sys.stderr.write("not a number, keeping %s\n" % current)
+                value = None
+        if value is not None:
+            doc["ceilings"][ceiling_key]["value"] = value
+
+    generated = copy.deepcopy(doc)
+    errors, warnings = validate(generated)
+    if errors:
+        for error in errors:
+            sys.stderr.write("ERROR %s\n" % error)
+        sys.stderr.write("the generated document failed its own validation; nothing was "
+                         "written. This is a bug in the example file; fix it there.\n")
+        return 1
+
+    with open(target, "w") as handle:
+        json.dump(doc, handle, indent=2)
+        handle.write("\n")
+
+    out.write("wrote %s (from %s)\n\n" % (target, EXAMPLE_BASENAME))
+    out.write("The granted and stop lists are the example's, verbatim. Now TRIM the\n")
+    out.write("granted list down to what is actually true for this project. Removing a\n")
+    out.write("grant is safe, and init will never add one for you. Then:\n\n")
+    out.write("  python3 %s validate %s\n" % (os.path.basename(__file__), target))
+    for warning in warnings:
+        out.write("WARN  %s\n" % warning)
+    return 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="authz.py",
@@ -299,10 +391,25 @@ def main(argv=None):
     p_check.add_argument("file")
     p_check.add_argument("--ask", required=True, help="the question you are about to send")
 
+    p_init = sub.add_parser("init", help="generate a starter authorization file from the "
+                                         "shipped example")
+    p_init.add_argument("file")
+    p_init.add_argument("--project", help="what the file governs (default: cwd basename)")
+    p_init.add_argument("--commits", type=int, help="commits_before_review ceiling value")
+    p_init.add_argument("--fix-attempts", type=int, dest="fix_attempts",
+                        help="fix_attempts ceiling value")
+    p_init.add_argument("--runtime-seconds", type=int, dest="runtime_seconds",
+                        help="command_runtime ceiling value")
+    p_init.add_argument("--yes", action="store_true",
+                        help="non-interactive: accept defaults for anything not flagged")
+
     args = parser.parse_args(argv)
     if not args.command:
         parser.print_help()
         return 2
+
+    if args.command == "init":
+        return cmd_init(args, sys.stdout)
 
     try:
         doc = load(args.file)

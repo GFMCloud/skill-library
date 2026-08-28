@@ -3,8 +3,8 @@ name: "standing-authorization"
 description: "Read what you are already authorized to do out of a file instead of asking — a granted list, a stop-list, and ceilings that resolve to one value in one place. Use at the start of every session, and again before sending any question that begins should I, shall I, or do you want me to."
 metadata:
   maturity: stable
-  version: 1.0.0
-  reviewed: 2026-08-09
+  version: 1.1.0
+  reviewed: 2026-08-28
 ---
 
 # standing-authorization
@@ -32,8 +32,24 @@ python3 <this-skill-dir>/authz.py validate authorization.json
 Absolute path when you need one: read `installPath` for `turn-reduction@gfm-foundry` out
 of `~/.claude/plugins/installed_plugins.json`. Never construct it.
 
-Start from `authorization.example.json` in this skill directory: copy it to the project
-repo root as `authorization.json` and cut it down to what is true for that project.
+To start a new project's file, generate it rather than hand-copying:
+
+```bash
+# interactive: asks for the project name and the three ceiling values
+python3 <this-skill-dir>/authz.py init authorization.json
+
+# non-interactive: flags plus defaults
+python3 <this-skill-dir>/authz.py init authorization.json --project my-project --yes
+```
+
+`init` parameterizes `authorization.example.json` (the single editable home of the
+starter lists): your project name and ceiling values go in, the granted and stop lists
+come through verbatim. It refuses to overwrite an existing file, and it never invents a
+grant: every starter match token is a multi-word phrase, because under the substring
+matcher a bare word like `proceed` or `cat` grants nearly anything (a first version of
+this command proved that: 10 of 10 dangerous probe asks auto-granted; the shipped
+example scores 0 of 10). After generating, TRIM the granted list down to what is true
+for that project. Removing a grant is safe; the reverse is not.
 
 ## The three verdicts
 
