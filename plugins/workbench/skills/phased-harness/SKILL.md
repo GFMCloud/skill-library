@@ -10,8 +10,8 @@ description: >-
   sessions that ends in an irreversible step.
 metadata:
   maturity: stable
-  version: 1.2.2
-  reviewed: 2026-08-20
+  version: 1.2.3
+  reviewed: 2026-08-28
 ---
 
 # Phased harness — scaffold a gated, resumable project
@@ -199,6 +199,32 @@ side effects** — cleanup, retirement, suffix-renaming — to a named owner in 
 breath. Overridden rows lose their execution task, and the side effects they carried
 vanish silently. This is a real failure that reached the final verification sweep in
 the run this skill generalizes (see doctrine).
+
+### Constitution conflict is a stop, not a tiebreak
+
+Every harness has a few invariants it may not trade away: the invariant sentence in
+`docs/end-state.md`, the guardrails in its `CLAUDE.md`, the never-pre-authorizable list
+in its `CONFIG.md`. When a phase's plan collides with one of them, **the phase bends and
+the invariant does not**. Record the collision in `STATE.md` and stop for a ruling. Do
+not resolve it in flight, and do not take the reading that happens to let the phase
+continue, which is always the reading available under pressure. Amending an invariant is
+its own gated act, with its own before and after and its own approval; it is never a
+side effect of the phase that ran into it.
+
+This is a different operation from the end-state doc's tiebreaker role. The tiebreaker
+resolves an instruction that is **ambiguous**; this handles a plan that collides with an
+invariant that is not ambiguous at all.
+
+### Residue: name where the last phase's leftovers go
+
+A final phase always leaves residue: gaps it found and did not close, checks it
+deferred, things it deliberately scoped out. A harness that closes without naming an
+owner for residue silently converts it into "done", and the gap is then discovered by
+whoever trusted the closing report. The final phase's runbook therefore says where
+residue goes before the harness may close: onto `STATE.md` as an open item with a named
+owner, into a named successor project's state file, or explicitly dropped with the
+reason written next to it. "Nobody owns this" is a legitimate destination only when it
+is written down as one.
 
 ### Evidence discipline
 

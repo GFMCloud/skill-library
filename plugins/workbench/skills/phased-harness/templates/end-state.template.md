@@ -65,3 +65,7 @@ by re-reading earlier notes:
 4. `<check 4 - the enforcement gate proven by deliberate failure>`
 5. `<check 5>`
 6. `<IRREVERSIBLE-STEP> completed - the only irreversible step in the project.`
+7. **Residue named and owned.** Every gap this project found and did not close, every
+   deferred check, everything deliberately scoped out: each has a destination written
+   down (an owned open item in `STATE.md`, a named successor, or dropped with the
+   reason). Closing without this converts open gaps into "done".

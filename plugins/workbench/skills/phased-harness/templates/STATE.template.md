@@ -20,6 +20,9 @@ runbooks alone. Never rely on conversation memory.
 <!-- Append: date - decision - one-line rationale. Never rewrite old entries. -->
 <!-- Gate rulings go here in full, including the ones ratified "as proposed", and
      including any side effects reassigned because a ruling overrode a proposal. -->
+<!-- A plan that collided with an invariant goes here too: what collided, and the
+     ruling. The phase bends, the invariant does not; amending one is its own gated
+     act, never a side effect of the phase that hit it. -->
 
 ## Evidence
 
@@ -33,6 +36,15 @@ runbooks alone. Never rely on conversation memory.
      date - what/where - why it does not fit - one-line recommendation.
      Anomalies are LOGGED and reviewed at the next gate, never silently resolved
      and never raised one-by-one mid-run. -->
+
+## Open items
+
+<!-- Residue: what this project found and did not close, deferred, or scoped out.
+     One line each: what - why it is still open - WHO OWNS IT NEXT.
+     Unlike Anomalies, these are not reviewed at the next gate; they are what
+     survives the final one, so the final phase must give every entry a
+     destination (an owner here, a named successor project, or dropped with the
+     reason) before the harness may close. -->
 
 ## Session log
 

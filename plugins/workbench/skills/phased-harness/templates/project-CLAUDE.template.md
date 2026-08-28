@@ -28,6 +28,13 @@ same by hand:
 - **Phase `<READ-ONLY-PHASE-N>` is strictly read-only.** Survey only. Do not modify,
   move, rename, or delete anything found during it. Prefer plan mode.
 - **Never touch `<OFF-LIMITS-PATHS>`.** `<One line on why - the structural reason.>`
+- **A collision with an invariant is a stop, not a tiebreak.** If a phase's plan
+  collides with the invariant in `docs/end-state.md`, a guardrail here, or the
+  never-pre-authorizable list in `CONFIG.md`, the phase bends and the invariant does
+  not. Record it in `STATE.md` and stop for a ruling; never resolve it in flight.
+  This is not the end-state doc's tiebreaker role, which settles an instruction that
+  is *ambiguous*; this is a plan colliding with one that is not. Amending an invariant
+  is its own gated act with its own approval.
 - **Move, never copy** (global rule; here it binds `<The thing being migrated/changed>`,
   which must not remain in its old location).
 - **Nothing is deleted until Phase `<FINAL-PHASE-N>` verification passes.** Until

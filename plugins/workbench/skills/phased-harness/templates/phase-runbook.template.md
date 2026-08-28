@@ -68,3 +68,7 @@ something that cannot be safely deferred - and only after trying the obvious fix
 - `<Checkable condition 3.>`
 - `STATE.md`: Phase `<N>` checked, evidence recorded, anomalies logged, session log
   line added.
+<!-- FINAL PHASE ONLY: also state where residue goes - every gap found and not closed,
+every deferred check, everything scoped out - as an owned open item in STATE.md, a
+named successor, or dropped with the reason written next to it. A final phase that
+closes without naming a destination converts its own open gaps into "done". -->

@@ -2,6 +2,31 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-08-28 - Weekly maintainer cycle 3
+
+Third cycle of the `claude-improvements-weekly` maintainer. Pack bump: workbench 0.5.2.
+
+- **phased-harness 1.2.3**: two rules added to the set every generated harness bakes in,
+  both from the spec-kit comparison you asked about on 2026-08-15 and ruled on 2026-08-20.
+  First, a constitution conflict is a **stop**, not a tiebreak: when a phase's plan
+  collides with an invariant in `docs/end-state.md`, the harness's own `CLAUDE.md`, or
+  the never-pre-authorizable list in `CONFIG.md`, the phase
+  bends and the invariant does not, and amending an invariant becomes its own gated act
+  rather than a side effect of the phase that hit it. Previously the skill said nothing
+  about this case, so a harness meeting one had only the reading that let it continue.
+  Second, a **residue rule**: the final phase must name where its leftovers go (an owned
+  open item in `STATE.md`, a named successor, or explicitly dropped with the reason
+  written next to it) before the harness may
+  close, because a harness that closes silently converts its own open gaps into "done".
+  Both rules are carried by template slots, not by the SKILL.md body alone: the
+  constitution rule lands in `project-CLAUDE.template.md` and `STATE.template.md`, the
+  residue rule in `end-state.template.md`'s definition-of-done, in
+  `phase-runbook.template.md`, and as a new `## Open items` section in
+  `STATE.template.md` so the destination the rule names actually exists in a generated
+  harness. Every other generation rule already had template hooks;
+  a rule that reaches a harness only through the generating model's discretion is the
+  same silent-prose failure these two rules exist to prevent.
+
 ## 2026-08-20 - Weekly maintainer cycle 2
 
 Second cycle of the `claude-improvements-weekly` maintainer. Pack bump: workbench
