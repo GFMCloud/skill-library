@@ -5,9 +5,11 @@ description: >-
   produce a committed verdict note: ADOPT, HARVEST, WATCH, or SKIP, backed by
   verified evidence, an overlap check against the skill-library inventory, and a
   harvest block listing exactly what to take. Use on "review this", "is this
-  worth it", "worth adopting", "should I care about this", a bare pasted URL, or
-  a bare owner/repo. Read-only toward the world; its only write is the review
-  note. Applying a finished note is source-harvest's job, not this skill's.
+  worth it", "worth adopting", "should I care about this", "should this replace
+  X", "compare this to my installed skill/process", "review this to bring into
+  my environment", a bare pasted URL, or a bare owner/repo. Read-only toward the
+  world; its only write is the review note. Applying a finished note is
+  source-harvest's job, not this skill's.
 metadata:
   maturity: incubator
 ---
@@ -67,6 +69,44 @@ Name the existing skills this source duplicates, extends, or contradicts. "This
 is `plan-gate` with worse triggers, but its two-tier proportionality idea is
 better than ours" is worth more than the rest of the review combined. Absence of
 overlap is also a finding: say the inventory was checked and nothing matched.
+
+### 3b. Blind incumbent comparison
+
+Runs when the overlap check surfaces a real **incumbent**: an installed skill, a
+standing process, or a tool already in use that this source would replace or
+substantially amend. Mere adjacency does not trigger it.
+
+The failure mode being designed out: the incumbent is already loaded in the
+reviewing session (skill listings, CLAUDE.md, plugin descriptions) while the
+candidate starts unread, so the session anchors on the incumbent and the review
+collapses into defending it. A rule saying "be neutral" does not fix a context
+asymmetry; removing the asymmetry does. Recurring pattern, recorded 2026-08-29.
+
+Procedure (requires the Agent tool, i.e. Claude Code):
+
+1. Extract both artifacts into neutral form: the incumbent's actual text or
+   source, and the candidate's, each stripped of adoption status. No
+   "installed", "ours", "current", or "new" labels; present them as Candidate A
+   and Candidate B with no hint which is in use.
+2. Spawn one subagent per candidate with an **identical rubric**: what it does,
+   strengths, weaknesses, failure modes, maintenance surface. Each subagent sees
+   only its own candidate and never learns an alternative exists. State the
+   model for each spawn (default: the session's model).
+3. A judge, a third subagent that sees only the two structured reports and
+   never the labels, rules between: adopt B and retire A, amend A with named items
+   from B, keep A, or synthesize something that replaces both. Replacement and
+   retire-both are first-class outcomes, not concessions.
+4. Write the note's Overlap and Verdict sections from the judge's ruling, and
+   record in Evidence that the comparison was blind: which agents saw what.
+
+Degraded mode (mobile, or no Agent tool): do the comparison inline, and add a
+Flags line, `incumbent-exposed: comparison ran with the incumbent loaded in
+context`, so the note's reader can discount the verdict accordingly.
+
+The ruling lands in the existing contract unchanged: amendment or replacement
+becomes harvest rows with destination `skill` naming the incumbent, and
+retirement follows the duplication rule: one editable home; adoption is a
+migration, never coexistence.
 
 ### 4. Verdict
 
