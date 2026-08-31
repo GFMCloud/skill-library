@@ -2,6 +2,36 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-08-30 - Source intake pipeline retired
+
+Graham closed the project. `source-review` and `source-harvest` are removed from
+`_incubator`; the inventory drops from 46 skills to 44. The notes repo
+`GFMCloud/personal-source-reviews` is archived read-only with all three notes
+preserved, and the reason for closure is recorded in its README.
+
+- **Both skills removed.** Neither was ever promoted out of incubator, and
+  `source-harvest` never ran once: all three notes are permanently
+  `status: reviewed`, so no harvest item was ever applied. The pipeline produced
+  three documents and zero changes to the environment in four days.
+- **What actually failed was transport, not judgment.** The notes are
+  contract-compliant, the blind incumbent comparison (3b) ran and disclosed its
+  own prep error, and untrusted-content flagging behaved correctly on both
+  reviews that hit directive-shaped text. But the skill declared its environment
+  as "web fetch plus the GitHub connector" while the runtime actually used was a
+  cloud Claude Code session holding a token scoped to `claude/*` branches. It
+  cannot write `main`. Two of three reviews stranded on unmerged branches, and
+  `INDEX.md`, the file whose whole job is preventing duplicate reviews, was blind
+  to both.
+- **The generalizable lesson, worth keeping when something replaces this.** A
+  skill that names its runtime in prose and never verifies it will be debugged at
+  the wrong layer indefinitely. Three separate diagnoses this session all
+  proposed fixing the write instruction; the environment was never checked until
+  a commit trailer settled it. Two proposed fixes were unsatisfiable in the real
+  runtime, and one of them (an auto-merge workflow) was a standing
+  pre-authorized push to `main`, against the never-pre-authorizable rule.
+  `INDEX.md` also proved to be a denormalized cache that both drifted and was
+  the sole merge-conflict surface between concurrent runs.
+
 ## 2026-08-28 - Ratify execution (same-day, interactive)
 
 Graham ruled the full pending queue and asked for immediate execution. Pack bumps:
