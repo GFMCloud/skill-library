@@ -82,8 +82,6 @@ for d in skill_dirs:
                 warns.append(f"W1 {rel}: reviewed {rev} is >{STALE_MONTHS} months old")
     if mat == "deprecated" and not str(meta.get("supersedes", "")).strip():
         fails.append(f"F11 {rel}: deprecated without metadata.supersedes")
-    if plugin == "_incubator" and mat == "stable":
-        fails.append(f"F12 {rel}: _incubator skill marked stable")
     if str(fm.get("disable-model-invocation", "")).lower() == "true":
         warns.append(f"W2 {rel}: disable-model-invocation set — slash-only intended?")
     for base, _, files in os.walk(d):

@@ -1,10 +1,10 @@
 ---
 name: capability-index
 description: >-
-  Points at capability that exists on this machine but is not loaded in the current session, so it does not become invisible. Consult whenever the user asks for something no loaded skill covers, specifically: anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys; or a workflow that one of the unreleased `_incubator` skills covers (session retros, sweep and rulings and experiment harnesses, a Cloudflare Pages migration, the Scrollback SB-01 design system, scaffolding a project handoff for a fresh session, devshell or new-project scaffolding). Do not attempt those tasks unaided. Say what covers it and where it lives, and offer to load it.
+  Points at capability that exists on this machine but is not loaded in the current session, so it does not become invisible. Consult whenever the user asks for something no loaded skill covers, specifically: anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys; or a skill in a skill-library plugin that is not installed here (the `decks` pack). Do not attempt those tasks unaided. Say what covers it and where it lives, and offer to load it.
 metadata:
   maturity: incubator
-  reviewed: 2026-08-20
+  reviewed: 2026-09-02
 ---
 
 # Capability index
@@ -18,19 +18,21 @@ answer.
 ## What is not loaded, and where it actually lives
 
 Verified against `claude plugin list` and `~/.claude/plugins/installed_plugins.json`
-on 2026-08-20.
+on 2026-09-02. The former `_incubator` pack is gone: its skills now live inside the
+plugins they belong to (workbench, frontend-design, deploy-ops, foundry-core) and load
+with them.
 
 | Not loaded | Covers | Where it lives | How to reach it |
 |---|---|---|---|
-| `_incubator` pack | cloudflare-pages-migration, devshell-init, experiment-harness, new-project, pipeline-foundry, retro, rulings-harness, scrollback, sweep-harness | `skill-library` repo, published to the marketplace but **not installed** | `claude plugin install _incubator@skill-library` |
+| `decks` pack | cd-to-pptx, chart-discipline, deck-scaffolding-builder, html-diagram, layout-critique, sales-lens-review | `skill-library` repo, installed but **disabled** | enable it in `/plugin`, or `claude plugin enable decks@skill-library` |
 | SCL project skills | keeper rules, session startup, module deploy checklist | **project-scoped** in `~/work/GitHub/sloshball-champions-league-v2/.claude/skills/`, not a plugin and not installable | open a session in that repo, where they load automatically |
 
 ## How to respond
 
 When a request matches, do not silently proceed. Say what covers it and offer:
 
-> That is covered by the `_incubator` pack, which is published but not installed.
-> Install it? `claude plugin install _incubator@skill-library`
+> That is covered by the `decks` pack, which is installed but disabled.
+> Enable it? `claude plugin enable decks@skill-library`
 
 If the user agrees, run the command. The change takes effect for subsequent sessions,
 so if the skill does not appear immediately, tell the user to restart rather than
@@ -47,7 +49,7 @@ offering an install command that does not exist.
   the SCL v2 repo, or stop.
 - Do not assume a skill named in another project's notes is reachable from the project
   you are in. Project-scoped skills load only inside their own repo.
-- Do not install a pack without asking first.
+- Do not install or enable a pack without asking first.
 
 ## Keeping this list correct
 
