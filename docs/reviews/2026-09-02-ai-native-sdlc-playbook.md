@@ -32,7 +32,7 @@ predate the article. Convergent.
 ## Open for Graham (proposed, not applied)
 
 - Row 6, a PreToolUse hook freezing `tests/**` during a flagged fix task, M effort, for the python archetype. Currency check 2026-09-02: `Edit|Write` matchers, exit 2 blocking, and `${CLAUDE_PROJECT_DIR}` are all current.
-- Row 7, `permissions.deny` for credential files in `~/.claude/settings.json`: ratified by Graham 2026-09-02, deny list only (sandbox deferred). Applied by paste because the classifier blocks permission-content edits from a session; proof by deliberate failure recorded in the rulings log once landed. Currency check: `Read(.env*)` also matches `.env.example`, so the entries are explicit.
+- Row 7, `permissions.deny` for credential files in `~/.claude/settings.json`: out, Graham 2026-09-02. Declined after the trade-offs: the deny covers the Read tool only, blocks hard rather than prompting, and no credential-read incident is on record here. The prose rule stays the control.
 - Row 8, an explanatory Bash gate hook on pushes and production writes: out, on recommendation, 2026-09-02.
 
 ## What was declined, and why
