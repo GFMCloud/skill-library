@@ -3,8 +3,8 @@ name: "capability-preflight"
 description: "Prove access to every system a milestone must touch before the milestone starts — a real read and a real write per system, each with a negative control that must fail. Use at the top of any milestone, before the first step runs, and whenever a step is about to be handed to a human because something looks unreachable."
 metadata:
   maturity: stable
-  version: 1.0.0
-  reviewed: 2026-08-09
+  version: 1.1.0
+  reviewed: 2026-09-02
 ---
 
 # capability-preflight

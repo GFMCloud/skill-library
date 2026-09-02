@@ -3,8 +3,8 @@ name: "evidence-report"
 description: "Format executed evidence into a report that states what was checked, what the check returned, and what was not checked. Use when presenting verification results, acceptance checks, or any claim that work is done."
 metadata:
   maturity: stable
-  version: 1.0.0
-  reviewed: 2026-08-09
+  version: 1.1.0
+  reviewed: 2026-09-02
 ---
 
 # evidence-report
@@ -66,6 +66,11 @@ be explicit.
   timestamp. An acceptance record that does not name what it ran against cannot
   be re-checked later, and item 3 shipped exactly that defect before it was
   caught.
+- **Never add isolated measurements together.** Two improvements measured
+  separately do not sum when combined; they overlap, and the combined figure is
+  usually smaller than the arithmetic total. A claim about several changes at
+  once is measured with all of them applied, on the complete workflow, or it is
+  reported as separate claims that were never combined.
 
 ## When evidence cannot be produced
 
