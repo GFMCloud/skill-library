@@ -29,9 +29,9 @@ predate the article. Convergent.
 - Row 5, red test first, committed, frozen: `plugins/workbench/skills/new-project/scripts/scaffold.sh` rule 6 and `references/conventions.md` SPEC.md §6, this commit.
 - Row 9, σ-banded autonomy tiers: WATCH, recheck 2026-12-01; landing spot `pipeline-foundry` §8 if a project gains a metric with a rolling baseline.
 
-## Open for Graham (proposed, not applied)
+## Ruled by Graham, 2026-09-02 (record closed)
 
-- Row 6, a PreToolUse hook freezing `tests/**` during a flagged fix task, M effort, for the python archetype. Currency check 2026-09-02: `Edit|Write` matchers, exit 2 blocking, and `${CLAUDE_PROJECT_DIR}` are all current.
+- Row 6, a PreToolUse hook freezing `tests/**` during a flagged fix task: out. Row 5's prose procedure stays the control for bug fixes. Currency check for the record: `Edit|Write` matchers, exit 2 blocking, and `${CLAUDE_PROJECT_DIR}` are all current if this is revisited.
 - Row 7, `permissions.deny` for credential files in `~/.claude/settings.json`: out, Graham 2026-09-02. Declined after the trade-offs: the deny covers the Read tool only, blocks hard rather than prompting, and no credential-read incident is on record here. The prose rule stays the control.
 - Row 8, an explanatory Bash gate hook on pushes and production writes: out, on recommendation, 2026-09-02.
 
