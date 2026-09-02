@@ -141,7 +141,7 @@ Record the rulings in the file, never in conversation memory.
 Route by the largest ratified row:
 
 - **All S** (under an hour, one sitting): apply in this session. Library rules
-  bind: new skills start in `_incubator`, stable-skill edits bump version and
+  bind: new skills go straight into their plugin, stable-skill edits bump version and
   get a CHANGELOG line, `bash scripts/validate-skills.sh` exits 0 before any
   commit, `scripts/generate-inventory.sh` runs when a skill is added or removed.
   Commit; pushing and PRs are never pre-authorized, ask.

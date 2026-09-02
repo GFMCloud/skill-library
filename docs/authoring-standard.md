@@ -60,10 +60,12 @@ packages, structured reports), that output format is an **API**:
 
 Three states, not four:
 
-- **incubator** — lives in `plugins/_incubator/`. No stability promise. Edit freely
-  on main, no PR ceremony. Promote after the skill has proven itself in real use
-  (guideline: ≥2 successful real sessions). Promotion is a `git mv` into a real
-  plugin plus a CHANGELOG line — never a copy.
+- **incubator** — a label, not a location. The skill lives in the plugin it belongs
+  to from day one and is installed alongside that plugin's stable skills. No
+  stability promise. Edit freely on main, no PR ceremony. Promote after the skill
+  has proven itself in real use (guideline: 2 or more successful real sessions).
+  Promotion flips `maturity` to `stable` and adds `version` and `reviewed`, plus a
+  CHANGELOG line. Nothing moves and nothing is copied.
 - **stable** — owned by the contract: has `version` + `reviewed`, changes go through
   PR, behavior changes get a CHANGELOG line and a version bump.
 - **deprecated** — still installed, but `supersedes` names the replacement and the
@@ -73,7 +75,8 @@ Three states, not four:
 
 - Stable skills: change by PR; bump `metadata.version`; update `metadata.reviewed`;
   CHANGELOG describes the behavior change, not the wording change.
-- Incubator skills: edit directly on main.
+- Incubator skills: edit directly on main. Adding one still bumps the host plugin's
+  `version` so installed caches pick it up.
 - Run `scripts/validate-skills.sh` before committing anything.
 - Behavior testing: for stable skills keep 2–3 eval cases and run them on change
   (the official `skill-creator` plugin provides evals and version comparison).

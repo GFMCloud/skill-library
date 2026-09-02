@@ -1,6 +1,11 @@
 {
   "name": "deploy-ops",
-  "description": "Deploy and release operations; owns the deploy-verify-fix loop",
-  "author": { "name": "Graham" },
-  "dependencies": ["foundry-core"]
+  "description": "Deploy and release operations; owns the deploy-verify-fix loop and Cloudflare Pages migrations",
+  "author": {
+    "name": "Graham"
+  },
+  "dependencies": [
+    "foundry-core"
+  ],
+  "version": "0.2.0"
 }

@@ -9,8 +9,12 @@ structured as a plugin marketplace.
 
 - Follow [docs/authoring-standard.md](docs/authoring-standard.md) for every skill.
   Start new skills from [templates/SKILL.template.md](templates/SKILL.template.md).
-- **New skills start in `plugins/_incubator/`** with `maturity: incubator`, and get a
-  CHANGELOG entry on promotion to a real plugin.
+- **New skills go straight into the plugin they belong to** (the install unit they
+  would be enabled with), with `maturity: incubator` as a label only. There is no
+  staging plugin; a skill is live on every machine at the next plugin update. Adding
+  a skill bumps that plugin's `version` and gets a CHANGELOG line.
+- **Promotion to `stable`** is a frontmatter flip (`maturity`, `version`, `reviewed`)
+  plus a CHANGELOG line. Nothing moves.
 - **Stable-skill changes** bump `metadata.version`, update `metadata.reviewed`, and
   get a CHANGELOG entry describing the behavior change (not the wording change).
 - **Run the validator before committing:**

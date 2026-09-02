@@ -2,6 +2,30 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-02 - _incubator retired; maturity is a label, not a location
+
+Pack bumps: workbench 0.7.0, frontend-design 0.4.0, deploy-ops 0.2.0, foundry-core 0.2.0.
+The `_incubator` plugin is removed from the marketplace. It was never installed on the
+authoring machine (enabled in settings, absent from the install list), so its twelve
+skills loaded in no session, and promotion out of it happened once in four weeks.
+
+- **Twelve skills moved by `git mv`, content unchanged, still `maturity: incubator`:**
+  `retro`, `experiment-harness`, `rulings-harness`, `sweep-harness`, `new-project`,
+  `devshell-init`, `pipeline-foundry`, `source-intake` to **workbench**;
+  `mobile-taste-frontend`, `scrollback` to **frontend-design**;
+  `cloudflare-pages-migration` to **deploy-ops**; `full-output-enforcement` to
+  **foundry-core**. Each now loads with its host plugin.
+- **Rule change.** New skills go straight into the plugin they belong to, with
+  `maturity: incubator` as a label. Promotion flips the label and adds `version` and
+  `reviewed`; nothing moves. Adding a skill bumps the host plugin's version so daily
+  plugin updates pick it up. CLAUDE.md, README, the authoring standard and the SKILL
+  template say so.
+- **Validator:** check F12 (`_incubator` skill marked stable) removed; there is no
+  such plugin to check.
+- **capability-index:** the `_incubator` row and its install instructions are gone.
+  The only skill-library capability a session cannot reach is the disabled `decks`
+  pack, which the table now lists instead.
+
 ## 2026-09-01 - Upstream taste-skill v2 merged into frontend-design; two incubator skills
 
 Pack bumps: frontend-design 0.3.0, _incubator 0.3.0. Source: `Leonxlnx/taste-skill` at

@@ -4,7 +4,7 @@ description: >-
   <What this skill produces + when to use it + trigger phrases the user would
   actually say. This line is the auto-invocation router — be specific, ≥40 chars.>
 metadata:
-  maturity: incubator        # incubator | stable | deprecated
+  maturity: incubator        # incubator | stable | deprecated (a label; no staging plugin)
   # version: 1.0.0           # required once stable (semver)
   # reviewed: YYYY-MM-DD     # required once stable
   # supersedes: <skill-name> # required when deprecated

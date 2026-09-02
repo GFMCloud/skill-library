@@ -12,7 +12,7 @@
     {
       "name": "foundry-core",
       "source": "./plugins/foundry-core",
-      "description": "Core delivery discipline: evidence-report and proof-of-work. Wanted on ~every project."
+      "description": "Core delivery discipline: evidence-report, proof-of-work, full-output-enforcement. Wanted on ~every project."
     },
     {
       "name": "turn-reduction",
@@ -37,7 +37,7 @@
     {
       "name": "deploy-ops",
       "source": "./plugins/deploy-ops",
-      "description": "Deploy loop discipline: deploy-verify-fix plus the deploy-loop-owner agent."
+      "description": "Deploy loop discipline: deploy-verify-fix and cloudflare-pages-migration plus the deploy-loop-owner agent."
     },
     {
       "name": "decks",
@@ -47,22 +47,17 @@
     {
       "name": "frontend-design",
       "source": "./plugins/frontend-design",
-      "description": "Frontend visual design judgment: design taste, image taste, minimalist UI, redesigns, and UI-polish review guidance."
+      "description": "Frontend visual design judgment: design taste, image taste, mobile app screens, minimalist UI, redesigns, the Scrollback SB-01 design system, and UI-polish review guidance."
     },
     {
       "name": "workbench",
       "source": "./plugins/workbench",
-      "description": "Graham's general-purpose working skills: project setup and review, phased project harnesses, handoffs, knowledge bases, skill discovery, code review, systems design."
+      "description": "Graham's general-purpose working skills: project setup and scaffolding, phased/sweep/rulings/experiment harnesses, handoffs, retros, source intake, knowledge bases, skill discovery, systems design."
     },
     {
       "name": "graham-voice",
       "source": "./plugins/graham-voice",
       "description": "Graham's personal writing voice, as its own single-skill install unit. Split out of workbench so it can be installed alone."
-    },
-    {
-      "name": "_incubator",
-      "source": "./plugins/_incubator",
-      "description": "New and unproven skills. No stability promise; skills here may change or disappear without notice."
     }
   ]
 }
