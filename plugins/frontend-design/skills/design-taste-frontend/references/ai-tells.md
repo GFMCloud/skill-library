@@ -141,6 +141,10 @@ as a hard ban unless the brief explicitly calls for it.
 - The en dash stays legitimate for date and number ranges (`2018–2026`, `€40–80k`); that is correct
   typography, not a tell. Do not use it as a sentence separator either.
 - Kinetic em-dash flourishes, em-dash bullets, and long-pause dashes inside quote text.
+- Mannered copy: a metaphor or flourish standing in for a direct statement in headlines, eyebrows,
+  or body ("a dial worth turning", "earns its keep", "does the heavy lifting"). The phrase performs
+  the writer instead of conveying the idea, and drags in connotations nobody chose. When a literal
+  phrase exists, use it.
 
 ## Fake product preview tells
 

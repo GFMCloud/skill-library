@@ -33,4 +33,4 @@ Front of a section = punchy headline slides, presenter carries, minimal copy. Ba
 
 ## Quick reminder of the worst tells
 
-(Full list, if the project has a dedicated voice skill, lives there.) The ones that creep into deck copy most: delve, crucial, pivotal, landscape (as abstract noun), showcases, underscores, "serves as," "represents a," "not just X but also Y," and the rule of three used as a stylistic crutch. Hyphens not em dashes, straight quotes not curly.
+(Full list, if the project has a dedicated voice skill, lives there.) The ones that creep into deck copy most: delve, crucial, pivotal, landscape (as abstract noun), showcases, underscores, "serves as," "represents a," "not just X but also Y," and the rule of three used as a stylistic crutch. Also mannered prose, where a metaphor stands in for a plain statement ("a dial worth turning" for "a parameter worth varying"): say the literal thing. Hyphens not em dashes, straight quotes not curly.

@@ -73,6 +73,10 @@ Graham's ear is tuned to spot generated text, and nothing kills a draft's credib
 - Sections that clear up misconceptions nobody actually had
 - Gerund filler: "emphasizing...", "highlighting...", "contributing to..."
 
+**Mannered prose - cut the flourish, not just the words:**
+- Mannered prose substitutes metaphor and flourish for direct statement: "a dial worth turning" for "a parameter worth varying", "this point earns its keep" for "this point still matters". The phrase exists to display the writer, not to convey the idea, and readers can tell. Metaphors also drag in connotations the writer did not choose. When a literal phrase is available, use it.
+- Test each figure of speech: if it can be swapped for a plain statement with no loss, swap it. A metaphor stays only when it carries something the literal version cannot.
+
 **What natural writing looks like instead:**
 - Plain copulas are fine - "is", "are", "has". Don't reach for "serves as", "boasts", "features".
 - Vary sentence length - short punchy sentences mixed with longer ones (the rhythm point from the patterns section, applied to prose).

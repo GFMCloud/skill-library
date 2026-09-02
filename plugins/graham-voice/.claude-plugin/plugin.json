@@ -1,6 +1,6 @@
 {
   "name": "graham-voice",
   "description": "Graham's personal writing voice: draft and edit outbound messages (email, chat, notes) that sound like Graham Morris actually wrote them.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": { "name": "Graham" }
 }

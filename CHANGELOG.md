@@ -2,6 +2,20 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-02 - No-mannered-prose rule added to the three copy-producing skills
+
+Pack bumps: graham-voice 1.0.1, decks 0.2.1, frontend-design 0.4.1. Source: Anthropic's
+"Prompting Claude Fable 5.1" guide (Writing density section), which names metaphor-for-statement
+as the model's main prose tic and supplies the defining instruction. Same rule added to the
+global CLAUDE.md the same day.
+
+- **`graham-voice`:** drafts drop metaphor and flourish that stand in for a direct statement
+  ("a dial worth turning", "earns its keep"); each figure of speech is swapped for the literal
+  phrase unless it carries something the literal version cannot.
+- **`deck-scaffolding-builder`:** `references/copy-voice.md` worst-tells list gains mannered prose.
+- **`design-taste-frontend`:** `references/ai-tells.md` gains a mannered-copy tell for headlines,
+  eyebrows, and body text alongside the em-dash tells.
+
 ## 2026-09-02 - AI-native SDLC playbook harvested: five fragments, three questions open
 
 Pack bump: workbench 0.7.1. Source: claude.com/blog/the-ai-native-sdlc-playbook, pinned by
