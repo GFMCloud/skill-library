@@ -59,7 +59,9 @@ Sections are in the stub. Two are load-bearing:
   same debate reopens every session and gets resolved differently each time.
 - **§6 Verification** — the actual commands, and what their output should look like. This
   is what an agent runs before claiming done. A spec without it reliably produces
-  confident false completion claims, because "done" has no definition.
+  confident false completion claims, because "done" has no definition. For a bug fix
+  the verification is the reproducing test: written first, seen to fail for the expected
+  reason, committed before the fix, and left untouched by the fix commit.
 
 Specs accrete. A 40 KB `SPEC.md` on a mature project is healthy; a 40 KB one on day zero
 is fiction. On day zero it is mostly `TBD (<what would settle it>)`, and that is correct.

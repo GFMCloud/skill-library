@@ -48,6 +48,8 @@ Rank findings by severity: **Critical** (broken or actively misleading), **High*
 
 Don't pad. If a dimension is clean, say so in one line and move on. The user wants signal, and a review that manufactures findings to look thorough erodes trust in the real ones.
 
+Cap Low findings at five per review and summarize the rest as a count. Do not report anything a formatter, linter, or CI check already enforces, and nothing under a generated path. Those are noise wearing a finding's clothing, and they bury the items the executor should reach first.
+
 ## Phase 3 - Write the improvement plan
 
 Read `references/plan-template.md` and follow it. Write the plan to the project root (or the output directory on Claude.ai) as `improvement-plan-YYYY-MM-DD.md`. If a plan with that name already exists, append `-v2` rather than overwriting - the history matters for verify mode.

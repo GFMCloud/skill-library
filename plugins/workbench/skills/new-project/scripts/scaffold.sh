@@ -251,7 +251,10 @@ fastest way to make an agent do the wrong thing confidently.
 5. **Ask before irreversible or expensive.** Deletes, force-pushes, anything that spends
    money or touches production. Low-stakes work: just do it.
 6. **Do not relax an assertion to make a change pass.** If a check fails, either the change
-   is wrong or the check is — decide which, out loud.
+   is wrong or the check is — decide which, out loud. For a bug fix, write the
+   reproducing test first, run it, and confirm it fails for the reason you expect. Commit
+   that test before touching the code, and leave it untouched in the fix commit: a test
+   the fix could rewrite proves nothing.
 7. **Counts and versions in docs are dated snapshots.** Verify against the live thing rather
    than trusting a number written here.
 $rules

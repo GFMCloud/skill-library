@@ -84,6 +84,7 @@ this routing table:
 | Project mechanics or commands (how to build/run/deploy *this* project) | That project's `CLAUDE.md` |
 | Architecture commitment (a structural choice that constrains future work) | A `decisions/` ADR in the repo |
 | Deterministic check (something a script could catch every time) | A hook or CI, not prose |
+| Behavioral regression (the agent did the wrong thing and no script can catch it deterministically) | An eval case in the owning skill, kept as a regression test |
 | One-off (true once, unlikely to recur, not worth a standing rule) | The retro only, this is where it correctly dies |
 
 **Cross-project special case:** the memory directory is scoped per working

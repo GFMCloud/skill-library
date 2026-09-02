@@ -2,6 +2,30 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-02 - AI-native SDLC playbook harvested: five fragments, three questions open
+
+Pack bump: workbench 0.7.1. Source: claude.com/blog/the-ai-native-sdlc-playbook, pinned by
+sha256 `adfcd44e…a213f` (fetched 2026-09-02). Verdict HARVEST; record and evidence in
+`docs/reviews/2026-09-02-ai-native-sdlc-playbook.md` and its directory.
+
+- **`fable-project-review`:** Low findings are capped at five per review with the rest
+  summarized as a count; anything a formatter, linter, or CI already enforces, and anything
+  under a generated path, is not reported.
+- **`retro`:** the §3 routing table gains a row: a behavioral regression no script can catch
+  routes to an eval case in the owning skill, not to prose.
+- **`new-project`:** generated hard rule 6 and `conventions.md` SPEC.md §6 add the bug-fix
+  procedure: reproducing test first, seen to fail for the expected reason, committed before
+  the fix, untouched by the fix commit.
+- **Authoring standard (rule change):** promotion requires a trigger test (three phrasings,
+  fresh session); once a skill has eval cases they run on any change to that skill, its
+  hooks, or its CLAUDE.md, and a pass-rate drop is reviewed before merge. The library had
+  zero eval cases when this was written, so the second rule binds from the first one.
+- **Not taken:** the article's `production-gate.sh` (substring match, Bash-only matcher,
+  spoofable env var) and `agent-evals.yml` (no timeout, `result.json` overwritten per loop);
+  fifteen practices already stated here with their originating failure attached. WATCH on
+  σ-banded autonomy tiers (recheck 2026-12-01). Open for Graham: a test-file freeze hook, a
+  credential-file `permissions.deny`, a Bash gate hook (recommended out).
+
 ## 2026-09-02 - _incubator retired; maturity is a label, not a location
 
 Pack bumps: workbench 0.7.0, frontend-design 0.4.0, deploy-ops 0.2.0, foundry-core 0.2.0.

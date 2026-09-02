@@ -39,6 +39,10 @@ summary: what the skill produces, when to use it, and the trigger phrases a user
 would actually say. Vague descriptions are the #1 cause of skills that never fire or
 fire wrongly. Spend review effort here first.
 
+Before promoting a skill, test that it triggers: ask for its task three different ways
+in a fresh session and confirm the skill loads each time. A skill that fires on one
+phrasing is not routed, it is lucky.
+
 ## Body
 
 - **Under 500 lines** (official guidance). A loaded skill stays in context across
@@ -81,3 +85,8 @@ Three states, not four:
 - Behavior testing: for stable skills keep 2–3 eval cases and run them on change
   (the official `skill-creator` plugin provides evals and version comparison).
   Reviewing prompt diffs alone tells you almost nothing about behavior.
+- Once a skill has eval cases, they run on any change to that skill, its hooks, or the
+  CLAUDE.md it depends on, because that configuration steers the agent and deserves the
+  regression testing code gets. A change that drops the pass rate is reviewed before it
+  merges, not after. (Recorded 2026-09-02 with zero eval cases in the library, so this
+  binds from the first one.)
