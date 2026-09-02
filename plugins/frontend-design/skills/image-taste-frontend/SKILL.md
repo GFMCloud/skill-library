@@ -52,7 +52,31 @@ Reading the request:
 - "premium SaaS" keeps clarity high and art direction controlled
 - "editorial" allows stronger type and more asymmetry
 
+**Brief-to-direction mapping.** Read the brief, then bias the section 6 picks like this:
+
+| Brief says | Hero scale | Background | Gradients | Composition |
+|---|---|---|---|---|
+| "minimalist", "clean", "typography-only", "swiss" | Mini | solid surfaces, subtle texture, at most one color-blocked diptych | skip, or the softest tonal grade | stacked center, generous negative space; no forced full-bleed |
+| "editorial", "magazine", "art-directed", "fashion" | Mid or Giant | editorial side image, duotone, atmospheric photo grade | subtle tonal only | off-grid offset, asymmetric pulls, strong type contrast |
+| "cinematic", "atmospheric", "premium", "luxury", "bold" | Giant | full-bleed image with tonal overlay, soft radial vignette plus product, micro-noise gradient | palette-matched cinematic grades welcome | bottom-left over image, centered low, image as canvas |
+| "SaaS", "product", "fintech", "infra" | Mid | solid plus inline asset, flat block plus detail crop | very subtle, palette-matched | clear product framing, trust-driven anchors, higher clarity |
+| "agency", "creative studio", "portfolio" | Giant or Mini, decisively | vary boldly: full-bleed, diptych, duotone | editorial color washes acceptable | off-grid, poster-like |
+| "e-commerce", "shop", "product page" | Mid, product-focused | full-bleed product photo, vignette plus crop, flat block plus detail | subtle, never competing with the product | product-led, CTAs unmistakable |
+
+If the brief is silent on style, use the defaults with confident background variety and pick one hero
+scale decisively. Never force backgrounds, gradients, or full-bleed treatments where the brief asks
+for restraint, and never strip them out where it asks for atmosphere.
+
 ## 3. Image generation discipline
+
+**Commit to a section count out loud before generating.** Infer the site type and the conversion
+goal, then the number of sections. When the brief is vague, default high: "hero" is 1 section;
+"landing page", "site template", "product page", or "portfolio" is 6; "full website" or "marketing
+site" is 8. Announce the commitment ("Generating 6 horizontal images, one per section: hero, ...")
+so the user can correct it before any image exists. Then label every image as it lands, "Section X
+of N: <name>", and keep going until the full set is delivered. Do not stop early, do not
+summarize, and do not return one image in place of the set. If only one image can be rendered per
+call, generate them sequentially in the same response.
 
 One section is one primary image. A complex section gets a primary image plus one or more detail
 images. An unclear section gets regenerated as a fresh standalone image.
@@ -129,6 +153,12 @@ cinematic imagery, or tactile textured surface.
 
 **Typography character:** clean grotesk, refined grotesk, expressive display, compressed statement,
 editorial serif plus sans, or Swiss rational hierarchy.
+
+**Hero scale, pick one for the whole site, matched to the brand mood:** Giant Statement (massive
+type, large image, dominant first viewport), Mid Editorial (balanced type and image, cinematic but
+not screen-filling), or Mini Minimalist (small logo, short statement, thin CTA, almost no image,
+lots of negative space). Mini does not mean weak; it means confident restraint. Do not split the
+difference.
 
 **Hero architecture:** cinematic centered minimalist, asymmetric split, floating scatter, inline
 typography behemoth, editorial offset, or image-first with restrained text.

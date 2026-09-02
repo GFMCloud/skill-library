@@ -2,6 +2,45 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-01 - Upstream taste-skill v2 merged into frontend-design; two incubator skills
+
+Pack bumps: frontend-design 0.3.0, _incubator 0.3.0. Source: `Leonxlnx/taste-skill` at
+`ccbc15639c97057cbfcf32ecebc38ef716e4bb37`, merged by hand through the `taste-skill-merge`
+harness (36 ruled decision rows; nothing installed side by side, no upstream text copied).
+
+- **`design-taste-frontend` behaves differently on five points.** Eyebrows are rationed
+  (max 1 per 3 sections, hero counts as 1, mechanically counted at pre-flight) instead of
+  mandated before every H1/H2. Infinite-loop card states are optional and must be
+  motivated; the pack no longer says every card loops. `prefers-reduced-motion` is
+  mandatory above `MOTION_INTENSITY 3`. Real images come first (generation tool, then
+  seeded placeholders, then labeled `<!-- TODO -->` slots); div-based fake screenshots
+  are banned. Hard bans became contextual with named overrides (purple when the brand
+  asks, emoji for playful briefs, centered hero for manifesto and launch briefs), and a
+  quiet-constraints rule lets accessibility-first and public-sector briefs override
+  aesthetics. Also new: a brief-inference design read, a design-system map, a copy
+  self-audit, and zero em dashes in rendered copy (en dashes in ranges stay).
+- **Two corrections at ingest.** Upstream's WCAG large-text threshold ("18px+") is
+  corrected to 18pt (about 24px) regular or 14pt bold, so subheads under 24px need 4.5:1.
+  Upstream's two conflicting dark-mode contrast lines are reconciled as AA minimum for all
+  text, AAA target for body and hero copy.
+- **Not ingested, on purpose.** The dead Block Library contract, the 62-box pre-flight
+  (now 15 countable items), the two cross-project-memory rules a stateless model cannot
+  honor, and the redesign audit (routed to `redesign-existing-projects` instead).
+- **`references/ai-tells.md` is now the whole catalogue.** Upstream's production-tested
+  tells (hero version labels, section-number eyebrows, decorative dots, poetic section
+  labels, photo-credit captions, locale strips, scroll cues) live there under distinctive
+  "... tells" headings; the flagship body points at it and restates none. Long material
+  moved out of the body into `references/` (GSAP skeletons, design-system map with install
+  commands, dark-mode protocol, Liquid Glass approximation). Body 332 lines.
+- **`image-taste-frontend`** gains the count-commitment protocol (commit to N sections out
+  loud, label "Section X of N"), the brief-to-direction table, and the hero-scale pick.
+- **New in `_incubator`:** `mobile-taste-frontend` (app screens as a distinct medium:
+  platform commitment, safe areas, tab bars, onboarding flows, screen-set consistency;
+  trimmed from 6,552 to 1,999 words and 19 dials to 3) and `full-output-enforcement`
+  (anti-truncation discipline, with the TODO ban scoped to "user asked for a full
+  implementation" so it does not collide with instructed image placeholders).
+- **Inventory** regenerated (46 skills), absorbing the uncommitted 2026-08-30 regeneration.
+
 ## 2026-08-30 - Source intake pipeline retired
 
 Graham closed the project. `source-review` and `source-harvest` are removed from
