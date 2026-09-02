@@ -31,5 +31,8 @@ revision, command line. Enough to reproduce the run from this file alone.>`
 ## Verdict
 
 `<confirmed / refuted / inconclusive, plus one line comparing Result against
-Prediction. If refuted or the idea is abandoned, add a row to dead-ideas.md and
-update this hypothesis's status in REGISTER.md.>`
+Prediction. If this run compares two configurations, judge it on paired per-item
+wins (which config won on each case), not by subtracting two raw rates, and state
+the sample size or interval the verdict rests on. If refuted or the idea is
+abandoned, add a row to dead-ideas.md and update this hypothesis's status in
+REGISTER.md.>`

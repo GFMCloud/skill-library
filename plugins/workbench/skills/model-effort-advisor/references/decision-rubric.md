@@ -38,4 +38,8 @@ There's no formula that mechanically outputs a model name, use `model-catalog.md
 - High Repetition → this is a fan-out signal, not a model-tier signal. Route to `subagent-routing.md` regardless of what the other axes say.
 - High Human Oversight (i.e. low actual review) → treat as equivalent to bumping Risk up one notch, since nothing is catching mistakes downstream.
 
+## Diagnosing a skill or prompt that underperforms
+
+The five axes are prospective. When something already built is scoring badly, run the ablation before rewriting it: hold the skill or prompt fixed and swap the model one tier up or down. If a stronger model does not move the result, the bottleneck is the skill or prompt and rewriting it is the fix; if it does, the model choice was the bottleneck. The direction of the change is the diagnosis; do not start editing the prompt on the first bad score.
+
 When two axes disagree (e.g. low reasoning but high risk), the higher one wins for model selection. Effort level can still flex independently, a high-risk, low-reasoning task might warrant a stronger model at a lower effort setting (get it right, but it doesn't need to think long to get there).

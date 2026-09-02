@@ -19,6 +19,7 @@ Decides whether work runs inline or gets delegated to one or more subagents, and
 For higher-risk generative work, consider a two-agent pattern instead of a single pass:
 - **Build agent** produces the work (code, document, analysis).
 - **Review agent**, ideally a fresh context with no attachment to the build agent's choices, checks it against the success criteria before it's presented as done.
+- Hand the review agent the artifact and the success criteria only, never the build agent's reasoning or rationale. A persuasive explanation of why a choice was made is exactly the channel through which a bad choice gets waved through; the reviewer judges what was produced, not why.
 
 Use this pairing when Risk is high on the decision rubric and a single self-reviewing pass isn't enough assurance. Skip it for low-risk, low-reasoning work, it's overhead without payoff there.
 

@@ -43,6 +43,12 @@ Before promoting a skill, test that it triggers: ask for its task three differen
 in a fresh session and confirm the skill loads each time. A skill that fires on one
 phrasing is not routed, it is lucky.
 
+Say what the skill is not for and what it costs (a subagent spawn, a long read, a
+network fetch) alongside what it does; a description with no negative scope routes
+neighbouring requests to it. When a skill keeps firing wrongly or not at all, fix the
+description before reaching for a stronger model: most misroutes trace back to an
+inaccurate description, not to the model.
+
 ## Body
 
 - **Under 500 lines** (official guidance). A loaded skill stays in context across
@@ -50,6 +56,9 @@ phrasing is not routed, it is lucky.
 - Long material — rubrics, examples, schemas, sample outputs — lives in
   `references/` or `templates/` inside the skill directory, linked by relative path.
 - Structure the body around what the skill must *do*, not background prose.
+- Shape each rule as scope, action, exception, verification (when X, do Y, unless Z,
+  proven by W) rather than a growing list of banned words or phrases. A ban list ages
+  into an enumeration nobody checks; a rule with a verification step can be tested.
 
 ## Output contracts
 
@@ -90,3 +99,7 @@ Three states, not four:
   regression testing code gets. A change that drops the pass rate is reviewed before it
   merges, not after. (Recorded 2026-09-02 with zero eval cases in the library, so this
   binds from the first one.)
+- A change made to fix a failing case is tested on two sets: the boundary set (the
+  case or cases that prompted the change) must improve, and the retention set (every
+  case that already passed) must not regress. Showing only the second is how a change
+  that fixed nothing gets merged.

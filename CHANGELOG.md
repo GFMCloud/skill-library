@@ -2,6 +2,24 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-02 - "AI Agents in Depth" (bojieli/ai-agent-book) harvested: six fragments on main, two by PR
+
+Pack bump: workbench 0.7.2. Source: github.com/bojieli/ai-agent-book, English text, pinned at
+commit `8b45707`. Verdict HARVEST; record and evidence in `docs/reviews/2026-09-02-ai-agent-book.md`
+and its directory. No new skill; the book builds agent harnesses, this library drives Claude Code.
+
+- **`model-effort-advisor`:** `decision-rubric.md` gains a diagnostic for a skill or prompt that
+  already underperforms: hold it fixed, swap the model tier, and let the direction of the change
+  say whether to rewrite the skill or change the model. `subagent-routing.md` build/review pairing
+  now hands the reviewer the artifact and criteria only, never the builder's rationale.
+- **`experiment-harness`:** the run template's Verdict field asks for paired per-item wins and a
+  stated sample size or interval when two configurations are compared.
+- **`docs/authoring-standard.md`:** descriptions state negative scope and cost, and a misrouting
+  skill gets its description fixed before a stronger model is tried; rules are shaped as scope,
+  action, exception, verification; a fix is tested on the boundary set and the retention set.
+- Pending by PR (stable skills): `evidence-report` gains a rule against summing isolated
+  savings; `capability-preflight`'s `excerpt()` keeps the tail of probe output as well as the head.
+
 ## 2026-09-02 - No-mannered-prose rule added to the three copy-producing skills
 
 Pack bumps: graham-voice 1.0.1, decks 0.2.1, frontend-design 0.4.1. Source: Anthropic's
