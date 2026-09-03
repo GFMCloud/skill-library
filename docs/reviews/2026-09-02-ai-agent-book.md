@@ -6,7 +6,7 @@ pin: git 8b45707504df0631be097f79ba8ec3fea245ff23 (2026-09-02T03:04:19Z)
 reviewed: 2026-09-02
 verdict: HARVEST
 recheck: n/a
-applied: the commit that adds this file (workbench 0.7.2) for the six S rows; rows 4 and 21 by PR from branch harvest/ai-agent-book-stable-rows (see "Pending by PR")
+applied: 593ba23 (workbench 0.7.2, six S rows and this record); afa4712 merged as c05555e via PR #5 (evidence-report 1.1.0, capability-preflight 1.1.0, foundry-core 0.2.1)
 evidence: docs/reviews/2026-09-02-ai-agent-book/ (cleanroom-review.md, comparison.md, decisions.md); scratch paths do not survive, so the three files are copied here
 ---
 
@@ -48,16 +48,18 @@ room was chunked by chapter. Companion code was cloned to read; nothing was run.
 - Row 31, rules shaped as scope, action, exception, verification:
   `docs/authoring-standard.md`, "Body", this commit.
 
-## Pending by PR
+## Landed by PR (#5, merged as c05555e, 2026-09-02)
 
 - Row 4, never sum isolated optimization savings: `plugins/foundry-core/skills/evidence-report/SKILL.md`,
-  "Rules", version 1.0.0 to 1.1.0.
+  "Rules", version 1.0.0 to 1.1.0, commit afa4712.
 - Row 21, head-and-tail excerpt with an explicit omission marker:
   `plugins/turn-reduction/skills/capability-preflight/preflight.py`, `excerpt()`,
-  version 1.0.0 to 1.1.0, proven by a fixture whose only failure line sits past the head window.
+  version 1.0.0 to 1.1.0, commit afa4712. Proven by a fixture whose only failure line sat
+  past the old 400-char window: old excerpt hid it, new excerpt shows it, redaction still
+  runs first. CI validate passed on the PR.
 
-Both are stable skills, so they change by PR per the authoring standard. Graham ruled
-"go with the PR" on 2026-09-02. This record is updated with the merge commit when it lands.
+Both are stable skills, so they changed by PR per the authoring standard. Graham ruled
+"go with the PR" on 2026-09-02 and "merge it" after CI went green.
 
 ## Ruled by Graham, 2026-09-02
 
