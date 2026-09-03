@@ -89,10 +89,23 @@ extraction. Say so when you run it (global model-routing rule). `claude -p`
 buffers its answer until the end, so an empty output file mid-run is normal.
 Check the exit code and that the file is non-empty before proceeding.
 
+**Large sources (over roughly 40k words) do not fit one context.** Split into
+natural units (chapters, or one SKILL.md per unit for a collection), run one
+clean-room `claude -p` per unit with the same rubric at `--model sonnet`, up to
+six in parallel, and check every exit code and every output for non-emptiness.
+Then run one headless synthesis pass at the CLI default model that reads only
+the per-unit reviews, never the incumbents, and produces the consolidated
+clean-room review: ranked techniques capped at 30 with near-duplicates merged,
+load-bearing claims, whole-source rubric scores, currency risk, folklore
+numbers, flags, reviewer disagreements. Sonnet reads, the frontier model judges.
+Procedure, the loop, and the synthesis prompt:
+[references/large-sources.md](references/large-sources.md). Worked example:
+`docs/reviews/2026-09-02-ai-agent-book/`.
+
 ## Step 3: Comparison against incumbents
 
 Now, and only now, bring in what is installed. Spawn one subagent (state the
-model; default the session's) with
+model; default Sonnet, this is extraction against the incumbents) with
 [references/comparison-prompt.md](references/comparison-prompt.md) filled in:
 the clean-room review, `~/skill-library/docs/inventory.md`, and the **full text**
 of every incumbent the inventory suggests (skill bodies plus their `references/`).

@@ -2,6 +2,18 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-02 - source-intake: chunked clean-room review for large sources
+
+Pack bump: workbench 0.7.3. Learned on the bojieli/ai-agent-book run (190k words), which
+could not fit one headless context.
+
+- **`source-intake`:** Step 2 gains a rule for sources over roughly 40k words: split into
+  natural units, one clean-room `claude -p` per unit at Sonnet (up to six in parallel, every
+  exit code and output checked), then one headless synthesis at the CLI default model that
+  reads only the per-unit reviews and emits the consolidated review Step 3 consumes. Model
+  split is now the default: Sonnet for per-unit reads and the Step 3 comparison agent,
+  frontier for synthesis. Procedure and synthesis prompt in `references/large-sources.md`.
+
 ## 2026-09-02 - "AI Agents in Depth" (bojieli/ai-agent-book) harvested: six fragments on main, two by PR
 
 Pack bump: workbench 0.7.2. Source: github.com/bojieli/ai-agent-book, English text, pinned at
