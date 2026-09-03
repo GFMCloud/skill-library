@@ -6,7 +6,7 @@ pin: fd4d59224ab96b43c6dc6888207c67b3bd5a24cf
 reviewed: 2026-09-03
 verdict: HARVEST
 recheck: n/a
-applied: none yet; rows ruled 2026-09-03 by /phase ratify in claude-scout-weekly (see decisions.md Rulings log); ratified S rows land in the next scout Phase 2
+applied: row 2 in ~/.claude commit e81d4d6 (2026-09-03); row 1 lands in the next scout Phase 2; row 3 is a runbook
 evidence: docs/reviews/2026-09-03-commerce-agents/
 ---
 
