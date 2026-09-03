@@ -6,7 +6,7 @@ pin: 2c606141936f1eeef17fa3043a72095b4765b9c2
 reviewed: 2026-09-02
 verdict: HARVEST
 recheck: 2026-12-01
-applied: pending (filled by the follow-up commit that names this one)
+applied: 98a3f2a (row 3 and this record), plus the follow-up commit that set this line
 evidence: docs/reviews/2026-09-02-andrej-karpathy-skills/ (cleanroom-review.md, comparison.md, currency-check.md, decisions.md)
 ---
 
