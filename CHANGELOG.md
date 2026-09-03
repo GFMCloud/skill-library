@@ -17,8 +17,13 @@ and its directory. No new skill; the book builds agent harnesses, this library d
 - **`docs/authoring-standard.md`:** descriptions state negative scope and cost, and a misrouting
   skill gets its description fixed before a stronger model is tried; rules are shaped as scope,
   action, exception, verification; a fix is tested on the boundary set and the retention set.
-- Pending by PR (stable skills): `evidence-report` gains a rule against summing isolated
-  savings; `capability-preflight`'s `excerpt()` keeps the tail of probe output as well as the head.
+- **`evidence-report` 1.1.0** (foundry-core 0.2.1): a rule against adding separately measured
+  improvements together; a combined claim is measured with everything applied or reported as
+  separate claims.
+- **`capability-preflight` 1.1.0:** `excerpt()` keeps the head and the tail of probe output with
+  an explicit "chars omitted" marker instead of head-only truncation, so a failure printed after
+  a long preamble is no longer hidden from the report. Proven by a fixture whose only error line
+  sat past the old 400-char window.
 
 ## 2026-09-02 - No-mannered-prose rule added to the three copy-producing skills
 

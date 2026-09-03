@@ -55,10 +55,20 @@ def redact(text):
 
 
 def excerpt(text):
+    """Head and tail of the redacted output with an explicit omission marker.
+
+    Head-only truncation hid the decisive line whenever a probe printed a
+    preamble longer than the window before failing; the error a preflight exists
+    to surface is usually the last line. The full redacted output stays in the
+    JSON record, so the excerpt only has to point at it, never replace it."""
     flat = " ".join(redact(text).split())
-    if len(flat) > EXCERPT_CHARS:
-        flat = flat[:EXCERPT_CHARS] + "…"
-    return flat
+    if len(flat) <= EXCERPT_CHARS:
+        return flat
+    head = EXCERPT_CHARS * 3 // 4
+    tail = EXCERPT_CHARS - head
+    omitted = len(flat) - head - tail
+    return "%s [... %d chars omitted, full output in the JSON record ...] %s" % (
+        flat[:head], omitted, flat[-tail:])
 
 
 # --------------------------------------------------------------------------------------
