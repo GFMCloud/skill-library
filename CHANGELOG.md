@@ -2,7 +2,7 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
-## 2026-09-02 - andrej-karpathy-skills reviewed: one fragment into proof-of-work, two banked
+## 2026-09-02 - andrej-karpathy-skills reviewed: one fragment into proof-of-work, two into the global CLAUDE.md
 
 Pack bump: foundry-core 0.2.2. Source: github.com/multica-ai/andrej-karpathy-skills, pinned at
 commit `2c60614`. Verdict HARVEST; record and evidence in
@@ -11,10 +11,10 @@ four-principle CLAUDE.md, two principles redundant against the harness prompt, o
 
 - **`proof-of-work` 1.1.0:** multi-step work declares each step's check before the step runs, so the
   evidence standard is fixed up front rather than chosen after the output exists.
-- **Banked, not written:** the orphan-cleanup asymmetry and match-existing-style rules, plus the
-  code-shape anti-overengineering bullets, are recorded in the review record as a ready paste for
-  `~/.claude/CLAUDE.md`. A 60-day transcript scan found one qualifying correction; the CLAUDE.md
-  economy rule needs two.
+- **Global CLAUDE.md, "Surgical edits" block** (`~/.claude` commit `566c71a`): the orphan-cleanup
+  asymmetry, match-existing-style, and code-shape anti-overengineering rules. First proposed as banked
+  (a 60-day transcript scan found one qualifying correction; the economy rule needs two); Graham ruled
+  to add it anyway, overriding the economy rule with that one correction on record.
 
 ## 2026-09-02 - source-intake: chunked clean-room review for large sources
 

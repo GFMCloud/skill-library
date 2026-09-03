@@ -6,22 +6,22 @@ pin: 2c606141936f1eeef17fa3043a72095b4765b9c2
 reviewed: 2026-09-02
 verdict: HARVEST
 recheck: 2026-12-01
-applied: 98a3f2a (row 3 and this record), plus the follow-up commit that set this line
+applied: 98a3f2a (row 3 and this record); ~/.claude commit 566c71a (rows 1-2, global CLAUDE.md); plus the follow-up commits that set this line
 evidence: docs/reviews/2026-09-02-andrej-karpathy-skills/ (cleanroom-review.md, comparison.md, currency-check.md, decisions.md)
 ---
 
 # andrej-karpathy-skills
 
-**Verdict:** HARVEST. One short skill restating four principles from a single X post; two are redundant against the harness prompt and the global working agreements, one contradicts them, and two fragments are real gaps that are banked here until they earn a line.
+**Verdict:** HARVEST. One short skill restating four principles from a single X post; two are redundant against the harness prompt and the global working agreements, one contradicts them, and two fragments are real gaps, now in the global CLAUDE.md on Graham's ruling.
 
 **Ancestry:** none. No file in the library or ~/.claude names the source; independent origin.
 
 ## What landed
 
 - Row 3, step-to-verify pointer: one bullet "Declare the check before the step" in `plugins/foundry-core/skills/proof-of-work/SKILL.md`, version 1.0.0 to 1.1.0, foundry-core 0.2.2, CHANGELOG entry dated 2026-09-02. Ratified by Graham.
-- Rows 1 and 2 (orphan-cleanup asymmetry, match existing style, code-shape anti-overengineering): banked, not written. The global CLAUDE.md economy rule requires two corrections; a 60-day transcript scan found one (over-engineering, process shape) and zero for drive-by edits, style drift, or deleted code. The block below is the paste for when the second correction lands, target `~/.claude/CLAUDE.md` under Working agreements.
+- Rows 1 and 2 (orphan-cleanup asymmetry, match existing style, code-shape anti-overengineering): landed as the "Surgical edits" block under Working agreements in `~/.claude/CLAUDE.md`, commit `566c71a` in that repo. Proposed as banked because the economy rule requires two corrections and a 60-day transcript scan found one (over-engineering, process shape) and zero for drive-by edits, style drift, or deleted code; Graham overrode the rule and ruled to add it. The block as landed:
 
-### Banked block (rows 1 and 2)
+### Landed block (rows 1 and 2)
 
 ```markdown
 ### Surgical edits
@@ -61,5 +61,5 @@ Quoted, not acted on:
 ## Re-review trigger
 
 - The pin moving with a maintainer commit (none since 2026-04-20 as of 2026-09-02); PRs #188 (self-check), #196 (fix the sort example), or a no-test fallback merging.
-- The second user correction in categories A to D of the transcript scan, which promotes the banked block into `~/.claude/CLAUDE.md`.
+- A correction in categories A to D of the transcript scan after 2026-09-02 is evidence the block is not working as written, which is the trigger to revise it.
 - Recheck date 2026-12-01.
