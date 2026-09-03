@@ -2,6 +2,20 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-03 - repo-handoff: hand a personal-data-bearing repo to another person
+
+Pack bump: workbench 0.9.0. New incubator skill `repo-handoff` (weekly maintainer cycle 5,
+F-11), built because the same workflow ran by hand three times between 2026-08-28 and
+2026-09-02 for three recipients (a privatized fork before Graham's data went in, a clean
+branch cut for Lauren with `git log -S`, a sanitized fantasy-draft toolkit for a friend).
+
+- **`repo-handoff`:** inventory personal, league or client-specific, copyrighted and
+  credential-bearing content by identifier grep and file class; cut a clean commit or a
+  sanitized subset; prove the delivered tree clean (identifier grep to zero, `gitleaks`,
+  credential-file find), a hit being a stop; create the recipient's private repo without
+  touching Graham's origin; write a walkthrough and execute every command in it before
+  handover. Negative scope: not `folder-to-repo` (fresh folders), not a routine push.
+
 ## 2026-09-03 - turn-reduction 1.1.0: the plugin gains the version field it never had
 
 Pack bump: turn-reduction 1.1.0 (weekly maintainer cycle 5, F-2). `plugin.json` had no
