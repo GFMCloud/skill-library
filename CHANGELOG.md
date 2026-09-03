@@ -2,6 +2,14 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-03 - turn-reduction 1.1.0: the plugin gains the version field it never had
+
+Pack bump: turn-reduction 1.1.0 (weekly maintainer cycle 5, F-2). `plugin.json` had no
+`version` since the migration commit that called it "stable 1.0.0", so the two skill bumps
+since (standing-authorization 1.1.0 on 2026-08-28, capability-preflight 1.1.0 on
+2026-09-02) landed without the plugin bump the authoring rules require. Installed caches
+had been tracking it by commit sha. No skill body changed.
+
 ## 2026-09-02 - x-read: full X posts, Articles, and threads from the terminal
 
 Pack bump: workbench 0.8.0. New incubator skill `x-read`.
