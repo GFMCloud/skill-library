@@ -2,6 +2,20 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-02 - andrej-karpathy-skills reviewed: one fragment into proof-of-work, two banked
+
+Pack bump: foundry-core 0.2.2. Source: github.com/multica-ai/andrej-karpathy-skills, pinned at
+commit `2c60614`. Verdict HARVEST; record and evidence in
+`docs/reviews/2026-09-02-andrej-karpathy-skills.md` and its directory. No new skill; the source is a
+four-principle CLAUDE.md, two principles redundant against the harness prompt, one contradicting it.
+
+- **`proof-of-work` 1.1.0:** multi-step work declares each step's check before the step runs, so the
+  evidence standard is fixed up front rather than chosen after the output exists.
+- **Banked, not written:** the orphan-cleanup asymmetry and match-existing-style rules, plus the
+  code-shape anti-overengineering bullets, are recorded in the review record as a ready paste for
+  `~/.claude/CLAUDE.md`. A 60-day transcript scan found one qualifying correction; the CLAUDE.md
+  economy rule needs two.
+
 ## 2026-09-02 - source-intake: chunked clean-room review for large sources
 
 Pack bump: workbench 0.7.3. Learned on the bojieli/ai-agent-book run (190k words), which

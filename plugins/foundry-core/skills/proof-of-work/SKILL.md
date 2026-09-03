@@ -3,8 +3,8 @@ name: "proof-of-work"
 description: "Produce executed evidence that a piece of work actually works before presenting it as done — run the code against representative data, inspect the render, print the validation output. Use before declaring any artifact complete, and whenever a tool reports its own success."
 metadata:
   maturity: stable
-  version: 1.0.0
-  reviewed: 2026-08-09
+  version: 1.1.0
+  reviewed: 2026-09-02
 ---
 
 # proof-of-work
@@ -23,6 +23,10 @@ executed evidence attached.
   result with no input named is not reproducible.
 - **Verify at the level the failure lives.** A check that structurally cannot
   see the defect is not a check, however green it comes back.
+- **Declare the check before the step.** For multi-step work, each step in the
+  plan names the check that will prove it (`step -> verify: check`) before the
+  step runs, so the evidence standard is fixed up front rather than chosen after
+  the output is in hand.
 
 ## A success message is not evidence
 
