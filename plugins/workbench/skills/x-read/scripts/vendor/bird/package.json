@@ -1,0 +1,10 @@
+{
+  "name": "bird-read",
+  "version": "0.8.0",
+  "description": "Vendored subset of @steipete/bird (search + TweetDetail + article extraction) for the x-read skill",
+  "type": "module",
+  "private": true,
+  "engines": { "node": ">=22" },
+  "license": "MIT",
+  "attribution": "Based on @steipete/bird v0.8.0 by Peter Steinberger (MIT License). Read-only mirror: edit upstream, re-vendor."
+}

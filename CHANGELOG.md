@@ -2,6 +2,20 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-02 - x-read: full X posts, Articles, and threads from the terminal
+
+Pack bump: workbench 0.8.0. New incubator skill `x-read`.
+
+- **`x-read`:** `node scripts/x-read.mjs <post-url>` returns a post, a long-form X Article
+  (title plus complete body via the `TweetDetail` GraphQL call with article field toggles,
+  falling back to `UserArticlesTweets` plain text), a whole thread, or an X search, as
+  Markdown or `--json`. Engine is a vendored read-only subset of `@steipete/bird` 0.8.0
+  (MIT; the npm package is deprecated upstream, hence pinned and vendored). Credentials come
+  from `AUTH_TOKEN`/`CT0` env or keychain items `x-read-*` (fallback `last30days-*`), stored
+  by `scripts/x-read-auth.sh`, which only Graham runs; values never pass through Claude.
+  Motivation: last30days' vendored bird subset is search-only and caps post text at 500
+  characters, so Articles arrived as previews.
+
 ## 2026-09-02 - andrej-karpathy-skills reviewed: one fragment into proof-of-work, two into the global CLAUDE.md
 
 Pack bump: foundry-core 0.2.2. Source: github.com/multica-ai/andrej-karpathy-skills, pinned at
