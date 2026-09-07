@@ -23,9 +23,9 @@ evidence: the commit that adds this file; scratch clean-room review and comparis
 - Row 4: P0/P1/P2 severity tiers added to Step 4 of `cd-to-pptx/references/pptx-review-playbook.md`, with a Step 2b failure as P0.
 - decks plugin 0.2.1 to 0.2.2; CHANGELOG entry dated 2026-09-07.
 
-## Held for Graham
+## Row 2: ruled out by Graham, 2026-09-07
 
-- Row 2: the HTML deck production contract (four required `data-*` attributes, 12-name layout registry, `validate_html_deck.py`, starter template) as a new `html-deck-builder` skill, effort M. Recommendation: out. The gap is real in the decks plugin, but visualize already owns HTML decks on this machine, and a second lane adds to the four-way routing collision. Three upstream defects would need fixing first: the ratio regex rejects the recipe's own `4:5`; `html-production-lock.md` points at a "Strategic Minimal" system that `html-visual-systems.md` names "Architectural Minimal"; sixty lines of "Surpass-Guizang" positioning would need stripping.
+- Row 2: the HTML deck production contract (four required `data-*` attributes, 12-name layout registry, `validate_html_deck.py`, starter template) as a new `html-deck-builder` skill, effort M. Ruled out. The gap is real in the decks plugin, but visualize already owns HTML decks on this machine, and a second lane adds to the four-way routing collision. Three upstream defects would need fixing first: the ratio regex rejects the recipe's own `4:5`; `html-production-lock.md` points at a "Strategic Minimal" system that `html-visual-systems.md` names "Architectural Minimal"; sixty lines of "Surpass-Guizang" positioning would need stripping.
 
 ## What was declined, and why
 
