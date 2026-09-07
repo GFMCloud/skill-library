@@ -48,6 +48,24 @@ If structure fails, fix that before anything visual - a missing slide changes ev
 
 ---
 
+## Step 2b - Object inspection (prove "editable" before you look at pixels)
+
+A rendered PNG cannot tell a native text box from a picture of one. "Native shapes, never screenshots" is the build's top non-negotiable, so check it with code, not eyes, before the visual pass. Three standard-library scripts live in this skill's `scripts/` directory (vendored from gnipbao/knowledge-cat-ppt-skill, MIT, pinned 889c3dc; they read the OOXML directly and need no python-pptx):
+
+```
+python3 scripts/check_pptx_editability.py "[PPTX_PATH]" --expected-slides N --fail-on-image-only-slides --require-native-table
+python3 scripts/probe_pptx_editability.py "[PPTX_PATH]" --search "[a phrase that appears on one slide]"
+python3 scripts/extract_pptx_text.py "[PPTX_PATH]"
+```
+
+- The checker counts text shapes, pictures, charts, and tables per slide and exits non-zero on any slide that is image-only or below the text-shape minimum. Add `--require-native-table` only when the source has a table; leave `--require-native-chart` off, since this skill deliberately leaves charts as placeholder boxes.
+- The probe copies the file, rewrites one text run, reopens the copy, and confirms the edit landed while the original's checksum is unchanged. Pass a real phrase from the deck; the default search string is the vendor's demo text and will not match. A failing probe means the text is not a native text object, whatever the render looks like.
+- The extractor dumps every text run per slide, which is the fastest way to run the placeholder search from Step 2 ("TODO", "INSERT", "Lorem", "[", "PLACEHOLDER") across the whole file at once.
+
+Any error here is a P0 (see Step 4) and goes back to the build before Step 3 starts. Both scripts carry `--self-test`; run it once on a new machine before trusting a green result.
+
+---
+
 ## Step 3 - Visual check against the wireframe
 
 Now the real review. Go slide by slide against the PDF. Lean on the complexity flags from the build (the chart-heavy and dense slides are where problems hide). For each slide check:
@@ -81,6 +99,14 @@ Good punch-list entries:
 ```
 
 As you write each one, tag it: **real defect** or **suspected renderer artifact**. If you can open it in PowerPoint, confirm. Don't send renderer artifacts to the fix pass - you'll burn cycles chasing something that isn't broken.
+
+Give every real defect a severity too, so the fix pass and the stop decision in Step 6 have an order to work in:
+
+- **P0 - must fix before delivery:** file does not open; a slide is missing or its copy did not make it across; text is cut off, overlapping, or unreadable; placeholder text remains; a slide failed the Step 2b object inspection (image-only, or text that is not a native object); a chart or table from the PDF has no placeholder or was wrongly blanked into one.
+- **P1 - fix before a client sees it:** wrong font or fallback font anywhere; off-token colors; chrome (logo, footer, accent line) shifted between slides; a stretched logo; low contrast or uneven spacing that hurts readability.
+- **P2 - nudge if time allows:** sub-pixel alignment, a caption to tweak, a margin a couple of pixels off. These are the items Step 6 says to finish by hand.
+
+A punch list with no P0s and a couple of P2s is done. A punch list with one P0 is not, however clean the rest looks.
 
 ---
 
@@ -145,6 +171,7 @@ Some things are just faster to do yourself than to prompt for. Don't iterate the
 | Task | Tool |
 |---|---|
 | Render the PPTX for review | builder -> pptx to PDF to PNG (sandbox / LibreOffice) |
+| Prove native editability | `scripts/check_pptx_editability.py` and `scripts/probe_pptx_editability.py` (Step 2b) |
 | Structural + visual review | the rendered PNGs next to the reference PDF, your eyes |
 | Confirm a suspected artifact is/isn't real | real PowerPoint, if available |
 | Targeted fixes | build session + punch list |

@@ -91,7 +91,7 @@ For section-of-master decks, keep slide masters and layouts consistent with the 
 
 ## Step 5 - Self-QA (per deck)
 
-Render the built PPTX through `pptx -> PDF -> PNG` and compare slide-by-slide against the reference PDF - QA the PPTX, never the HTML. Use a fresh-eyes subagent pinned to `model: sonnet` for the visual comparison. Distinguish real file defects from QA-renderer artifacts (the preview is not PowerPoint). Read `references/pptx-review-playbook.md` for the structural + visual checklist.
+Render the built PPTX through `pptx -> PDF -> PNG` and compare slide-by-slide against the reference PDF - QA the PPTX, never the HTML. Use a fresh-eyes subagent pinned to `model: sonnet` for the visual comparison. Distinguish real file defects from QA-renderer artifacts (the preview is not PowerPoint). Before the visual pass, run `scripts/check_pptx_editability.py` and `scripts/probe_pptx_editability.py` on the built file so "native, editable" is proven by object inspection, not by how the render looks. Read `references/pptx-review-playbook.md` for the object-inspection step and the structural + visual checklist.
 
 ## Step 6 - Hand off
 

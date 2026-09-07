@@ -2,6 +2,22 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-07 - decks 0.2.2: cd-to-pptx proves editability with code; layout-critique names the tells
+
+Pack bump: decks 0.2.2. Source: `source-intake` HARVEST of gnipbao/knowledge-cat-ppt-skill
+(pinned 889c3dc, MIT); review record in `docs/reviews/2026-09-07-knowledge-cat-ppt-skill.md`.
+
+- **`cd-to-pptx`:** the review playbook gains Step 2b, an object-inspection gate that runs
+  before the visual pass. Three vendored standard-library scripts count native text shapes,
+  pictures, charts and tables per slide, fail on image-only slides, and prove a text object
+  can be edited with a reversible mutation probe against an unchanged original checksum.
+  Punch-list items now carry a P0/P1/P2 severity next to the real-defect/artifact tag, and
+  an object-inspection failure is a P0. Proven this session by the scripts' self-tests, a
+  pass on the vendor's six-slide native deck, and a deliberate image-only deck failing both.
+- **`layout-critique`:** checklist item 5 lists ten named machine-made-slide tells
+  (gradient blobs, over-rounded floating cards, fake laptop frames) instead of the generic
+  "decorative chartjunk" line alone.
+
 ## 2026-09-03 - repo-handoff: hand a personal-data-bearing repo to another person
 
 Pack bump: workbench 0.9.0. New incubator skill `repo-handoff` (weekly maintainer cycle 5,

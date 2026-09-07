@@ -50,6 +50,18 @@ Scan the slide for half a second. Does one thing grab the eye, or does everythin
 **5. Can you see the layout?**
 Look for decorative chartjunk - drop shadows, gradient fills, boxes around boxes, divider lines that don't separate anything, icons that decorate rather than inform. Every one of those is the layout showing through. Fix: delete anything that isn't carrying meaning. If removing it loses nothing, it was noise.
 
+The tells that mark a machine-made slide, worth scanning for by name:
+- Title plus six bullets as the default pattern
+- Random icons with no informational value
+- Decorative gradient blobs or orbs
+- Over-rounded floating cards everywhere
+- Thin gray text on an off-white background
+- Stock-like blurry hero images
+- The same layout repeated across most slides
+- Inconsistent margins and gaps
+- An accent line under every title
+- Screenshots inside fake laptop frames, unless the frame serves the story
+
 **6. Is color identifying or decorating?**
 Color should mean something - this is the highlighted number, this is the warning, this is our brand. Color sprinkled for variety just adds noise and competes with the one place color should be pulling the eye. Fix: reserve the accent for the thing that matters; let everything else stay neutral. (Brand colors come from the project's own brand kit or design tokens if one exists, otherwise a neutral accessible default - say so rather than inventing a brand.)
 
