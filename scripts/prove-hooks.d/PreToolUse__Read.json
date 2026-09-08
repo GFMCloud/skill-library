@@ -1,0 +1,37 @@
+{
+ "_hook": "route-large-read.py (PreToolUse, matcher Read): while the llama-offload marker exists, denies a Read of a file over 200 KB unless offset or limit is given; silent otherwise",
+ "born": "2026-09-07",
+ "env": {
+  "LLAMA_OFFLOAD_MARKER": "{{TMP_PLAIN}}"
+ },
+ "positive": [
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "{{TMP_LARGE}}"
+   }
+  }
+ ],
+ "negative": [
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "{{TMP_PLAIN}}"
+   }
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "{{TMP_LARGE}}",
+    "offset": 1,
+    "limit": 200
+   }
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "ls"
+   }
+  }
+ ]
+}

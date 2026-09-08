@@ -2,6 +2,25 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-07 - hooks runbook run: prove-hooks.sh takes control lists, env, and born dates; llama-offload marker protocol
+
+Pack bump: workbench 0.9.4. Source: claude-scout-weekly `docs/runbooks/2026-09-03-hooks-and-permissions.md`
+run on Graham's instruction (Steps 1, 2, 4; Step 3 in part; Step 5 gated on replay-hooks.py).
+Local commit only.
+
+- **`scripts/prove-hooks.sh`:** a fixture's `positive` and `negative` may be lists (every
+  positive must deny, every negative must allow); a fixture-level `env` is exported to the hook;
+  a `born` date is documented for `replay-hooks.py`; three more placeholders (`{{TMP_ENDASH}}`,
+  `{{TMP_LARGE}}`, `{{TMP_SUPERSEDED}}`). Proven by deliberate failure: a candidate settings
+  file with the Bash hook replaced by `true` came back RED on all 23 positives.
+- **`scripts/prove-hooks.d/`:** `PreToolUse__Bash.json` (23 positives, 17 negatives for
+  `~/.claude/hooks/deny-destructive.py`), `PreToolUse__Read.json` (the llama-offload router,
+  `~/.claude/hooks/route-large-read.py`), `PreToolUse__Artifact.json` widened to en dash and
+  the `.superseded` exemption for `~/.claude/hooks/dash-gate.sh`. The hook scripts live in
+  `~/.claude/hooks/`, outside this repo; the fixtures here are their proof.
+- **`llama-offload`:** step 1 writes `~/.claude/state/llama-offload-active` and step 6 removes
+  it; while it exists, a plain Read of a file over 200 KB is denied and routed here.
+
 ## 2026-09-07 - retro owns recurrence: third occurrence of a failure class is a mechanism failure, not a fourth rule
 
 Pack bump: workbench 0.9.3. Source: claude-scout-weekly `/phase ratify` Q-2026-09-07-9 (Graham:

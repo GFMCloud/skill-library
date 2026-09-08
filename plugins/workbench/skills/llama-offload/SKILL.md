@@ -42,7 +42,10 @@ of a bad batch exceeds the generation savings.
 
 ## Workflow
 
-1. **Design.** Claude writes the per-item prompt. Constraints:
+1. **Design.** Write the marker `~/.claude/state/llama-offload-active` (`mkdir -p` the
+   directory); while it exists, the route-large-read hook denies a plain Read of any file over
+   200 KB and points here, so bulk input is never read into context by accident. Then Claude
+   writes the per-item prompt. Constraints:
    - Output format locked, JSON or single-line
    - "Output ONLY the answer, no preamble or commentary"
    - Preserve all specifics verbatim: names, numbers, dates, paths
@@ -65,6 +68,7 @@ of a bad batch exceeds the generation savings.
    exceeds 10%, excluding item classes where ambiguity is expected and UNSURE is the correct answer,
    such as genuinely colliding names. A high unexpected-escalation rate means the task was not
    actually intern-grade. Stop and reconsider the split rather than grinding through.
+   Remove the marker file last, whatever the outcome; a stale marker keeps routing reads.
 
 ## Hard rules
 

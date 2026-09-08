@@ -12,9 +12,16 @@
 # 2026-09-03 rows 1, 3, 5).
 #
 # Fixtures live in scripts/prove-hooks.d/<Event>__<matcher>[__<index>].json:
-#   {"positive": <stdin json>, "negative": <stdin json>}
+#   {"positive": <stdin json> | [<stdin json>, ...], "negative": <stdin json> | [...],
+#    "env": {<VAR>: <value>} (optional, exported to the hook for every control),
+#    "born": "YYYY-MM-DD" (the date the hook was wired; ignored here, required by
+#    scripts/replay-hooks.py, the second proof, which measures noise on real history)}
+# Every positive must deny and every negative must allow; the first control that
+# disagrees names the hook RED.
 # Placeholders inside fixture strings are materialized as temp files before the run:
 #   {{TMP_EMDASH}}  a file containing an em dash      {{TMP_PLAIN}}  a plain ASCII file
+#   {{TMP_ENDASH}}  a file containing an en dash      {{TMP_LARGE}}  a 300 KB ASCII file
+#   {{TMP_SUPERSEDED}}  an em-dash file whose name ends .superseded
 # Add a fixture for every new hook in the same commit that adds the hook.
 #
 # Detector arm vs exemption arm (hstack row 3, the second step, not yet implemented): a
@@ -67,6 +74,9 @@ def materialize(name, content):
 placeholders = {
     "{{TMP_EMDASH}}": materialize("emdash.html", "<p>before — after</p>\n"),
     "{{TMP_PLAIN}}": materialize("plain.html", "<p>before and after</p>\n"),
+    "{{TMP_ENDASH}}": materialize("endash.html", "<p>2026\u2013 2027</p>\n"),
+    "{{TMP_LARGE}}": materialize("large.txt", ("x" * 99 + "\n") * 3072),
+    "{{TMP_SUPERSEDED}}": materialize("old.html.superseded", "<p>before \u2014 after</p>\n"),
 }
 def fill(obj):
     s = json.dumps(obj)
@@ -90,9 +100,10 @@ def verdict(stdout):
         return "allow"
     return "error"
 
-def run(cmd, payload):
+def run(cmd, payload, env=None):
     try:
-        p = subprocess.run(cmd, shell=True, input=payload, capture_output=True, text=True, timeout=30)
+        p = subprocess.run(cmd, shell=True, input=payload, capture_output=True, text=True, timeout=30,
+                           env={**os.environ, **(env or {})})
     except subprocess.TimeoutExpired:
         return "error", "timeout after 30s"
     if p.returncode not in (0, 2):  # 2 is Claude Code's blocking exit code
@@ -119,17 +130,24 @@ for event, entries in (hooks or {}).items():
             try:
                 fx = json.load(open(fixture))
                 pos, neg = fx["positive"], fx["negative"]
+                pos = pos if isinstance(pos, list) else [pos]
+                neg = neg if isinstance(neg, list) else [neg]
+                env = {k: json.loads(fill(v)) for k, v in (fx.get("env") or {}).items()}
             except Exception as e:
                 red(label, f"bad fixture {os.path.basename(fixture)}: {e}")
                 continue
-            pv, pout = run(hook["command"], fill(pos))
-            nv, nout = run(hook["command"], fill(neg))
-            if pv == "deny" and nv == "allow":
-                green(label, f"positive=deny negative=allow (fixture {os.path.basename(fixture)})")
+            why = []
+            for k, payload in enumerate(pos):
+                pv, pout = run(hook["command"], fill(payload), env)
+                if pv != "deny":
+                    why.append(f"positive #{k} was {pv} (dead detector under-blocks): {pout or '<empty>'}")
+            for k, payload in enumerate(neg):
+                nv, nout = run(hook["command"], fill(payload), env)
+                if nv != "allow":
+                    why.append(f"negative #{k} was {nv} (dead exemption over-blocks): {nout or '<empty>'}")
+            if not why:
+                green(label, f"{len(pos)} positive=deny, {len(neg)} negative=allow (fixture {os.path.basename(fixture)})")
             else:
-                why = []
-                if pv != "deny":  why.append(f"positive control was {pv} (dead detector under-blocks): {pout or '<empty>'}")
-                if nv != "allow": why.append(f"negative control was {nv} (dead exemption over-blocks): {nout or '<empty>'}")
                 red(label, "; ".join(why))
 
 reds = [r for r in results if r[0] == "RED"]

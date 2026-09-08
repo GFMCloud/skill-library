@@ -1,5 +1,49 @@
 {
-  "_hook": "em-dash pre-publish check (PreToolUse, matcher Artifact); denies a publish whose file contains an em dash",
-  "positive": {"tool_name": "Artifact", "tool_input": {"action": "publish", "file_path": "{{TMP_EMDASH}}"}},
-  "negative": {"tool_name": "Artifact", "tool_input": {"action": "publish", "file_path": "{{TMP_PLAIN}}"}}
+ "_hook": "dash-gate.sh (PreToolUse, matcher Artifact): denies a publish whose file contains an em dash, en dash, or horizontal bar; exempt .superseded and the scratchpad root",
+ "born": "2026-08-28",
+ "positive": [
+  {
+   "tool_name": "Artifact",
+   "tool_input": {
+    "action": "publish",
+    "file_path": "{{TMP_EMDASH}}"
+   }
+  },
+  {
+   "tool_name": "Artifact",
+   "tool_input": {
+    "file_path": "{{TMP_EMDASH}}"
+   }
+  },
+  {
+   "tool_name": "Artifact",
+   "tool_input": {
+    "action": "publish",
+    "file_path": "{{TMP_ENDASH}}"
+   }
+  }
+ ],
+ "negative": [
+  {
+   "tool_name": "Artifact",
+   "tool_input": {
+    "action": "publish",
+    "file_path": "{{TMP_PLAIN}}"
+   }
+  },
+  {
+   "tool_name": "Artifact",
+   "tool_input": {
+    "action": "read",
+    "url": "https://claude.ai/code/artifact/x"
+   }
+  },
+  {
+   "tool_name": "Artifact",
+   "tool_input": {
+    "action": "publish",
+    "file_path": "{{TMP_SUPERSEDED}}"
+   }
+  }
+ ]
 }
