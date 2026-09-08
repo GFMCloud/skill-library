@@ -2,6 +2,22 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-08 - replay-hooks.py: a hook's fire rate on real history is the second proof
+
+No pack bump (a repo script, no plugin body changed). Source: claude-scout-weekly
+`docs/runbooks/2026-09-07-replay-hooks.md`, run on Graham's instruction; oops-i-did-it-again
+review rows 1 and 6 (ruled Q-2026-09-07-8). Local commit only.
+
+- **`scripts/replay-hooks.py`** (new): runs a registered hook command over every Bash (or
+  Read) tool_use in a COPY of Claude Code transcripts and prints counts and rates per rule,
+  split at the fixture's `born` date, with a NOISY flag above 5 fires per 100 commands. It
+  refuses `~/.claude/projects` as input, refuses a fixture without `born`, and prints no
+  command body, path, or session id. Proven by a planted transcript built from the
+  deny-destructive fixture (40 commands: 23 denials, 17 silent, per-rule counts exact) and
+  by the refusal control.
+- **`scripts/prove-hooks.d/*.json`** carry `born` (added 2026-09-07 with the hooks runbook);
+  `prove-hooks.sh`'s header names replay-hooks.py as the second proof.
+
 ## 2026-09-07 - hooks runbook run: prove-hooks.sh takes control lists, env, and born dates; llama-offload marker protocol
 
 Pack bump: workbench 0.9.4. Source: claude-scout-weekly `docs/runbooks/2026-09-03-hooks-and-permissions.md`
