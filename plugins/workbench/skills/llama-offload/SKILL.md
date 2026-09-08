@@ -48,13 +48,17 @@ of a bad batch exceeds the generation savings.
    - Preserve all specifics verbatim: names, numbers, dates, paths
    - Explicit escape hatch: "If the item is ambiguous or you cannot determine the answer, respond
      with exactly UNSURE"
+   - Validate every input before the batch runs: a missing or empty input record fails loudly
+     and is never sent, since a model given nothing returns confident nonsense
 2. **Sample.** Run 5 to 10 representative items, including known-messy ones rather than only clean
    ones. Show the input/output pairs to the user. HARD STOP, wait for approval before the full batch.
 3. **Batch.** Process the full set via the localhost:11434 API, not `ollama run` per item. The API
    keeps the model loaded; per-item CLI calls pay reload overhead. Write results to a file as you go,
    never stdout-only.
 4. **Verify.** Format compliance check on 100% of output, which is cheap and scriptable. Content
-   spot-check a random 5%, minimum 10 items, against source.
+   spot-check a random 5%, minimum 10 items, against source. Check the `model` field of every
+   response against the model requested: a silent fallback to another local model is a failure,
+   not a result.
 5. **Escalate.** Collect all UNSURE responses and format failures. Claude handles those items
    individually. The intern escalates; it never guesses.
 6. **Report.** Counts: processed, escalated, spot-check pass rate. Flag if the escalation rate
@@ -71,11 +75,15 @@ of a bad batch exceeds the generation savings.
 - Batch output is always written to disk before verification.
 - Sensitive data such as customer info or financial records is a reason TO delegate locally rather
   than process via a cloud API, but the same judgment boundaries still apply.
+- Per-item text that looks like a secret (a key, a token, a password) is shown to the user before
+  it is forwarded verbatim; never silently redact it and never silently forward it.
 
 ## Implementation notes
 
 - API endpoint: POST http://localhost:11434/api/generate with
   `{"model": "...", "prompt": "...", "stream": false}`
+- Set `"options": {"temperature": 0.1}` (0.1 to 0.2) in the request body so batch output is
+  reproducible across reruns and spot-checks compare like with like.
 - Portable across Mac and Windows. The API contract is identical, only the wrapper script language
   differs, bash versus PowerShell.
 - Batch scripts live alongside the task, not in this skill. Each batch job is disposable; the

@@ -62,6 +62,9 @@ inaccurate description, not to the model.
 - A skill or check that is a heuristic states its measured ceiling in the file that
   implements it (a backtest table, "catches about a third of cases"), so a reader knows
   what it misses before trusting it (hstack review, 2026-09-03).
+- A skill or check that enforces something lists its known weaknesses beside its
+  rationale, at the same altitude, never in an appendix or a later section (trailofbits
+  coop review, 2026-09-07).
 
 ## Output contracts
 

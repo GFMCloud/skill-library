@@ -2,6 +2,24 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-07 - scout ratify: clean room hides MCP tools; llama-offload gains four batch-hygiene rules
+
+Pack bump: workbench 0.9.2. Source: rulings from claude-scout-weekly `/phase ratify` 2026-09-07
+(Q-2026-09-07-5; spotify-shunt rows 2 to 5; trailofbits-coop row 5; oops-i-did-it-again row 8),
+applied the same evening on Graham's instruction. Local commit only; rides the Thursday push manifest.
+
+- **`source-intake`:** the clean-room command adds `--disallowedTools "mcp__*"`; `--restricted`
+  leaves MCP servers visible, and three reviewers on 2026-09-07 could see the GitHub MCP.
+  Proven by a reviewer asked to list its tools naming no `mcp__` tool.
+- **`llama-offload`:** validate inputs before the batch (empty record fails loudly); check each
+  response's `model` field against the request (silent fallback is a failure); temperature 0.1
+  to 0.2 in the request body; per-item text that looks like a secret is shown before it is
+  forwarded, never silently redacted or forwarded (Spotify shunt review).
+- **`docs/authoring-standard.md`:** an enforcing skill or check lists its known weaknesses
+  beside its rationale, at the same altitude (coop review).
+- **`docs/reviews/2026-09-03-hstack/decisions.md`** row 7 carries a pointer to the
+  oops-i-did-it-again Stop-hook loop brake for whoever builds the first Stop hook.
+
 ## 2026-09-07 - scout cycle 2: clean room gets a tool-layer boundary; model-effort-advisor learns Fable 5.1 and cache economics; prove-hooks.sh
 
 Pack bump: workbench 0.9.1. Source: rulings from claude-scout-weekly `/phase ratify` 2026-09-03

@@ -78,7 +78,7 @@ remove a context asymmetry; an empty context does. Run:
 ```bash
 cd <pinned source path> && claude -p "$(cat <rubric-file>) ... path: <pinned source path>" \
   --setting-sources "" --restricted --permission-prompts none \
-  --allowedTools "Read Glob Grep" > <scratch>/cleanroom-review.md
+  --allowedTools "Read Glob Grep" --disallowedTools "mcp__*" > <scratch>/cleanroom-review.md
 ```
 
 Rubric by source type, each already phrased as a complete prompt that takes a
@@ -93,8 +93,11 @@ extraction. Say so when you run it (global model-routing rule). `--restricted`
 (Claude Code 2.1.248+) removes every tool that runs commands or code and confines
 file tools to the working directory, which is why the command starts with `cd` into
 the pin; `--permission-prompts none` (2.1.259+) denies anything that would have
-prompted. Proven 2026-09-07: a reviewer asked to run `echo` with Bash answered
-`NO-BASH` while Read of a file in the pin worked. `claude -p`
+prompted. `--restricted` leaves MCP servers visible, so `--disallowedTools "mcp__*"`
+removes them from the reviewer's context as well (three reviewers on 2026-09-07 could
+see the GitHub MCP and were stopped only by the denied prompt). Proven 2026-09-07: a
+reviewer asked to run `echo` with Bash answered `NO-BASH` while Read of a file in the
+pin worked, and a reviewer asked to list its tools named no `mcp__` tool. `claude -p`
 buffers its answer until the end, so an empty output file mid-run is normal.
 Check the exit code and that the file is non-empty before proceeding.
 
