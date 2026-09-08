@@ -2,6 +2,16 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-07 - retro owns recurrence: third occurrence of a failure class is a mechanism failure, not a fourth rule
+
+Pack bump: workbench 0.9.3. Source: claude-scout-weekly `/phase ratify` Q-2026-09-07-9 (Graham:
+`retro` owns the "a mistake just happened" trigger), oops-i-did-it-again row 7. Local commit only.
+
+- **`retro`:** section 3 gains a recurrence check before routing: read earlier retros for the
+  same failure class; on the third occurrence the destination is a statement that the mechanism
+  holding the existing rules is failing, with those rules named, never another rule on top.
+  The global CLAUDE.md is untouched; no new always-loaded line.
+
 ## 2026-09-07 - scout ratify: clean room hides MCP tools; llama-offload gains four batch-hygiene rules
 
 Pack bump: workbench 0.9.2. Source: rulings from claude-scout-weekly `/phase ratify` 2026-09-07

@@ -87,6 +87,14 @@ this routing table:
 | Behavioral regression (the agent did the wrong thing and no script can catch it deterministically) | An eval case in the owning skill, kept as a regression test |
 | One-off (true once, unlikely to recur, not worth a standing rule) | The retro only, this is where it correctly dies |
 
+**Recurrence check before routing:** read the earlier files in
+`.claude/retros/` for the same failure class. On its third occurrence, the
+destination is none of the rows above: stop and state that the mechanism
+already holding two rules for it is failing, name those rules, and propose
+fixing or replacing that mechanism. Never stack a fourth rule on three that
+are not firing (oops-i-did-it-again review, 2026-09-07; ruled Q-2026-09-07-9,
+`retro` owns this trigger).
+
 **Cross-project special case:** the memory directory is scoped per working
 directory. A lesson that applies across projects, not just this one, does not
 belong in this project's memory, it belongs in `~/.claude/CLAUDE.md` instead
