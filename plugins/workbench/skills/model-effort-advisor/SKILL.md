@@ -56,7 +56,7 @@ Never guess silently. Getting the mode wrong wastes more time than asking once.
 
 1. Read the task or prompt
 2. Score it against `references/decision-rubric.md` (Reasoning, Creativity, Risk, Repetition, Human Oversight)
-3. Pick the model and reasoning effort using `references/model-catalog.md` and `references/effort-sizing.md`
+3. Pick the model and reasoning effort using `references/model-catalog.md` and `references/effort-sizing.md` (and `references/cache-economics.md` for a long or unattended session)
 4. Decide inline vs. subagent(s) using `references/subagent-routing.md`
 5. Output the Quick Pass block from `references/output-template.md` - nothing else, no extra sections
 

@@ -2,6 +2,31 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-07 - scout cycle 2: clean room gets a tool-layer boundary; model-effort-advisor learns Fable 5.1 and cache economics; prove-hooks.sh
+
+Pack bump: workbench 0.9.1. Source: rulings from claude-scout-weekly `/phase ratify` 2026-09-03
+(Q-5, Q-7, Q-8, Q-10; hstack rows 1, 4, 6; commerce-agents row 1), applied by the scout cycle
+of 2026-09-07. Local commit only; rides the Thursday push manifest.
+
+- **`source-intake`:** the clean-room command runs from the pinned source with
+  `--restricted --permission-prompts none` (Claude Code 2.1.248 and 2.1.259), so the reviewer
+  has no command tools and cannot prompt; proven by a reviewer answering `NO-BASH` while Read
+  worked. Untrusted-content paragraph: an archive arriving with `.git` inside is cloned fresh
+  or has `.git/config` read before any git command (core.fsmonitor hijack).
+- **`model-effort-advisor`:** `model-catalog.md` gains a `claude-fable-5-1` section (routing
+  advice, the three API constraints, the documented behavior differences from Fable 5);
+  new `references/cache-economics.md` (1-hour Claude Code cache window, 0.025x reads on
+  Fable 5.1, /compact before leaving, cacheTtl for long scanners, the /cost miss-cause
+  field); `effort-sizing.md` measures cost per completed task, not per call.
+- **`scripts/prove-hooks.sh`** (new) with `scripts/prove-hooks.d/` fixtures: runs a positive and
+  a negative control against every command hook in a Claude Code settings file; a hook with
+  no fixture, a missing hooks block, or an unexpected verdict is RED. Proven by deliberate
+  failure on 2026-09-07 (corrupted pattern RED, unproven hook RED, no hooks block RED, live
+  settings GREEN). The Thursday maintainer's Phase 0 calls it (H7).
+- **`docs/authoring-standard.md`** and the validator header: structural checks parse
+  frontmatter, never grep prose; a heuristic states its measured ceiling where it is
+  implemented.
+
 ## 2026-09-07 - decks 0.2.2: cd-to-pptx proves editability with code; layout-critique names the tells
 
 Pack bump: decks 0.2.2. Source: `source-intake` HARVEST of gnipbao/knowledge-cat-ppt-skill

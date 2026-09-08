@@ -1,0 +1,5 @@
+{
+  "_hook": "em-dash pre-publish check (PreToolUse, matcher Artifact); denies a publish whose file contains an em dash",
+  "positive": {"tool_name": "Artifact", "tool_input": {"action": "publish", "file_path": "{{TMP_EMDASH}}"}},
+  "negative": {"tool_name": "Artifact", "tool_input": {"action": "publish", "file_path": "{{TMP_PLAIN}}"}}
+}

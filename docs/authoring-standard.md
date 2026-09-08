@@ -59,6 +59,9 @@ inaccurate description, not to the model.
 - Shape each rule as scope, action, exception, verification (when X, do Y, unless Z,
   proven by W) rather than a growing list of banned words or phrases. A ban list ages
   into an enumeration nobody checks; a rule with a verification step can be tested.
+- A skill or check that is a heuristic states its measured ceiling in the file that
+  implements it (a backtest table, "catches about a third of cases"), so a reader knows
+  what it misses before trusting it (hstack review, 2026-09-03).
 
 ## Output contracts
 
@@ -91,6 +94,9 @@ Three states, not four:
 - Incubator skills: edit directly on main. Adding one still bumps the host plugin's
   `version` so installed caches pick it up.
 - Run `scripts/validate-skills.sh` before committing anything.
+- Structural checks parse frontmatter with the YAML loader (`scripts/skill_meta.py`),
+  never grep for a key name: a checker that can match its own documentation, or a
+  key mentioned in prose, is not checking structure (hstack review, 2026-09-03).
 - Behavior testing: for stable skills keep 2–3 eval cases and run them on change
   (the official `skill-creator` plugin provides evals and version comparison).
   Reviewing prompt diffs alone tells you almost nothing about behavior.

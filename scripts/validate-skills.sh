@@ -4,6 +4,9 @@
 #   STRICT=1        warnings also cause exit 1
 #   STALE_MONTHS=6  staleness threshold for W1
 # Checks every plugins/*/skills/*/ skill (or just the given plugin's).
+# Structural checks parse frontmatter through skill_meta.py, never grep the file for a
+# key name: a grep would match the key inside prose or inside this validator's own
+# documentation and call a broken skill green (hstack review 2026-09-03, row 4).
 set -uo pipefail
 # Resolve the repo root from this script's own location, never from the cwd:
 # a cwd-derived root inside any other repo found zero skills and exited 0 (A-11).

@@ -2,6 +2,8 @@
 
 Reasoning effort is a separate dial from model choice, a strong model at low effort can still beat a weaker model at max effort on some tasks, and burning max effort on a simple task just adds latency for no quality gain.
 
+Measure cost per completed task rather than per model call: a cheaper model that needs more turns, or fails more often, is not cheaper (Anthropic commerce-agents review, 2026-09-03). Cache behavior changes the per-task figure more than the tier does on long sessions; see `cache-economics.md`.
+
 ## Effort Levels
 
 **Low**: quick, direct answer. Use when the task is well-defined, low-reasoning, and there's no ambiguity to resolve. Matches Haiku most of the time, but a low-effort Sonnet call is also common (fast Sonnet answer to something simple, without wanting Haiku's ceiling).
