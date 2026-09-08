@@ -142,6 +142,12 @@ this version and note the migration in this file.
   task); only `/retro` is built. Run this against real sessions first, build
   the review once a corpus of retros exists to review, per the original
   design's own recommendation.
+  Reference technique for that review, from Headroom's `headroom learn`
+  writer (review record `docs/reviews/2026-09-07-headroom.md`): a
+  marker-delimited block where the current run's sections replace same-named
+  prior sections and prior sections not re-emitted are carried forward, so a
+  re-run never silently drops accumulated lessons. Its limit is the next
+  bullet: it promotes idempotently but never demotes.
 - No tracking of "this rule hasn't been referenced in N sessions." The
   original design depended on this for a demotion pass in the (unbuilt)
   weekly review. No mechanism for it exists yet, this skill does not attempt
