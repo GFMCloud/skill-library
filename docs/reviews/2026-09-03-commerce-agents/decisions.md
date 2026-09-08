@@ -68,3 +68,4 @@ adversarial test fixtures, correctly used. No credentials requested.
 2026-09-03: proposed by the scout cycle; nothing ratified.
 2026-09-03 ratify: rows 1 and 2 ratified now, row 3 as a one-session runbook; row 4 tabled with the eval harness; rows 5 to 8 out. Q-2026-09-03-9 closed as superseded by this table. Recorded in claude-scout-weekly STATE.md as Q-2026-09-03-17.
 2026-09-03 later: row 2 applied to the global CLAUDE.md Concurrency section, ~/.claude commit e81d4d6, on Graham's instruction in the ratify session.
+2026-09-07 scout cycle 2: row 1 applied in ac50987 (one sentence in model-effort-advisor references/effort-sizing.md).

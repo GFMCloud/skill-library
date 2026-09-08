@@ -1,0 +1,2 @@
+source: https://github.com/trailofbits/coop
+pin: cbfe0273ac68585f381bcd9edf22384cac2cefce (cloned 2026-09-08T00:24:38Z, depth 1); HEAD subject "Merge pull request #450 from trailofbits/up-new-instance"; CHANGELOG newest tag v0.5.4

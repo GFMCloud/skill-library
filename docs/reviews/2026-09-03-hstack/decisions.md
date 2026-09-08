@@ -64,3 +64,4 @@ leaves them; `burn-context.sh:197` injects model-selection steering each turn. N
 2026-09-03: proposed by the scout cycle; nothing ratified. Row 1's proof was executed as
 verification evidence, not as an applied change.
 2026-09-03 ratify: rows 1, 2, 4, 6 ratified as one S-effort session (rows 3 and 5 ride on row 1); row 7 tabled until Graham's close-out format is stable; row 8 out. Recorded in claude-scout-weekly STATE.md as Q-2026-09-03-16.
+2026-09-07 scout cycle 2: rows 1, 4, 6 applied in ac50987 (prove-hooks.sh proven by deliberate failure: corrupted pattern RED, unproven hook RED, no hooks block RED, live settings GREEN); rows 3 and 5 recorded in the script header; H7 applied in claude-improvements-weekly da278a0. Row 7 reference: oops-i-did-it-again review 2026-09-07 row 8 (a tested two-brake Stop-hook loop guard).
