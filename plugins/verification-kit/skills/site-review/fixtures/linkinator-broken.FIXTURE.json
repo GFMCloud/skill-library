@@ -1,0 +1,10 @@
+{
+  "_fixture_note": "FIXTURE authored for site-review's deliberate-failure proof, shaped like a real linkinator JSON report (linkinator@8.x --format=json). Not a real crawl of any site.",
+  "links": [
+    { "url": "https://gfmcloud.example/", "status": 200, "state": "OK" },
+    { "url": "https://gfmcloud.example/about", "status": 200, "state": "OK" },
+    { "url": "https://gfmcloud.example/blog", "status": 200, "state": "OK" },
+    { "url": "https://gfmcloud.example/old-pricing", "status": 404, "state": "BROKEN" }
+  ],
+  "passed": false
+}
