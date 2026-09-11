@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""check-pointer.py — validate a rendered Scheduled-task pointer v1 file.
+"""check-pointer.py: validate a rendered Scheduled-task pointer v1 file.
 
 Usage:
     python3 check-pointer.py <pointer.md>
@@ -51,7 +51,7 @@ def parse_frontmatter(text: str):
     is two flat scalar keys) rather than a full YAML parse, so a malformed block
     still yields a useful F1 message instead of a traceback."""
     # The frontmatter block must open a line (either the file's first line, the
-    # real case, or after a leading FIXTURE-label comment in a fixture file) —
+    # real case, or after a leading FIXTURE-label comment in a fixture file),
     # re.search with the (?:^|\n) anchor tolerates the latter without accepting
     # '---' appearing mid-paragraph.
     m = re.search(r"(?:^|\n)---\n(.*?)\n---\n(.*)$", text, re.S)

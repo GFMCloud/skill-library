@@ -6,7 +6,7 @@ not absolute; (2) the consecutive-retry-cap line is missing entirely.
 
 ---
 name: FIXTURE-broken-pointer
-description: FIXTURE — a deliberately broken pointer for the check-pointer.py proof.
+description: "FIXTURE: a deliberately broken pointer for the check-pointer.py proof."
 ---
 
 Harness: /Users/gfm/work/cfb-picks-harness

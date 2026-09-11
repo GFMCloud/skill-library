@@ -1,4 +1,4 @@
-# Platform facts — Desktop scheduled tasks
+# Platform facts: Desktop scheduled tasks
 
 Fetched from https://code.claude.com/docs/en/desktop-scheduled-tasks on 2026-09-11
 (WebFetch succeeded; quoting the pages's own words, not a paraphrase). These are the
@@ -81,9 +81,9 @@ phase does not need to commit to the harness's own tree" step.
 > the Edit form or ask Claude."
 
 This is the primary source for two design decisions in this skill: (1) the pointer's
-frontmatter carries only `name` and `description` — every other field (schedule,
+frontmatter carries only `name` and `description`, every other field (schedule,
 folder, model, permission mode) lives in the platform's own task configuration, not in
-the file; (2) this skill never writes into `~/.claude/scheduled-tasks/` itself — the
+the file; (2) this skill never writes into `~/.claude/scheduled-tasks/` itself, the
 hard boundary in this skill's build brief is also what the platform's own file layout
 implies: that path is the platform's, populated when a task is created through the UI,
 through natural language in a Desktop session, or through
@@ -91,7 +91,7 @@ through natural language in a Desktop session, or through
 
 ## Headless `--permission-prompts none` (R-6)
 
-Not on this page — the desktop-scheduled-tasks doc covers the Desktop app's own task
+Not on this page. The desktop-scheduled-tasks doc covers the Desktop app's own task
 runner, which has its own per-task permission mode and never needs the headless CLI
 flag. The `--permission-prompts none` claim (arrived 2.1.259) is sourced from the CLI
 changelog per the research record (R-6, VERIFIED) and applies to the separate case this
@@ -102,6 +102,6 @@ any scheduler other than the Desktop app's own.
 
 Not documented on this page either way. The research record's R-14 overrides an
 earlier secondary claim that scheduled runs cannot spawn subagents: "the maintainer's
-first scheduled run on 2026-08-15 spawned ten, per its run log" — local evidence beats
+first scheduled run on 2026-08-15 spawned ten, per its run log", local evidence beats
 doc silence. This skill's pointer and prompt guidance assume subagent fan-out is
 available to a scheduled `/phase` run, the same as an interactive one.

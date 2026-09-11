@@ -6,7 +6,7 @@ finding about real data.
 
 ---
 name: FIXTURE-cfb-picks-sunday-grade
-description: FIXTURE — a complete pointer for the check-pointer.py proof.
+description: "FIXTURE: a complete pointer for the check-pointer.py proof."
 ---
 
 Harness: /Users/gfm/work/cfb-picks-harness

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""render-pointer.py — render a Scheduled-task pointer v1 file from a small
+"""render-pointer.py: render a Scheduled-task pointer v1 file from a small
 YAML or JSON input.
 
 Usage:
@@ -20,7 +20,7 @@ substitutes every {{placeholder}}, and writes the rendered pointer to stdout or
 the path given with -o.
 
 This script only renders. It never writes into ~/.claude/scheduled-tasks/ and
-never registers a task — registration is Graham's action in the desktop app, or
+never registers a task; registration is Graham's action in the desktop app, or
 the mcp__scheduled-tasks__create_scheduled_task tool, with his approval.
 """
 import json
