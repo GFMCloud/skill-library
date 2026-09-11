@@ -2,6 +2,42 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-11 - AI workflow toolkit: eight skills across three packs (toolkit-build branch)
+
+Pack bumps: foundry-core 0.3.0, verification-kit 0.1.0 (first version field on a
+manifest that never had one), workbench 0.10.0. Source: toolkit-build-harness Phases 3
+and 4, executing the AI workflow toolkit roadmap items T1 to T8. Every skill ships as
+incubator with a fixture-proven deliberate failure and an authored eval suite; eval
+execution is deferred to the weekly maintainer (`claude plugin eval` is early-access
+gated on this account). Each passed an independent opus review after a sonnet build.
+
+- **goal-spec (foundry-core, new):** turns an open-ended ask into a Goal block v1 with
+  a runnable check or criterion-separated rubric, a recorded baseline, and a named
+  human gate; refuses when no check can be named. `goal-block-check.sh` fails a block
+  with a missing field.
+- **bounded-loop (foundry-core, new):** script-based Stop hook that runs a goal's
+  check itself, blocks failing turns with the real output, guards against test-file
+  edits, and escalates with a structured report at a fixed attempt budget (default 3).
+- **smoke-gate (verification-kit, new):** generates a smoke script from a Smoke
+  manifest v1, proves every assertion category by poisoning it to exit 1, refuses a
+  manifest missing any category's poison, then runs live for exit 0.
+- **review-pair (verification-kit, new):** independent pass/fail verdict on a change
+  spec from a read-only reviewer subagent that never sees the builder's context;
+  `verdict-check.sh` rejects a verdict missing a field and holds on a repeat fail.
+- **site-review (verification-kit, new):** Lighthouse, linkinator, viewport and dark
+  screenshots, content checklist; scored before/after table with a fix phase under
+  `/goal` re-scored by review-pair.
+- **handoff 0.2.0 (workbench):** resume mode with Typed claim v1 blocks; a new session
+  verifies each checkable claim against the live tree before continuing, and
+  `check-claims.py` fails on a mismatch.
+- **schedule-harness (workbench, new):** scaffolds a Scheduled-task pointer v1 plus
+  absolute-limits block for running one `/phase` mode on a cadence; never registers
+  the task or writes under `~/.claude/`. `check-pointer.py` fails a pointer with a
+  relative path or no retry cap.
+- **change-watch (workbench, new):** registered check with a seen-index that reports
+  only on a state transition; a re-fire in the same state produces no report, and an
+  unclassified action is refused.
+
 ## 2026-09-11 - contract sections: standard, template, validator (toolkit-build branch)
 
 No pack bump (repo standard, template, and validator only). Source: toolkit-build-harness
