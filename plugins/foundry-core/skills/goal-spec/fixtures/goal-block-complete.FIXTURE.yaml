@@ -1,4 +1,4 @@
-# FIXTURE — complete Goal block v1, for goal-block-check.sh's passing-run proof.
+# FIXTURE - complete Goal block v1, for goal-block-check.sh's passing-run proof.
 # Values are the worked example from the interface spec, not a real run.
 goal_block: v1
 ask: "get the homepage lighthouse scores up"

@@ -58,7 +58,7 @@ above 3", never an average of the criterion scores>.
 
 ## Worked example
 
-Ask: "review my homepage" (judgment — no single command settles "is this a
+Ask: "review my homepage" (judgment: no single command settles "is this a
 good homepage").
 
 ```markdown
@@ -87,7 +87,7 @@ Score: 1-5, independent of the other criteria.
 ## Criterion 3: load-bearing trust signals
 
 Pass: at least one concrete, checkable trust signal is visible above the
-fold (a named customer logo, a specific number, a dated review) — not a
+fold (a named customer logo, a specific number, a dated review), not a
 generic claim ("trusted by thousands").
 Fail: no concrete signal above the fold, or the only signals are generic
 claims.
@@ -102,17 +102,17 @@ Pass requires: every criterion at or above 3 of 5. A single criterion below
 This is the `end_state` a Goal block v1 with `kind: judgment` would cite:
 "every criterion in rubrics/homepage-review.md scores at or above 3 of 5."
 The `check` field for a judgment goal is the act of applying the rubric and
-surfacing the per-criterion scores in the transcript — there is no shell
+surfacing the per-criterion scores in the transcript: there is no shell
 command, but the scores must still be printed verbatim, the same rule R-1
 puts on a measurable check's output.
 
 ## Common mistakes
 
 - Two criteria that are really one quality asked twice ("visual appeal" and
-  "aesthetic quality") — collapse them.
+  "aesthetic quality"): collapse them.
 - A pass line that only a domain expert could apply ("professional design
-  sensibility") — rewrite it as an observable a non-expert reviewer could
+  sensibility"): rewrite it as an observable a non-expert reviewer could
   check.
 - A combination rule that averages instead of gating ("average of 3.5 or
-  above passes") — this hides one bad criterion behind two good ones. Prefer
+  above passes"): this hides one bad criterion behind two good ones. Prefer
   a floor per criterion.

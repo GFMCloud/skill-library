@@ -1,4 +1,4 @@
-FIXTURE — an ask with a runnable check, used to prove goal-spec's normal
+FIXTURE - an ask with a runnable check, used to prove goal-spec's normal
 path produces a filled Goal block v1 with a recorded baseline.
 
 Ask (verbatim, as it would be given to goal-spec):

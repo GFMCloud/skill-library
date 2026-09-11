@@ -1,4 +1,4 @@
-# FIXTURE — deliberately incomplete Goal block v1, for goal-block-check.sh's
+# FIXTURE - deliberately incomplete Goal block v1, for goal-block-check.sh's
 # deliberate-failure proof. Never a real goal; baseline is empty on purpose.
 goal_block: v1
 ask: "get the homepage lighthouse scores up"

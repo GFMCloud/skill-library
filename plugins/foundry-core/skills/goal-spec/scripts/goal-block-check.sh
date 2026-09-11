@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# goal-block-check.sh — validate a Goal block v1 file (interface spec section 1).
+# goal-block-check.sh: validate a Goal block v1 file (interface spec section 1).
 #
 # Usage: goal-block-check.sh <path-to-goal-block.yaml>
 #
@@ -9,7 +9,9 @@
 # Exit 1: a required field is missing or empty, or no stop clause is found.
 #         The missing/malformed field is named on stderr.
 #
-# Runs from any directory; resolves its own path so it does not depend on cwd.
+# Takes the goal block path as its only argument (absolute, or relative to
+# the caller's cwd) and depends on nothing else: it does not resolve its own
+# location and has no other cwd-relative reference.
 
 set -euo pipefail
 
@@ -52,7 +54,7 @@ done
 # but stated explicitly per the roadmap's gate wording).
 baseline_value="$(get_field_value baseline)"
 if [ -z "$baseline_value" ]; then
-  echo "FAIL: 'baseline' is empty — the check must be run once before work starts" >&2
+  echo "FAIL: 'baseline' is empty: the check must be run once before work starts" >&2
   fail=1
 fi
 
