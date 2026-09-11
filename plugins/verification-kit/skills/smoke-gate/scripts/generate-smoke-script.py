@@ -3,7 +3,7 @@
 
 Usage: generate-smoke-script.py <manifest.yaml> <output-script.sh>
 
-Reads the fields defined in the harness interface spec, docs/interface-spec.md,
+Reads the fields defined in the toolkit interface spec, docs/toolkit-interface-spec.md,
 section 5 ("smoke: v1"): target, assertions.{identity,freshness,connections,routes,
 console}. It never invents fields the spec does not define; the field list lives only
 in the spec.

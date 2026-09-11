@@ -4,7 +4,7 @@ site-review is a `foundry-core:goal-spec` template: instead of asking
 goal-spec to invent a check from scratch, this file supplies the check,
 `expected`, and `goal_condition` fields already filled for the site-review
 case. The shape itself (Goal block v1) is defined once, in the harness
-interface spec (`docs/interface-spec.md`, section 1); this file does not
+interface spec (`docs/toolkit-interface-spec.md`, section 1); this file does not
 redefine it, only shows the site-review instance of it.
 
 ## Filled Goal block v1

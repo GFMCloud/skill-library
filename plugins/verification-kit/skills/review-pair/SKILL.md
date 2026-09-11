@@ -36,9 +36,8 @@ the reviewer returns.
   set of edits not yet applied.
 - The target: the path, repo, or resource the change would land on.
 - Nothing else. The reviewer gets exactly the goal block and the change; not the
-  builder's transcript, prompt, or reasoning (harness guardrail, restated from
-  `toolkit-build-harness/CLAUDE.md`: "Reviewers receive the interface spec and the
-  skill directory only").
+  builder's transcript, prompt, or reasoning. This is the rule the toolkit itself was
+  reviewed under: reviewers receive the interface spec and the skill directory only.
 
 ## Verify
 
@@ -102,6 +101,6 @@ an independent reviewer is sufficient; do not seek a second opinion after a pass
 
 ## Output contract
 
-Produces a Verdict object v1 as defined in `docs/interface-spec.md` section 3. Consumes
-a Goal block v1 as defined in `docs/interface-spec.md` section 1. Field lists live only
+Produces a Verdict object v1 as defined in `docs/toolkit-interface-spec.md` section 3. Consumes
+a Goal block v1 as defined in `docs/toolkit-interface-spec.md` section 1. Field lists live only
 in the interface spec; this skill and its references cite them by name and version.

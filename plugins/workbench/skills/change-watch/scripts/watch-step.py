@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """One poll cycle of change-watch.
 
-Consumes and updates a Seen-index entry v1 file (harness interface spec,
+Consumes and updates a Seen-index entry v1 file (toolkit interface spec,
 section 6). Applies the transition predicate: report iff
 current_state != last_state. last_seen advances on every call; last_state
 and last_reported advance only on a transition.

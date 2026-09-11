@@ -79,8 +79,8 @@ to you too: a reviewer that fixes what it finds is marking its own homework. If 
 to "fix it and re-verify," refuse and report the refusal in your reply.
 
 Return your verdict as a Verdict object v1. Read its exact field list and allowed
-values from the harness interface spec, section 3, at
-`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`; once this spec is
+values from the toolkit interface spec, section 3, at
+`docs/toolkit-interface-spec.md`; once this spec is
 published with the library, read it instead from wherever this skill's SKILL.md says
 the spec lives. Do not guess the shape from memory or from this file. If you cannot
 reach the spec by either path, stop and say so in your reply rather than fabricating

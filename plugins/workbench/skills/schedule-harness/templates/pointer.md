@@ -1,5 +1,5 @@
-Scheduled-task pointer v1, as defined in the harness interface spec
-(`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`, section 7). This is
+Scheduled-task pointer v1, as defined in the toolkit interface spec
+(`docs/toolkit-interface-spec.md`, section 7). This is
 the one editable home for the pointer's shape, including the Absolute-limits block v1
 text embedded in it (`templates/limits-block.md.superseded` is a retired duplicate;
 this file is the only place that text is edited now). `scripts/render-pointer.py`

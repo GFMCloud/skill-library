@@ -126,12 +126,12 @@ fix list with a status per item (roadmap entry, "Output").
 
 ## Output contract
 
-Consumes a Goal block v1 as defined in the harness interface spec
-(`docs/interface-spec.md`, section 1); fills it per
+Consumes a Goal block v1 as defined in the toolkit interface spec
+(`docs/toolkit-interface-spec.md`, section 1); fills it per
 [templates/goal-condition.md](templates/goal-condition.md) and hands it to
 `/goal` for the fix phase.
 
-Consumes a Verdict object v1 as defined in the harness interface spec,
+Consumes a Verdict object v1 as defined in the toolkit interface spec,
 section 3, from `verification-kit:review-pair`'s independent re-score of
 each fix attempt; applies a fix only on `result: pass`.
 

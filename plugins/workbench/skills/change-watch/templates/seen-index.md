@@ -1,7 +1,7 @@
 # Seen-index entry v1 template
 
 The Seen-index entry v1 shape, its field list, and its rules are defined once,
-in the harness interface spec (`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`,
+in the toolkit interface spec (`docs/toolkit-interface-spec.md`,
 section 6, "Seen-index entry v1"). This file never redefines the field list;
 if the spec changes the shape, edit the spec, not this file. What follows is
 the spec's own example plus usage notes not already stated in the spec.

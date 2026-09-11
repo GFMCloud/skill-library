@@ -3,7 +3,7 @@
 
 Usage: check-poison-coverage.py <manifest.yaml>
 
-Per the harness interface spec section 5: "a category with no poison entry is not
+Per the toolkit interface spec section 5: "a category with no poison entry is not
 proven and the gate reports it as unproven, never as passed." This script is the one
 place that reports UNPROVEN; nothing downstream is allowed to read a missing poison
 entry as a pass.

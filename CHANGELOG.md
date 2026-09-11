@@ -37,6 +37,12 @@ gated on this account). Each passed an independent opus review after a sonnet bu
 - **change-watch (workbench, new):** registered check with a seen-index that reports
   only on a state transition; a re-fire in the same state produces no report, and an
   unclassified action is refused.
+- **`docs/toolkit-interface-spec.md` (new):** the ratified interface spec every shape
+  above is defined in (Goal block v1, Escalation report v1, Verdict v1, Typed claim v1,
+  Smoke manifest v1, Scheduled-task pointer v1, Seen-index entry v1, scored table, eval
+  suite layout), moved into the library from the build harness so the skills' citations
+  resolve for a plugin consumer. Skills cite it by name and section; none restates a
+  field list.
 
 ## 2026-09-11 - contract sections: standard, template, validator (toolkit-build branch)
 

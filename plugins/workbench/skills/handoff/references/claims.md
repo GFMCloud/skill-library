@@ -2,8 +2,8 @@
 
 This is the how-to for the Typed claim v1 shape this skill produces and consumes
 (writer: handoff generation; reader: handoff resume mode). The shape itself is defined
-once, in the harness interface spec:
-`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`, section 4. This file
+once, in the toolkit interface spec:
+`docs/toolkit-interface-spec.md`, section 4. This file
 explains how to fill it in and how to check it; it does not redefine any field.
 
 ## Write side
@@ -34,7 +34,7 @@ explains how to fill it in and how to check it; it does not redefine any field.
    (a repo, a URL, a CLI, a state file). Compare the fresh output to `expected`. Do this
    even for claims that sound obviously true - obviousness is not verification, and is
    exactly the failure mode the roadmap's design note names.
-3. Report a status in three sentences, per the harness interface spec's resume output
+3. Report a status in three sentences, per the toolkit interface spec's resume output
    order (section 4).
 4. Render the discrepancy table: `claim | command | actual | match/mismatch`.
 5. Render the `not_checkable` list verbatim under the heading "unverified by design".

@@ -96,9 +96,9 @@ independently, never collapsed into one holistic number.
   measurable check or a rubric criterion) and stop. Never invent a check or
   a rubric to avoid asking.
 - **The budget clause is missing and Graham has not stated one.** Propose the
-  library default (3 attempts, per `bounded_loop_default_budget` in
-  toolkit-build-harness's `CONFIG.md` when that harness is in play, else "stop
-  after 3 attempts") and ask for a one-word confirm rather than guessing
+  library default (3 attempts, the budget `bounded-loop` ships with; a harness
+  that names its own default in its config wins, else "stop after 3
+  attempts") and ask for a one-word confirm rather than guessing
   silently: this is the one field this skill is allowed to default instead
   of refuse on, because a sane default exists and an unbounded loop does not.
 - **The check cannot actually be run** (the target doesn't exist yet, the
@@ -110,8 +110,8 @@ independently, never collapsed into one holistic number.
 
 ## Output contract
 
-Emits a Goal block v1 as defined in the harness interface spec
-(`docs/interface-spec.md`, section 1). This skill never redefines that
+Emits a Goal block v1 as defined in the toolkit interface spec
+(`docs/toolkit-interface-spec.md`, section 1). This skill never redefines that
 shape's fields; see [references/goal-block.md](references/goal-block.md) for
 guidance on filling each one and the worked example from the spec.
 

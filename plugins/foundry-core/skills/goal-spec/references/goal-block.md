@@ -1,7 +1,7 @@
 # Filling a Goal block v1
 
-The shape itself is defined once, in the harness interface spec
-(`docs/interface-spec.md`, section 1). This file is guidance on how to fill
+The shape itself is defined once, in the toolkit interface spec
+(`docs/toolkit-interface-spec.md`, section 1). This file is guidance on how to fill
 each field; it does not redefine the shape. If the two ever disagree, the
 interface spec wins.
 

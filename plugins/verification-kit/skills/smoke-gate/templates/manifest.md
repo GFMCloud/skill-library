@@ -1,7 +1,7 @@
 # Smoke manifest v1 template
 
 The field list, its types, and the semantics of `assertions` and `poison` are defined
-once, in `docs/interface-spec.md` section 5 ("smoke: v1"). This file does not restate
+once, in `docs/toolkit-interface-spec.md` section 5 ("smoke: v1"). This file does not restate
 that list. Copy the shape from the spec (or from the worked example below, which is
 the spec's own example instance), fill it in for your project, then run
 `scripts/generate-smoke-script.py <your-manifest.yaml> smoke.sh` to produce the

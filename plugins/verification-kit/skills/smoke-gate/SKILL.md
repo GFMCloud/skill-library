@@ -30,7 +30,7 @@ was reused from Anthropic's `webapp-testing` skill and what was not.
 
 ## Inputs
 
-- A Smoke manifest v1 (harness interface spec section 5): `target` and five
+- A Smoke manifest v1 (toolkit interface spec section 5): `target` and five
   assertion categories (`identity`, `freshness`, `connections`, `routes`,
   `console`), each with a matching `poison` entry. The generator refuses to emit a
   script for any category missing a `poison` entry, exit 1, naming the category, see
@@ -112,7 +112,7 @@ calling project, not to this skill directory), a run log containing the five
 poisoned exit-1 results and the one live exit-0 result with its verbatim output, and
 one screenshot from the live pass (or a stated absence).
 
-Consumes: a Smoke manifest v1 as defined in the harness interface spec, section 5.
+Consumes: a Smoke manifest v1 as defined in the toolkit interface spec, section 5.
 
 On a red live pass, this skill's run log becomes the `last_failing_output` carried
 by `foundry-core:bounded-loop`'s Escalation report v1, as defined in the harness

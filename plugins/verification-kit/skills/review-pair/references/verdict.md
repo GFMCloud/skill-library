@@ -1,8 +1,8 @@
 # Filling out Verdict object v1
 
 The shape, its field list, and every field's allowed values are defined once: the
-harness interface spec, section 3, "Verdict object v1"
-(`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`, or, once this spec is
+toolkit interface spec, section 3, "Verdict object v1"
+(`docs/toolkit-interface-spec.md`, or, once this spec is
 published with the library, wherever this skill's SKILL.md says it lives). This file
 is guidance on how to fill the shape, not a second definition; if the two ever
 disagree, the interface spec wins and this file is stale.

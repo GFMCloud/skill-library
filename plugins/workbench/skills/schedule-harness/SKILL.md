@@ -165,7 +165,7 @@ run. State the recommendation; the choice is Graham's, made at registration.
 ## Absolute-limits block v1 `[R]`
 
 Every rendered pointer carries the full **Absolute-limits block v1**, as defined in the
-harness interface spec (`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`,
+toolkit interface spec (`docs/toolkit-interface-spec.md`,
 section 7). Referenced by name and version, never redefined here. The single editable
 home of the block's text inside this skill is
 [templates/pointer.md](templates/pointer.md), the same file `scripts/render-pointer.py`
@@ -235,8 +235,8 @@ illustrative shape of both, a FIXTURE, not a real run.
 ## Output contract
 
 Produces a **Scheduled-task pointer v1** file and, embedded in it, an
-**Absolute-limits block v1**, both as defined in the harness interface spec
-(`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`, section 7), reference
+**Absolute-limits block v1**, both as defined in the toolkit interface spec
+(`docs/toolkit-interface-spec.md`, section 7), reference
 by name and version; this file and its templates never redefine either shape, they
 render and check it. `change-watch` consumes the Scheduled-task pointer v1 shape
 (spec composition map, row T8) for its polling transport; beyond that, the pointer's

@@ -100,7 +100,7 @@ count of distinct attempts (a repeated diff hash never inflates N).
 
 ## Output contract
 
-Produces an Escalation report v1 as defined in the harness interface spec,
+Produces an Escalation report v1 as defined in the toolkit interface spec,
 section 2, on budget exhaustion, a guard failure, or a no-progress
 detection, written to the `--escalation-out` path (default
 `<state-dir>/escalation.yaml`) and printed once by the hook itself. On
@@ -108,6 +108,6 @@ success, no escalation report is produced; the agent states "target met at
 attempt N" with the check's verbatim output attached, per the
 `foundry-core:proof-of-work` evidence standard.
 
-Consumes a Goal block v1 as defined in the harness interface spec, section 1,
+Consumes a Goal block v1 as defined in the toolkit interface spec, section 1,
 specifically `check`, `budget`, and (when present) `goal_condition` for
 the escalation's `goal_block` field.

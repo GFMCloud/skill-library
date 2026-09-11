@@ -21,7 +21,7 @@ metadata:
 
 Watches one source for a state transition and reports only on the
 transition, never on presence in a fixed state. For the polling transport,
-this skill consumes a Scheduled-task pointer v1 (harness interface spec,
+this skill consumes a Scheduled-task pointer v1 (toolkit interface spec,
 section 7) produced by `schedule-harness` (T7, `workbench`): the watch runs as
 a mode of an existing phased harness, so the pointer's target is that
 harness's `/phase` skill with the watch as its mode. A watch with no harness
@@ -128,7 +128,7 @@ since its last report.
 
 ## Output contract
 
-Consumes and updates a Seen-index entry v1 (harness interface spec, section
+Consumes and updates a Seen-index entry v1 (toolkit interface spec, section
 6) per source. On a transition classified safe, may hand a Smoke manifest v1
 (interface spec, section 5) to `smoke-gate` for a staging check; this skill
 never redefines that shape, only names it. Reports exceptions in the report
