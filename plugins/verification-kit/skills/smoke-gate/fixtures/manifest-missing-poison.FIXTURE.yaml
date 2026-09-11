@@ -1,0 +1,17 @@
+# FIXTURE. Smoke manifest v1 with the "console" poison entry deliberately omitted, used
+# to prove scripts/check-poison-coverage.py reports an unproven category instead of a
+# pass. Otherwise identical to manifest.FIXTURE.yaml.
+smoke: v1
+target: http://127.0.0.1:0/
+assertions:
+  identity:    {expect: "Graham (commissioner)"}
+  freshness:   {field: "Rosters updated", must_advance_from: "2026-09-07"}
+  connections: [{name: fixture-server, expect: open}]
+  routes:      [{path: /status, status: 200}, {path: /data, status: 200}]
+  console:     {errors: 0}
+poison:
+  identity:    "Guest"
+  freshness:   "2099-01-01"
+  connections: "127.0.0.1:1"
+  routes:      /does-not-exist
+  # console poison entry intentionally missing

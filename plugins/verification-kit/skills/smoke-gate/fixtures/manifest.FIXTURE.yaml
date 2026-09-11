@@ -1,0 +1,19 @@
+# FIXTURE. Smoke manifest v1 (harness interface spec docs/interface-spec.md section 5)
+# for the smoke-gate deliberate-failure proof. target is a placeholder; the fixture
+# runner overrides it at run time with SMOKE_TARGET, since fixture_server.py binds to
+# an OS-assigned free port. Every other value below matches what fixture_server.py
+# actually serves, so the live pass is expected to go green with no overrides.
+smoke: v1
+target: http://127.0.0.1:0/
+assertions:
+  identity:    {expect: "Graham (commissioner)"}
+  freshness:   {field: "Rosters updated", must_advance_from: "2026-09-07"}
+  connections: [{name: fixture-server, expect: open}]
+  routes:      [{path: /status, status: 200}, {path: /data, status: 200}]
+  console:     {errors: 0}
+poison:
+  identity:    "Guest"
+  freshness:   "2099-01-01"
+  connections: "127.0.0.1:1"
+  routes:      /does-not-exist
+  console:     "FIXTURE simulated console error: TypeError undefined is not a function"
