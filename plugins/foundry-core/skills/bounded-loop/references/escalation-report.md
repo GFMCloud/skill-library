@@ -34,6 +34,12 @@ the workspace snapshot), and `cause_class` straight out of
 `write_escalation`. Do not hand-edit these; if one looks wrong, the state
 file (`--state`) is the thing to inspect, not the escalation file.
 
+The Stop hook itself only ever detects the two-identical-hashes route to
+`cause_class: no_progress`. The spec's other route to the same class, an
+operator or a `/goal` evaluator reporting an "impossible" verdict, is not
+something the hook can see; that route sets `no_progress` from outside the
+script's own state file.
+
 Known weakness, stated beside the rule: `unreachable_condition` vs.
 `ambiguous_check_feedback` is a heuristic on output equality, not a semantic
 read of *why* the check keeps failing. A check whose output is

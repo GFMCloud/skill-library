@@ -238,6 +238,7 @@ Produces a **Scheduled-task pointer v1** file and, embedded in it, an
 **Absolute-limits block v1**, both as defined in the harness interface spec
 (`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`, section 7), reference
 by name and version; this file and its templates never redefine either shape, they
-render and check it. Nothing consumes this skill's output within the toolkit (the
-composition map lists no consumer); the pointer's consumer is the scheduled-task
-platform itself, once Graham or the create-task tool registers it.
+render and check it. `change-watch` consumes the Scheduled-task pointer v1 shape
+(spec composition map, row T8) for its polling transport; beyond that, the pointer's
+consumer is the scheduled-task platform itself, once Graham or the create-task tool
+registers it.

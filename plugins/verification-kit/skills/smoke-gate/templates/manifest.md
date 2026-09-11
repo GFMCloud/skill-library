@@ -26,11 +26,11 @@ list.
   404s". `console`: a distinctive string (`FIXTURE simulated console error: ...`)
   that could not appear in real page output by coincidence.
 - **`console` has no `poison` entry by default in a blank manifest.** The generator
-  refuses to generate a script for a manifest whose `console` assertion has no
-  matching `poison` entry (exit 1, "UNPROVEN console: no poison entry") rather than
-  emitting a script that would silently default to an empty marker and report
-  console as passed without ever proving it can fail. Fill in `poison.console`
-  before generating.
+  refuses to generate a script for any assertion category with no matching `poison`
+  entry (exit 1, "UNPROVEN `<category>`: no poison entry") rather than emitting a
+  script that would silently default to an empty marker and report that category as
+  passed without ever proving it can fail. Fill in `poison.console`, and every other
+  category's `poison` entry, before generating.
 - Run `scripts/check-poison-coverage.py <manifest.yaml>` before trusting a green run
   on any category; it prints `UNPROVEN <category>` and exits 3 rather than letting a
   missing poison entry read as a pass.

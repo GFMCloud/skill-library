@@ -20,10 +20,16 @@ metadata:
 # change-watch
 
 Watches one source for a state transition and reports only on the
-transition, never on presence in a fixed state. Composes with
-`schedule-harness` (T7, `workbench`) for the polling transport, and with
-`smoke-gate` (`verification-kit`) for the staging check a safe action can run
-after a transition. See [references/transports.md](references/transports.md)
+transition, never on presence in a fixed state. For the polling transport,
+this skill consumes a Scheduled-task pointer v1 (harness interface spec,
+section 7) produced by `schedule-harness` (T7, `workbench`): the watch runs as
+a mode of an existing phased harness, so the pointer's target is that
+harness's `/phase` skill with the watch as its mode. A watch with no harness
+behind it takes the Routine or webhook transport instead (see
+[references/transports.md](references/transports.md)). It also composes with
+`smoke-gate` (`verification-kit`) for the
+staging check a safe action can run after a transition. See
+[references/transports.md](references/transports.md)
 for the three transports and when each applies, and
 [templates/seen-index.md](templates/seen-index.md) for the state file this
 skill reads and writes.
@@ -126,6 +132,7 @@ Consumes and updates a Seen-index entry v1 (harness interface spec, section
 6) per source. On a transition classified safe, may hand a Smoke manifest v1
 (interface spec, section 5) to `smoke-gate` for a staging check; this skill
 never redefines that shape, only names it. Reports exceptions in the report
-mode named in Inputs. When the polling transport is a scheduled task, that
-task is registered as a Scheduled-task pointer v1 (interface spec, section
-7), produced by `schedule-harness`, not by this skill.
+mode named in Inputs. When the polling transport is a scheduled task, this
+skill consumes a Scheduled-task pointer v1 (interface spec, section 7)
+produced by `schedule-harness` for the harness whose mode runs the watch; this
+skill never writes or redefines that shape.

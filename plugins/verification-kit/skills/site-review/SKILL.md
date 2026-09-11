@@ -126,19 +126,20 @@ fix list with a status per item (roadmap entry, "Output").
 
 ## Output contract
 
-Produces a Goal block v1 as defined in the harness interface spec
-(`docs/interface-spec.md`, section 1), filled per
-[templates/goal-condition.md](templates/goal-condition.md), to hand to
+Consumes a Goal block v1 as defined in the harness interface spec
+(`docs/interface-spec.md`, section 1); fills it per
+[templates/goal-condition.md](templates/goal-condition.md) and hands it to
 `/goal` for the fix phase.
 
 Consumes a Verdict object v1 as defined in the harness interface spec,
 section 3, from `verification-kit:review-pair`'s independent re-score of
 each fix attempt; applies a fix only on `result: pass`.
 
-On budget exhaustion, produces an Escalation report v1 as defined in the
-harness interface spec, section 2, whose `last_failing_output` is the final
-`score-table.py` run's verbatim output and whose `likely_causes` names the
-specific red rows, not a paraphrase.
+On budget exhaustion, site-review is escalated by
+`foundry-core:bounded-loop`'s Escalation report v1 as defined in the harness
+interface spec, section 2, not by producing one itself: `last_failing_output`
+is the final `score-table.py` run's verbatim output and `likely_causes` names
+the specific red rows, not a paraphrase.
 
 Field lists for all three shapes live only in the interface spec; this
 skill and its references cite them by name and version and never redefine

@@ -34,23 +34,27 @@ explains how to fill it in and how to check it; it does not redefine any field.
    (a repo, a URL, a CLI, a state file). Compare the fresh output to `expected`. Do this
    even for claims that sound obviously true - obviousness is not verification, and is
    exactly the failure mode the roadmap's design note names.
-3. Render the discrepancy table: `claim | command | actual | match/mismatch`.
-4. Render the `not_checkable` list verbatim under the heading "unverified by design".
+3. Report a status in three sentences, per the harness interface spec's resume output
+   order (section 4).
+4. Render the discrepancy table: `claim | command | actual | match/mismatch`.
+5. Render the `not_checkable` list verbatim under the heading "unverified by design".
    Never attempt to verify these; they are not checkable by construction.
-5. If every row matches and nothing is ambiguous, report "proceeding". If any row
+6. If every row matches and nothing is ambiguous, report "proceeding". If any row
    mismatches, or a claim's wording is ambiguous enough that two different checks could
    satisfy it, stop and ask exactly one question naming the row. Zero typed claims are
    accepted from the document alone.
 
-`scripts/check-claims.py` in this skill directory implements steps 2-4 mechanically for
-a single handoff file: `python3 scripts/check-claims.py <path-to-handoff.md>`. It exits
-1 on any checkable mismatch and 0 when every checkable claim matches. It is the same
-procedure described above, ordered so it can be run standalone; it is what the fixtures
-in `fixtures/` are checked against, and it does not replace the "ask one question"
-judgment call in step 5, which stays with the session.
+`scripts/check-claims.py` in this skill directory implements steps 2, 4, and 5
+mechanically for a single handoff file: `python3 scripts/check-claims.py
+<path-to-handoff.md>`. It exits 1 on any checkable mismatch and 0 when every
+checkable claim matches. It is the same procedure described above, ordered so it can
+be run standalone; it is what the fixtures in `fixtures/` are checked against, and it
+does not replace the status in step 3 or the "ask one question" judgment call in
+step 6, both of which stay with the session.
 
-## Example (from the interface spec, reproduced for reference - the spec is still the
-## source of truth for the shape)
+## Example (FIXTURE, from the interface spec, reproduced for reference - the spec is
+## still the source of truth for the shape; these values are the spec's worked
+## example and match no real tree state)
 
 ```yaml
 claims: v1

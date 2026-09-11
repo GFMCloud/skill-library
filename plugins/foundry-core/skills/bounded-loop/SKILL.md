@@ -86,7 +86,10 @@ count of distinct attempts (a repeated diff hash never inflates N).
 - **No progress.** Two consecutive identical diff hashes (the workspace
   snapshot unchanged between attempts): `cause_class: no_progress`, escalate
   immediately on the second identical hash rather than spend the remaining
-  budget re-running an identical check against an identical workspace.
+  budget re-running an identical check against an identical workspace. The
+  Stop hook itself detects only this two-identical-hashes route; an operator
+  or a `/goal` evaluator reporting an "impossible" verdict sets the same
+  `cause_class: no_progress` through the other route the spec names.
 - **Scope note.** This skill's guard and budget do not scale to large,
   compositional changes: a check that only exercises one function cannot
   catch a regression three modules away (SpecBench finding, research record

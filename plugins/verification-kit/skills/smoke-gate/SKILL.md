@@ -32,8 +32,9 @@ was reused from Anthropic's `webapp-testing` skill and what was not.
 
 - A Smoke manifest v1 (harness interface spec section 5): `target` and five
   assertion categories (`identity`, `freshness`, `connections`, `routes`,
-  `console`), each with a matching `poison` entry. A category with no `poison` entry
-  is accepted but is reported as unproven, never as passed, see "Verify".
+  `console`), each with a matching `poison` entry. The generator refuses to emit a
+  script for any category missing a `poison` entry, exit 1, naming the category, see
+  "Verify".
 - For each `connections` entry, an address to check at run time
   (`SMOKE_CONN_HOST_<NAME>` / `SMOKE_CONN_PORT_<NAME>`; see the template's wiring
   notes). Nothing else is required before generation; the address is only needed to
@@ -113,14 +114,15 @@ one screenshot from the live pass (or a stated absence).
 
 Consumes: a Smoke manifest v1 as defined in the harness interface spec, section 5.
 
-On a red live pass, hands an Escalation report v1 as defined in the harness
-interface spec, section 2, to `foundry-core:bounded-loop`: this skill's run log
-output becomes that report's `last_failing_output`, the failing assertion category
-becomes the one-line basis for `likely_causes`, and `cause_class` is set per
-bounded-loop's own rules (`ambiguous_check_feedback` for a genuinely unclear
-assertion failure, `unreachable_condition` when the target itself could not be
-reached). smoke-gate does not redefine the Escalation report shape; it only
-supplies the fields bounded-loop's contract asks a failing check to supply.
+On a red live pass, this skill's run log becomes the `last_failing_output` carried
+by `foundry-core:bounded-loop`'s Escalation report v1, as defined in the harness
+interface spec, section 2: smoke-gate feeds bounded-loop's loop, it does not
+produce the report. The failing assertion category becomes the one-line basis for
+`likely_causes`, and `cause_class` is set per bounded-loop's own rules
+(`ambiguous_check_feedback` for a genuinely unclear assertion failure,
+`unreachable_condition` when the target itself could not be reached). smoke-gate
+does not redefine the Escalation report shape; it only supplies the fields
+bounded-loop's contract asks a failing check to supply.
 
 For the staging-to-production promote flow, smoke-gate composes with
 `deploy-ops:deploy-verify-fix`: that skill's "Verify at the level the failure
