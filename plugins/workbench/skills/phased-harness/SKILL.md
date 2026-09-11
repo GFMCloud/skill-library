@@ -10,8 +10,8 @@ description: >-
   sessions that ends in an irreversible step.
 metadata:
   maturity: stable
-  version: 1.2.3
-  reviewed: 2026-08-28
+  version: 1.2.4
+  reviewed: 2026-09-10
 ---
 
 # Phased harness — scaffold a gated, resumable project
@@ -238,6 +238,9 @@ is written down as one.
   mid-verification costs a whole phase.
 - The **final phase re-verifies the invariant from scratch** — a fresh sweep in a
   fresh context, not a re-read of earlier notes.
+- The `.superseded` check is `find`, never `grep`, and any generated catalog or
+  inventory is regenerated in the final phase after the last content edit, with its
+  check part of Gate B. Both are carried by the phase runbook template.
 
 ### Compose, don't duplicate
 

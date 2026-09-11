@@ -19,7 +19,10 @@ turn-reduction:capability-preflight, do not assume it.>`
    do-not-touch list, and the guardrails restated. Results written to files before
    the orchestrator proceeds.>`
 4. `<Step. Where a step supersedes something, it is RENAMED with the .superseded
-   suffix - never deleted. Deletion happens only in the final phase, after Gate B.>`
+   suffix - never deleted. Deletion happens only in the final phase, after Gate B.
+   Verify the rename with find <root> -name '*.superseded' and record the list;
+   never grep for the suffix, since an ignore-file-aware grep wrapper drops hits
+   silently and the sweep looks complete.>`
 5. Record executed evidence in `STATE.md` as you go - the command and its actual
    output, not a checkmark. Check items off in the tracking file **as you go**: that
    file is the resume point if the session dies mid-phase.
@@ -71,4 +74,7 @@ something that cannot be safely deferred - and only after trying the obvious fix
 <!-- FINAL PHASE ONLY: also state where residue goes - every gap found and not closed,
 every deferred check, everything scoped out - as an owned open item in STATE.md, a
 named successor, or dropped with the reason written next to it. A final phase that
-closes without naming a destination converts its own open gaps into "done". -->
+closes without naming a destination converts its own open gaps into "done".
+Also: any generated catalog, inventory, or index is regenerated here, after the last
+content edit of the run, and its --check (or a diff against a fresh regeneration) is
+part of Gate B. Regenerating it in an earlier phase leaves it stale by the finish. -->

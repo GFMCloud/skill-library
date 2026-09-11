@@ -2,6 +2,24 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-10 - phased-harness 1.2.4 and sweep-harness: two template lessons and an advisory worker field
+
+workbench 0.9.5. Source: claude-improvements-weekly ratify 2026-09-10, executing the
+2026-09-03 rulings Q-2026-09-03-29 and Q-2026-09-03-27 part 2 (blocked a week by a dirty
+tree). Local commit only.
+
+- **phased-harness 1.2.4:** the phase runbook template's supersession step now verifies
+  the rename with `find <root> -name '*.superseded'` and forbids `grep` for the suffix
+  (ignore-file-aware wrappers drop hits silently); its final-phase block now places any
+  generated catalog or inventory regeneration in the final phase after the last content
+  edit, with the `--check` as part of Gate B. SKILL.md's evidence discipline names both.
+  Both defects were met live by the taste-skill-merge harness and never reached the
+  templates.
+- **sweep-harness (incubator):** `WORKER.template.md` step 4 and the item-state template
+  gain an optional, advisory "what would have made this item cheaper or more reliable"
+  line, written into the item's own state file. The orchestrator reads it at triage and
+  never acts on it automatically.
+
 ## 2026-09-08 - prove-hooks.sh scores WARN-only hooks and indexes fixtures per matcher
 
 No pack bump (repo scripts and fixtures only). Source: claude-scout-weekly hooks runbook Step 5

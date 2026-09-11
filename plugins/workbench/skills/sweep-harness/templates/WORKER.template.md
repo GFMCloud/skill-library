@@ -33,5 +33,8 @@ with:
 - `status: done` if the check in step 3 passed, `status: failed` if it did not.
 - The evidence: the command run and its actual output, not a paraphrase.
 - Timestamps for started/completed.
+- Optional, one line under `## Notes`: what would have made this item's treatment
+  cheaper or more reliable, if anything. Advisory only: the orchestrator reads it at
+  triage and never acts on it automatically. Leave it out when nothing comes to mind.
 
 Then stop. Do not touch `MANIFEST.tsv`, `failures.md`, or any other state file.

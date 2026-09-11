@@ -13,4 +13,5 @@ completed: <ISO-8601 or empty>
 ## Notes
 
 `<Anything the orchestrator needs at triage time if this failed. Empty if done
-cleanly.>`
+cleanly. Optionally one line on what would have made this item cheaper or more
+reliable; advisory only.>`
