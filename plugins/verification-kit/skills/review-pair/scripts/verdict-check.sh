@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# verdict-check.sh — validates a Verdict object v1 file (interface spec section 3)
+# verdict-check.sh: validates a Verdict object v1 file (interface spec section 3)
 # and, given two, applies the review-pair hold rule.
 #
 # Usage:
@@ -9,7 +9,7 @@
 # Exit codes:
 #   0  valid (single file), or valid pair with no hold triggered
 #   1  invalid/malformed verdict, missing file, or bad usage
-#   2  valid pair that is a repeat fail — HOLD, queue for Graham
+#   2  valid pair that is a repeat fail, HOLD, queue for Graham
 #
 # Runnable from any directory; takes absolute or relative paths to verdict files.
 
@@ -115,7 +115,7 @@ main() {
     new_info2=$(get_field "$2" "new_information")
 
     if [ "$result1" = "fail" ] && [ "$result2" = "fail" ] && [ "$new_info2" = "false" ]; then
-      echo "HOLD: second verdict is a fail with new_information: false — repeat fail, hold the target and queue for Graham"
+      echo "HOLD: second verdict is a fail with new_information: false, repeat fail, hold the target and queue for Graham"
       exit 2
     fi
 

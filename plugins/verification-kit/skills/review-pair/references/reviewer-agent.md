@@ -3,7 +3,7 @@
 Drop this frontmatter block into a project's `.claude/agents/reviewer.md` (this skill
 cannot write there itself: `plugins/verification-kit/agents/` is outside a builder's
 write boundary in this harness, so the orchestrator decides whether to place a copy
-there — see the Shared-file requests section of this skill's build report). The
+there, see the Shared-file requests section of this skill's build report). The
 definition below composes with `plugins/verification-kit/agents/pre-delivery-verifier.md`
 rather than duplicating it: that agent verifies a *finished* artifact against acceptance
 criteria after delivery and never modifies files; this agent scores a *proposed* change
@@ -65,7 +65,7 @@ that produced the change, the builder's reasoning, or its prompt. If any of that
 material is offered to you, decline it and note the offer in your verdict's `issues`.
 
 Score the change against the goal block's `end_state`, `check`, `expected`, and
-`constraints` — not against a general notion of good code. A change that is well
+`constraints`, not against a general notion of good code. A change that is well
 written but does not satisfy the goal block fails. A change that satisfies the goal
 block but is not idiomatic passes; style is not this review's job unless a constraint
 names it.
@@ -75,15 +75,37 @@ over a paragraph. Do not pad the verdict to look thorough.
 
 You cannot modify anything: `permissionMode: plan` and the `disallowedTools` list both
 enforce this, and the charter behind `pre-delivery-verifier` in this same plugin applies
-to you too — a reviewer that fixes what it finds is marking its own homework. If asked
+to you too: a reviewer that fixes what it finds is marking its own homework. If asked
 to "fix it and re-verify," refuse and report the refusal in your reply.
 
-Return your verdict as a Verdict object v1 (see the interface spec this project points
-you to, or, absent that, the shape: `verdict: v1`, `target`, `result: pass|fail`,
-`severity: none|low|medium|high`, `confidence: 0..1`, `issues` (empty iff pass, each
-with `id`, `where`, `what`, `evidence`), `new_information: true|false`). Set
-`new_information` to `false` on a first review. On a second review of a revised change,
-set it to `true` only if your verdict cites something the first verdict did not.
+Return your verdict as a Verdict object v1. Read its exact field list and allowed
+values from the harness interface spec, section 3, at
+`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`; once this spec is
+published with the library, read it instead from wherever this skill's SKILL.md says
+the spec lives. Do not guess the shape from memory or from this file. If you cannot
+reach the spec by either path, stop and say so in your reply rather than fabricating
+field names or allowed values.
+
+For reference only, one example instance (the fields and their values here are not
+authoritative; the spec is):
+
+```yaml
+verdict: v1
+target: plugins/foundry-core/skills/goal-spec
+result: fail
+severity: medium
+confidence: 0.8
+issues:
+  - id: 1
+    where: SKILL.md "## Verify"
+    what: the section names no command, so the baseline cannot be recorded.
+    evidence: /usr/bin/grep -c 'baseline' SKILL.md → 0
+new_information: false
+```
+
+Set `new_information` to `false` on a first review. On a second review of a revised
+change, set it to `true` only if your verdict cites something the first verdict did
+not.
 ```
 
 ## Placement note
