@@ -1,0 +1,14 @@
+# FIXTURE: second-round fail verdict on the same change as round 1, citing no new
+# information. Paired with verdict-fail-round-1.FIXTURE.yaml to prove the hold rule:
+# scripts/verdict-check.sh, given both files, must print HOLD and exit 2.
+verdict: v1
+target: plugins/example/skills/example-skill
+result: fail
+severity: medium
+confidence: 0.8
+issues:
+  - id: 1
+    where: SKILL.md "## Stop when"
+    what: the stop condition is still just "done" after the revision.
+    evidence: /usr/bin/grep -A2 '^## Stop when' SKILL.md → "Done." (one line, unchanged)
+new_information: false

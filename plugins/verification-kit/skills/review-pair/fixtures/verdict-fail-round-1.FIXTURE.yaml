@@ -1,0 +1,13 @@
+# FIXTURE: first-round fail verdict on a change, part of a two-file HOLD pair.
+# Paired with verdict-fail-round-2-repeat.FIXTURE.yaml to prove the hold rule.
+verdict: v1
+target: plugins/example/skills/example-skill
+result: fail
+severity: medium
+confidence: 0.85
+issues:
+  - id: 1
+    where: SKILL.md "## Stop when"
+    what: the only stop condition given is "done", which is vacuous per the authoring standard.
+    evidence: /usr/bin/grep -A2 '^## Stop when' SKILL.md → "Done." (one line)
+new_information: false

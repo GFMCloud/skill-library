@@ -1,0 +1,9 @@
+# FIXTURE: a valid, well-formed Verdict object v1 with result: pass.
+# Used to prove scripts/verdict-check.sh accepts a well-formed passing verdict (exit 0).
+verdict: v1
+target: plugins/verification-kit/skills/review-pair
+result: pass
+severity: none
+confidence: 0.92
+issues: []
+new_information: false
