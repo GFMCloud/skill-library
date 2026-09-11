@@ -1,0 +1,29 @@
+{
+  "_fixture_note": "FIXTURE authored for site-review's deliberate-failure proof, shaped like a real Lighthouse JSON report (lighthouse@12.x --output=json). Not a real run of any site.",
+  "lighthouseVersion": "12.2.1",
+  "requestedUrl": "https://gfmcloud.example/",
+  "finalUrl": "https://gfmcloud.example/",
+  "fetchTime": "2026-09-11T18:40:02.000-05:00",
+  "categories": {
+    "performance": {
+      "id": "performance",
+      "title": "Performance",
+      "score": 0.91
+    },
+    "accessibility": {
+      "id": "accessibility",
+      "title": "Accessibility",
+      "score": 0.97
+    },
+    "best-practices": {
+      "id": "best-practices",
+      "title": "Best Practices",
+      "score": 0.96
+    },
+    "seo": {
+      "id": "seo",
+      "title": "SEO",
+      "score": 1.0
+    }
+  }
+}

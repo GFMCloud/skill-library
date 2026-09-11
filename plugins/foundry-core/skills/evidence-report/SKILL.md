@@ -3,8 +3,8 @@ name: "evidence-report"
 description: "Format executed evidence into a report that states what was checked, what the check returned, and what was not checked. Use when presenting verification results, acceptance checks, or any claim that work is done."
 metadata:
   maturity: stable
-  version: 1.1.0
-  reviewed: 2026-09-02
+  version: 1.1.1
+  reviewed: 2026-09-11
 ---
 
 # evidence-report
@@ -12,6 +12,29 @@ metadata:
 The reporting half of `proof-of-work`. That skill sets the standard for what
 counts as evidence; this one is how the evidence gets presented so a reader can
 tell verified from assumed at a glance.
+
+## Inputs
+
+One or more claims, each with the command or action that checked it and the output it
+actually returned; the list of what was not checked and why.
+
+## Verify
+
+Every block has all four fields; `OUTPUT` is quoted, not paraphrased; the `NOT
+VERIFIED` list is present even when empty of surprises; the error count, not the
+tool's adjectives, is what the verdict cites.
+
+## Done when
+
+The report holds one block per claim, each verdict naming the failure mode it rules
+out, an identifier for what it ran against (SHA, count, timestamp), and the closing
+not-verified list.
+
+## Stop when
+
+A claim has no `OUTPUT` because its check could not be run: record it `UNVERIFIED` with
+the reason and stop there, never substitute reasoning about why it probably works. A
+check's output was not read; a report cannot summarise what nobody looked at.
 
 ## The format
 

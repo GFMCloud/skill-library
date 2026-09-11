@@ -1,0 +1,7 @@
+# FIXTURE - starting Seen-index entry v1 for change-watch's replay proofs.
+# Not a real alarm; source name is fixture-only.
+seen: v1
+source: cloudwatch:demo-alarm-fixture
+last_state: OK
+last_seen: 2026-09-11T00:00:00-05:00
+last_reported: never

@@ -1,0 +1,3 @@
+FIXTURE - a passing counterpart action name that IS in
+fixtures/classify-rules.yaml, classified safe.
+diagnose

@@ -1,0 +1,13 @@
+# FIXTURE - complete Goal block v1, for goal-block-check.sh's passing-run proof.
+# Values are the worked example from the interface spec, not a real run.
+goal_block: v1
+ask: "get the homepage lighthouse scores up"
+kind: measurable
+end_state: all four Lighthouse category scores at or above 90 on https://gfmcloud.com/
+check: npx lhci collect --url=https://gfmcloud.com/ && node scripts/lh-scores.js
+expected: "perf>=90 a11y>=90 bp>=90 seo>=90"
+baseline: "perf=71 a11y=88 bp=92 seo=100  (2026-09-11T14:02:11-05:00)"
+constraints: [no content changes to the hero copy, no new third-party scripts]
+budget: stop after 5 tries
+human_gate: deploying the fix branch to production
+goal_condition: "all four Lighthouse scores at or above 90 on gfmcloud.com per scripts/lh-scores.js, stop after 5 tries"

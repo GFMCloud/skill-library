@@ -2,6 +2,77 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-11 - AI workflow toolkit: eight skills across three packs (toolkit-build branch)
+
+Pack bumps: foundry-core 0.3.0, verification-kit 0.1.0 (first version field on a
+manifest that never had one), workbench 0.10.0. Source: toolkit-build-harness Phases 3
+and 4, executing the AI workflow toolkit roadmap items T1 to T8. Every skill ships as
+incubator with a fixture-proven deliberate failure and an authored eval suite; eval
+execution is deferred to the weekly maintainer (`claude plugin eval` is early-access
+gated on this account). Each passed an independent opus review after a sonnet build.
+
+- **goal-spec (foundry-core, new):** turns an open-ended ask into a Goal block v1 with
+  a runnable check or criterion-separated rubric, a recorded baseline, and a named
+  human gate; refuses when no check can be named. `goal-block-check.sh` fails a block
+  with a missing field.
+- **bounded-loop (foundry-core, new):** script-based Stop hook that runs a goal's
+  check itself, blocks failing turns with the real output, guards against test-file
+  edits, and escalates with a structured report at a fixed attempt budget (default 3).
+- **smoke-gate (verification-kit, new):** generates a smoke script from a Smoke
+  manifest v1, proves every assertion category by poisoning it to exit 1, refuses a
+  manifest missing any category's poison, then runs live for exit 0.
+- **review-pair (verification-kit, new):** independent pass/fail verdict on a change
+  spec from a read-only reviewer subagent that never sees the builder's context;
+  `verdict-check.sh` rejects a verdict missing a field and holds on a repeat fail.
+- **site-review (verification-kit, new):** Lighthouse, linkinator, viewport and dark
+  screenshots, content checklist; scored before/after table with a fix phase under
+  `/goal` re-scored by review-pair.
+- **handoff 0.2.0 (workbench):** resume mode with Typed claim v1 blocks; a new session
+  verifies each checkable claim against the live tree before continuing, and
+  `check-claims.py` fails on a mismatch.
+- **schedule-harness (workbench, new):** scaffolds a Scheduled-task pointer v1 plus
+  absolute-limits block for running one `/phase` mode on a cadence; never registers
+  the task or writes under `~/.claude/`. `check-pointer.py` fails a pointer with a
+  relative path or no retry cap.
+- **change-watch (workbench, new):** registered check with a seen-index that reports
+  only on a state transition; a re-fire in the same state produces no report, and an
+  unclassified action is refused.
+- **`docs/toolkit-interface-spec.md` (new):** the ratified interface spec every shape
+  above is defined in (Goal block v1, Escalation report v1, Verdict v1, Typed claim v1,
+  Smoke manifest v1, Scheduled-task pointer v1, Seen-index entry v1, scored table, eval
+  suite layout), moved into the library from the build harness so the skills' citations
+  resolve for a plugin consumer. Skills cite it by name and section; none restates a
+  field list.
+
+## 2026-09-11 - contract sections: standard, template, validator (toolkit-build branch)
+
+No pack bump (repo standard, template, and validator only). Source: toolkit-build-harness
+Phase 1, executing the AI workflow toolkit roadmap item T0. Branch `toolkit-build`, one PR.
+
+- **`docs/authoring-standard.md`:** new "Contract sections" rule: every SKILL.md carries
+  `## Inputs`, `## Verify`, `## Done when`, `## Stop when`, in that order, with at least one
+  stop condition that is not "done". Stable skills fail without them; incubator skills warn.
+  Known weakness stated beside the rule: presence is checked, quality is not.
+- **`templates/SKILL.template.md`:** the four sections with one-line placeholders.
+- **`scripts/validate-skills.sh`:** F14 (missing section), F15 (out of order), F16 (vacuous
+  Stop when) for stable skills; W4, W5, W6 for incubator. Headings are matched on their own
+  line in the body, never in prose. Proven by a stable fixture missing `## Stop when`
+  (exit 1) and the same fixture as incubator (warning, exit 0).
+
+## 2026-09-11 - stable backfill: contract sections on every stable skill (toolkit-build branch)
+
+No behavior change in any skill; the four sections name inputs, checks, and stop
+conditions that were already in each body. Pack bumps land in Phase 5 of the same branch.
+
+- **identity-resolution 1.0.1:** contract sections added, no behavior change.
+- **evidence-report 1.1.1:** contract sections added, no behavior change.
+- **proof-of-work 1.1.1:** contract sections added, no behavior change.
+- **capability-preflight 1.1.1:** contract sections added, no behavior change.
+- **output-lint 1.0.1:** contract sections added, no behavior change.
+- **standing-authorization 1.1.1:** contract sections added, no behavior change.
+- **phased-harness 1.2.5:** contract sections added around its existing "Done when", no
+  behavior change.
+
 ## 2026-09-10 - phased-harness 1.2.4 and sweep-harness: two template lessons and an advisory worker field
 
 workbench 0.9.5. Source: claude-improvements-weekly ratify 2026-09-10, executing the

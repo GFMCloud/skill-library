@@ -66,6 +66,33 @@ inaccurate description, not to the model.
   rationale, at the same altitude, never in an appendix or a later section (trailofbits
   coop review, 2026-09-07).
 
+## Contract sections
+
+Every SKILL.md body carries four H2 sections, in this order, after the title and any
+introductory paragraph and before `## Output contract`:
+
+1. `## Inputs` - what the skill needs before it can start: the artifacts, values, or
+   questions answered. A skill with no inputs says so in one line.
+2. `## Verify` - the check the skill runs or surfaces to show its work held: the
+   command, the observable, or the fixture, and what output means pass.
+3. `## Done when` - the end state, stated so a reader could confirm it without asking
+   the skill's author. One measurable line beats three vague ones.
+4. `## Stop when` - the conditions under which the skill halts short of done and hands
+   back: a budget exhausted, a blocker only the user can clear, a check that cannot be
+   named. At least one condition that is not "done". A skill with no stop condition is
+   an unbounded loop with a description.
+
+Maturity split, enforced by `scripts/validate-skills.sh`: a **stable** skill fails the
+validator (F14, F15, F16) when a section is missing, out of order, or `## Stop when` is
+vacuous; an **incubator** skill gets a warning (W4, W5, W6) and passes. Promotion to
+stable therefore requires the four sections, like `version` and `reviewed`.
+
+Known weakness, stated beside the rule: the validator checks presence, order, and one
+non-trivial line under `## Stop when`. A section can be present and vacuous ("Inputs:
+see above") and still pass. Quality of the four sections is a review judgment, made by
+the human reviewer at promotion and by the weekly maintainer's audit; the validator
+proves only that the author wrote them.
+
 ## Output contracts
 
 If a skill's output is consumed by other agents, skills, or pipelines (handoff

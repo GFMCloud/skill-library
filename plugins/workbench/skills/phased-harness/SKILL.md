@@ -10,8 +10,8 @@ description: >-
   sessions that ends in an irreversible step.
 metadata:
   maturity: stable
-  version: 1.2.4
-  reviewed: 2026-09-10
+  version: 1.2.5
+  reviewed: 2026-09-11
 ---
 
 # Phased harness — scaffold a gated, resumable project
@@ -260,6 +260,19 @@ restating them:
 
 Reference them by name; do not copy their content into the harness.
 
+## Inputs
+
+The eight interview answers from Step 2: the end state and its invariant, the
+irreversible step, the standing authorizations, the never-pre-authorized list, the phase
+breakdown with natures, the project directory, the decisions that are the user's alone,
+and the parameters. Any of them unresolved stays literally `TBD`.
+
+## Verify
+
+Grep the generated tree for `<` and find no surviving placeholder; every relative link
+resolves; every phase in STATE.md's tracker has a runbook file; every CONFIG key a
+runbook references exists in CONFIG.md. Report the tree with line counts.
+
 ## Done when
 
 - The tree above exists, fully substituted, with no stray `<PLACEHOLDER>`.
@@ -271,3 +284,12 @@ Reference them by name; do not copy their content into the harness.
   exactly those phases, all unchecked.
 - You told the user the one command that starts the work: open a session in the
   project dir and run `/phase`.
+
+## Stop when
+
+The fit test in Step 1 fails on any of its four criteria: decline, state the failing
+criterion, and route in the same breath. An interview answer is missing and the user is
+not available to supply it: scaffold with `TBD` and say which sessions will stop on it;
+never invent a value. A target directory named in CONFIG.md has no git root and the
+user declines the Phase 0 `git init` step: `.superseded` is not reversible there, so the
+harness is not scaffolded until that is resolved.

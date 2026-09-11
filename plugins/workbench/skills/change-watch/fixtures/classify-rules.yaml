@@ -1,0 +1,8 @@
+# FIXTURE - classify-action rules for change-watch evals and the deliberate-
+# failure proof. Not a real action-safety policy; do not use for a live check.
+diagnose safe
+draft-fix-on-branch safe
+smoke-gate-staging safe
+deploy-production approval-only
+rotate-credential approval-only
+page-oncall approval-only

@@ -20,6 +20,22 @@ Long material — rubrics, examples, schemas — goes in references/ and gets li
 
 See [references/example.md](references/example.md).
 
+## Inputs
+
+<What the skill needs before it starts: artifacts, values, questions answered. "None" is a valid one-line answer.>
+
+## Verify
+
+<The check the skill runs or surfaces to show its work held: command, observable, or fixture, and what output means pass.>
+
+## Done when
+
+<The end state, stated so a reader can confirm it without asking the author. One measurable line.>
+
+## Stop when
+
+<At least one condition that is not "done": budget exhausted, a blocker only the user can clear, no check can be named.>
+
 ## Output contract
 
 <If other agents/pipelines consume this skill's output, define and VERSION the

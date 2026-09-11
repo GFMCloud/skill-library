@@ -3,8 +3,8 @@ name: "output-lint"
 description: "Check a message or document before sending it, whenever it carries a command to run or an ask to act on — catches unsubstituted placeholders, commands that cannot run as written, writes announced before they are made, and counts with no enumeration behind them. Use before any hand-off, instruction, or status report."
 metadata:
   maturity: stable
-  version: 1.0.0
-  reviewed: 2026-08-09
+  version: 1.0.1
+  reviewed: 2026-09-11
 ---
 
 # output-lint
@@ -17,6 +17,26 @@ to convert into a decision yourself"*, *"I didn't put it in because you should k
 Six of those defects are mechanically checkable. Two are not. This checks the six and
 prints the two next to the result, rather than letting a clean run imply the message was
 good.
+
+## Inputs
+
+One outgoing message or document draft, as a file path or on stdin.
+
+## Verify
+
+`output_lint.py` exits 0 on the draft, and the `NOT CHECKED` footer naming the two
+unchecked rules is present in its output.
+
+## Done when
+
+The six checked rules find nothing in that text, and the two unchecked rules (lead
+with the ask, one decision per message) have been applied by hand.
+
+## Stop when
+
+Exit 2: the input was unreadable. Exit 1: errors are present; fix the draft and re-run,
+never send with an error standing. The input is reference documentation rather than an
+outgoing message: the checks will produce noise, so do not run them on it.
 
 ## Run it
 

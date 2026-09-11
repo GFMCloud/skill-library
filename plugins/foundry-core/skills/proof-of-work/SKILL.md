@@ -3,14 +3,37 @@ name: "proof-of-work"
 description: "Produce executed evidence that a piece of work actually works before presenting it as done — run the code against representative data, inspect the render, print the validation output. Use before declaring any artifact complete, and whenever a tool reports its own success."
 metadata:
   maturity: stable
-  version: 1.1.0
-  reviewed: 2026-09-02
+  version: 1.1.1
+  reviewed: 2026-09-11
 ---
 
 # proof-of-work
 
 The evidence standard. `evidence-report` is how the evidence gets written up;
 this is what qualifies as evidence in the first place.
+
+## Inputs
+
+The artifact and its class (code, document, deployment, data, config); representative
+input to run it against; for multi-step work, the check each step names before it runs.
+
+## Verify
+
+The check ran at the level the failure lives, and the three parts are stated: what was
+run, against what input, and what came back. Any tool self-report is confirmed by
+inspecting what it claims to have produced.
+
+## Done when
+
+Executed evidence is attached to every claim of completion, in the `evidence-report`
+format, with the not-verified list closing it.
+
+## Stop when
+
+Evidence cannot be produced by the executor after establishing that it genuinely cannot
+run the check: say so in those words, put it in the not-verified list, and hand over the
+exact command for a human to paste. The only available check runs at the wrong level: a
+green result there is not reported as a pass.
 
 ## The standard
 
