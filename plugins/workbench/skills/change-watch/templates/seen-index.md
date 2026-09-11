@@ -1,20 +1,10 @@
 # Seen-index entry v1 template
 
-The Seen-index entry v1 shape is defined once, in the harness interface spec
-(`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`, section 6).
-This file is the fill-in-the-blanks template plus the spec's own example. It
-never redefines the field list; if the spec changes the shape, edit the spec,
-not this file.
-
-## Template
-
-```yaml
-seen: v1
-source: <alarm name, PR number, metric name, marker path>
-last_state: <the value last observed>
-last_seen: <timestamp of the last observation, any state>
-last_reported: <timestamp of the last report, or never>
-```
+The Seen-index entry v1 shape, its field list, and its rules are defined once,
+in the harness interface spec (`/Users/gfm/work/toolkit-build-harness/docs/interface-spec.md`,
+section 6, "Seen-index entry v1"). This file never redefines the field list;
+if the spec changes the shape, edit the spec, not this file. What follows is
+the spec's own example plus usage notes not already stated in the spec.
 
 ## Spec's example (interface spec section 6)
 
@@ -38,7 +28,3 @@ last_reported: 2026-09-11T03:10:00-05:00
 - `last_reported` only advances on a transition (`scripts/watch-step.py`
   enforces this). It reads `never` before the first transition, exactly as
   written, so a report-history sweep can grep for the literal word.
-- The predicate that decides a transition is `current_state != last_state`,
-  never "is this state already in the index." A first observation seeds
-  `last_state` and reports nothing, because there is no prior state to
-  transition from.

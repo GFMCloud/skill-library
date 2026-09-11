@@ -10,7 +10,7 @@ description: >-
   "poll for X and only bug me on a change", "re-enable the estate map as
   exception-only", "wait for this marker file". Not for one-shot checks with
   no ongoing cadence (that is a normal command), and not for a transport
-  choice you have not yet made — this skill picks the transport as its first
+  choice you have not yet made: this skill picks the transport as its first
   step. Costs: a scheduled task or Routine gets registered, and a seen-index
   file gets created and updated on every cycle.
 metadata:
@@ -63,8 +63,8 @@ action before the diagnostic call: it prints `safe` or `approval-only`, or
 exits 1 with `unclassified` on stderr for an action the rules file does not
 name. An unclassified action is never treated as safe by default.
 
-Replay proof (FIXTURE-labelled, captured in
-`/Users/gfm/work/toolkit-build-harness/runs/phase-3/change-watch.md`): a known
+Replay proof (FIXTURE-labelled, run against the fixtures in
+[fixtures/](fixtures/)): a known
 transition OK to ALARM produces exactly one `REPORT`; the same ALARM state
 replayed three times produces three `NO-REPORT` lines with `last_seen`
 advancing and `last_reported` unchanged; a flapping sequence OK, ALARM, OK,
