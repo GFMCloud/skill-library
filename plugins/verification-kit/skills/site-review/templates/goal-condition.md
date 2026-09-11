@@ -26,10 +26,14 @@ human_gate: deploying any fix to production
 goal_condition: "all four scores at or above 90 and linkinator reports zero broken, stop after 5 tries"
 ```
 
+This `goal_condition` string is the one editable home for the wording. `score-table.py`'s
+`GOAL_CONDITION` constant quotes it verbatim and must be kept in sync with this file if
+either changes.
+
 Note the `check` line composes three commands: Lighthouse, linkinator, and
 the gate script that turns their two JSON files into the table and the exit
 code `/goal`'s evaluator actually needs to see printed in the transcript (the
-evaluator judges the transcript, never runs a command itself — R-1). The
+evaluator judges the transcript, never runs a command itself, R-1). The
 `goal_condition` line is the one to paste after `/goal`; it is the roadmap
 entry's fix-phase condition verbatim.
 
@@ -51,7 +55,7 @@ attempt as the fix, hand its diff and this Goal block to
 `verification-kit:review-pair` for an independent re-score. review-pair
 returns a Verdict object v1 (interface spec section 3); apply the change only
 on `result: pass`. This is the "review-pair re-scoring independently" step
-in the roadmap entry — it is a second, independent check on the change, not a
+in the roadmap entry: it is a second, independent check on the change, not a
 replacement for score-table.py's own exit code.
 
 ## On budget exhaustion
@@ -61,4 +65,4 @@ If 5 attempts pass without meeting the condition, `bounded-loop`'s Stop hook
 (interface spec section 2). Its `last_failing_output` field is the final
 `score-table.py` run's verbatim output; its `likely_causes` should name the
 specific red rows still failing, not a generic "performance is low." Never
-paraphrase the table into the escalation — copy it.
+paraphrase the table into the escalation. Copy it.

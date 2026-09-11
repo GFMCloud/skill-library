@@ -38,9 +38,11 @@ LABELS = [
     "compliance.",
 ]
 
+# Canonical wording lives in templates/goal-condition.md (the roadmap-verbatim
+# fix-phase condition); this string must match it exactly.
 GOAL_CONDITION = (
-    "all four Lighthouse scores at or above 90 and linkinator reports zero "
-    "broken links, stop after 5 tries"
+    "all four scores at or above 90 and linkinator reports zero broken, "
+    "stop after 5 tries"
 )
 
 

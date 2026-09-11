@@ -39,5 +39,5 @@ design is good, the copy is persuasive, or the information architecture makes
 sense. Rows 5, 6, 7, 8 are visual judgment calls made by whoever runs the
 review (a human, or the reviewer subagent under `review-pair`'s independent
 re-score); they are not automatable the way rows 1, 2, 4, 9, 10, 11 are. Do
-not report "checklist complete" as equivalent to "the site looks good" — it
+not report "checklist complete" as equivalent to "the site looks good"; it
 means every row above was checked and passed, nothing more.

@@ -11,7 +11,7 @@ description: >-
   "check the site's Lighthouse scores", "find broken links on", or "is this
   site ready". Not for a design-only critique with no live URL (that has no
   check to run), and not a substitute for a real Core Web Vitals or WCAG
-  audit — see the labels in `## Output contract`.
+  audit; see the labels in `## Output contract`.
 metadata:
   maturity: incubator
 ---
@@ -30,7 +30,7 @@ no CLI tool scores (see [references/rubric.md](references/rubric.md)).
 ## Inputs
 
 - A URL for the live site or tool. site-review scores the deployed,
-  rendered site, never a local build or a static export — Lighthouse and
+  rendered site, never a local build or a static export. Lighthouse and
   linkinator both need a real HTTP response (linkinator specifically crawls
   a live rendered site; a file-based alternative like `lychee` is not what
   this skill wraps, see [references/rubric.md](references/rubric.md)'s
@@ -58,7 +58,7 @@ above 90 and linkinator reports zero broken links, 1 otherwise (see the
 script's own docstring for the exact field paths it reads:
 `categories.<id>.score` and `links[].state`). This exit code is what the
 `/goal` condition in [templates/goal-condition.md](templates/goal-condition.md)
-checks for — see that file for the full Goal block v1.
+checks for; see that file for the full Goal block v1.
 
 For the 375px-viewport and dark-theme passes, run Lighthouse a second time
 with device emulation and a forced dark color scheme, and capture a
@@ -112,7 +112,7 @@ fix list with a status per item (roadmap entry, "Output").
 
 - **Budget exhausted.** Five `/goal` attempts complete without meeting the
   condition: stop, do not attempt a sixth, and produce an Escalation report
-  v1 (interface spec section 2) naming the specific rows still red — never
+  v1 (interface spec section 2) naming the specific rows still red, never
   a generic "performance is low" (roadmap entry, "Failure").
 - **The URL does not resolve, or Lighthouse/linkinator cannot reach it.**
   Report the exact command and its error, and stop rather than guessing at
@@ -127,8 +127,8 @@ fix list with a status per item (roadmap entry, "Output").
 ## Output contract
 
 Produces a Goal block v1 as defined in the harness interface spec
-(`docs/interface-spec.md`, section 1) — filled per
-[templates/goal-condition.md](templates/goal-condition.md) — to hand to
+(`docs/interface-spec.md`, section 1), filled per
+[templates/goal-condition.md](templates/goal-condition.md), to hand to
 `/goal` for the fix phase.
 
 Consumes a Verdict object v1 as defined in the harness interface spec,
