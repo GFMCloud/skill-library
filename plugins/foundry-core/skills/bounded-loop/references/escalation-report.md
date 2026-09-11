@@ -6,7 +6,7 @@ redefines a field. `stop-hook-verify.sh` writes the file; this page is how a
 reader (human or agent) checks that what it wrote is right, and how to fill
 the two fields the script cannot compute for you.
 
-The spec's own example (quoted verbatim, for reference — the field list lives
+The spec's own example (quoted verbatim, for reference; the field list lives
 in the spec, not here):
 
 ```yaml
@@ -26,21 +26,13 @@ question: should an empty header row count as a record?
 
 ## What the script fills automatically
 
+`cause_class` is set per the rules in `docs/interface-spec.md` section 2
+(Escalation report v1); this page does not redefine them. The script fills
 `attempts`, `last_failing_output`, `tried` (with real `diff_hash` values from
-the workspace snapshot), and `cause_class` all come straight out of
-`stop-hook-verify.sh`'s state file — see `scripts/_verify_impl.py`'s
+the workspace snapshot), and `cause_class` straight out of
+`stop-hook-verify.sh`'s state file; see `scripts/_verify_impl.py`'s
 `write_escalation`. Do not hand-edit these; if one looks wrong, the state
 file (`--state`) is the thing to inspect, not the escalation file.
-
-`cause_class` is chosen by the script's own rule, not a judgment call at
-write time:
-
-| Situation the script observed | cause_class |
-|---|---|
-| a guarded path's content changed between attempts | `test_file_modified` |
-| two consecutive attempts left the workspace snapshot unchanged | `no_progress` |
-| budget exhausted, every attempt's check output was byte-identical | `unreachable_condition` |
-| budget exhausted, check output differed across attempts | `ambiguous_check_feedback` |
 
 Known weakness, stated beside the rule: `unreachable_condition` vs.
 `ambiguous_check_feedback` is a heuristic on output equality, not a semantic

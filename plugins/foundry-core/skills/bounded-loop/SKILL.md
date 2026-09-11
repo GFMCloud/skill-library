@@ -8,8 +8,8 @@ description: >-
   harness rather than judged from the transcript, and for any unattended
   `/goal` run that needs a fixed escalation format when it cannot finish. Not
   for goals `/goal` can already judge from the transcript alone, and not a
-  substitute for `/goal`'s own loop — this only supplies the parts `/goal`
-  lacks: running the check, guarding against test-file tampering, and a
+  substitute for `/goal`'s own loop: this only supplies the parts `/goal`
+  lacks, running the check, guarding against test-file tampering, and a
   budget with an escalation report at the end.
 metadata:
   maturity: incubator
@@ -20,7 +20,7 @@ metadata:
 `/goal` is the loop. This skill supplies what `/goal` cannot do on its own:
 `/goal`'s evaluator judges only what Claude surfaces in the transcript, it
 never runs a command itself (research record 2026-09-11, row 1). When the
-check is a command — a test suite, a linter, a build — something has to
+check is a command, a test suite, a linter, a build, something has to
 execute it and hold the agent to what it actually returns, not what it
 claims. That something is a script-based Stop hook:
 `scripts/stop-hook-verify.sh`.
@@ -33,14 +33,14 @@ to fill and present the report this skill produces.
 ## Inputs
 
 - A Goal block v1 (from `foundry-core:goal-spec`, or written by hand in that
-  shape) — specifically its `check` field (a command) and `budget` field.
+  shape), specifically its `check` field (a command) and `budget` field.
 - A budget: the number of distinct attempts before escalating. Default **3
   attempts** if the goal block does not name one. This default is a design
-  choice, not a benchmarked optimum — pick a smaller number for a check that
+  choice, not a benchmarked optimum: pick a smaller number for a check that
   is cheap to run and a larger one only if early evidence shows 3 is too
   tight for the kind of task in question.
 - The repo or workspace root the check runs against (`--repo`).
-- Optionally, one or more guarded paths (`--guard`) — the verifier and test
+- Optionally, one or more guarded paths (`--guard`): the verifier and test
   files that must not change between attempts. Name every file the check
   itself reads to decide pass/fail; an unguarded test file can be edited to
   make a failing attempt look like it passed.
@@ -49,7 +49,7 @@ to fill and present the report this skill produces.
 
 Install the hook for the session (add an entry under `Stop` in
 `.claude/settings.json` invoking `stop-hook-verify.sh` with the goal's
-`--check`, `--budget`, `--repo`, and `--guard` flags — see
+`--check`, `--budget`, `--repo`, and `--guard` flags, see
 `scripts/stop-hook-verify.sh --help` for the full flag list). From then on,
 every Stop event runs the check itself and the three-part evidence standard
 (what ran, against what, what came back) is satisfied automatically: the
@@ -80,15 +80,15 @@ count of distinct attempts (a repeated diff hash never inflates N).
 - **A guarded file changed.** Any content change to a `--guard` path between
   attempts is an automatic fail, `cause_class: test_file_modified`,
   regardless of what the check itself returned. This does not wait for
-  budget exhaustion — it escalates immediately, because a check that can be
+  budget exhaustion: it escalates immediately, because a check that can be
   made to pass by editing the thing that checks it is not evidence of
   anything (research record row 11, EvilGenie test-file-edit detection).
-- **No progress.** Two consecutive attempts leave the workspace snapshot
-  unchanged (same diff hash back to back): `cause_class: no_progress`,
-  escalate immediately rather than spend the remaining budget re-running an
-  identical check against an identical workspace.
+- **No progress.** Two consecutive identical diff hashes (the workspace
+  snapshot unchanged between attempts): `cause_class: no_progress`, escalate
+  immediately on the second identical hash rather than spend the remaining
+  budget re-running an identical check against an identical workspace.
 - **Scope note.** This skill's guard and budget do not scale to large,
-  compositional changes — a check that only exercises one function cannot
+  compositional changes: a check that only exercises one function cannot
   catch a regression three modules away (SpecBench finding, research record
   secondary findings). Use `bounded-loop` for small, boundable tasks with one
   clear check; add an integration check separately for anything that touches
@@ -99,12 +99,12 @@ count of distinct attempts (a repeated diff hash never inflates N).
 
 Produces an Escalation report v1 as defined in the harness interface spec,
 section 2, on budget exhaustion, a guard failure, or a no-progress
-detection — written to the `--escalation-out` path (default
+detection, written to the `--escalation-out` path (default
 `<state-dir>/escalation.yaml`) and printed once by the hook itself. On
 success, no escalation report is produced; the agent states "target met at
 attempt N" with the check's verbatim output attached, per the
 `foundry-core:proof-of-work` evidence standard.
 
-Consumes a Goal block v1 as defined in the harness interface spec, section 1
-— specifically `check`, `budget`, and (when present) `goal_condition` for
+Consumes a Goal block v1 as defined in the harness interface spec, section 1,
+specifically `check`, `budget`, and (when present) `goal_condition` for
 the escalation's `goal_block` field.

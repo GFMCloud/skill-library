@@ -38,7 +38,7 @@ reads any valid JSON output on stdout." And: "The blocking message is the
 reason from your JSON's blocking decision when it makes one, and your stderr
 text otherwise."
 
-`stop-hook-verify.sh` never prints a JSON blocking decision — it prints the
+`stop-hook-verify.sh` never prints a JSON blocking decision: it prints the
 check's verbatim output to stderr and exits 2. Per the quoted line above, that
 stderr text **is** the blocking message Claude sees, which is what the
 roadmap entry's "blocks the turn... with the actual output as
@@ -54,14 +54,14 @@ it in the transcript. The exceptions are `UserPromptSubmit`,
 one of the four, so `stop-hook-verify.sh`'s stdout on exit 0 (the "target
 met" line, or the printed escalation report) lands in the debug log only, not
 automatically in the transcript. That is why SKILL.md tells the agent to read
-`escalation.yaml` itself and present it — the hook's job is to gate and
+`escalation.yaml` itself and present it: the hook's job is to gate and
 record state, not to narrate.
 
 ## Decision control (Stop-specific)
 
 The docs' decision-control table for Stop names a `"decision": "block"`
 field with an associated `reason` ("Explanation of why the stop is
-blocked"). `stop-hook-verify.sh` does not use this path — it uses the plainer
+blocked"). `stop-hook-verify.sh` does not use this path: it uses the plainer
 exit-2-plus-stderr path above, which the docs confirm has the same effect
 (the turn cannot end) without needing to emit JSON.
 
@@ -72,7 +72,7 @@ the standard decision model, Claude Code ignores the exit code and the JSON
 alone decides the outcome: each field the event supports is honored,
 including `permissionDecision`, `additionalContext`, `updatedInput`, and
 `systemMessage`." The page does not enumerate, in the content available at
-fetch time, which specific events honor `additionalContext` — the "decision
+fetch time, which specific events honor `additionalContext`; the "decision
 control" table that would say so per event was not fully present in what
 this skill's builder could retrieve. So this skill does not assert that Stop
 accepts a JSON `additionalContext` field; it relies only on the verified
@@ -80,7 +80,7 @@ stderr-becomes-blocking-message behavior above, which is sufficient to carry
 the check's output back to Claude. If a future reader confirms Stop does
 accept `additionalContext`, switching to it is a small change to
 `_verify_impl.py`'s failing-attempt branch (emit JSON with `additionalContext`
-instead of plain stderr) — note it as an open item rather than assuming it
+instead of plain stderr); note it as an open item rather than assuming it
 silently.
 
 ## SubagentStop
@@ -89,5 +89,5 @@ The docs confirm `SubagentStop` exists as a separate event alongside `Stop`.
 This skill only installs a `Stop` hook; a bounded loop running inside a
 subagent (rather than the main session) would need the hook registered on
 `SubagentStop` instead, which `stop-hook-verify.sh` supports unchanged since
-it only reads `cwd` from stdin — only the hook registration in
+it only reads `cwd` from stdin; only the hook registration in
 `.claude/settings.json` differs.

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # FIXTURE: test-file-guard. Proves that stop-hook-verify.sh treats a change to
-# a guarded path (tests/) as an automatic fail — cause_class test_file_modified
-# — even when the check exits 0 on the attempt that changed it.
+# a guarded path (tests/) as an automatic fail, cause_class test_file_modified,
+# even when the check exits 0 on the attempt that changed it.
 #
-# Usage: bash run.sh [workdir]
+# Usage: bash run.FIXTURE.sh [workdir]
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOOK="$HERE/../../scripts/stop-hook-verify.sh"
@@ -24,7 +24,7 @@ code1=$?
 echo "exit code: $code1"
 echo
 
-echo "=== attempt 2: check now exits 0, but tests/test_app.py was edited in between — must still fail ==="
+echo "=== attempt 2: check now exits 0, but tests/test_app.py was edited in between, must still fail ==="
 echo "assert True  # weakened to always pass" > "$WORK/tests/test_app.py"
 echo '{"cwd": "'"$WORK"'"}' | bash "$HOOK" \
   --check "exit 0" --budget 3 \

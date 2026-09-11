@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# stop-hook-verify.sh — the script-based Stop hook for bounded-loop.
+# stop-hook-verify.sh: the script-based Stop hook for bounded-loop.
 #
 # Reads the Stop hook's JSON on stdin (session_id, cwd, hook_event_name, ...;
 # see references/stop-hook-contract.md for the quoted doc lines), then:

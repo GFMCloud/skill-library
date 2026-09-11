@@ -197,9 +197,10 @@ def main():
     if passed:
         state["status"] = "passed"
         if not is_repeat:
-            state["attempts"].append({"n": len(state["attempts"]) + 1,
+            n = len(state["attempts"]) + 1
+            state["attempts"].append({"n": n,
                                        "diff_hash": diff_hash,
-                                       "summary": summarize(output)})
+                                       "summary": summarize(output, n)})
         save_state(state_path, state)
         print(f"bounded-loop: target met at attempt {len(state['attempts'])}")
         print("check output:")
@@ -207,15 +208,16 @@ def main():
         sys.exit(0)
 
     if not is_repeat:
-        state["attempts"].append({"n": len(state["attempts"]) + 1,
+        n = len(state["attempts"]) + 1
+        state["attempts"].append({"n": n,
                                    "diff_hash": diff_hash,
-                                   "summary": summarize(output)})
+                                   "summary": summarize(output, n)})
         state["attempts"][-1]["check_output"] = output
     save_state(state_path, state)
 
     attempts = state["attempts"]
 
-    if state["repeat_count"] >= 2:
+    if state["repeat_count"] >= 1:
         state["status"] = "escalated"
         save_state(state_path, state)
         report = write_escalation(
@@ -261,7 +263,7 @@ def main():
 
     # Fail, budget remains: block the turn. Per the hooks doc, exit 2's
     # blocking message is "your stderr text" when no JSON blocking decision
-    # is printed (references/stop-hook-contract.md quotes this exactly) — so
+    # is printed (references/stop-hook-contract.md quotes this exactly), so
     # the check's verbatim output on stderr is what reaches Claude to keep
     # working.
     eprint(f"bounded-loop: attempt {len(attempts)} of {budget} failed, check output follows")

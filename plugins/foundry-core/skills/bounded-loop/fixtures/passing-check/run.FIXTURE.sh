@@ -2,9 +2,14 @@
 # FIXTURE: passing-check. Proves two things:
 #   1. A check that exits 0 releases the hook (exit 0, no block).
 #   2. Repeating the exact same workspace state (same diff hash) does not
-#      consume a new attempt — the hook is idempotent on a repeated hash.
+#      consume a new attempt, the hook is idempotent on a repeated hash.
+# Note: attempt 2 below repeats the workspace with a now-passing check
+# rather than a repeated failing check. Two consecutive identical hashes on
+# a still-failing check escalate as no_progress (see fixtures/no-progress),
+# so repeating a failing check here would escalate instead of demonstrating
+# idempotency on the passing path.
 #
-# Usage: bash run.sh [workdir]
+# Usage: bash run.FIXTURE.sh [workdir]
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOOK="$HERE/../../scripts/stop-hook-verify.sh"
@@ -35,15 +40,14 @@ echo "attempts recorded after attempt 1:"
 python3 -c "import json; print(len(json.load(open('$WORK/.bounded-loop/state.json'))['attempts']))"
 echo
 
-echo "=== attempt 2 (repeat): same workspace, same failing check, no file changed ==="
-run_once "attempt 2 (repeat, no file change)" "exit 1"
+echo "=== attempt 2 (repeat): same workspace, no file changed, check now passes ==="
+run_once "attempt 2 (repeat, no file change, now passes)" "exit 0"
 echo "attempts recorded after repeated hash (must be unchanged: still 1):"
 python3 -c "import json; print(len(json.load(open('$WORK/.bounded-loop/state.json'))['attempts']))"
 echo
 
-echo "=== attempt 3: workspace edited, check now exits 0 — releases the turn ==="
-echo "def add(a, b): return a + b  # small no-op edit" > "$WORK/src/app.py"
-run_once "attempt 3 (real change, passes)" "exit 0"
+echo "=== attempt 3: already passed, further Stop events find nothing to gate ==="
+run_once "attempt 3 (already passed)" "exit 0"
 echo
 
 echo "=== final state.json ==="

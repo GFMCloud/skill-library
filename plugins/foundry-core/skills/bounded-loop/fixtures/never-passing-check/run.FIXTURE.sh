@@ -4,11 +4,12 @@
 # check's failing output never changes across three genuinely distinct
 # attempts (each attempt edits src/app.py so the diff hash differs).
 #
-# Usage: bash run.sh [workdir]   (workdir defaults to a fresh mktemp -d)
+# Usage: bash run.FIXTURE.sh [workdir]   (workdir defaults to a fresh mktemp -d)
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOOK="$HERE/../../scripts/stop-hook-verify.sh"
 WORK="${1:-$(mktemp -d)}"
+CHECK='echo "FAIL: FIXTURE assertion" >&2; exit 1'
 
 mkdir -p "$WORK/src"
 echo "FIXTURE: never-passing-check workspace" > "$WORK/README.txt"
@@ -16,9 +17,9 @@ echo "FIXTURE: never-passing-check workspace" > "$WORK/README.txt"
 run_attempt () {
   local n="$1"
   echo "print('attempt $n')" > "$WORK/src/app.py"
-  echo "=== attempt $n: stop-hook-verify.sh --check 'exit 1' --budget 3 ==="
+  echo "=== attempt $n: stop-hook-verify.sh --check '$CHECK' --budget 3 ==="
   echo '{"cwd": "'"$WORK"'"}' | bash "$HOOK" \
-    --check "exit 1" --budget 3 \
+    --check "$CHECK" --budget 3 \
     --state "$WORK/.bounded-loop/state.json" \
     --escalation-out "$WORK/.bounded-loop/escalation.yaml"
   echo "exit code: $?"
