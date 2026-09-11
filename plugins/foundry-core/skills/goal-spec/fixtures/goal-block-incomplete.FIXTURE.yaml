@@ -1,0 +1,13 @@
+# FIXTURE — deliberately incomplete Goal block v1, for goal-block-check.sh's
+# deliberate-failure proof. Never a real goal; baseline is empty on purpose.
+goal_block: v1
+ask: "get the homepage lighthouse scores up"
+kind: measurable
+end_state: all four Lighthouse category scores at or above 90 on https://example.invalid/
+check: npx lhci collect --url=https://example.invalid/ && node scripts/lh-scores.js
+expected: "perf>=90 a11y>=90 bp>=90 seo>=90"
+baseline:
+constraints: [no content changes to the hero copy, no new third-party scripts]
+budget: stop after 5 tries
+human_gate: deploying the fix branch to production
+goal_condition: "all four Lighthouse scores at or above 90 on example.invalid per scripts/lh-scores.js, stop after 5 tries"
