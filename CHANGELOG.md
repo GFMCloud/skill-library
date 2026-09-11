@@ -2,6 +2,22 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-08 - prove-hooks.sh scores WARN-only hooks and indexes fixtures per matcher
+
+No pack bump (repo scripts and fixtures only). Source: claude-scout-weekly hooks runbook Step 5
+(evidence-guard, oops-i-did-it-again rows 2, 4, 5), run on Graham's instruction. Local commit only.
+
+- **`scripts/prove-hooks.sh`:** a fourth verdict, `warn` (additionalContext with no
+  permissionDecision); a fixture declares `"positive_verdict": "warn"` for a WARN-only hook and
+  its positives must warn, never deny. The fixture index now counts hooks per (event, matcher)
+  across every settings entry, so two Bash hooks are `PreToolUse__Bash__0.json` and
+  `PreToolUse__Bash__1.json` and never share a fixture (the old single-entry index would have
+  proved both against the first). Proven by deliberate failure: the evidence-guard command
+  replaced by `true` came back RED on all 17 positives, "expected warn".
+- **`scripts/prove-hooks.d/`:** `PreToolUse__Bash.json` renamed `PreToolUse__Bash__0.json`;
+  new `PreToolUse__Bash__1.json` for `~/.claude/hooks/evidence-guard.py` (17 warn positives,
+  17 negatives, `born` 2026-09-08).
+
 ## 2026-09-08 - replay-hooks.py: a hook's fire rate on real history is the second proof
 
 No pack bump (a repo script, no plugin body changed). Source: claude-scout-weekly

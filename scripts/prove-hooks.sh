@@ -11,9 +11,12 @@
 # validator is trusted only after being proven by deliberate failure"; hstack review
 # 2026-09-03 rows 1, 3, 5).
 #
-# Fixtures live in scripts/prove-hooks.d/<Event>__<matcher>[__<index>].json:
+# Fixtures live in scripts/prove-hooks.d/<Event>__<matcher>[__<index>].json, where <index>
+# counts hooks with that matcher across every entry (two entries matching Bash are #0 and #1):
 #   {"positive": <stdin json> | [<stdin json>, ...], "negative": <stdin json> | [...],
 #    "env": {<VAR>: <value>} (optional, exported to the hook for every control),
+#    "positive_verdict": "deny" (default) | "warn" (a WARN-only hook answers with
+#    additionalContext and no permissionDecision; its positives must warn, never deny),
 #    "born": "YYYY-MM-DD" (the date the hook was wired; ignored here, required by
 #    scripts/replay-hooks.py, the second proof, which measures noise on real history)}
 # Every positive must deny and every negative must allow; the first control that
@@ -85,7 +88,8 @@ def fill(obj):
     return s
 
 def verdict(stdout):
-    """deny | allow | error. A hook allows by staying silent or by saying so."""
+    """deny | warn | allow | error. A hook allows by staying silent or by saying so; a
+    WARN-only hook answers with additionalContext and no permissionDecision."""
     text = stdout.strip()
     if not text:
         return "allow"
@@ -98,6 +102,8 @@ def verdict(stdout):
         return "deny"
     if hso.get("permissionDecision") in ("allow", "ask") or d.get("decision") == "approve":
         return "allow"
+    if hso.get("additionalContext") and not hso.get("permissionDecision"):
+        return "warn"
     return "error"
 
 def run(cmd, payload, env=None):
@@ -110,13 +116,17 @@ def run(cmd, payload, env=None):
         return "error", f"exit {p.returncode}: {p.stderr.strip()[:200]}"
     return verdict(p.stdout), p.stdout.strip()[:200]
 
+seen = {}  # (event, matcher) -> running hook index across entries, so two entries with the
+           # same matcher never share a fixture
 for event, entries in (hooks or {}).items():
     if not isinstance(entries, list):
         continue
     for entry in entries:
         matcher = str(entry.get("matcher", "*"))
         safe = re.sub(r"[^A-Za-z0-9_.-]", "_", matcher)
-        for j, hook in enumerate(entry.get("hooks", [])):
+        for hook in entry.get("hooks", []):
+            j = seen.get((event, safe), 0)
+            seen[(event, safe)] = j + 1
             label = f"{event} matcher={matcher} #{j}"
             if hook.get("type") != "command" or not hook.get("command"):
                 red(label, "not a command hook; nothing to prove")
@@ -133,20 +143,23 @@ for event, entries in (hooks or {}).items():
                 pos = pos if isinstance(pos, list) else [pos]
                 neg = neg if isinstance(neg, list) else [neg]
                 env = {k: json.loads(fill(v)) for k, v in (fx.get("env") or {}).items()}
+                want = fx.get("positive_verdict", "deny")  # "warn" for a WARN-only hook
+                if want not in ("deny", "warn"):
+                    raise ValueError(f"positive_verdict must be deny or warn, not {want}")
             except Exception as e:
                 red(label, f"bad fixture {os.path.basename(fixture)}: {e}")
                 continue
             why = []
             for k, payload in enumerate(pos):
                 pv, pout = run(hook["command"], fill(payload), env)
-                if pv != "deny":
-                    why.append(f"positive #{k} was {pv} (dead detector under-blocks): {pout or '<empty>'}")
+                if pv != want:
+                    why.append(f"positive #{k} was {pv}, expected {want} (dead detector under-blocks): {pout or '<empty>'}")
             for k, payload in enumerate(neg):
                 nv, nout = run(hook["command"], fill(payload), env)
                 if nv != "allow":
                     why.append(f"negative #{k} was {nv} (dead exemption over-blocks): {nout or '<empty>'}")
             if not why:
-                green(label, f"{len(pos)} positive=deny, {len(neg)} negative=allow (fixture {os.path.basename(fixture)})")
+                green(label, f"{len(pos)} positive={want}, {len(neg)} negative=allow (fixture {os.path.basename(fixture)})")
             else:
                 red(label, "; ".join(why))
 

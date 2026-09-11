@@ -1,0 +1,247 @@
+{
+ "_hook": "evidence-guard.py (PreToolUse, matcher Bash, second hook): WARN only via additionalContext for pipe-masks-exit-code, stderr discarded, measurement silenced, empty grep as absence, arbitrary row, guessed candidates, secret exposure, config guard; silent otherwise",
+ "born": "2026-09-08",
+ "positive_verdict": "warn",
+ "positive": [
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "pytest tests/ | tail -5"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "bash scripts/validate-skills.sh 2>&1 | tail -3"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "npm test 2>/dev/null"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "cargo test -q"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "make check > /dev/null"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "grep -r TODO src/ || echo none"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "if ! grep -q foo bar.txt; then echo missing; fi"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "ls -la | head -1"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "cat out.txt | tail -n 1"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "ls a.txt b.txt c.txt 2>/dev/null"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "cat config.yml config.yaml settings.yml 2>/dev/null"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "export API_TOKEN=abcdefghijklmnopqrstuvwxyz123456"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "sshpass -p hunter2 ssh host"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "curl -H 'Authorization: Bearer abcdefghijklmnopqrstuvwxyz1234567890' https://x"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "sed -i 's/a/b/' ~/.claude/settings.json"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "cp new.py ~/.claude/hooks/deny-destructive.py"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "python3 - <<'EOF'\nimport json; json.dump({}, open('/Users/gfm/.claude/settings.json','w'))\nEOF"
+   },
+   "cwd": "/Users/gfm/work/x"
+  }
+ ],
+ "negative": [
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "set -o pipefail; pytest tests/ | tail -5"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "pytest tests/"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "bash scripts/validate-skills.sh"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "git status --short"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "grep -rn TODO src/"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "grep -c foo bar.txt"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "sort names.txt | head -1"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "ls -t | head -1"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "git log --oneline | head -1"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "ls a.txt b.txt"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "cat README.md"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "export DEBUG=1"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "curl -s https://api.example.com/health"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "cat ~/.claude/settings.json"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "bash ~/skill-library/scripts/prove-hooks.sh"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "python3 ~/.claude/hooks/evidence-guard.py < fixture.json"
+   },
+   "cwd": "/Users/gfm/work/x"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "echo hello | tail -2"
+   },
+   "cwd": "/Users/gfm/work/x"
+  }
+ ]
+}
