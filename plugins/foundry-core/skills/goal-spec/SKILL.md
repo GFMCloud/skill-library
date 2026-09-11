@@ -68,8 +68,15 @@ filled and points at a real file, not that the rubric is well-formed).
 
 This Verify section (the runnable block above and the surrounding prose) was
 checked with `turn-reduction`'s `output-lint` before this skill was proposed
-for promotion; the passing run is quoted verbatim in the Phase 4 fix report
-at `runs/phase-3/goal-spec.md` under "Fix round 1".
+for promotion. Running the command above against the passing fixture prints:
+
+```
+$ cd /Users/gfm/skill-library/plugins/foundry-core/skills/goal-spec
+$ scripts/goal-block-check.sh fixtures/goal-block-complete.FIXTURE.yaml
+PASS: fixtures/goal-block-complete.FIXTURE.yaml is a complete Goal block v1
+```
+
+exit 0.
 
 ## Done when
 

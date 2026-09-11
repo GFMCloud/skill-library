@@ -30,11 +30,13 @@ FIXTURE.sh prove each category one at a time without touching the manifest file:
 <NAME> and <PATH> are the connection name / route path, non-alphanumeric characters
 replaced with "_", upper-cased.
 
-A manifest whose "console" assertion has no matching "poison" entry is refused at
-generation time (exit 1, "UNPROVEN console: no poison entry"), never generated with an
-empty marker: an empty marker always matches nothing, so the emitted script would
-print PASS console on every run and report a never-proven category as passed, which
-the spec (section 5) forbids. Add poison.console before generating.
+A manifest whose assertion category (identity, freshness, connections, routes, or
+console) has no matching "poison" entry is refused at generation time (exit 1,
+"UNPROVEN <category>: no poison entry"), never generated with an empty or missing
+poison value: a category the generator never proved could fail would otherwise report
+PASS on every run, which the spec (section 5) forbids ("a category with no poison
+entry is not proven and the gate reports it as unproven, never as passed"). Add the
+missing poison.<category> entry before generating.
 """
 import os
 import re
@@ -51,6 +53,15 @@ except ImportError:
 def die(msg):
     sys.stderr.write(f"generate-smoke-script.py: {msg}\n")
     sys.exit(1)
+
+
+def require_poison(category, poison):
+    """Refuse to generate a script for a category the manifest never proves can fail.
+    Per interface spec section 5, every assertion category present in the manifest
+    must carry a poison entry; a category with none is reported unproven, never
+    generated with a default that would silently pass forever."""
+    if poison.get(category) in (None, ""):
+        die(f"UNPROVEN {category}: no poison entry")
 
 
 def var_name(s):
@@ -94,6 +105,7 @@ def main():
     lines.append("")
 
     if "identity" in a:
+        require_poison("identity", poison)
         expect = a["identity"]["expect"]
         lines += [
             "# --- identity ---",
@@ -109,6 +121,7 @@ def main():
         ]
 
     if "freshness" in a:
+        require_poison("freshness", poison)
         field = a["freshness"]["field"]
         stale = a["freshness"]["must_advance_from"]
         lines += [
@@ -128,6 +141,7 @@ def main():
         ]
 
     if "connections" in a:
+        require_poison("connections", poison)
         for c in a["connections"]:
             name = c["name"]
             v = var_name(name)
@@ -145,6 +159,7 @@ def main():
             ]
 
     if "routes" in a:
+        require_poison("routes", poison)
         for r in a["routes"]:
             path = r["path"]
             status = r["status"]
@@ -163,14 +178,8 @@ def main():
             ]
 
     if "console" in a:
+        require_poison("console", poison)
         marker_default = poison.get("console")
-        if marker_default in (None, ""):
-            die(
-                "UNPROVEN console: no poison entry - refusing to generate a script "
-                "that would otherwise default to an empty marker and report console "
-                "as PASS without ever proving it can fail. Add poison.console to the "
-                "manifest before generating."
-            )
         lines += [
             "# --- console ---",
             "# FIXTURE-mode stand-in: a real console-error check needs a browser (the Browser",

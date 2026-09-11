@@ -9,7 +9,7 @@ FIXTURE.sh` runs the generated script directly, never through a hook).
 The event, the exit-code behavior, and what a Stop hook's stdin and stdout do are
 verified facts, not this skill's derivation; they are quoted and sourced in
 `foundry-core:bounded-loop`'s
-[references/stop-hook-contract.md](../../../foundry-core/skills/bounded-loop/references/stop-hook-contract.md).
+[references/stop-hook-contract.md](../../../../foundry-core/skills/bounded-loop/references/stop-hook-contract.md).
 This section only applies those facts to a generated smoke script.
 
 ## Event
