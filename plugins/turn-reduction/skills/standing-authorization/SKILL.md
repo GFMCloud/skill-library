@@ -3,8 +3,8 @@ name: "standing-authorization"
 description: "Read what you are already authorized to do out of a file instead of asking — a granted list, a stop-list, and ceilings that resolve to one value in one place. Use at the start of every session, and again before sending any question that begins should I, shall I, or do you want me to."
 metadata:
   maturity: stable
-  version: 1.1.0
-  reviewed: 2026-08-28
+  version: 1.1.1
+  reviewed: 2026-09-11
 ---
 
 # standing-authorization
@@ -15,6 +15,30 @@ five of them in a single session, by sessions that had **just written the rule d
 
 Prose did not bind. So this is not more prose. It is a file the agent reads and a check
 that can look at a question and say the question is a defect.
+
+## Inputs
+
+The project's `authorization.json` (granted list, stop list, ceilings), and the question
+the agent is about to send.
+
+## Verify
+
+`authz.py validate` exits 0 on the file; `authz.py check` returns exactly one of
+`ALREADY-GRANTED`, `STOP-LISTED`, `NOT-COVERED` with the exit code the table below
+gives it.
+
+## Done when
+
+`ALREADY-GRANTED`: the action is taken inside its ceiling and logged where `log_to`
+says, and the question is not sent. `NOT-COVERED`: the question is sent, and the answer
+is added to the file so it cannot be asked twice.
+
+## Stop when
+
+`STOP-LISTED`: asking is correct and stays correct. `validate` fails: fix the file before
+trusting any `check`. The granted list is empty, which is the state this file exists to
+leave. The question is phrased in words no `match` entry anticipates: that is a miss,
+so ask, then add the phrasing rather than widening the keywords.
 
 ## Run it
 

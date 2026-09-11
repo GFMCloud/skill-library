@@ -3,8 +3,8 @@ name: "identity-resolution"
 description: "Match records that refer to the same real-world entity across sources with different names, spellings, and identifiers. Use when joining data whose keys do not line up exactly, and before assuming two similarly-named things are the same thing."
 metadata:
   maturity: stable
-  version: 1.0.0
-  reviewed: 2026-08-09
+  version: 1.0.1
+  reviewed: 2026-09-11
 ---
 
 # identity-resolution
@@ -12,6 +12,31 @@ metadata:
 Deciding whether two records are the same entity. The part of data wrangling
 that cannot be done by a join, and the part that gets reimplemented every time
 because the rules live in code instead of in an artifact.
+
+## Inputs
+
+Two or more record sources to be matched; the canonical identifier where one exists;
+the accept and reject thresholds for fuzzy matching, agreed before any match is
+applied; any existing mapping table for the same entities.
+
+## Verify
+
+Counts reconcile: records in equals resolved plus unresolved, and every cluster is
+listed. The whole procedure re-run from the original source produces the same output.
+Every fuzzy match carries its score and the threshold it was judged against.
+
+## Done when
+
+The mapping table is emitted as a keyed, commented data artifact; the reject ledger
+lists every unresolved record with its reason; the scale the resolution was validated
+at is stated.
+
+## Stop when
+
+No canonical identifier exists and no threshold has been agreed: ask for the threshold
+before applying any fuzzy match. A cluster above two members cannot be inspected. The
+counts do not reconcile after a re-run; a resolution that is not reproducible is not
+handed over.
 
 ## Order of operations
 

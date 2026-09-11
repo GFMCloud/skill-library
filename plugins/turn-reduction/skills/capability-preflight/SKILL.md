@@ -3,8 +3,8 @@ name: "capability-preflight"
 description: "Prove access to every system a milestone must touch before the milestone starts — a real read and a real write per system, each with a negative control that must fail. Use at the top of any milestone, before the first step runs, and whenever a step is about to be handed to a human because something looks unreachable."
 metadata:
   maturity: stable
-  version: 1.1.0
-  reviewed: 2026-09-02
+  version: 1.1.1
+  reviewed: 2026-09-11
 ---
 
 # capability-preflight
@@ -17,6 +17,31 @@ with a shell on the machine owning the step.*
 That is architectural. Care does not remove it. What removes it is finding out which
 systems are actually reachable **before** the work starts, in one pass, and clearing all
 of them at once.
+
+## Inputs
+
+A capability manifest (`capability-manifest.json`) with one entry per system the
+milestone touches, each carrying `population`, `excludes`, `remedy`, a `read` and a
+`write` probe with an `evidence` rule, and a `negative_control`.
+
+## Verify
+
+`preflight.py` exits 0; every negative control failed; every read and write probe
+satisfied its evidence rule; the report closes by stating that it binds only the
+capabilities the manifest named.
+
+## Done when
+
+Every capability is proven in one batch before the milestone's first step runs, and the
+printed report is recorded with the milestone's evidence.
+
+## Stop when
+
+Exit 2: the manifest was rejected and nothing ran; fix the manifest. Exit 1: send the
+whole `BLOCKERS` batch with its remedy lines, wait, and re-run; never start the
+milestone around a blocker. A `declared_unreachable` probe succeeds
+(`FALSE-ARCHITECTURAL-CLAIM`): the plan was built on a gap that does not exist. The
+milestone's shape changes: the manifest changes and the preflight runs again.
 
 ## Run it
 

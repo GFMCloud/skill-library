@@ -17,6 +17,20 @@ Phase 1, executing the AI workflow toolkit roadmap item T0. Branch `toolkit-buil
   line in the body, never in prose. Proven by a stable fixture missing `## Stop when`
   (exit 1) and the same fixture as incubator (warning, exit 0).
 
+## 2026-09-11 - stable backfill: contract sections on every stable skill (toolkit-build branch)
+
+No behavior change in any skill; the four sections name inputs, checks, and stop
+conditions that were already in each body. Pack bumps land in Phase 5 of the same branch.
+
+- **identity-resolution 1.0.1:** contract sections added, no behavior change.
+- **evidence-report 1.1.1:** contract sections added, no behavior change.
+- **proof-of-work 1.1.1:** contract sections added, no behavior change.
+- **capability-preflight 1.1.1:** contract sections added, no behavior change.
+- **output-lint 1.0.1:** contract sections added, no behavior change.
+- **standing-authorization 1.1.1:** contract sections added, no behavior change.
+- **phased-harness 1.2.5:** contract sections added around its existing "Done when", no
+  behavior change.
+
 ## 2026-09-10 - phased-harness 1.2.4 and sweep-harness: two template lessons and an advisory worker field
 
 workbench 0.9.5. Source: claude-improvements-weekly ratify 2026-09-10, executing the
