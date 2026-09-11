@@ -29,6 +29,12 @@ FIXTURE.sh prove each category one at a time without touching the manifest file:
 
 <NAME> and <PATH> are the connection name / route path, non-alphanumeric characters
 replaced with "_", upper-cased.
+
+A manifest whose "console" assertion has no matching "poison" entry is refused at
+generation time (exit 1, "UNPROVEN console: no poison entry"), never generated with an
+empty marker: an empty marker always matches nothing, so the emitted script would
+print PASS console on every run and report a never-proven category as passed, which
+the spec (section 5) forbids. Add poison.console before generating.
 """
 import os
 import re
@@ -157,7 +163,14 @@ def main():
             ]
 
     if "console" in a:
-        marker_default = poison.get("console", "")
+        marker_default = poison.get("console")
+        if marker_default in (None, ""):
+            die(
+                "UNPROVEN console: no poison entry - refusing to generate a script "
+                "that would otherwise default to an empty marker and report console "
+                "as PASS without ever proving it can fail. Add poison.console to the "
+                "manifest before generating."
+            )
         lines += [
             "# --- console ---",
             "# FIXTURE-mode stand-in: a real console-error check needs a browser (the Browser",

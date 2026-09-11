@@ -5,7 +5,7 @@ description: >-
   live connections, key routes, zero console errors), prove each assertion category
   by poisoning it to a recorded exit 1, then run it live for a real exit 0 with a
   screenshot attached. Use before any "ready," "live," or "working" claim about an
-  interactive artifact — a staging deploy, a war-room demo, a promote-to-production
+  interactive artifact: a staging deploy, a war-room demo, a promote-to-production
   step. Not for a one-off manual check with no committed script, and not a substitute
   for `deploy-verify-fix`'s diagnose-and-fix loop: this only produces and proves the
   gate that loop's verify step should call.
@@ -33,7 +33,7 @@ was reused from Anthropic's `webapp-testing` skill and what was not.
 - A Smoke manifest v1 (harness interface spec section 5): `target` and five
   assertion categories (`identity`, `freshness`, `connections`, `routes`,
   `console`), each with a matching `poison` entry. A category with no `poison` entry
-  is accepted but is reported as unproven, never as passed — see "Verify".
+  is accepted but is reported as unproven, never as passed, see "Verify".
 - For each `connections` entry, an address to check at run time
   (`SMOKE_CONN_HOST_<NAME>` / `SMOKE_CONN_PORT_<NAME>`; see the template's wiring
   notes). Nothing else is required before generation; the address is only needed to
@@ -47,7 +47,7 @@ was reused from Anthropic's `webapp-testing` skill and what was not.
    `scripts/check-poison-coverage.py <manifest.yaml>`. Exit 0 means every category
    has a poison entry; exit 3 lists which categories are unproven, one line each
    (`UNPROVEN <category>: no poison entry`). An unproven category is never reported
-   as passed, in the run log or anywhere else — see
+   as passed, in the run log or anywhere else, see
    `fixtures/manifest-missing-poison.FIXTURE.yaml` for the poisoned proof of this
    rule itself.
 3. Prove the script, one category at a time: run it once per category with that
@@ -66,7 +66,7 @@ was reused from Anthropic's `webapp-testing` skill and what was not.
 Known weakness: the generated script's `console` check is a text-marker grep, not a
 real DevTools console read (see `references/webapp-testing-intake.md`). It proves
 the *category can fail and pass on command*, not that a real browser saw zero
-console errors — that stronger claim needs the Browser tool or Playwright wired to
+console errors: that stronger claim needs the Browser tool or Playwright wired to
 the actual check, which this skill's generic script does not embed by design (a
 committed script should not require a Playwright runtime everywhere it runs).
 
@@ -126,3 +126,12 @@ For the staging-to-production promote flow, smoke-gate composes with
 `deploy-ops:deploy-verify-fix`: that skill's "Verify at the level the failure
 lives" step is exactly this skill's live pass, and its "diagnose from real output"
 step reads this skill's run log rather than re-deriving a new check.
+
+## Optional Stop hook
+
+The generated smoke script can optionally be installed as a Stop hook, so a "ready"
+claim cannot end the turn while smoke is red. This is optional, not required by
+"Done when," and not proven by a fixture in this build. See
+[references/stop-hook.md](references/stop-hook.md) for the event, the
+`settings.json` shape, the command, and the exit-2-with-stderr blocking path, sourced
+from `foundry-core:bounded-loop`'s stop-hook contract reference.

@@ -14,15 +14,15 @@ and contains exactly one file, `with_server.py`.
 
 ## What it offers
 
-- **Server lifecycle management** — `with_server.py` starts one or more dev servers
+- **Server lifecycle management**: `with_server.py` starts one or more dev servers
   (backend and frontend together, when both are needed) before running an automation
   script against them, and tears them down afterward. This is the piece the roadmap
   step names explicitly ("reuse its server-lifecycle... machinery if it fits").
-- **Browser automation via Playwright** — programmatic clicking, typing, and
+- **Browser automation via Playwright**: programmatic clicking, typing, and
   navigation against a running local web app, driven from Python.
-- **Screenshot and DOM inspection** — capturing the rendered page and reading its
+- **Screenshot and DOM inspection**: capturing the rendered page and reading its
   structure for debugging, plus browser console log capture.
-- **A stated workflow discipline**: "reconnaissance then action" — wait for network
+- **A stated workflow discipline**: "reconnaissance then action", wait for network
   idle, screenshot and inspect the DOM, identify selectors, only then interact. This
   is a practice, not a mechanism; it is not something this skill's generated bash
   script needs to reuse, since the generated script never drives a browser.
@@ -32,9 +32,9 @@ and contains exactly one file, `with_server.py`.
 ## What smoke-gate reused, and how
 
 - **The server-lifecycle pattern**, not the code. `scripts/generate-smoke-script.py`
-  and the fixture proof follow the same shape `with_server.py` uses — start the
+  and the fixture proof follow the same shape `with_server.py` uses: start the
   target process, wait for it to announce readiness, run checks against it, always
-  tear it down — implemented independently in
+  tear it down, implemented independently in
   [../fixtures/run-fixture-proof.FIXTURE.sh](../fixtures/run-fixture-proof.FIXTURE.sh)
   and [../fixtures/fixture_server.py](../fixtures/fixture_server.py). No code from
   `with_server.py` was copied into this repository; the library's own guardrail
@@ -56,7 +56,7 @@ and contains exactly one file, `with_server.py`.
   Playwright runtime cannot be assumed. `SKILL.md`'s "Verify" section states this
   gap explicitly: the fixture's `console` check is a text-marker stand-in, and a real
   console-error count is out of the fixture's reach and out of the generated script's
-  reach too — that step is left to whichever caller has Playwright or the Browser
+  reach too; that step is left to whichever caller has Playwright or the Browser
   tool available, per the roadmap step's own text ("capture a screenshot" via the
   live pass, not via the generated script).
 - **The static-`file://`-URL example and element-discovery examples.** Not relevant

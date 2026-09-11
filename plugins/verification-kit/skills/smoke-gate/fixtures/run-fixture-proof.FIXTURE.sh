@@ -9,7 +9,10 @@
 #   3. Run the poison-coverage check against manifest.FIXTURE.yaml (expect PROVEN x5,
 #      exit 0) and against manifest-missing-poison.FIXTURE.yaml (expect one UNPROVEN
 #      line, exit 3) - proving an unproven category is reported as unproven, never as
-#      passed.
+#      passed. Also run the generator itself against manifest-missing-poison.FIXTURE.yaml
+#      (expect it to refuse with "UNPROVEN console: no poison entry", exit 1, and write
+#      no script) - proving the generated script itself can never default to PASS for a
+#      category that was never proven.
 #   4. Run the generated script once per assertion category with that category's
 #      poison override active and the rest at their passing defaults: expect exit 1
 #      each time, five times (identity, freshness, connections, routes, console).
@@ -55,6 +58,18 @@ echo "== 3b. poison coverage: manifest-missing-poison.FIXTURE.yaml (expect exit 
 python3 "$SKILL_DIR/scripts/check-poison-coverage.py" "$HERE/manifest-missing-poison.FIXTURE.yaml"
 COVERAGE_MISSING_EXIT=$?
 echo "exit: $COVERAGE_MISSING_EXIT"
+
+echo
+echo "== 3c. generator refusal: manifest-missing-poison.FIXTURE.yaml (expect exit 1, UNPROVEN console, no script written) =="
+rm -f "$WORKDIR/should-not-exist.sh"
+python3 "$SKILL_DIR/scripts/generate-smoke-script.py" "$HERE/manifest-missing-poison.FIXTURE.yaml" "$WORKDIR/should-not-exist.sh"
+GENERATOR_REFUSAL_EXIT=$?
+echo "exit: $GENERATOR_REFUSAL_EXIT"
+if [ "$GENERATOR_REFUSAL_EXIT" -eq 0 ] || [ -e "$WORKDIR/should-not-exist.sh" ]; then
+  echo "FIXTURE PROOF FAIL: generator did not refuse the missing-poison manifest"; FAIL_GENERATOR_REFUSAL=1
+else
+  FAIL_GENERATOR_REFUSAL=0
+fi
 
 FAIL=0
 
@@ -105,6 +120,10 @@ echo "screenshot: not available in fixture mode"
 echo
 if [ "$COVERAGE_FULL_EXIT" -ne 0 ] || [ "$COVERAGE_MISSING_EXIT" -ne 3 ]; then
   echo "FIXTURE PROOF FAIL: poison-coverage check did not behave as expected"
+  FAIL=1
+fi
+
+if [ "$FAIL_GENERATOR_REFUSAL" -ne 0 ]; then
   FAIL=1
 fi
 
