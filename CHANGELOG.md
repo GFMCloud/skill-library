@@ -2,6 +2,21 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-11 - contract sections: standard, template, validator (toolkit-build branch)
+
+No pack bump (repo standard, template, and validator only). Source: toolkit-build-harness
+Phase 1, executing the AI workflow toolkit roadmap item T0. Branch `toolkit-build`, one PR.
+
+- **`docs/authoring-standard.md`:** new "Contract sections" rule: every SKILL.md carries
+  `## Inputs`, `## Verify`, `## Done when`, `## Stop when`, in that order, with at least one
+  stop condition that is not "done". Stable skills fail without them; incubator skills warn.
+  Known weakness stated beside the rule: presence is checked, quality is not.
+- **`templates/SKILL.template.md`:** the four sections with one-line placeholders.
+- **`scripts/validate-skills.sh`:** F14 (missing section), F15 (out of order), F16 (vacuous
+  Stop when) for stable skills; W4, W5, W6 for incubator. Headings are matched on their own
+  line in the body, never in prose. Proven by a stable fixture missing `## Stop when`
+  (exit 1) and the same fixture as incubator (warning, exit 0).
+
 ## 2026-09-10 - phased-harness 1.2.4 and sweep-harness: two template lessons and an advisory worker field
 
 workbench 0.9.5. Source: claude-improvements-weekly ratify 2026-09-10, executing the

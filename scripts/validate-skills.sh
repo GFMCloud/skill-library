@@ -4,6 +4,9 @@
 #   STRICT=1        warnings also cause exit 1
 #   STALE_MONTHS=6  staleness threshold for W1
 # Checks every plugins/*/skills/*/ skill (or just the given plugin's).
+# Contract sections (F14-F16 stable, W4-W6 incubator): Inputs, Verify, Done when,
+# Stop when, in that order, with a non-vacuous Stop when. See
+# docs/authoring-standard.md "Contract sections".
 # Structural checks parse frontmatter through skill_meta.py, never grep the file for a
 # key name: a grep would match the key inside prose or inside this validator's own
 # documentation and call a broken skill green (hstack review 2026-09-03, row 4).
@@ -85,6 +88,28 @@ for d in skill_dirs:
                 warns.append(f"W1 {rel}: reviewed {rev} is >{STALE_MONTHS} months old")
     if mat == "deprecated" and not str(meta.get("supersedes", "")).strip():
         fails.append(f"F11 {rel}: deprecated without metadata.supersedes")
+    # Contract sections (docs/authoring-standard.md "Contract sections"): four H2
+    # headings in order, and a non-vacuous "Stop when". Stable fails, incubator warns.
+    # Headings are matched on their own line, so a mention in prose does not count.
+    CONTRACT = ["Inputs", "Verify", "Done when", "Stop when"]
+    sink, code = (fails, "F") if mat == "stable" else (warns, "W")
+    codes = {"F": ("F14", "F15", "F16"), "W": ("W4", "W5", "W6")}[code]
+    h2 = [m.group(1).strip() for m in re.finditer(r"^## (.+?)\s*$", body, re.M)]
+    present = [h for h in CONTRACT if h in h2]
+    missing = [h for h in CONTRACT if h not in h2]
+    if missing:
+        sink.append(f"{codes[0]} {rel}: missing contract section(s) "
+                    + ", ".join(f"'## {h}'" for h in missing))
+    elif [h for h in h2 if h in CONTRACT] != CONTRACT:
+        sink.append(f"{codes[1]} {rel}: contract sections out of order (expected "
+                    + " > ".join(CONTRACT) + ")")
+    if "Stop when" in present:
+        sec = re.search(r"^## Stop when\s*$(.*?)(?=^## |\Z)", body, re.M | re.S)
+        lines = [l.strip() for l in (sec.group(1) if sec else "").splitlines()
+                 if l.strip() and not l.strip().startswith("<!--")]
+        real = [l for l in lines if not re.fullmatch(r"\W*done\W*", l, re.I)]
+        if not real:
+            sink.append(f"{codes[2]} {rel}: '## Stop when' has no condition other than done")
     if str(fm.get("disable-model-invocation", "")).lower() == "true":
         warns.append(f"W2 {rel}: disable-model-invocation set — slash-only intended?")
     for base, _, files in os.walk(d):
