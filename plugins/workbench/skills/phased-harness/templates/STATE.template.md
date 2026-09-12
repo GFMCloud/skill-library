@@ -15,6 +15,18 @@ runbooks alone. Never rely on conversation memory.
 - [ ] Phase 4 - `<PHASE-4-NAME>`
 - [ ] Phase 5 - `<PHASE-5-NAME>` / **Gate B**
 
+## Spend log
+
+<!-- One entry per phase, two lines each, running total against the spend cap where
+     CONFIG.md sets one (toolkit-build-harness named it `spend_cap_usd`):
+     - Phase N - subagents: <tokens per subagent, from their completion notices>;
+       eval cost from the eval JSON if any - list-price estimate - running total.
+     - Phase N - orchestrator: <estimated tokens for the orchestrating session itself>.
+       Subagent notices never include the orchestrator; a harness that logs only
+       subagents meters part of its spend (toolkit-build-harness A13, 2026-09-11).
+       Estimate it from the session's usage display or the transcript size, and say
+       which. -->
+
 ## Decision log
 
 <!-- Append: date - decision - one-line rationale. Never rewrite old entries. -->

@@ -10,8 +10,8 @@ description: >-
   sessions that ends in an irreversible step.
 metadata:
   maturity: stable
-  version: 1.2.5
-  reviewed: 2026-09-11
+  version: 1.2.6
+  reviewed: 2026-09-12
 ---
 
 # Phased harness — scaffold a gated, resumable project
