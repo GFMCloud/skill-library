@@ -3,6 +3,9 @@
 # Usage: bash scripts/validate-skills.sh [plugins/<name>]
 #   STRICT=1        warnings also cause exit 1
 #   STALE_MONTHS=6  staleness threshold for W1
+#   BASE_REF=origin/main  ref the plugin-bump check (F17) diffs against; a skill
+#                   changed since the merge-base with BASE_REF whose plugin manifest
+#                   version is unchanged fails. Unresolvable ref warns (W7).
 # Checks every plugins/*/skills/*/ skill (or just the given plugin's).
 # Contract sections (F14-F16 stable, W4-W6 incubator): Inputs, Verify, Done when,
 # Stop when, in that order, with a non-vacuous Stop when. See
@@ -15,7 +18,7 @@ set -uo pipefail
 # a cwd-derived root inside any other repo found zero skills and exited 0 (A-11).
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 exec python3 - "${1:-plugins}" <<'PY'
-import os, re, sys, datetime
+import os, re, sys, datetime, json, subprocess
 
 sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
 # Parser lives in skill_meta.py, shared with generate-inventory.sh: one editable home.
@@ -142,6 +145,41 @@ if root == "plugins":
     if actual != expected:
         fails.append("F13 docs/inventory.md missing or stale; "
                      "run: bash scripts/generate-inventory.sh")
+
+# F17: any change to a skill's files bumps the host plugin's manifest version
+# (docs/authoring-standard.md "Change hygiene"). Installed caches refresh only on a
+# manifest change (workbench 0.10.1, 2026-09-12). The diff is the working tree plus
+# untracked files against the merge-base with BASE_REF, so it fires before commit.
+BASE_REF = os.environ.get("BASE_REF", "origin/main")
+def git(*args):
+    r = subprocess.run(["git", *args], capture_output=True, text=True)
+    return r.stdout if r.returncode == 0 else None
+mb = git("merge-base", BASE_REF, "HEAD")
+if mb is None:
+    warns.append(f"W7 plugin-bump check (F17) skipped: cannot resolve BASE_REF '{BASE_REF}'")
+else:
+    mb = mb.strip()
+    changed = (git("diff", "--name-only", mb) or "").splitlines()
+    changed += (git("ls-files", "--others", "--exclude-standard") or "").splitlines()
+    touched = {}
+    for path in changed:
+        m = re.match(r"^plugins/([^/]+)/skills/", path)
+        if m and (root == "plugins" or root.rstrip("/") == f"plugins/{m.group(1)}"):
+            touched.setdefault(m.group(1), path)
+    for plug, example in sorted(touched.items()):
+        manifest = f"plugins/{plug}/.claude-plugin/plugin.json"
+        before = git("show", f"{mb}:{manifest}")
+        if before is None:
+            continue  # plugin is new since the base: nothing to bump
+        try:
+            v_before = json.loads(before).get("version")
+            v_now = json.load(open(manifest, encoding="utf-8")).get("version") \
+                if os.path.isfile(manifest) else None
+        except (json.JSONDecodeError, OSError) as e:
+            fails.append(f"F17 {manifest}: unreadable ({e})"); continue
+        if v_before == v_now:
+            fails.append(f"F17 plugins/{plug}: skill files changed since {BASE_REF} "
+                         f"(e.g. {example}) but {manifest} version is still '{v_now}'")
 
 if not skill_dirs:
     fails.append("F0: zero skills found; a green run that checked nothing is a false green")

@@ -2,6 +2,15 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-12 - validator F17: plugin-bump rule enforced
+
+No skill change, no plugin bump. `scripts/validate-skills.sh` gains F17: any file
+under `plugins/<p>/skills/` changed against `BASE_REF` (default `origin/main`,
+working tree and untracked files included) with an unchanged
+`plugins/<p>/.claude-plugin/plugin.json` version fails. An unresolvable base ref
+warns (W7) rather than passing silently. CI checks out full history and passes the
+PR base branch as `BASE_REF`.
+
 ## 2026-09-12 - workbench 0.10.1: manifest bump so installed caches pick up phased-harness 1.2.6
 
 No skill change. The residue PR (#7) shipped phased-harness 1.2.6 without bumping
