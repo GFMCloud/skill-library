@@ -2,6 +2,12 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-12 - toolkit-build residue (toolkit-residue branch)
+
+- **phased-harness 1.2.6:** the STATE.md template gains a Spend log section with an
+  orchestrator token-estimate line per phase, so a generated harness meters its own
+  session and not only its subagents (toolkit-build-harness A13).
+
 ## 2026-09-11 - AI workflow toolkit: eight skills across three packs (toolkit-build branch)
 
 Pack bumps: foundry-core 0.3.0, verification-kit 0.1.0 (first version field on a
