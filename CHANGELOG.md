@@ -7,6 +7,12 @@ Behavior changes only — not wording tweaks. Newest first.
 - **phased-harness 1.2.6:** the STATE.md template gains a Spend log section with an
   orchestrator token-estimate line per phase, so a generated harness meters its own
   session and not only its subagents (toolkit-build-harness A13).
+- **Eval suites for the seven stable skills** (identity-resolution, evidence-report,
+  proof-of-work, capability-preflight, output-lint, standing-authorization,
+  phased-harness): two cases each, graders limited to regex, tool_used, tool_order,
+  file_exists, laid out per `docs/toolkit-interface-spec.md` section 9. Authored and
+  structurally checked; execution waits on `claude plugin eval` leaving early access
+  (Gate A ruling d).
 
 ## 2026-09-11 - AI workflow toolkit: eight skills across three packs (toolkit-build branch)
 
