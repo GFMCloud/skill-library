@@ -122,13 +122,13 @@ Three states, not four:
 - Stable skills: change by PR; bump `metadata.version`; update `metadata.reviewed`;
   CHANGELOG describes the behavior change, not the wording change.
 - Incubator skills: edit directly on main.
-- Any change to a skill's files, stable or incubator, bumps the host plugin's
-  `version` in the same commit. A versioned plugin's installed cache refreshes only
+- Any change to a skill's or agent's files, stable or incubator, bumps the host
+  plugin's `version` in the same commit. A versioned plugin's installed cache refreshes only
   when the manifest version changes; the skill's own `metadata.version` does not
   trigger it. Recorded 2026-09-12: phased-harness 1.2.6 shipped in PR #7 without a
   workbench bump, `claude plugin update` reported workbench "already at the latest
   version (0.10.0)", and every installed cache stayed at 1.2.5 until PR #8 bumped
-  the manifest. Enforced by the validator (F17): skill files changed against
+  the manifest. Enforced by the validator (F17): skill or agent files changed against
   `BASE_REF` (default `origin/main`; CI passes the PR base) with an unchanged
   manifest version fail.
 - Run `scripts/validate-skills.sh` before committing anything.

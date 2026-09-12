@@ -2,6 +2,15 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-12 - validator F17 widened to agents
+
+No skill change, no plugin bump. F17 now matches `plugins/<p>/agents/` as well as
+`plugins/<p>/skills/`: agent files are cached the same way and go just as stale
+without a manifest bump. The change-hygiene rule in the authoring standard and the
+library CLAUDE.md now says "skill or agent". A changed plugin whose manifest has no
+`version` field at all fails with its own message (data-wrangler is the one such
+plugin today).
+
 ## 2026-09-12 - validator F17: plugin-bump rule enforced
 
 No skill change, no plugin bump. `scripts/validate-skills.sh` gains F17: any file
