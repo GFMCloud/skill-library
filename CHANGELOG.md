@@ -9,6 +9,10 @@ the workbench manifest, and `claude plugin update` reported workbench "already a
 the latest version (0.10.0)", leaving the installed cache at 1.2.5. A stable-skill
 change inside a versioned plugin needs the plugin version bumped in the same commit.
 
+- **Authoring standard, change hygiene:** any change to a skill's files, stable or
+  incubator, bumps the host plugin's `version` in the same commit (the rule the
+  0.10.1 bump above had to be made for). Restated in the library CLAUDE.md.
+
 ## 2026-09-12 - toolkit-build residue (toolkit-residue branch)
 
 - **phased-harness 1.2.6:** the STATE.md template gains a Spend log section with an
