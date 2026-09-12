@@ -2,6 +2,13 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-12 - workbench 0.10.1: manifest bump so installed caches pick up phased-harness 1.2.6
+
+No skill change. The residue PR (#7) shipped phased-harness 1.2.6 without bumping
+the workbench manifest, and `claude plugin update` reported workbench "already at
+the latest version (0.10.0)", leaving the installed cache at 1.2.5. A stable-skill
+change inside a versioned plugin needs the plugin version bumped in the same commit.
+
 ## 2026-09-12 - toolkit-build residue (toolkit-residue branch)
 
 - **phased-harness 1.2.6:** the STATE.md template gains a Spend log section with an
