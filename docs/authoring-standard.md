@@ -128,7 +128,9 @@ Three states, not four:
   trigger it. Recorded 2026-09-12: phased-harness 1.2.6 shipped in PR #7 without a
   workbench bump, `claude plugin update` reported workbench "already at the latest
   version (0.10.0)", and every installed cache stayed at 1.2.5 until PR #8 bumped
-  the manifest.
+  the manifest. Enforced by the validator (F17): skill files changed against
+  `BASE_REF` (default `origin/main`; CI passes the PR base) with an unchanged
+  manifest version fail.
 - Run `scripts/validate-skills.sh` before committing anything.
 - Structural checks parse frontmatter with the YAML loader (`scripts/skill_meta.py`),
   never grep for a key name: a checker that can match its own documentation, or a

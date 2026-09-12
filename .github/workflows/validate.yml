@@ -8,5 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # F17 diffs against the base branch; a shallow clone cannot
       - name: Validate skills
+        env:
+          BASE_REF: origin/${{ github.base_ref || 'main' }}
         run: STRICT=0 bash scripts/validate-skills.sh

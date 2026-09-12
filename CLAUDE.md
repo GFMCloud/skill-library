@@ -19,7 +19,8 @@ structured as a plugin marketplace.
   get a CHANGELOG entry describing the behavior change (not the wording change).
 - **Any skill change bumps the host plugin's `version` in the same commit.**
   Installed caches refresh only on a manifest version change, never on a skill's
-  own `metadata.version` (workbench 0.10.1, 2026-09-12).
+  own `metadata.version` (workbench 0.10.1, 2026-09-12). The validator enforces
+  this (F17) against `origin/main`.
 - **Run the validator before committing:**
 
   ```bash
