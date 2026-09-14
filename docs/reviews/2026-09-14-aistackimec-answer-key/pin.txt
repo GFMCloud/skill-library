@@ -1,0 +1,4 @@
+source: https://aistackimec.substack.com/p/we-caught-our-coding-agents-reading
+fetched: 2026-09-14T23:30:18Z
+sha256 (markdown via markitdown): b72e639be3ed8c59d67acca01b1f665b976a434846102695b13bc7ba8bbc24be
+words: 3449

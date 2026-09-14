@@ -1,0 +1,4 @@
+source: https://developers.googleblog.com/the-anatomy-of-harness-engineering-how-to-evaluate-iterate-and-guard-ai-coding-agents/
+fetched: 2026-09-14T23:30:18Z
+sha256 (markdown via markitdown): 6bc1b75293793c3c715aeb5375efa0ee5ebaf97ace3f90ca6f12457de9448140
+words: 1333

@@ -57,6 +57,33 @@ CI (`ANTHROPIC_API_KEY`, `CLAUDE_CODE_OAUTH_TOKEN`, optional `NPM_TOKEN`, `MIRRO
 `SLACK_WEBHOOK_URL`); no exfiltration path found by the clean-room reviewer. `scaffold_script`
 runs arbitrary bash as the runner user, default on.
 
+## Riders on row 3, added 2026-09-14 (scout cycle 3; read at scaffold time)
+
+Claude Code 2.1.269 shipped `claude plugin eval` (scored JSON plus HTML report, a
+with-without ablation arm, a Haiku judge by default, `--max-cost-usd`, `--no-publish`),
+verified on the installed 2.1.270 CLI; the first-party runner row 3 assumed it would have to
+build. Three reviews the same cycle add design constraints; each is one row in its own
+decisions file:
+
+- `2026-09-14-google-harness-engineering/decisions.md` row 1: never tune a prompt or skill
+  against the suite that gates it (experiment-harness frozen-holdout rule, global
+  bounded-loop rule); every behavioral case carries a negative control. Row 2: seed the
+  first cases from observed failures; match strictness to how open-ended the task is, with
+  any LLM judge validated against human labels before it counts.
+- `2026-09-14-aistackimec-answer-key/decisions.md` row 1: no fixture a graded skill can read
+  may contain the expected output or a prior result, and the scrub is proven inside the
+  built environment; audit every graded transcript for retrieval signatures; canary
+  provenance must not be model-detectable, and a pass on a problem the model could recite
+  is weaker evidence than a pass on a novel one. Row 2 (authoring standard): an ablation
+  closes every equivalent path at once.
+- `2026-09-14-skilltest/decisions.md` row 2: a decoy-catalog trigger arm built on
+  `docs/inventory.md` descriptions, scoring positive and negative phrases separately (the
+  executed form of Q-2026-09-03-11's proxy routing test). Row 5: fence untrusted text with
+  a random marker before any judge prompt reads it. Conflicts recorded there: a zero-uplift
+  result renders non-green by default; any provider error renders as a distinct non-green
+  state, never as a routing regression; the harness picks a CLI name distinct from
+  `skilltest` and `skilleval`.
+
 ## Rulings log
 
 2026-09-03: proposed by the scout cycle; nothing ratified. Tier 2 is off; every row is

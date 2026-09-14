@@ -1,0 +1,4 @@
+source: https://github.com/archplg/skilltest
+pin: 6191446a56d93bfe299512f73da6f1b394758def
+cloned: 2026-09-14T23:30:11Z (depth 1)
+files: 69
