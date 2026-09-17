@@ -1,0 +1,9 @@
+side	item	source	type	lines	class_judge_XY	class_judge_YX	judges_agree	target	effort	adoption_cost	note_judge_XY	note_judge_YX
+ecc	item-1	skills/gateguard/	skill	186	NOT ROWED	NOT ROWED	yes	n/a	n/a	n/a		
+ecc	item-2	skills/safety-guard/	skill	76	NOT ROWED	NOT ROWED	yes	n/a	n/a	n/a		
+ecc	item-3	scripts/hooks/config-protection.js	hook	176	NOT ROWED	NOT ROWED	yes	n/a	n/a	n/a		
+ecc	item-4	scripts/hooks/gateguard-fact-force.js	hook	1347	NOT ROWED	NOT ROWED	yes	n/a	n/a	n/a		
+ecc	item-5	scripts/hooks/gateguard-heredoc.js	hook	258	NOT ROWED	NOT ROWED	yes	n/a	n/a	n/a		
+installed	item-1	plugins/foundry-core/skills/goal-spec/	skill	527	NOT ROWED	NOT ROWED	yes	n/a	n/a	n/a		
+installed	item-2	dot-claude/hooks/deny-destructive.py	hook	123	NOT ROWED	NOT ROWED	yes	n/a	n/a	n/a		
+installed	item-3	SPECIAL:settings-permissions	rule file	64	NOT ROWED	NOT ROWED	yes	n/a	n/a	n/a		
