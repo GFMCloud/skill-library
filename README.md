@@ -49,7 +49,7 @@ you can enable a few without taking the whole library.
 | Plugin | Contents | What it's for |
 |---|---|---|
 | `foundry-core` | evidence-report, proof-of-work, full-output-enforcement | Never present work as done without executed evidence, and never truncate it. The skills most worth having on every project. |
-| `turn-reduction` | capability-preflight, output-lint, standing-authorization | Cut wasted round trips: prove access before starting, lint outgoing instructions, read your authorization from a file instead of asking. |
+| `turn-reduction` | capability-preflight, output-lint, standing-authorization, plan-gate | Cut wasted round trips: prove access before starting, lint outgoing instructions, read your authorization from a file instead of asking, plan and stop for approval before work with real blast radius. |
 | `verification-kit` | fact-currency-check, `pre-delivery-verifier` agent | Check a claim is still true today, and verify an artifact against its acceptance criteria before handing it over. |
 | `consistency-checker` | spec-artifact-diff, `cross-document-checker` agent | Catch docs that have drifted from the thing they describe, and documents that contradict each other. |
 | `deploy-ops` | deploy-verify-fix, cloudflare-pages-migration, `deploy-loop-owner` agent | Own the deploy, verify, fix loop end to end instead of handing a half-deployed artifact back to a human. Includes the Cloudflare Pages migration runbook. |
