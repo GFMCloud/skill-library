@@ -1,0 +1,7 @@
+slot	side	item	conflict	found_by
+orchestration	ecc	item-4	judge XY's per-item row says COMPLEMENT but the same judge's Verdict says "Drop X's items-4–13 (the wrapper/launcher pipeline — real but largely duplicative of item-3, and prose-only)"; judge YX's Verdict keeps the item-3/4–8 pipeline	verification/cross-document-checker-attempt-2.md finding 2
+orchestration	ecc	item-5	same as item-4	verification/cross-document-checker-attempt-2.md finding 2
+orchestration	ecc	item-6	same as item-4	verification/cross-document-checker-attempt-2.md finding 2
+orchestration	ecc	item-7	same as item-4	verification/cross-document-checker-attempt-2.md finding 2
+orchestration	ecc	item-8	same as item-4	verification/cross-document-checker-attempt-2.md finding 2
+build-loop	ecc	item-4	judge YX's per-item row says COMPLEMENT but both Verdicts set it aside: XY "Drop ... X item-4 (redundant with X item-1)"; YX "treat X item-4 as largely superseded by the merged item-1 content"	verification/cross-document-checker-attempt-2.md finding 3

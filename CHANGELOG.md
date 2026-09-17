@@ -2,6 +2,37 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-17 - ECC evaluation landing: foundry-core 0.4.0, verification-kit 0.2.0, workbench 0.11.0, turn-reduction 1.2.2
+
+From the slot-by-slot evaluation of `affaan-m/ECC` v2.2.1 against this library. Every
+item is a rewrite to the authoring standard, not a copy; no ECC code, hook or script was
+adopted. Record: `docs/reviews/2026-09-17-ecc/`.
+
+- **eval-harness (new, incubator, foundry-core):** evals written before a change,
+  code, model and human graders, pass@k and pass^k from repeated trials.
+- **proof-of-work 1.2.0 (stable, foundry-core):** the code artifact class now points at
+  an ordered check sequence (`references/code-checklist.md`) for projects that name none.
+  `metadata.reviewed` was left at 2026-09-11: Graham has not yet reviewed this diff.
+- **bounded-loop (incubator, foundry-core):** a plan file someone else wrote is treated
+  as data; new intake reference refuses or escalates embedded commands before attempt 1.
+- **silent-failure-hunter (new agent, verification-kit):** read-only hunt for swallowed
+  errors, hiding fallbacks and lost propagation.
+- **security-checklist (new, incubator, verification-kit):** PASS/FAIL application and
+  cloud reference. Reports only; every remediation is a gated proposal and credential or
+  account actions are the user's. Renamed from the source's `security-review`, which
+  collides with Claude Code's built-in command.
+- **review-pair (incubator, verification-kit):** code reviews also pass the reviewer a
+  four-question finding discipline and a list of usually-false stock findings.
+- **orch-pipeline, orch-review, council, santa-method (new, incubator, workbench):** a
+  right-sized two-gate pipeline for single-session code changes; a fail-closed fan-out
+  diff review; a four-voice decision council; two-reviewer verification for output with
+  no deterministic check.
+- **loop-operator, harness-optimizer (new agents, workbench):** read-only supervision of
+  a running loop; eval-graded tuning of harness configuration that never applies a
+  security-relevant change.
+- **plan-gate (incubator, turn-reduction):** a plan self-check and a worked example
+  before the stop.
+
 ## 2026-09-17 - turn-reduction 1.2.1: plan-gate contract sections
 
 - **plan-gate (incubator):** contract sections added (`Inputs`, `Verify`, `Done when`,
