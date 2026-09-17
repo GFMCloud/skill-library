@@ -87,6 +87,21 @@ For infrastructure changes, these three are usually where the damage lives, so s
 
 **Plan.** Files you'll create or modify, the key function/type signatures or resource addresses, and the order you'll work in. Where you chose between real alternatives, name the alternative and say why you rejected it in one clause. A plan with no rejected alternatives usually means you didn't look for any.
 
+**Plan self-check.** Before presenting, read the plan against these and fix what fails. They are checks on the plan, not on the code (adapted from the ECC project's `planner` agent, MIT, v2.2.1; review record `docs/reviews/2026-09-17-ecc/`):
+
+- Every step names the file or resource address it touches. A step with no path is a wish.
+- The plan says how each step will be verified, and what is tested versus left uncovered. A plan with no testing strategy fails this check.
+- Each phase can be delivered and rolled back on its own. If phase 2 only works once phase 4 exists, the phases are wrong.
+- No value is hardcoded that the repo or the environment already defines (account IDs, regions, paths, limits).
+- The unhappy path is in the plan: what each step does on timeout, partial write or a failed apply.
+
+A worked example of the level of detail expected, for "add a 30-day expiration rule to the logs bucket":
+
+> **Goal.** Objects under `logs/` in `app-logs-prod` expire after 30 days; nothing outside `logs/` changes; verified by reading the live lifecycle configuration after apply.
+> **Blocking questions (1).** Versioning is on, so expiration leaves noncurrent versions behind. Also expire noncurrent versions after 30 days? Default: yes.
+> **Assumptions.** 1. The bucket is managed by `infra/s3.tf` (`aws_s3_bucket.logs`), confirmed with `terraform state list`. 2. No lifecycle rule exists today, confirmed with `aws s3api get-bucket-lifecycle-configuration` (returned NoSuchLifecycleConfiguration). 3. Nothing reads `logs/` objects older than 30 days; not verifiable from here, please confirm. Blast radius: deletes data by design, in place, no replacement. Reversibility: the rule can be removed, deleted objects cannot be restored. Drift: none found.
+> **Plan.** 1. `infra/s3.tf`: add `aws_s3_bucket_lifecycle_configuration.logs` with one rule, prefix `logs/`, 30 days current and noncurrent. Verify: `terraform plan` shows 1 to add, 0 to change, 0 to destroy. 2. Apply. Verify: `get-bucket-lifecycle-configuration` returns the rule. Rejected: a bucket-wide rule, because `exports/` shares the bucket.
+
 Then wait. Do not begin implementing.
 
 ## 3. Proportionality
