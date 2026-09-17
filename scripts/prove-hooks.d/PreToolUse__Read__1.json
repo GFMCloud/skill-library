@@ -1,0 +1,123 @@
+{
+ "_hook": "deny-destructive.py (PreToolUse, matcher Read, second hook after route-large-read.py): denies a Read of a credential path and fails closed on hook input it cannot parse; silent otherwise",
+ "born": "2026-09-17",
+ "positive": [
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/work/app/.env"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/work/app/.env.production"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/.aws/credentials"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/.ssh/id_ed25519"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/.ssh/id_rsa"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/work/app/certs/server.pem"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/.netrc"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/.npmrc"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/.pypirc"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "_raw": "{\"tool_name\": \"Read\", \"tool_input\": {\"file_path\": "
+  }
+ ],
+ "negative": [
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/work/app/README.md"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/work/app/.env.example"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/work/app/.env.template"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/work/app/src/environment.py"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/work/app/docs/pem-format.md"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Read",
+   "tool_input": {
+    "file_path": "/Users/gfm/work/app/.envrc.md"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "tool_name": "Glob",
+   "tool_input": {
+    "pattern": "**/.env"
+   },
+   "cwd": "/Users/gfm/work/claude-scout-weekly"
+  }
+ ]
+}

@@ -25,7 +25,12 @@
 #   {{TMP_EMDASH}}  a file containing an em dash      {{TMP_PLAIN}}  a plain ASCII file
 #   {{TMP_ENDASH}}  a file containing an en dash      {{TMP_LARGE}}  a 300 KB ASCII file
 #   {{TMP_SUPERSEDED}}  an em-dash file whose name ends .superseded
+# A payload written as {"_raw": "<text>"} is sent to the hook as that text, unparsed: the
+# way to give a hook stdin that is not valid JSON.
 # Add a fixture for every new hook in the same commit that adds the hook.
+#
+# Registry: every wired hook must also have a row in docs/hooks-registry.md (event, matcher,
+# script file name). A wired hook with no row is RED; a row with no wiring is a NOTE.
 #
 # Detector arm vs exemption arm (hstack row 3, the second step, not yet implemented): a
 # dead detector UNDER-blocks (positive control passes through), a dead exemption
@@ -68,6 +73,23 @@ hooks = settings.get("hooks") if isinstance(settings, dict) else None
 if not hooks:
     red("settings", f"no hooks block in {settings_path} (a key that silently disables hooks? see header)")
 
+# docs/hooks-registry.md: a hook wired in settings with no row there is RED.
+registry_path = os.path.join(os.getcwd(), "docs", "hooks-registry.md")
+registered = set()  # (event, matcher, script file name)
+try:
+    with open(registry_path, encoding="utf-8") as fh:
+        for line in fh:
+            cells = [c.strip().strip("`") for c in line.strip().strip("|").split("|")]
+            if len(cells) >= 4 and cells[3] in ("blocks", "warns"):
+                registered.add((cells[0], cells[1], cells[2]))
+except OSError as e:
+    red("registry", f"cannot read docs/hooks-registry.md: {e}")
+wired = set()
+
+def script_name(command):
+    m = re.search(r"[A-Za-z0-9_.-]+\.(?:py|sh|js)\b", command)
+    return m.group(0) if m else command.strip()
+
 tmpdir = tempfile.mkdtemp(prefix="prove-hooks-")
 def materialize(name, content):
     p = os.path.join(tmpdir, name)
@@ -82,6 +104,8 @@ placeholders = {
     "{{TMP_SUPERSEDED}}": materialize("old.html.superseded", "<p>before \u2014 after</p>\n"),
 }
 def fill(obj):
+    if isinstance(obj, dict) and set(obj) == {"_raw"}:
+        return obj["_raw"]  # sent as-is: stdin that is not valid JSON
     s = json.dumps(obj)
     for k, v in placeholders.items():
         s = s.replace(k, v)
@@ -131,6 +155,10 @@ for event, entries in (hooks or {}).items():
             if hook.get("type") != "command" or not hook.get("command"):
                 red(label, "not a command hook; nothing to prove")
                 continue
+            key = (event, matcher, script_name(hook["command"]))
+            wired.add(key)
+            if key not in registered:
+                red(f"{label} registry", f"unlisted: {key[2]} is wired in settings but has no row in docs/hooks-registry.md")
             candidates = [f"{event}__{safe}__{j}.json", f"{event}__{safe}.json"]
             fixture = next((os.path.join(fixture_dir, c) for c in candidates
                             if os.path.exists(os.path.join(fixture_dir, c))), None)
@@ -163,9 +191,14 @@ for event, entries in (hooks or {}).items():
             else:
                 red(label, "; ".join(why))
 
+if wired and wired <= registered:
+    green("registry", f"all {len(wired)} wired hook(s) are listed in docs/hooks-registry.md")
+
 reds = [r for r in results if r[0] == "RED"]
 for status, label, why in results:
     print(f"{status}  {label}  {why}")
+for event, matcher, name in sorted(registered - wired):
+    print(f"NOTE  registry lists {event} matcher={matcher} {name}, which {settings_path} does not wire")
 print(f"\n{len(results)} hook check(s): {len(results) - len(reds)} green, {len(reds)} red")
 sys.exit(1 if reds or not results else 0)
 PY
