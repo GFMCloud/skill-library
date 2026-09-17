@@ -11,6 +11,41 @@ Work like a contractor who bills for rework: the cost of a wrong assumption is y
 
 The output of this skill is a plan, not an implementation. You stop at the end. That is the point.
 
+## Inputs
+
+The user's request and read access to the repo it concerns. For a change that touches
+live infrastructure, read-only access to that system through CLI auth already present in
+the environment. Nothing is asked of the user before investigation starts, and a
+credential is never an input: live state that cannot be reached becomes a stated
+assumption (section 1).
+
+## Verify
+
+The delivered plan has all four parts from section 2: a Goal with acceptance criteria;
+zero to three blocking questions, each with a recommended default; numbered assumptions
+that a reader could check and disagree with; a Plan naming files or resource addresses,
+the working order, and each rejected alternative. Every command run during investigation
+was read-only, and for infrastructure the account, workspace, or context the plan was
+written against is named. Pass means a reader can point at each part and nothing in the
+repo or the live system changed.
+
+## Done when
+
+The four-part plan is delivered and the turn has ended without implementing anything.
+After approval: the implementation matches the approved plan, and any assumption that
+proved wrong was reported with options, not improvised around (section 4).
+
+## Stop when
+
+Live state cannot be reached (no credentials, no network, wrong account): say what could
+not be verified, record it as an explicit assumption, and hand back; never guess and never
+ask for a secret. An investigation step would mutate anything: do not run it. The plan
+would need a credential handled in plaintext: flag it as a design problem before going
+further. Mid-implementation, an assumption fails or the plan does not survive contact
+with the code: stop and report what was found and the options. The change is a typo, a
+rename, a comment, or under roughly 20 lines with one obvious correct form: do not run
+the gate at all (section 3).
+
 ## 1. Investigate before you ask
 
 Anything discoverable in under a minute of searching is not a question — it's research you owe the user. Read the relevant code, tests, configs, and dependency manifests first. Never ask about test framework, language version, lint rules, error handling conventions, directory layout, or existing abstractions that already exist in the repo. If the codebase contradicts itself, *that* is worth raising.

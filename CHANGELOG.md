@@ -2,6 +2,13 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-17 - turn-reduction 1.2.1: plan-gate contract sections
+
+- **plan-gate (incubator):** contract sections added (`Inputs`, `Verify`, `Done when`,
+  `Stop when`), no behavior change. Each restates what sections 1 to 4 of the skill
+  already say. Clears the validator's W4 on this skill. Still incubator: promotion needs
+  real-session use, a `version`, and a `reviewed` date.
+
 ## 2026-09-17 - turn-reduction 1.2.0: plan-gate gets a library home
 
 - **plan-gate (new, incubator):** the pre-implementation gate (restated goal, at most
