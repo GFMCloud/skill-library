@@ -395,6 +395,32 @@ Written by every Phase 3 builder to `<harness>/runs/phase-3/<skill>.md`:
 | Roadmap line (Validation or Success) | Evidence in the directory |
 ```
 
+## 11. Persisted-state safety invariants v1
+
+Added 2026-09-17 (ECC evaluation, plan-gate output H1, ledger `memory` item-10 fragments).
+An addition, not a field change: no shape above changes version. Binding on anything that
+persists state between sessions or reads it back: a handoff file, a state file, a
+seen-index, a snapshot, and any hook or skill that injects stored text into a session.
+
+1. **Create-only writes.** A memory or snapshot write creates a new file and fails if
+   the target exists. It never truncates, replaces or appends to an earlier record. A
+   state file that is edited in place by design (`STATE.md`) is edited by the session
+   that owns it, never by a hook.
+2. **Secret-shaped strings are rejected before the write.** The text is checked before
+   anything is written or injected, and a hit means nothing is written: no partial file,
+   no redacted copy. The refusal names the shape, never the string.
+3. **Symlinks are never followed on read.** A stored file that is a symlink is skipped
+   or refused; it is not read through.
+4. **No automatic promotion.** Nothing moves stored text into a standing tier (a memory
+   directory, a CLAUDE.md, a settings file, a skill) without Graham's accept. Text read
+   back from storage enters a session labelled unverified, and a Typed claim v1 block
+   is accepted only through the resume procedure in section 4.
+
+Each invariant has a fixture that fails when it is violated: `scripts/prove-hooks.d/`
+`SessionStart__startup_clear.json` and `PreCompact__manual_auto.json` (their
+`_invariants` lines map controls to invariants), enforced for the hooks by
+`~/.claude/hooks/memory_safety.py`.
+
 ## Composition map
 
 | Skill | Wraps (first-party primitive) | Research row | Produces | Consumes |

@@ -1,0 +1,42 @@
+{
+ "_hook": "session-carryover.py (SessionStart, matcher startup|clear): injects only the typed claims block of the newest handoff when its claims are 7 days old or less; names a stale, claims-less or secret-bearing handoff in one line and injects nothing; silent with no handoff; fails open with a stderr line on a malformed block or unparseable stdin. All project directories are FIXTURE data built by prove-hooks.sh.",
+ "_invariants": "positive #0 and #1: no promotion (dir_unchanged: the hook writes nothing). positive #2: secret rejected before injection. positive #4: symlink never followed (the link is skipped and the real handoff behind it in age is used).",
+ "born": "2026-09-17",
+ "positive_verdict": "warn",
+ "positive": [
+  {"hook_event_name": "SessionStart", "source": "startup", "session_id": "FIXTURE", "cwd": "{{PROJ_FRESH}}"},
+  {"hook_event_name": "SessionStart", "source": "startup", "session_id": "FIXTURE", "cwd": "{{PROJ_STALE}}"},
+  {"hook_event_name": "SessionStart", "source": "startup", "session_id": "FIXTURE", "cwd": "{{PROJ_SECRET}}"},
+  {"hook_event_name": "SessionStart", "source": "clear", "session_id": "FIXTURE", "cwd": "{{PROJ_NOCLAIMS}}"},
+  {"hook_event_name": "SessionStart", "source": "startup", "session_id": "FIXTURE", "cwd": "{{PROJ_SYMLINK}}"}
+ ],
+ "negative": [
+  {"hook_event_name": "SessionStart", "source": "startup", "session_id": "FIXTURE", "cwd": "{{PROJ_NONE}}"},
+  {"hook_event_name": "SessionStart", "source": "startup", "session_id": "FIXTURE", "cwd": "{{PROJ_MALFORMED}}"},
+  {"hook_event_name": "SessionStart", "source": "startup", "session_id": "FIXTURE"},
+  {"_raw": "FIXTURE stdin that is not JSON"}
+ ],
+ "expect": {
+  "positive": [
+   {"stdout_contains": ["{{PROJ_FRESH}}/handoff-fixture-new.md", "Claims written: 24 hours ago", "UNVERIFIED", "expected: fixture-branch"],
+    "stdout_excludes": ["must never be injected", "old-branch"],
+    "dir_unchanged": "{{PROJ_FRESH}}"},
+   {"stdout_contains": ["{{PROJ_STALE}}/handoff-fixture.md", "stale", "nothing injected"],
+    "stdout_excludes": ["fixture-branch", "must never be injected"],
+    "dir_unchanged": "{{PROJ_STALE}}"},
+   {"stdout_contains": ["secret-shaped", "nothing injected"],
+    "stdout_excludes": ["FIXTUREFIXTURE00", "fixture-branch"],
+    "stderr_contains": ["secret-shaped"]},
+   {"stdout_contains": ["no typed claims block", "nothing injected"],
+    "stdout_excludes": ["must never be injected"]},
+   {"stdout_contains": ["{{PROJ_SYMLINK}}/handoff-real.md", "expected: real-branch"],
+    "stdout_excludes": ["handoff-link.md", "fixture-branch"]}
+  ],
+  "negative": [
+   {"dir_unchanged": "{{PROJ_NONE}}"},
+   {"stderr_contains": ["failing open", "Malformed"]},
+   null,
+   {"stderr_contains": ["failing open", "JSONDecodeError"]}
+  ]
+ }
+}

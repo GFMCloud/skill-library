@@ -2,6 +2,33 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-17 - workbench 0.13.0: session-memory hooks and the compaction rule (ECC plan-gate H1)
+
+- **handoff 0.4.0 (incubator, workbench):** new `## Before Compaction` section: write the
+  plan and state to a file before compacting, with a six-row decision table (compact,
+  hand off, `/clear`, or recover after an auto-compaction). Injected claims from the
+  new SessionStart hook are a prompt to run Resume Mode, never a substitute for it.
+- **`docs/toolkit-interface-spec.md` section 11 (new), Persisted-state safety invariants
+  v1:** create-only writes, secret-shaped strings rejected before the write, symlinks
+  never followed on read, no automatic promotion. An addition; no shape changes version.
+- **`~/.claude/hooks/session-carryover.py`, `pre-compact-state.py`, `memory_safety.py`
+  (new, live outside this repo, not wired until Graham pastes the `settings.json`
+  entries):** SessionStart injects only the typed claims block of the project's newest
+  handoff when the claims are 7 days old or less, and names a stale, claims-less or
+  secret-bearing handoff in one line instead; PreCompact copies `STATE.md` to a
+  create-only `STATE-precompact-<stamp>.md` and does nothing in a project with no
+  `STATE.md`. Both fail open with one stderr line, carry a 5 second budget and use no
+  network. Rows added to `docs/hooks-registry.md`, whose parser now accepts an escaped
+  pipe in a matcher (`startup\|clear`).
+- **`prove-hooks.sh`:** fixtures can assert text and side effects per control (`expect`:
+  stdout and stderr text, `dir_unchanged`, `dir_adds_only`, `file_contains`), FIXTURE
+  project directories are built per run (`{{PROJ_*}}`), and `positive_verdict: allow`
+  is accepted for a side-effect hook only when every positive has an `expect`. New
+  fixtures `SessionStart__startup_clear.json` and `PreCompact__manual_auto.json`; eleven
+  deliberate breakages of the hooks (one per invariant and ruling) each turned the run red.
+- Not adopted: ECC's session-end summarizer, its instinct learning, its dispatcher. No
+  ECC code. Plan: `~/work/ecc-harness-eval/hook-gate/H1-memory.md`.
+
 ## 2026-09-17 - hooks registry, and deny-destructive tightened (ECC plan-gate H2)
 
 - **`docs/hooks-registry.md` (new):** every hook wired in `~/.claude/settings.json`, its

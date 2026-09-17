@@ -12,7 +12,8 @@ removing or re-wiring a hook means editing this table in the same change, next t
 hook's fixture in `scripts/prove-hooks.d/`.
 
 The check parses the table: keep the first four columns in this order, and write the
-fourth as exactly `blocks` or `warns`.
+fourth as exactly `blocks` or `warns`. A matcher that contains a pipe is written with
+the pipe escaped (`startup\|clear`).
 
 | Event | Matcher | Hook | Blocks or warns | Fixture | What it does |
 |---|---|---|---|---|---|
@@ -21,6 +22,8 @@ fourth as exactly `blocks` or `warns`.
 | PreToolUse | Bash | `evidence-guard.py` | warns | `PreToolUse__Bash__1.json` | Adds context when a command shape hides evidence (a pipe masking an exit code, and similar). Never denies. Fails open. |
 | PreToolUse | Read | `route-large-read.py` | blocks | `PreToolUse__Read.json` | While the llama-offload marker exists, denies a Read over 200 KB with no offset or limit. Silent otherwise. Fails open. |
 | PreToolUse | Read | `deny-destructive.py` | blocks | `PreToolUse__Read__1.json` | Denies a Read of a credential path (`.env` and variants, `.pem`, SSH private keys, `.aws/credentials`, `.netrc`, `.npmrc`, `.pypirc`). Second hook on the Read matcher; the fixture index depends on that order. |
+| SessionStart | startup\|clear | `session-carryover.py` | warns | `SessionStart__startup_clear.json` | Injects only the typed claims block of the project's newest handoff, with its path and age, when the claims are 7 days old or less; names a stale, claims-less or secret-bearing handoff in one line instead. Writes nothing. Fails open with a stderr line. Imports `memory_safety.py` from the same directory. |
+| PreCompact | manual\|auto | `pre-compact-state.py` | warns | `PreCompact__manual_auto.json` | Copies the project's `STATE.md` to `STATE-precompact-<stamp>.md` beside it, create-only; refuses on a name collision, a secret-shaped string or a symlink. Does nothing in a project with no `STATE.md`. Never blocks compaction ("warns" here means only that). Imports `memory_safety.py`. |
 
 Two hooks answer PreToolUse:Bash and two answer PreToolUse:Read. How Claude Code
 arbitrates two answers to one event is not recorded here: the arbitration warning from

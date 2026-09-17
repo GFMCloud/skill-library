@@ -1,0 +1,33 @@
+{
+ "_hook": "pre-compact-state.py (PreCompact, matcher manual|auto): copies the project's STATE.md to a timestamped STATE-precompact-*.md beside it, create-only; refuses (stderr line, nothing written, exit 0) on a name collision, a secret-shaped string in STATE.md or a symlinked STATE.md; does nothing in a project with no STATE.md. All project directories are FIXTURE data built by prove-hooks.sh.",
+ "_invariants": "positive #0: no promotion (dir_adds_only: STATE.md untouched, the snapshot is the only new file). negative #0: create-only (the existing snapshot survives byte for byte). negative #1: secret rejected before write. negative #2: symlink never followed.",
+ "born": "2026-09-17",
+ "env": {
+  "PRE_COMPACT_STATE_STAMP": "FIXTURESTAMP"
+ },
+ "positive_verdict": "allow",
+ "positive": [
+  {"hook_event_name": "PreCompact", "trigger": "auto", "custom_instructions": null, "session_id": "FIXTURE-session", "transcript_path": "/FIXTURE/transcript.jsonl", "cwd": "{{PROJ_STATE}}"}
+ ],
+ "negative": [
+  {"hook_event_name": "PreCompact", "trigger": "manual", "custom_instructions": null, "session_id": "FIXTURE-session", "cwd": "{{PROJ_STATE_TAKEN}}"},
+  {"hook_event_name": "PreCompact", "trigger": "auto", "custom_instructions": null, "session_id": "FIXTURE-session", "cwd": "{{PROJ_STATE_SECRET}}"},
+  {"hook_event_name": "PreCompact", "trigger": "auto", "custom_instructions": null, "session_id": "FIXTURE-session", "cwd": "{{PROJ_STATE_SYMLINK}}"},
+  {"hook_event_name": "PreCompact", "trigger": "auto", "custom_instructions": null, "session_id": "FIXTURE-session", "cwd": "{{PROJ_NONE}}"},
+  {"_raw": "FIXTURE stdin that is not JSON"}
+ ],
+ "expect": {
+  "positive": [
+   {"dir_adds_only": {"dir": "{{PROJ_STATE}}", "patterns": ["STATE-precompact-FIXTURESTAMP.md"]},
+    "file_contains": {"dir": "{{PROJ_STATE}}", "pattern": "STATE-precompact-*.md",
+                      "text": ["trigger: auto", "session_id: FIXTURE-session", "source_sha256: ", "next: FIXTURE state line"]}}
+  ],
+  "negative": [
+   {"dir_unchanged": "{{PROJ_STATE_TAKEN}}", "stderr_contains": ["already exists", "create-only"]},
+   {"dir_unchanged": "{{PROJ_STATE_SECRET}}", "stderr_contains": ["secret-shaped"]},
+   {"dir_unchanged": "{{PROJ_STATE_SYMLINK}}", "stderr_contains": ["symlinks are never followed"]},
+   {"dir_unchanged": "{{PROJ_NONE}}"},
+   {"stderr_contains": ["no snapshot written", "JSONDecodeError"]}
+  ]
+ }
+}
