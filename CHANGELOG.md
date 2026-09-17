@@ -2,6 +2,17 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-17 - turn-reduction 1.2.0: plan-gate gets a library home
+
+- **plan-gate (new, incubator):** the pre-implementation gate (restated goal, at most
+  three blocking questions with defaults, numbered falsifiable assumptions, file-level
+  plan, then stop for approval). Until now it existed only as an account-level skill
+  with no editable file anywhere. The body is byte-for-byte the account copy as synced
+  to disk on 2026-09-17 (SHA-256 `b82b5e6c08e52e164bb0c87a74010427fb87e5297d4c465ef5ee685c44710374`
+  before the `metadata` block was added); only the `maturity: incubator` label is new.
+  It has no contract sections yet, so the validator warns (W4) and passes. The
+  account-level copy is now a mirror of this file, not the source.
+
 ## 2026-09-12 - validator F17 widened to agents
 
 No skill change, no plugin bump. F17 now matches `plugins/<p>/agents/` as well as

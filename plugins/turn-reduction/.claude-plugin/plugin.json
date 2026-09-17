@@ -1,7 +1,7 @@
 {
   "name": "turn-reduction",
-  "description": "Removes the two turn categories a nine-session audit showed dominate: capability pre-flight for relays, output lint for process corrections, standing authorization for approvals.",
+  "description": "Removes the two turn categories a nine-session audit showed dominate: capability pre-flight for relays, output lint for process corrections, standing authorization for approvals. Also carries plan-gate, the pre-implementation gate for work with real blast radius.",
   "author": { "name": "Graham" },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "dependencies": ["foundry-core"]
 }

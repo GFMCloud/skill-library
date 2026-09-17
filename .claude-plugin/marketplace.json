@@ -17,7 +17,7 @@
     {
       "name": "turn-reduction",
       "source": "./plugins/turn-reduction",
-      "description": "Fewer wasted turns: capability-preflight, output-lint, standing-authorization."
+      "description": "Fewer wasted turns: capability-preflight, output-lint, standing-authorization, plan-gate."
     },
     {
       "name": "data-wrangler",
