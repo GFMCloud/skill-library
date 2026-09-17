@@ -2,6 +2,23 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-17 - hooks registry, and deny-destructive tightened (ECC plan-gate H2)
+
+- **`docs/hooks-registry.md` (new):** every hook wired in `~/.claude/settings.json`, its
+  event, matcher, and whether it blocks or warns. `scripts/prove-hooks.sh` goes RED when
+  settings wires a hook with no row there; a row with no wiring prints a NOTE.
+- **`prove-hooks.sh`:** a fixture payload written as `{"_raw": "<text>"}` is sent to the
+  hook unparsed, so malformed stdin can be a control.
+- **`~/.claude/hooks/deny-destructive.py` (lives outside this repo):** fails closed on
+  hook input that is not a JSON object, with one stderr line; denies a Read of a
+  credential path once wired as the second hook on the Read matcher (a `settings.json`
+  entry, Graham's paste). The other three hooks stay fail-open. Fixtures: three
+  malformed-input positives in `PreToolUse__Bash__0.json`, new `PreToolUse__Read__1.json`;
+  both were red against the previous hook. Previous version kept beside it as
+  `deny-destructive.py.superseded`.
+- Not done, by ruling or by scope: the arbitration warning, echo suppression, a
+  dispatcher. No ECC code. Plan: `~/work/ecc-harness-eval/hook-gate/H2-hooks-runtime.md`.
+
 ## 2026-09-17 - workbench 0.12.0: handoff resume reports project staleness (ECC plan-gate H3)
 
 - **handoff 0.3.0 (incubator, workbench):** Resume Mode now checks whether project files
