@@ -2,6 +2,17 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-17 - workbench 0.12.0: handoff resume reports project staleness (ECC plan-gate H3)
+
+- **handoff 0.3.0 (incubator, workbench):** Resume Mode now checks whether project files
+  changed after the handoff's `written_at` and says so in the status, before the
+  discrepancy table. `scripts/check-claims.py` takes `--project <repo dir>` and prints
+  the changed files; staleness warns and never changes the exit code. New
+  `fixtures/FIXTURE-stale-handoff.md` and `fixtures/run-fixtures.sh`, which asserts the
+  match, mismatch and stale cases and fails on the script without the check. This is
+  the ruled form of ECC ledger row B3: no always-on Stop hook, no ECC code. Plan:
+  `~/work/ecc-harness-eval/hook-gate/H3-delivery-gate.md`.
+
 ## 2026-09-17 - ECC evaluation landing: foundry-core 0.4.0, verification-kit 0.2.0, workbench 0.11.0, turn-reduction 1.2.2
 
 From the slot-by-slot evaluation of `affaan-m/ECC` v2.2.1 against this library. Every
