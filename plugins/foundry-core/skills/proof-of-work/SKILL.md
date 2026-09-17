@@ -3,7 +3,7 @@ name: "proof-of-work"
 description: "Produce executed evidence that a piece of work actually works before presenting it as done — run the code against representative data, inspect the render, print the validation output. Use before declaring any artifact complete, and whenever a tool reports its own success."
 metadata:
   maturity: stable
-  version: 1.1.1
+  version: 1.2.0
   reviewed: 2026-09-11
 ---
 
@@ -74,7 +74,10 @@ dangerous than no check at all — it converts an unknown into a false known.
 ## What counts, by artifact class
 
 - **Code** — executed against representative input, output inspected. Not a
-  test that asserts the function was called.
+  test that asserts the function was called. When the project names no check
+  sequence of its own, use the ordered one in
+  [references/code-checklist.md](references/code-checklist.md) (build, types,
+  lint, tests, secrets, diff, with two stop conditions).
 - **Document** — the claims extracted and checked against the artifact they
   describe (`consistency-checker:spec-artifact-diff`). Reading it again is not
   a check.
