@@ -86,6 +86,9 @@ an independent reviewer is sufficient; do not seek a second opinion after a pass
    (or an equivalent read-only `tools` list), `maxTurns` set to a small bound, and
    `model` set to a value that differs from the model that produced the change. Pass it
    only the goal block and the change; nothing about how the change was produced.
+   When the change is code, also pass
+   [references/finding-discipline.md](references/finding-discipline.md): four questions
+   every issue must survive, and the stock findings that are usually false.
 3. The reviewer returns a Verdict object v1 (interface spec section 3). Write it to the
    run log before doing anything else with it.
 4. Run `scripts/verdict-check.sh` against the verdict file. On a script failure, treat
