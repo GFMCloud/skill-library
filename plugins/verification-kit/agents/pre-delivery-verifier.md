@@ -30,10 +30,14 @@ And since 2026-09-18 the plugin ships a PreToolUse hook,
 redirect outside the session scratchpad, `tee`, `sed -i`, `mv`, `cp`, `rm`, a
 git command that changes the tree, an inline `python -c` write) whenever the
 hook input's `agent_type` is this agent or one of its read-only siblings, and
-does nothing in any other context. Proven by `hooks/prove-guard.sh` (seven
-denials, nine allowances, including a main session and a general-purpose agent).
+does nothing in any other context. Proven by `hooks/prove-guard.sh` (fifteen
+denials, twelve allowances, including a main session and a general-purpose agent).
+The scratchpad is the only writable root: `/tmp` was one too until a run of this
+agent wrote `> /tmp/co.txt` on 2026-09-18.
 Known weakness, beside the rule: a write hidden behind `eval` or a script the
-agent did not write is not seen, so the charter still binds. **A missing tool is
+agent did not write is not seen, nor is a writer that uses no redirect (`dd of=`,
+`curl -o`, `sort -o`; the full list is in the hook's docstring), so the charter
+still binds. **A missing tool is
 a narrowed surface, not a boundary; the hook is the boundary, and the charter
 covers what the hook cannot see.**
 

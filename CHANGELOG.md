@@ -2,6 +2,25 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - verification-kit 0.5.2: readonly-agent-guard denies writes to /tmp and sees four more redirect forms
+
+- **readonly-agent-guard (hook):** a pre-delivery-verifier run wrote `> /tmp/co.txt`
+  through the guard on 2026-09-18. `/tmp` and `/private/tmp` were allowed roots by
+  design; /tmp is shared by every session and is not the scratchpad, so the only
+  writable targets are now `scratchpad_dir` and `/dev/null`. Reading the redirect
+  pattern for that fix found forms it never matched: `&> file`, `N> file` (so
+  `2> err.log`), `>| file` and `>& file`. All are now checked, and a target is
+  normalised so `scratchpad/../x` does not count as inside the scratchpad. `>&2`,
+  `2>&1` and `>&-` still pass. Proof: `hooks/prove-guard.sh` gained eight denials and
+  three allowances; seven of the denials failed against 0.5.1 and all 27 cases pass
+  now. Behavior change for callers: a read-only agent that kept notes under /tmp is
+  denied and must use its scratchpad; with the scratchpad off (no `scratchpad_dir` in
+  the hook input) nothing but `/dev/null` is writable. Shapes still unseen are listed
+  in the hook's docstring beside the rule: run-time redirects (`eval`, a variable, a
+  script file), a symlink out of the scratchpad, and writers that use no redirect
+  (`dd of=`, `curl -o`, `sort -o`, `tar -x`, `patch`, `perl -e`).
+  `pre-delivery-verifier`'s charter restated the proof counts and is updated.
+
 ## 2026-09-18 - workbench 0.16.3: capability-index stops offering to enable a pack that is already on
 
 - **capability-index:** the `decks` row is removed and the frontmatter description no
