@@ -2,6 +2,26 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - verification-kit 0.5.0: pack review set-1, ledger row 9 (security-audit, vendored)
+
+Source: the same set run; both judges classed `security-audit` and the installed
+`security-checklist` COMPLEMENT (a deep full-codebase audit with fail-closed validators
+beside a cheap per-change checklist). Graham ruled "Adopt as a sep skill as well", then
+"approve with defaults" on the plan-gate archived with the review record.
+
+- **security-audit (new, incubator, vendored):** the 20 files of
+  `cloudflare/security-audit-skill` at c1c8a8c (MIT) copied byte-identical, checksum
+  verified against the pinned clone, plus its `LICENSE` and a `SOURCE.md`. The only edit
+  is `SKILL.md` frontmatter: negative scope (not security-checklist, not the built-in
+  /security-review), costs, and `maturity: incubator`. This is an exception to rewriting
+  adopted material in the library's voice, because the value is the two dependency-free
+  validators as written. Both were read in full before anything ran: each opens one named
+  input read-only with no-follow, prints, and exits, with no write, network, process or
+  environment call. Their own suites: `node --test` 65 tests, 65 pass. Proven from this
+  side too: an empty array exits 0 on both; a malformed finding, a malformed ledger unit,
+  truncated JSON and a missing file each exit 1. `security-checklist` is unchanged.
+  Routing between the two skills is untested until the plugin is installed.
+
 ## 2026-09-18 - verification-kit 0.4.0: pack review set-1, ledger rows 7 and 8 (overengineering-review)
 
 Source: the same set run. The run found a gap, not a better version: nothing installed
