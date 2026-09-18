@@ -1,0 +1,6 @@
+archify/SKILL.md	skill	Gives an agent the capability to author, validate, and deliver interactive architecture/workflow/sequence/dataflow/lifecycle diagrams via this repo's bundled Node CLI (product-bound); the same skill is also distributed as the byte-identical archive archify.zip, a duplicate of this shorter path.
+.agents/skills/archify-review/SKILL.md	skill	Gives an agent a value/cost/impact framework for triaging Archify issues, PRs, and code changes; standalone, since it is a reasoning framework that does not itself require running the archify CLI.
+.coderabbit.yaml	agent	Configures the third-party CodeRabbit review agent's tone, path-specific review instructions, and merge-gate checks for this repository's pull requests; standalone, since it does not itself execute the archify CLI.
+FLAG	archify/SKILL.md: "Use this bounded path for ordinary generation. Do not read the optional Viewer Runtime reference"
+FLAG	.agents/skills/archify-review/SKILL.md: "Judge whether a problem is worth addressing and an approach is worth maintaining over time"
+FLAG	.coderabbit.yaml: "Use .agents/skills/archify-review/SKILL.md for value, cost, and impact judgments, and consult its linked repository guidance"

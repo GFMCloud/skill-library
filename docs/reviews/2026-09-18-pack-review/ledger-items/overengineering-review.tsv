@@ -1,0 +1,5 @@
+id	side	source	type	path	judge-XY.md	judge-YX.md
+item-3cb4b1ae	src1	src1	skill	/private/tmp/tr-runs/set-1/candidates/src1/skills/ponytail-audit	COMPLEMENT	COMPLEMENT
+item-4ef8ec23	src1	src1	skill	/private/tmp/tr-runs/set-1/candidates/src1/skills/ponytail-review	COMPLEMENT	COMPLEMENT
+item-c3affd53	installed	lib	skill	/Users/gfm/skill-library/plugins/workbench/skills/orch-review	DISCARD	FRAGMENT -> item-4ef8ec23
+item-e739493a	installed	lib	skill	/Users/gfm/skill-library/plugins/verification-kit/skills/review-pair	DISCARD	FRAGMENT -> item-4ef8ec23

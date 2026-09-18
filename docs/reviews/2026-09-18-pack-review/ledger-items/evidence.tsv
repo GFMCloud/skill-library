@@ -1,0 +1,4 @@
+id	side	source	type	path	judge-ESC.md	judge-XY.md	judge-YX.md
+item-7aed43c3	installed	lib	skill	/Users/gfm/skill-library/plugins/foundry-core/skills/proof-of-work	COMPLEMENT	SUPERSEDES item-b9504c3e	COMPLEMENT
+item-92c76be2	installed	lib	skill	/Users/gfm/skill-library/plugins/foundry-core/skills/evidence-report	COMPLEMENT	COMPLEMENT	COMPLEMENT
+item-b9504c3e	src2	src2	skill	/private/tmp/tr-runs/set-1/candidates/src2/agent-skills/orx-evidence	FRAGMENT -> item-7aed43c3	SUPERSEDED BY item-7aed43c3	COMPLEMENT
