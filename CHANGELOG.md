@@ -16,6 +16,89 @@ Human-Agent-Society/reef at `17d81bd`. Verdict HARVEST, two rows. Ruled by Graha
   `persist-credentials: false`. No step after checkout fetches or pushes, so nothing
   else changes. `actions/checkout` stays on its `v4` tag by ruling.
 
+## 2026-09-18 - verification-kit 0.5.3: security-audit and security-checklist route on three phrasings they missed
+
+- **security-audit and security-checklist (descriptions only):** both now say to load the
+  skill first, before listing or reading the target, and not to skip it for a small
+  target; security-audit also says its pen test works from source and needs no running
+  service, and each names the other as its negative scope. Only frontmatter changed;
+  security-audit's vendored body is byte-identical (sha256 checked against `origin/main`).
+  Its description moved to a folded scalar so a ": " cannot break the YAML.
+- **Cause, from the traces:** in every miss the model listed or read the target first,
+  judged it could answer unaided, and never came back to the skill list; one trace says
+  so ("Since the codebase is just a 23-line file, I audited it directly instead of
+  invoking the full security-audit workflow"), and the pen-test misses reasoned that
+  nothing was running. In every hit the Skill call came before any read.
+- **Measured** with fresh headless sessions (`claude -p`, `claude-opus-5`, `--max-turns 3`,
+  `--allowedTools Skill,Read,Glob,Grep`), verification-kit loaded with `--plugin-dir`
+  in both arms (before: `git archive origin/main`; after: the worktree) and the installed
+  copy disabled per run; the init event confirmed the path each time. FIXTURE projects:
+  small is one 23-line Python file, large is 8 files and about 300 lines.
+
+  | Set | Prompt | Before small | Before large | After small | After large |
+  |---|---|---|---|---|---|
+  | boundary | "Do a full security audit of this codebase." | 0/3 | 2/3 | 3/3 | 3/3 |
+  | boundary | "Pen test this service end to end and give me a findings report." | 0/3 | 0/3 | 3/3 | 3/3 |
+  | boundary | "Is app/repo.py safe to deploy?" | 0/3 | 1/3 | 3/3 | 3/3 |
+  | retention | "I want a comprehensive vulnerability review of this whole repo." | 1/1 | 1/1 | 1/1 | 1/1 |
+  | retention | "Do a security pass on the change to app/repo.py before I deploy it." | 1/1 | 1/1 | 1/1 | 1/1 |
+  | retention | "Run the security checklist on app/repo.py." | 1/1 | 1/1 | 1/1 | 1/1 |
+  | negative | "Review app/repo.py for bugs." loads neither | 1/1 | 1/1 | 2/2 | 2/2 |
+
+  Every load was the intended skill (no cross-routing) and, after the change, the first
+  action. Fixture artifact or description defect: both. The audit phrasing was mostly a
+  fixture artifact (0/3 small, 2/3 large before the change); the pen-test phrasing was a
+  description defect on either fixture (0/6); the deploy phrasing was mixed (1/6). The
+  new text removes the size sensitivity as well. Known limits: three trials per cell, one
+  model, two synthetic fixtures, one negative phrasing; "load this first" wording is the
+  kind that can over-trigger, and only the one negative guards against that.
+
+## 2026-09-18 - validator F19: no evals/ inside a skill directory
+
+- **`scripts/validate-skills.sh`, new failing check F19:** anything named `evals`
+  directly inside `plugins/<plugin>/skills/<skill>/` fails, with the correct
+  destination in the message. PR 16 moved every suite to `plugins/<plugin>/evals/<skill>/`
+  because `claude plugin eval` rejects an eval dir inside `skills/`, but nothing stopped
+  the old layout reappearing. The check runs before F1 and F2, so a skill directory
+  with a broken SKILL.md still reports it. Proof: `scripts/prove-f19.sh` builds a
+  fixture library; against the previous validator the offending skill passed (exit 0),
+  against this one it fails with F19 and the plugin-level location passes. The real
+  tree passes. Documented in `docs/authoring-standard.md` under Change hygiene with its
+  known weaknesses (top-level `evals` name only). No plugin changes, so no bumps.
+
+## 2026-09-18 - verification-kit 0.5.2: readonly-agent-guard denies writes to /tmp and sees four more redirect forms
+
+- **readonly-agent-guard (hook):** a pre-delivery-verifier run wrote `> /tmp/co.txt`
+  through the guard on 2026-09-18. `/tmp` and `/private/tmp` were allowed roots by
+  design; /tmp is shared by every session and is not the scratchpad, so the only
+  writable targets are now `scratchpad_dir` and `/dev/null`. Reading the redirect
+  pattern for that fix found forms it never matched: `&> file`, `N> file` (so
+  `2> err.log`), `>| file` and `>& file`. All are now checked, and a target is
+  normalised so `scratchpad/../x` does not count as inside the scratchpad. `>&2`,
+  `2>&1` and `>&-` still pass. Proof: `hooks/prove-guard.sh` gained eight denials and
+  three allowances; seven of the denials failed against 0.5.1 and all 27 cases pass
+  now. Behavior change for callers: a read-only agent that kept notes under /tmp is
+  denied and must use its scratchpad; with the scratchpad off (no `scratchpad_dir` in
+  the hook input) nothing but `/dev/null` is writable. Shapes still unseen are listed
+  in the hook's docstring beside the rule: run-time redirects (`eval`, a variable, a
+  script file), a symlink out of the scratchpad, and writers that use no redirect
+  (`dd of=`, `curl -o`, `sort -o`, `tar -x`, `patch`, `perl -e`).
+  `pre-delivery-verifier`'s charter restated the proof counts and is updated.
+
+## 2026-09-18 - workbench 0.17.1: capability-index stops offering to enable a pack that is already on
+
+- **capability-index:** the `decks` row is removed and the frontmatter description no
+  longer names `decks` as not installed. The row said "installed but disabled" and
+  offered `claude plugin enable decks@skill-library`; on 2026-09-18 the pack was found
+  not installed at all, so that command could not have worked, and it was then installed
+  and enabled (0.3.0, user scope). Checked against `claude plugin list` and
+  `~/.claude/plugins/installed_plugins.json`: all ten library packs are installed and
+  enabled, so the table now holds only the project-scoped SCL skills. The response
+  template tells the skill to check `claude plugin list` before choosing between
+  `install` and `enable`, which is the distinction the stale row got wrong. Committed
+  as 0.16.3; PR 14 (humanizer, 0.17.0) merged first, so the merge of `origin/main` into
+  this branch renumbered it 0.17.1.
+
 ## 2026-09-18 - workbench 0.17.0: humanizer (incubator), adopted from blader/humanizer
 
 Source: `docs/reviews/2026-09-18-humanizer.md`, a `toolkit-review` spot run against

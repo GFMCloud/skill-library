@@ -22,7 +22,20 @@ run deny  "tee"                                      "$(v silent-failure-hunter 
 run deny  "git commit"                               "$(v transcript-scanner '"git commit -am wip"')"
 run deny  "mv into the tree"                         "$(v Explore '"mv a.md b.md"')"
 run deny  "python inline write"                      "$(v pre-delivery-verifier '"python3 -c \"open(\\\"x.txt\\\",\\\"w\\\").write(\\\"hi\\\")\""')"
+# 2026-09-18: a pre-delivery-verifier run got `> /tmp/co.txt` through. /tmp was an allowed
+# root; only the scratchpad is now. The fd-prefixed and clobber forms were never matched.
+run deny  "redirect to /tmp, outside the scratchpad" "$(v verification-kit:pre-delivery-verifier '"ls -la > /tmp/co.txt"')"
+run deny  "redirect to a /private/tmp sibling"       "$(v pre-delivery-verifier '"ls > /private/tmp/other/out.txt"')"
+run deny  "dot-dot path out of the scratchpad"       "$(v pre-delivery-verifier '"ls > /private/tmp/scratch-x/../other/out.txt"')"
+run deny  "&> redirect to a file"                    "$(v pre-delivery-verifier '"pytest -q &> out.txt"')"
+run deny  "numbered fd redirect to a file"           "$(v pre-delivery-verifier '"pytest -q 2> err.log"')"
+run deny  ">| clobber redirect"                      "$(v pre-delivery-verifier '"ls >| out.txt"')"
+run deny  ">& redirect to a file"                    "$(v pre-delivery-verifier '"ls >& out.txt"')"
+run deny  "cp into /tmp"                             "$(v pre-delivery-verifier '"cp README.md /tmp/copy.md"')"
 # Negatives: reads, scratchpad writes, other agents, and the main session all pass.
+run allow "fd duplication to stderr is not a write"  "$(v pre-delivery-verifier '"echo warn >&2"')"
+run allow "stderr to /dev/null"                      "$(v pre-delivery-verifier '"ls missing 2>/dev/null"')"
+run allow "&> into the scratchpad"                   "$(v pre-delivery-verifier '"pytest -q &> /private/tmp/scratch-x/out.txt"')"
 run allow "read-only command in a verifier"          "$(v pre-delivery-verifier '"git status --short && wc -l README.md"')"
 run allow "stderr redirect is not a write"           "$(v pre-delivery-verifier '"bash scripts/validate.sh 2>&1"')"
 run allow "redirect to /dev/null"                    "$(v pre-delivery-verifier '"pytest -q > /dev/null 2>&1"')"

@@ -1,10 +1,10 @@
 ---
 name: capability-index
 description: >-
-  Points at capability that exists on this machine but is not loaded in the current session, so it does not become invisible. Consult whenever the user asks for something no loaded skill covers, specifically: anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys; or a skill in a skill-library plugin that is not installed here (the `decks` pack). Do not attempt those tasks unaided. Say what covers it and where it lives, and offer to load it.
+  Points at capability that exists on this machine but is not loaded in the current session, so it does not become invisible. Consult whenever the user asks for something no loaded skill covers, specifically: anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys; or a skill in a skill-library plugin that is not installed here (none as of 2026-09-18, all ten packs are installed and enabled, `decks` included). Do not attempt those tasks unaided. Say what covers it and where it lives, and offer to load it.
 metadata:
   maturity: incubator
-  reviewed: 2026-09-02
+  reviewed: 2026-09-18
 ---
 
 # Capability index
@@ -18,21 +18,26 @@ answer.
 ## What is not loaded, and where it actually lives
 
 Verified against `claude plugin list` and `~/.claude/plugins/installed_plugins.json`
-on 2026-09-02. The former `_incubator` pack is gone: its skills now live inside the
+on 2026-09-18. The former `_incubator` pack is gone: its skills now live inside the
 plugins they belong to (workbench, frontend-design, deploy-ops, foundry-core) and load
-with them.
+with them. All ten `skill-library` packs are installed and enabled at user scope, so no
+pack has a row. The `decks` pack had one until 2026-09-18: the row called it "installed
+but disabled" when it was not installed at all, and it was then installed and enabled
+(0.3.0).
 
 | Not loaded | Covers | Where it lives | How to reach it |
 |---|---|---|---|
-| `decks` pack | cd-to-pptx, chart-discipline, deck-scaffolding-builder, html-diagram, layout-critique, sales-lens-review | `skill-library` repo, installed but **disabled** | enable it in `/plugin`, or `claude plugin enable decks@skill-library` |
 | SCL project skills | keeper rules, session startup, module deploy checklist | **project-scoped** in `~/work/GitHub/sloshball-champions-league-v2/.claude/skills/`, not a plugin and not installable | open a session in that repo, where they load automatically |
 
 ## How to respond
 
-When a request matches, do not silently proceed. Say what covers it and offer:
+When a request matches, do not silently proceed. Say what covers it and offer. For a
+pack row, check `claude plugin list` first, because "not installed" and "installed but
+disabled" take different commands:
 
-> That is covered by the `decks` pack, which is installed but disabled.
-> Enable it? `claude plugin enable decks@skill-library`
+> That is covered by the `<pack>` pack, which is not installed here.
+> Install it? `claude plugin install <pack>@skill-library`
+> (If it is listed as disabled instead: `claude plugin enable <pack>@skill-library`)
 
 If the user agrees, run the command. The change takes effect for subsequent sessions,
 so if the skill does not appear immediately, tell the user to restart rather than

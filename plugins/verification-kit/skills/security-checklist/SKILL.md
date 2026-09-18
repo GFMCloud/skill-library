@@ -1,16 +1,19 @@
 ---
 name: security-checklist
 description: >-
-  A PASS/FAIL reference for reviewing application and cloud security: secrets, input
-  validation, injection, authentication and authorization, XSS, CSRF, rate limiting, data
-  exposure, dependencies, and cloud items (IAM, network, logging, CI/CD, CDN, backups).
-  Use when a change touches authentication, user input, database queries, file paths,
-  external APIs, secrets, or infrastructure; when the user says "security pass",
-  "security checklist", "is this safe to deploy"; and as the security dimension of
-  orch-review. It reviews and reports only: every remediation is a proposed action behind
-  a stop-and-confirm gate, and it never touches a credential. Not the built-in
-  /security-review command, and not a penetration test. Loading both reference files is a
-  long read (about 300 lines).
+  A PASS/FAIL security checklist for one change or one file before it ships. Load this
+  FIRST, before reading the file, when the user asks "is this safe to deploy", "safe to
+  ship", "safe to merge", "security pass" or "security checklist", or when a change
+  about to deploy touches authentication, user input, database queries, file paths,
+  external APIs, secrets or infrastructure; also the security dimension of orch-review.
+  Do not skip it for a small file, a deploy-safety question gets the checklist. Covers secrets,
+  input validation, injection, authn and authz, XSS, CSRF, rate
+  limiting, data exposure, dependencies, and cloud items (IAM, network, logging, CI/CD,
+  CDN, backups). It reviews and reports only, every remediation is a proposed action
+  behind a stop-and-confirm gate, and it never touches a credential. Not a full codebase
+  audit or pen test (that is security-audit), not a general bug review, not the built-in
+  /security-review command. Loading both reference files is a long read (about 300
+  lines).
 metadata:
   maturity: incubator
 ---
