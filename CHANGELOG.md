@@ -2,6 +2,24 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - decks 0.3.0: pack review set-1, ledger rows 2 (diagram) and 5 (figures)
+
+Source: the `toolkit-review` set run of 2026-09-18 over five candidate packs; both judges
+classed each candidate item COMPLEMENT. Ratified by Graham at Gate B ("yes all as
+recommended"). Fragments are rewritten in the library's voice; no candidate file is copied.
+
+- **html-diagram (incubator):** the screenshot leg of `scripts/validate.py --shots` fails
+  closed. An absent playwright, a capture error, or a missing or empty PNG prints a FAIL
+  and exits 1; before, it printed a note and the run still exited 0. PNGs from an earlier
+  run are deleted before capture. Proven both ways on the bundled example: real playwright
+  exit 0 with both PNGs written, a stub that raises ImportError exit 1 with none left.
+  From `tt-a1i/archify` at 72c750b, whose delivery never records a failed capture as skipped.
+- **chart-discipline (incubator):** new section "Number provenance": every plotted number
+  traces to a source that can be re-read, a generated chart is re-run from the raw source
+  before hand-over, and exclusions, partial periods, single-sample values, smoothing and
+  truncated axes are stated on the slide. Three matching pre-flight items. From
+  `orx-figures` in `alphaXiv/OpenResearch` at 69768ff; its LaTeX and TikZ tooling was not taken.
+
 ## 2026-09-18 - foundry-core 0.5.0, verification-kit 0.3.0: the five TIGHTEN rows from the verification self-review
 
 Source: `docs/reviews/2026-09-18-self-review-verification.md`, the first
