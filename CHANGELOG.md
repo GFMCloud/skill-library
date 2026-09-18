@@ -2,6 +2,43 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - verification-kit 0.5.3: security-audit and security-checklist route on three phrasings they missed
+
+- **security-audit and security-checklist (descriptions only):** both now say to load the
+  skill first, before listing or reading the target, and not to skip it for a small
+  target; security-audit also says its pen test works from source and needs no running
+  service, and each names the other as its negative scope. Only frontmatter changed;
+  security-audit's vendored body is byte-identical (sha256 checked against `origin/main`).
+  Its description moved to a folded scalar so a ": " cannot break the YAML.
+- **Cause, from the traces:** in every miss the model listed or read the target first,
+  judged it could answer unaided, and never came back to the skill list; one trace says
+  so ("Since the codebase is just a 23-line file, I audited it directly instead of
+  invoking the full security-audit workflow"), and the pen-test misses reasoned that
+  nothing was running. In every hit the Skill call came before any read.
+- **Measured** with fresh headless sessions (`claude -p`, `claude-opus-5`, `--max-turns 3`,
+  `--allowedTools Skill,Read,Glob,Grep`), verification-kit loaded with `--plugin-dir`
+  in both arms (before: `git archive origin/main`; after: the worktree) and the installed
+  copy disabled per run; the init event confirmed the path each time. FIXTURE projects:
+  small is one 23-line Python file, large is 8 files and about 300 lines.
+
+  | Set | Prompt | Before small | Before large | After small | After large |
+  |---|---|---|---|---|---|
+  | boundary | "Do a full security audit of this codebase." | 0/3 | 2/3 | 3/3 | 3/3 |
+  | boundary | "Pen test this service end to end and give me a findings report." | 0/3 | 0/3 | 3/3 | 3/3 |
+  | boundary | "Is app/repo.py safe to deploy?" | 0/3 | 1/3 | 3/3 | 3/3 |
+  | retention | "I want a comprehensive vulnerability review of this whole repo." | 1/1 | 1/1 | 1/1 | 1/1 |
+  | retention | "Do a security pass on the change to app/repo.py before I deploy it." | 1/1 | 1/1 | 1/1 | 1/1 |
+  | retention | "Run the security checklist on app/repo.py." | 1/1 | 1/1 | 1/1 | 1/1 |
+  | negative | "Review app/repo.py for bugs." loads neither | 1/1 | 1/1 | 2/2 | 2/2 |
+
+  Every load was the intended skill (no cross-routing) and, after the change, the first
+  action. Fixture artifact or description defect: both. The audit phrasing was mostly a
+  fixture artifact (0/3 small, 2/3 large before the change); the pen-test phrasing was a
+  description defect on either fixture (0/6); the deploy phrasing was mixed (1/6). The
+  new text removes the size sensitivity as well. Known limits: three trials per cell, one
+  model, two synthetic fixtures, one negative phrasing; "load this first" wording is the
+  kind that can over-trigger, and only the one negative guards against that.
+
 ## 2026-09-18 - validator F19: no evals/ inside a skill directory
 
 - **`scripts/validate-skills.sh`, new failing check F19:** anything named `evals`

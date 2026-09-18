@@ -1,6 +1,19 @@
 ---
 name: security-audit
-description: Security guidance and vulnerability review for codebases, APIs, services, CLI tools, libraries, and daemons. Use for security questions, focused reviews, vulnerability research, security audits, or pen tests. Run the complete workflow only for explicit codebase audit or pen-test requests, full/comprehensive/end-to-end reviews, or requested report artifacts. Not the cheap per-change pass before a deploy (that is security-checklist), and not the built-in /security-review command. The complete workflow costs a node runtime for its two validators, delegates to two sub-agent roles, and is a long read across up to 14 reference files. Vendored unmodified from cloudflare/security-audit-skill (MIT); see SOURCE.md.
+description: >-
+  Source-first security audit, pen test and vulnerability review of a codebase, API,
+  service, CLI tool, library or daemon. Load this FIRST, before listing or reading the
+  target, when the user asks for a "security audit", "full security audit", "pen test",
+  "penetration test", a security "findings report", a "vulnerability review", or a full,
+  comprehensive or end-to-end security review. Do not skip it because the target looks
+  small or nothing is running. The pen test here works from source with a sandboxed
+  local reproduction and needs no live service, and the skill scales itself down
+  (guidance mode for a question or focused review, the six-phase workflow only for an
+  explicit audit, pen test or report request). Not the per-change pass before a deploy
+  (that is security-checklist), not a bug review, not the
+  built-in /security-review. The full workflow costs a node runtime, two sub-agent
+  roles, and a long read of up to 14 reference files. Vendored unmodified from
+  cloudflare/security-audit-skill (MIT); see SOURCE.md.
 metadata:
   maturity: incubator
 ---
