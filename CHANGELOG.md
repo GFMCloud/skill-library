@@ -2,6 +2,23 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - workbench 0.16.0: pack review set-1, ledger row 4 (experiment-loop)
+
+Source: the same set run; both judges COMPLEMENT. Ratified by Graham at Gate B. From
+`orx-experiment-tree` in `alphaXiv/OpenResearch` at 69768ff; its CLI-bound launch, wait
+and notes mechanics were not taken. The version skips 0.15.0, which the unmerged
+`adopt-humanizer` branch claims; whichever merges second resolves the manifest and this file.
+
+- **experiment-harness (incubator):** new section "When one hypothesis needs many runs".
+  A verdict is filled in from output that was read, never from exit status; a run that
+  answered nothing (crash, out of memory, timeout, missing dependency) is repaired in
+  place and not scored, with a cap of two such runs in a row before asking; an answered
+  run is frozen; options of one decision are siblings and each new round hangs off the
+  previous winner; three consecutive failed or regressed runs is the scientific stop.
+  The `/run` template reads the output and applies the repair cap before writing Result,
+  and run files carry a `parent:` field that `/hypothesis` sets. Counted by the session,
+  not by a script, and the section says so.
+
 ## 2026-09-18 - foundry-core 0.6.0: pack review set-1, ledger row 3 (evidence)
 
 Source: the same set run. Judges split FRAGMENT / SUPERSEDED BY / COMPLEMENT, two of three
