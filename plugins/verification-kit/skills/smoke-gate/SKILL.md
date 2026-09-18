@@ -63,6 +63,12 @@ was reused from Anthropic's `webapp-testing` skill and what was not.
    available; when neither is (a headless CI run, a fixture target with no browser
    in front of it), the run log says `screenshot: not available` and states why,
    rather than skipping the line.
+5. Prove the Stop hook on the same script: `scripts/smoke-stop-hook.sh <smoke.sh>`
+   with one category poisoned must exit 2 with the script's `SMOKE FAIL` line on
+   stderr, and with no overrides must exit 0 silently. Both runs go in the run log.
+   The hook is what keeps a "ready" claim from ending the turn while smoke is red;
+   see [references/stop-hook.md](references/stop-hook.md) for the `settings.json`
+   entry, which the owner pastes (this skill never edits `settings.json`).
 
 Known weakness: the generated script's `console` check is a text-marker grep, not a
 real DevTools console read (see `references/webapp-testing-intake.md`). It proves
@@ -74,18 +80,21 @@ committed script should not require a Playwright runtime everywhere it runs).
 Offline proof for this skill's own gate:
 `bash fixtures/run-fixture-proof.FIXTURE.sh` (script-relative paths, runs from any
 directory). It starts a local fixture target (`fixtures/fixture_server.py`),
-generates a script from `fixtures/manifest.FIXTURE.yaml`, runs steps 2-4 above
-against it, and also runs `check-poison-coverage.py` against
+generates a script from `fixtures/manifest.FIXTURE.yaml`, runs steps 2-5 above
+against it (the Stop hook red, red-again-released, green and missing-script cases
+included), and also runs `check-poison-coverage.py` against
 `fixtures/manifest-missing-poison.FIXTURE.yaml` to prove the unproven-category
 report. See the build report for its captured output.
 
 ## Done when
 
 The live pass exits 0 with its output and a screenshot (or a stated reason none is
-available) attached, and every assertion category in the manifest has a poison run
+available) attached, every assertion category in the manifest has a poison run
 recorded with exit 1 in the same run log, on the same script, against the same
-target. A live exit 0 with fewer poison categories proven than the manifest declares
-is not done; it is an unproven pass.
+target, and the Stop hook has its two recorded runs on that script (exit 2 red,
+exit 0 green) with the `settings.json` entry handed over as a paste. A live exit 0
+with fewer poison categories proven than the manifest declares is not done; it is an
+unproven pass. A gate whose hook was never proven can be talked past at turn end.
 
 ## Stop when
 
@@ -129,11 +138,15 @@ For the staging-to-production promote flow, smoke-gate composes with
 lives" step is exactly this skill's live pass, and its "diagnose from real output"
 step reads this skill's run log rather than re-deriving a new check.
 
-## Optional Stop hook
+## Stop hook
 
-The generated smoke script can optionally be installed as a Stop hook, so a "ready"
-claim cannot end the turn while smoke is red. This is optional, not required by
-"Done when," and not proven by a fixture in this build. See
-[references/stop-hook.md](references/stop-hook.md) for the event, the
-`settings.json` shape, the command, and the exit-2-with-stderr blocking path, sourced
-from `foundry-core:bounded-loop`'s stop-hook contract reference.
+The generated smoke script is installed as a Stop hook through
+`scripts/smoke-stop-hook.sh`, so a "ready" claim cannot end the turn while smoke is
+red. It is required by "Done when" and proven by the fixture proof (red blocks with
+the script's own output, a second stop while still red is released so the session
+cannot loop, green releases silently, a missing script is named on stderr). The
+`settings.json` entry is the owner's paste; see
+[references/stop-hook.md](references/stop-hook.md) for the event, the shape and the
+exit-2-with-stderr blocking path, sourced from `foundry-core:bounded-loop`'s
+stop-hook contract reference. It was optional and unproven until the 2026-09-18
+self-review (`docs/reviews/2026-09-18-self-review-verification.md`).

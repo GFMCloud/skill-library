@@ -1,0 +1,13 @@
+# FIXTURE: a failing verdict whose only issue carries a bare quote as evidence, with no
+# executed check output and no not-checked marker. Must be rejected by verdict-check.sh.
+verdict: v1
+target: plugins/foundry-core/skills/goal-spec
+result: fail
+severity: medium
+confidence: 0.7
+issues:
+  - id: 1
+    where: SKILL.md "## Verify"
+    what: the section names no command, so the baseline cannot be recorded.
+    evidence: "the Verify section says only: re-read the goal"
+new_information: false

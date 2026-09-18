@@ -51,10 +51,12 @@ allowed values from the spec.
   A reviewer that ran the check and saw it fail sits near the top of the range. A
   reviewer inferring from a description of a check it could not run should say so, in
   `issues`, and keep confidence low.
-- **`issues`**: empty exactly when the verdict passes. Each issue needs `evidence`: a
-  command and its output, or a quote under 15 words. `evidence` is not optional: an
-  issue with no evidence is an opinion, and this rubric is explicitly not scoring
-  opinions.
+- **`issues`**: empty exactly when the verdict passes. Each issue needs `evidence`: the
+  command the reviewer ran and what it returned, written `<command> → <output>`, or, when
+  no check could be run, `not-checked: <reason>`. A quote from the change is not
+  evidence on its own; `scripts/verdict-check.sh` rejects it. `evidence` is not
+  optional: an issue with no executed check behind it is an opinion, and this rubric is
+  explicitly not scoring opinions.
 - **`new_information`**: false on a first review of a target. On a second review (the
   one-more-attempt case in `review-pair`'s procedure), the reviewer compares its new
   `issues` against the first verdict's `issues` and sets this true only if at least one

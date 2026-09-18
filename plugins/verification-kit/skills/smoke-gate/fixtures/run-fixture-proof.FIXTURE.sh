@@ -118,6 +118,49 @@ fi
 echo "screenshot: not available in fixture mode"
 
 echo
+echo "== 6. Stop hook, red: poisoned identity through scripts/smoke-stop-hook.sh (expect exit 2, SMOKE FAIL on stderr) =="
+HOOK="$SKILL_DIR/scripts/smoke-stop-hook.sh"
+printf '{"hook_event_name":"Stop","stop_hook_active":false}' | env SMOKE_IDENTITY_EXPECT="Guest" \
+  SMOKE_CONN_HOST_FIXTURE_SERVER="127.0.0.1" SMOKE_CONN_PORT_FIXTURE_SERVER="$PORT" \
+  bash "$HOOK" "$WORKDIR/smoke.FIXTURE.sh" > "$WORKDIR/hook-red.out" 2> "$WORKDIR/hook-red.err"
+HOOK_RED_EXIT=$?
+echo "exit: $HOOK_RED_EXIT"; sed 's/^/stderr: /' "$WORKDIR/hook-red.err"
+if [ "$HOOK_RED_EXIT" -ne 2 ] || ! grep -q 'SMOKE FAIL' "$WORKDIR/hook-red.err"; then
+  echo "FIXTURE PROOF FAIL: stop hook did not block a red smoke run with its own output"; FAIL=1
+fi
+
+echo
+echo "== 7. Stop hook, red again with stop_hook_active true (expect exit 0, released, still reported) =="
+printf '{"hook_event_name":"Stop","stop_hook_active":true}' | env SMOKE_IDENTITY_EXPECT="Guest" \
+  SMOKE_CONN_HOST_FIXTURE_SERVER="127.0.0.1" SMOKE_CONN_PORT_FIXTURE_SERVER="$PORT" \
+  bash "$HOOK" "$WORKDIR/smoke.FIXTURE.sh" > "$WORKDIR/hook-loop.out" 2> "$WORKDIR/hook-loop.err"
+HOOK_LOOP_EXIT=$?
+echo "exit: $HOOK_LOOP_EXIT"
+if [ "$HOOK_LOOP_EXIT" -ne 0 ] || ! grep -q 'still red' "$WORKDIR/hook-loop.err"; then
+  echo "FIXTURE PROOF FAIL: stop hook did not release a second stop while red"; FAIL=1
+fi
+
+echo
+echo "== 8. Stop hook, green: no overrides (expect exit 0, empty stderr) =="
+printf '{"hook_event_name":"Stop","stop_hook_active":false}' | env \
+  SMOKE_CONN_HOST_FIXTURE_SERVER="127.0.0.1" SMOKE_CONN_PORT_FIXTURE_SERVER="$PORT" \
+  bash "$HOOK" "$WORKDIR/smoke.FIXTURE.sh" > "$WORKDIR/hook-green.out" 2> "$WORKDIR/hook-green.err"
+HOOK_GREEN_EXIT=$?
+echo "exit: $HOOK_GREEN_EXIT"
+if [ "$HOOK_GREEN_EXIT" -ne 0 ] || [ -s "$WORKDIR/hook-green.err" ]; then
+  echo "FIXTURE PROOF FAIL: stop hook did not release a green smoke run silently"; FAIL=1
+fi
+
+echo
+echo "== 9. Stop hook, missing script (expect exit 0 and a stderr line naming the path: fails open, never silent) =="
+printf '{}' | bash "$HOOK" "$WORKDIR/no-such-smoke.sh" > /dev/null 2> "$WORKDIR/hook-missing.err"
+HOOK_MISSING_EXIT=$?
+echo "exit: $HOOK_MISSING_EXIT"; sed 's/^/stderr: /' "$WORKDIR/hook-missing.err"
+if [ "$HOOK_MISSING_EXIT" -ne 0 ] || ! grep -q 'no-such-smoke.sh' "$WORKDIR/hook-missing.err"; then
+  echo "FIXTURE PROOF FAIL: stop hook with a missing script did not name it on stderr"; FAIL=1
+fi
+
+echo
 if [ "$COVERAGE_FULL_EXIT" -ne 0 ] || [ "$COVERAGE_MISSING_EXIT" -ne 3 ]; then
   echo "FIXTURE PROOF FAIL: poison-coverage check did not behave as expected"
   FAIL=1
@@ -131,4 +174,4 @@ if [ "$FAIL" -ne 0 ]; then
   echo "FIXTURE PROOF: FAIL"
   exit 1
 fi
-echo "FIXTURE PROOF: PASS (five poisoned categories exit 1, live pass exits 0, unproven category correctly reported)"
+echo "FIXTURE PROOF: PASS (five poisoned categories exit 1, live pass exits 0, unproven category correctly reported, stop hook blocks red once and releases green)"

@@ -6,7 +6,7 @@ pin: af9faf7 (library main, 2026-09-18)
 reviewed: 2026-09-18
 verdict: HARVEST
 recheck: none
-applied: none; the five TIGHTEN rows are proposals for the owner
+applied: branch tighten-verification, the commit titled "foundry-core 0.5.0, verification-kit 0.3.0: the five TIGHTEN rows", ruled by Graham 2026-09-18 ("apply the five TIGHTEN rows")
 evidence: 2026-09-18-self-review-verification/ (extraction report, both judgments, ledger, usage)
 ---
 
@@ -28,7 +28,15 @@ passed `check-judgment.sh` on attempt 1. Ledger by `make-ledger.py`. Spend 388,5
 
 ## What landed
 
-Nothing. Rows are proposals.
+All five rows, each as the mechanism the judges described, each proven red and green:
+
+| Item | Landed as | Proof |
+|---|---|---|
+| proof-of-work 1.3.0 | `scripts/run-checks.sh` records each phase's command, exit code and output; `ran` only with a captured exit code | `fixtures/run-fixture-proof.sh`: green 0, failing tests 1 with later phases skipped, absent tool 3 |
+| evidence-report 1.2.0 | `scripts/check-report.py` validates the four fields, the verdict token, a non-empty OUTPUT on VERIFIED and FAILED, an identifier, the NOT VERIFIED section | `fixtures/report-good.md` passes; `report-bad.md` fails on four counts |
+| smoke-gate | Stop hook required and shipped as `scripts/smoke-stop-hook.sh`; settings entry stays a paste | fixture proof steps 6 to 9: red exits 2 with `SMOKE FAIL`, red again released, green silent, missing script named |
+| review-pair | `verdict-check.sh` rejects evidence that is a bare quote; spec section 3 tightened | `verdict-fail-bare-quote.FIXTURE.yaml` rejected; the four older fixtures unchanged in outcome |
+| pre-delivery-verifier | plugin hook `hooks/readonly-agent-guard.py` denies write-shaped Bash when `agent_type` is a read-only agent | `hooks/prove-guard.sh` 16 cases; live: a real verifier subagent's redirect denied, `guard-live-proof.md` |
 
 ## Rows (both judges, same class on all five)
 

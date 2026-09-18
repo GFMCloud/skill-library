@@ -6,6 +6,9 @@
 #   verdict-check.sh <verdict-file>                     validate one verdict
 #   verdict-check.sh <first-verdict> <second-verdict>    validate both, apply hold rule
 #
+# Also checks each issue's `evidence`: it must carry an executed check and its output
+# ("<command> → <output>") or an explicit "not-checked: <reason>"; a bare quote fails.
+#
 # Exit codes:
 #   0  valid (single file), or valid pair with no hold triggered
 #   1  invalid/malformed verdict, missing file, or bad usage
@@ -84,6 +87,23 @@ validate_one() {
   fi
   if [ "$result" = "fail" ] && [ "$issue_count" -eq 0 ]; then
     echo "FAIL $file: result is fail but issues is empty (must be non-empty)"
+    ok=0
+  fi
+
+  # Every issue's evidence names an executed check and its output ("<command> → <output>"),
+  # or says outright that nothing was run ("not-checked: <reason>"). A bare quote is an
+  # opinion with a citation, not evidence (self-review 2026-09-18, TIGHTEN).
+  local bad_evidence
+  bad_evidence=$(awk '
+    /^[[:space:]]*evidence:/ {
+      sub(/^[[:space:]]*evidence:[[:space:]]*/, ""); gsub(/^"|"$/, "");
+      if ($0 ~ /(→|->)/ || $0 ~ /^not-checked:[[:space:]]*[^[:space:]]/) next;
+      print
+    }' "$file")
+  if [ -n "$bad_evidence" ]; then
+    while IFS= read -r line; do
+      echo "FAIL $file: issue evidence names no executed check output (needs '<command> → <output>' or 'not-checked: <reason>'): $line"
+    done <<< "$bad_evidence"
     ok=0
   fi
 

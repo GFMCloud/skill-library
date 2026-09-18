@@ -3,7 +3,7 @@ name: "evidence-report"
 description: "Format executed evidence into a report that states what was checked, what the check returned, and what was not checked. Use when presenting verification results, acceptance checks, or any claim that work is done."
 metadata:
   maturity: stable
-  version: 1.1.1
+  version: 1.2.0
   reviewed: 2026-09-11
 ---
 
@@ -22,7 +22,14 @@ actually returned; the list of what was not checked and why.
 
 Every block has all four fields; `OUTPUT` is quoted, not paraphrased; the `NOT
 VERIFIED` list is present even when empty of surprises; the error count, not the
-tool's adjectives, is what the verdict cites.
+tool's adjectives, is what the verdict cites. `scripts/check-report.py <report>`
+checks the shape mechanically: the four fields per block, a verdict token from the
+three, a non-empty `OUTPUT` on `VERIFIED` and `FAILED`, an identifier in the claim or
+the output, and the `NOT VERIFIED` section with an entry or the word none. Proof:
+`fixtures/report-good.md` passes, `fixtures/report-bad.md` fails on four counts. Known
+weakness, stated with the rule: the identifier check is a heuristic (any number, hash,
+timestamp or path), and the script cannot tell whether a `CHECK` was run, only that its
+`OUTPUT` is empty.
 
 ## Done when
 

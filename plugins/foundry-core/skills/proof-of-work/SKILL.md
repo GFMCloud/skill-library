@@ -3,7 +3,7 @@ name: "proof-of-work"
 description: "Produce executed evidence that a piece of work actually works before presenting it as done — run the code against representative data, inspect the render, print the validation output. Use before declaring any artifact complete, and whenever a tool reports its own success."
 metadata:
   maturity: stable
-  version: 1.2.0
+  version: 1.3.0
   reviewed: 2026-09-11
 ---
 
@@ -21,7 +21,13 @@ input to run it against; for multi-step work, the check each step names before i
 
 The check ran at the level the failure lives, and the three parts are stated: what was
 run, against what input, and what came back. Any tool self-report is confirmed by
-inspecting what it claims to have produced.
+inspecting what it claims to have produced. For the code class, the check sequence is
+run through `scripts/run-checks.sh <log-dir>`, which records each phase's command,
+exit code and output in its own file and reports a phase as `ran` only when an exit
+code was captured; a phase whose tool is absent is `not-run`, and one skipped after a
+stop-phase failure is `skipped`, and both go in the not-verified list. Its own proof:
+`bash fixtures/run-fixture-proof.sh` (green sequence exits 0, a failing tests phase
+exits 1 and skips what follows, an absent tool exits 3 and is never marked ran).
 
 ## Done when
 
@@ -77,7 +83,8 @@ dangerous than no check at all — it converts an unknown into a false known.
   test that asserts the function was called. When the project names no check
   sequence of its own, use the ordered one in
   [references/code-checklist.md](references/code-checklist.md) (build, types,
-  lint, tests, secrets, diff, with two stop conditions).
+  lint, tests, secrets, diff, with two stop conditions), run through
+  `scripts/run-checks.sh` so the exit codes are recorded and not recalled.
 - **Document** — the claims extracted and checked against the artifact they
   describe (`consistency-checker:spec-artifact-diff`). Reading it again is not
   a check.

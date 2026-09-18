@@ -1,7 +1,11 @@
 {
   "name": "verification-kit",
   "description": "Pre-delivery verification and proof-of-work enforcement",
-  "author": { "name": "Graham" },
-  "version": "0.2.0",
-  "dependencies": ["foundry-core"]
+  "author": {
+    "name": "Graham"
+  },
+  "version": "0.3.0",
+  "dependencies": [
+    "foundry-core"
+  ]
 }

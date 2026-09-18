@@ -44,17 +44,19 @@ the reviewer returns.
 Run [scripts/verdict-check.sh](scripts/verdict-check.sh) against the reviewer's output
 file. It checks that the Verdict object v1 is well-formed (every required field
 present, `result` in `{pass, fail}`, `severity` in the allowed set, `confidence` in
-`0..1`, `issues` empty iff `result: pass`, `new_information` a boolean) and, given a
-pair of verdict files from two review rounds on the same target, applies the hold rule:
+`0..1`, `issues` empty iff `result: pass`, `new_information` a boolean, every issue's
+`evidence` an executed check with its output or an explicit `not-checked:` marker) and,
+given a pair of verdict files from two review rounds on the same target, applies the hold rule:
 a second `fail` whose `new_information` is `false` is a repeat fail, and the script
 prints `HOLD` and exits 2. A verdict object that fails this check is not a review
 result; it is a malformed reviewer output and the apply does not proceed on it either
 way.
 
-Known weakness: the script validates shape and the hold rule. It cannot check that the
-reviewer actually looked at the change rather than rubber-stamping it; that is what the
-subagent's `permissionMode: plan` (or read-only `tools` list), independent model, and
-lack of parent history are for, not the validator.
+Known weakness: the script validates shape, the evidence field's form and the hold rule.
+It cannot check that the command an issue cites was really run or that its quoted output
+is real; that is what the subagent's `permissionMode: plan` (or read-only `tools` list),
+independent model, and lack of parent history are for, not the validator.
+`fixtures/verdict-fail-bare-quote.FIXTURE.yaml` is the proof that a bare quote is rejected.
 
 ## Done when
 
