@@ -2,6 +2,20 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - foundry-core 0.6.2: eval-harness reads a delta against measured noise; CI checkout drops its token
+
+Source: `docs/reviews/2026-09-18-reef.md`, a `source-intake` run on
+Human-Agent-Society/reef at `17d81bd`. Verdict HARVEST, two rows. Ruled by Graham:
+"confirm, row 3 out, apply rows 1 and 2".
+
+- **eval-harness (incubator):** Metrics gains one rule. A before/after difference in
+  pass rate counts only when it exceeds the baseline's own run-to-run spread, measured
+  by running the unchanged baseline more than once. Honoring it costs extra baseline
+  trials.
+- **CI (`.github/workflows/validate.yml`):** the checkout step sets
+  `persist-credentials: false`. No step after checkout fetches or pushes, so nothing
+  else changes. `actions/checkout` stays on its `v4` tag by ruling.
+
 ## 2026-09-18 - workbench 0.17.0: humanizer (incubator), adopted from blader/humanizer
 
 Source: `docs/reviews/2026-09-18-humanizer.md`, a `toolkit-review` spot run against

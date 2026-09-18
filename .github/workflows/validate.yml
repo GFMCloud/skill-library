@@ -10,6 +10,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # F17 diffs against the base branch; a shallow clone cannot
+          persist-credentials: false  # no later step pushes or fetches
       - name: Validate skills
         env:
           BASE_REF: origin/${{ github.base_ref || 'main' }}
