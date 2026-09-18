@@ -1,7 +1,7 @@
 ---
 name: canonical-id-beats-name
 runs: 1
-max_turns: 6
+max_turns: 10
 timeout_seconds: 180
 allowed_tools: [Read, Skill]
 ---

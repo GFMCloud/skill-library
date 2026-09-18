@@ -329,12 +329,15 @@ W5, W6). `## Stop when` must contain at least one line that is not "done". Full 
 in the library's `docs/authoring-standard.md`, "Contract sections", which is the one
 editable home; this section points at it.
 
-## 9. Eval suite layout v1 (binding on every new skill)
+## 9. Eval suite layout v2 (binding on every new skill)
 
-Per-skill, inside the skill directory, so a builder never writes a plugin-level file:
+Per-skill, in the plugin's top-level `evals/` directory, one subdirectory per skill. The
+CLI refuses an eval dir inside `skills/` ("--eval-dir must not be inside the plugin's
+skills/ directory (a loaded component directory)"), which is why v1's
+`plugins/<plugin>/skills/<skill>/evals/` was retired on 2026-09-18:
 
 ```text
-plugins/<plugin>/skills/<skill>/evals/
+plugins/<plugin>/evals/<skill>/
 └── <case-name>/
     ├── prompt.md          # frontmatter: name, runs: 1, max_turns, timeout_seconds, allowed_tools; body: the prompt
     └── graders/
@@ -342,13 +345,25 @@ plugins/<plugin>/skills/<skill>/evals/
 ```
 
 Rules: at least two cases per skill; graders limited to `regex`, `tool_used`,
-`tool_order`, `file_exists` (no `llm`, no `baseline`); `runs: 1` in the file so a later
-execution is cheap by default; no `results/` directory is ever committed. The run command,
-for whoever executes it: `claude plugin eval plugins/<plugin> --eval-dir
-skills/<skill>/evals --ablation none --no-publish --max-cost-usd 2 --threshold 0.8 --json
-<path outside the library>`. Execution status on 2026-09-11: the command is gated
-("early access") on this account; see `STATE.md` A5 for the Gate A ruling on what
-"has an evals suite" means in this run.
+`tool_order`, `file_exists` (no `llm`, no `baseline`); `runs: 1` in the file so an
+execution is cheap by default; no `results/` directory is ever committed (`.gitignore`
+covers the CLI's default results path, and the run command writes outside the library
+anyway). `max_turns` is a runaway guard, not an assertion: set it to about twice the
+turns a passing run takes. A case that loads a skill, runs Bash and reports took 5 to 9
+turns across 12 trials on 2026-09-18, so 6 cut passing runs off before their report.
+
+The run command, from the repo root, one skill's suite at a time:
+
+```bash
+claude plugin eval plugins/<plugin> --eval-dir evals/<skill> --ablation none --no-publish --max-cost-usd 2 --threshold 0.8 --runs 3 --allow-tools Bash --trust-plugin --output-dir <dir outside the library> --report <dir outside the library>/report.html --json <dir outside the library>/result.json
+```
+
+Notes: without `--eval-dir` the CLI runs every case under `plugins/<plugin>/evals/`;
+`--case <glob>` filters by case name and does not support character classes; a case
+whose `allowed_tools` includes `Bash`, `Write` or `Edit` needs the matching
+`--allow-tools` grant or the tool is denied; `--runs 3` overrides the file's `runs: 1`.
+Two cases at three trials cost about $1.40 to $1.60. Execution status: first executed
+2026-09-18 on Claude Code 2.1.274; the command is no longer gated on this account.
 
 Example `prompt.md`:
 

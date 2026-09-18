@@ -1,7 +1,7 @@
 ---
 name: catches-placeholder-and-relative-cd
 runs: 1
-max_turns: 6
+max_turns: 10
 timeout_seconds: 180
 allowed_tools: [Read, Write, Bash, Skill]
 ---

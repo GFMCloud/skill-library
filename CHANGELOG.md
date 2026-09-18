@@ -2,6 +2,31 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - eval suites runnable in place: foundry-core 0.6.1, turn-reduction 1.2.3, data-wrangler 0.1.1, verification-kit 0.5.1, workbench 0.16.2
+
+Two defects from the first execution of the proof-of-work eval suite. No skill's
+behavior changes; the plugin bumps are for the files that left each skill directory.
+
+- **Eval suite layout v2** (`docs/toolkit-interface-spec.md` section 9): cases move from
+  `plugins/<plugin>/skills/<skill>/evals/` to `plugins/<plugin>/evals/<skill>/`. The
+  CLI rejects the v1 location ("--eval-dir must not be inside the plugin's skills/
+  directory (a loaded component directory)"), so the documented run command never
+  worked. Migration: all 15 suites (30 cases) moved with `git mv`, contents unchanged
+  apart from the caps below. Section 9 carries the corrected run command
+  (`--eval-dir evals/<skill>`, `--allow-tools`, `--runs 3`, `--trust-plugin`), and the
+  authoring standard points at it. `.gitignore` covers the CLI's default results path.
+- **`claude plugin eval` is no longer early-access gated on this account.** First
+  executed 2026-09-18 on Claude Code 2.1.274. This supersedes the "execution waits"
+  statements in the 2026-09-11 and 2026-09-12 entries below.
+- **proof-of-work evals, `max_turns` 6 to 15:** at 6, 1.3.0 passed 10 of 12 trials and
+  every failure was "Reached maximum number of turns (6)" with the Bash grader passing:
+  the run was cut off before its report. Run in place at cap 10, all 6 trials passed
+  using 6, 7, 8, 9, 8 and 8 turns, so 10 sat one turn above the observed maximum; 15
+  is about twice the median.
+- **output-lint and identity-resolution evals, `max_turns` 6 to 10:** the same 6-turn
+  cap, raised without trace data because neither suite has been executed yet. The
+  other stable suites were at 4 (Read and Skill only), 8 or 14 and are unchanged.
+
 ## 2026-09-18 - verification-kit 0.5.0: pack review set-1, ledger row 9 (security-audit, vendored)
 
 Source: the same set run; both judges classed `security-audit` and the installed
@@ -365,7 +390,8 @@ change inside a versioned plugin needs the plugin version bumped in the same com
   phased-harness): two cases each, graders limited to regex, tool_used, tool_order,
   file_exists, laid out per `docs/toolkit-interface-spec.md` section 9. Authored and
   structurally checked; execution waits on `claude plugin eval` leaving early access
-  (Gate A ruling d).
+  (Gate A ruling d). (Superseded 2026-09-18: no longer gated, and the suites moved to
+  `plugins/<plugin>/evals/<skill>/`, section 9 layout v2.)
 
 ## 2026-09-11 - AI workflow toolkit: eight skills across three packs (toolkit-build branch)
 
@@ -374,7 +400,7 @@ manifest that never had one), workbench 0.10.0. Source: toolkit-build-harness Ph
 and 4, executing the AI workflow toolkit roadmap items T1 to T8. Every skill ships as
 incubator with a fixture-proven deliberate failure and an authored eval suite; eval
 execution is deferred to the weekly maintainer (`claude plugin eval` is early-access
-gated on this account). Each passed an independent opus review after a sonnet build.
+gated on this account; superseded 2026-09-18, no longer gated). Each passed an independent opus review after a sonnet build.
 
 - **goal-spec (foundry-core, new):** turns an open-ended ask into a Goal block v1 with
   a runnable check or criterion-separated rubric, a recorded baseline, and a named
