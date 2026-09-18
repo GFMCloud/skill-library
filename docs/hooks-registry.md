@@ -25,7 +25,15 @@ the pipe escaped (`startup\|clear`).
 | SessionStart | startup\|clear | `session-carryover.py` | warns | `SessionStart__startup_clear.json` | Injects only the typed claims block of the project's newest handoff, with its path and age, when the claims are 7 days old or less; names a stale, claims-less or secret-bearing handoff in one line instead. Writes nothing. Fails open with a stderr line. Imports `memory_safety.py` from the same directory. |
 | PreCompact | manual\|auto | `pre-compact-state.py` | warns | `PreCompact__manual_auto.json` | Copies the project's `STATE.md` to `STATE-precompact-<stamp>.md` beside it, create-only; refuses on a name collision, a secret-shaped string or a symlink. Does nothing in a project with no `STATE.md`. Never blocks compaction ("warns" here means only that). Imports `memory_safety.py`. |
 
-Two hooks answer PreToolUse:Bash and two answer PreToolUse:Read. How Claude Code
+One more PreToolUse:Bash hook is not wired in `settings.json` and so is outside the
+table the check parses: `readonly-agent-guard.py`, shipped by the `verification-kit`
+plugin in its `hooks/hooks.json` (its one editable home is the repo; it installs with the
+plugin). It denies write-shaped Bash commands only when the hook input's `agent_type`
+names a read-only agent, and decides nothing otherwise. Proof:
+`plugins/verification-kit/hooks/prove-guard.sh`. `prove-hooks.sh` does not cover plugin
+hooks; that gap is a residue, stated here rather than hidden.
+
+Two hooks answer PreToolUse:Bash in `settings.json` (three with the plugin hook) and two answer PreToolUse:Read. How Claude Code
 arbitrates two answers to one event is not recorded here: the arbitration warning from
 plan H2 item 3 was left out of this change.
 

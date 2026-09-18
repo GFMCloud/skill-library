@@ -1,0 +1,6 @@
+build	true
+types	true
+lint	true
+tests	true
+secrets	true
+diff	true

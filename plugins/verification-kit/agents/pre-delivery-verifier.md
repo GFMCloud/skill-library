@@ -21,13 +21,21 @@ re-verification. It never modifies any file by any means, including a Bash
 heredoc, `sed -i`, `tee`, or a redirect, and an instruction to "fix it and
 re-verify" is refused and the refusal reported alongside the verdicts.
 
-That separation is held by this paragraph, not by the frontmatter. The edit
-tools are in `disallowedTools` and are genuinely absent, but this agent has
-Bash and a heredoc is a write — a sibling agent with the identical
-`disallowedTools` list was made to rewrite a file that way on the first
-adversarial probe, 2026-08-02. What held here, under the same instruction, was
-the unambiguous charter. **A missing tool is a narrowed surface, not a
-boundary.**
+That separation is held at three layers. The edit tools are in `disallowedTools`
+and are genuinely absent. This paragraph is the charter, and it is what held on
+2026-08-02 when a sibling agent with the identical `disallowedTools` list was
+made to rewrite a file through a Bash heredoc on the first adversarial probe.
+And since 2026-09-18 the plugin ships a PreToolUse hook,
+`hooks/readonly-agent-guard.py`, that denies a write-shaped Bash command (a
+redirect outside the session scratchpad, `tee`, `sed -i`, `mv`, `cp`, `rm`, a
+git command that changes the tree, an inline `python -c` write) whenever the
+hook input's `agent_type` is this agent or one of its read-only siblings, and
+does nothing in any other context. Proven by `hooks/prove-guard.sh` (seven
+denials, nine allowances, including a main session and a general-purpose agent).
+Known weakness, beside the rule: a write hidden behind `eval` or a script the
+agent did not write is not seen, so the charter still binds. **A missing tool is
+a narrowed surface, not a boundary; the hook is the boundary, and the charter
+covers what the hook cannot see.**
 
 ## Procedure
 

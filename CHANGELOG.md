@@ -2,6 +2,40 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - foundry-core 0.5.0, verification-kit 0.3.0: the five TIGHTEN rows from the verification self-review
+
+Source: `docs/reviews/2026-09-18-self-review-verification.md`, the first
+`toolkit-review` self-review run; both judges classed all five items `TIGHTEN` on the
+same section. Applied on Graham's "apply the five TIGHTEN rows".
+
+- **proof-of-work 1.3.0 (stable):** `scripts/run-checks.sh` runs the code-checklist
+  sequence and records each phase's command, exit code and output in its own file; a
+  phase shows as `ran` only when an exit code was captured, an absent tool is `not-run`,
+  a phase after a stop-phase failure is `skipped`. Proof `fixtures/run-fixture-proof.sh`.
+- **evidence-report 1.2.0 (stable):** `scripts/check-report.py` validates a report's
+  shape: four fields per block, a verdict token from the three, non-empty `OUTPUT` on
+  `VERIFIED` and `FAILED`, an identifier, and the `NOT VERIFIED` section. Fixtures
+  `report-good.md` and `report-bad.md`.
+- **smoke-gate (incubator):** the Stop hook is required, not optional. It is now a
+  script, `scripts/smoke-stop-hook.sh`, proven by the fixture proof's new steps 6 to 9
+  (red blocks with the script's output, a second stop while red is released so the
+  session cannot loop, green releases silently, a missing script is named). The
+  `settings.json` entry stays a paste.
+- **review-pair (incubator):** `verdict-check.sh` rejects an issue whose `evidence` is a
+  bare quote; evidence is `<command> → <output>` or `not-checked: <reason>`. Interface
+  spec section 3 tightened to match; fixture `verdict-fail-bare-quote.FIXTURE.yaml`.
+- **pre-delivery-verifier (agent) and the plugin:** verification-kit ships its first
+  plugin hook, `hooks/readonly-agent-guard.py` (PreToolUse, Bash), which denies
+  write-shaped commands when `agent_type` names a read-only agent and decides nothing
+  otherwise. Proof `hooks/prove-guard.sh`, plus a live one: a headless session spawned
+  the real `pre-delivery-verifier` and its `echo probe > probe.txt` was denied by the
+  hook with the hook's own message, no file created
+  (`docs/reviews/2026-09-18-self-review-verification/guard-live-proof.md`). Registered
+  in `docs/hooks-registry.md` as a plugin hook outside `prove-hooks.sh`'s table
+  (residue). Found on the way: `--plugin-dir` does not load a plugin whose manifest
+  `dependencies` names a plugin absent from the session, so a headless probe of this
+  plugin drops that entry from a copy.
+
 ## 2026-09-18 - workbench 0.14.1: toolkit-review's wave runner no longer links into the skill
 
 - **toolkit-review (incubator):** `run-wave.sh` created a symlink beside its snapshot so

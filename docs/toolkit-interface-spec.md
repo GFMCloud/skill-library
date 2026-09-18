@@ -126,11 +126,15 @@ issues:
   - id: <n>
     where: <file:line or section heading>
     what: <one sentence>
-    evidence: <command and its output, or a quote under 15 words>
+    evidence: <command → its output, or "not-checked: <reason>">
 new_information: true | false
 ```
 
-Rules: `issues` is empty on `pass`. `new_information` is `false` on a first review and
+Rules: `issues` is empty on `pass`. `evidence` names an executed check and what it
+returned, written `<command> → <output>`; an issue the reviewer could not run a check
+for says `not-checked: <reason>` instead. A quote from the change is not evidence on
+its own (tightened 2026-09-18 from "or a quote under 15 words": the validator could
+not tell a reviewer who ran a check from one who read a line). `new_information` is `false` on a first review and
 answers, on a second review, "does this verdict cite anything the first did not". A
 second `fail` with `new_information: false` is a repeat fail and holds the target. The
 reviewer runs on a model that differs from the builder's, with no parent history, and
