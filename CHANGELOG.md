@@ -2,6 +2,25 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - verification-kit 0.4.0: pack review set-1, ledger rows 7 and 8 (overengineering-review)
+
+Source: the same set run. The run found a gap, not a better version: nothing installed
+reviews for unnecessary code and abstraction. Both judges classed `ponytail-review` and
+`ponytail-audit` (`DietrichGebert/ponytail` at e3ba2aa, MIT) COMPLEMENT; one judge classed
+orch-review and review-pair FRAGMENT into them for their evidence contract. Ratified by
+Graham at Gate B. One new skill written in the library's voice; neither file is copied.
+
+- **overengineering-review (new, incubator):** reviews a diff or a repository for
+  unnecessary code only and lists cuts under five tags (`delete`, `yagni`, `stdlib`,
+  `native`, `shrink`). Every finding quotes code re-read at its cited line; a claim about
+  the rest of the codebase (unused, one caller, one implementation) carries the executed
+  search and its output or a `not-checked:` marker and is then reported unconfirmed; a
+  `stdlib` or `native` replacement states the behavior difference, after the source
+  pack's own benchmark finding of a parser substituted for a validator. The report
+  carries a mandatory "not reviewed: correctness, security, performance" line, a
+  seen-in-passing line, and in repo scope the directories not covered. Applies nothing.
+  Not mechanically enforced and has no eval cases; the skill says so.
+
 ## 2026-09-18 - workbench 0.16.1: toolkit-review scripts are executable
 
 - **toolkit-review (incubator):** all 18 files under `scripts/` go from mode 100644 to
