@@ -27,7 +27,8 @@ status were not carried over: nothing here declares its own work shippable.
 
 - The workflow, prompt, skill or hook under test, and the change proposed to it (or
   "none, measuring a baseline").
-- Where eval files live. Default: `evals/` beside the thing under test, versioned with it.
+- Where eval files live. Default: `<target>/evals/`, beside the thing under test and
+  versioned with it (never in this skill's directory).
 - `k`, the trials per case. Default 3.
 
 ## Two kinds of eval, both written before the change
@@ -98,7 +99,7 @@ any single trial from the file alone and get a result of the same kind.
 
 ## Done when
 
-`evals/<name>.md` holds the definitions, `evals/<name>.log` holds every trial, and the
+`<target>/evals/<name>.md` holds the definitions, `<target>/evals/<name>.log` holds every trial, and the
 report states pass@k and pass^k per case with status `READY FOR REVIEW` or `BLOCKED`.
 
 ## Stop when

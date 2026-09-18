@@ -55,6 +55,16 @@ inaccurate description, not to the model.
   turns; every line is a recurring token cost.
 - Long material — rubrics, examples, schemas, sample outputs — lives in
   `references/` or `templates/` inside the skill directory, linked by relative path.
+- Every supporting file the body names ships with the skill. Enforced by the validator
+  (F18): a bare path starting `assets/`, `evals/`, `fixtures/`, `references/`,
+  `scripts/`, or `templates/`, anywhere in SKILL.md including code blocks, must exist in
+  the skill directory. A file may instead exist at the library root (so
+  `scripts/validate-skills.sh` passes); a bare directory may not. To name a path that
+  belongs to something else, qualify it with its owner (`~/src/x/templates/`,
+  `<project>/scripts/run.sh`) and F18 skips it. Known weaknesses: it checks only those
+  six directory names, a file in any other location is unchecked; the library-root
+  allowance means a skill-local file that shares a name with a root file is not caught;
+  a qualified path is never checked at all.
 - Structure the body around what the skill must *do*, not background prose.
 - Shape each rule as scope, action, exception, verification (when X, do Y, unless Z,
   proven by W) rather than a growing list of banned words or phrases. A ban list ages

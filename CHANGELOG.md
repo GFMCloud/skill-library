@@ -2,6 +2,48 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-17 - workbench 0.13.1: two skills stop naming files that were never there; validator F18 catches the class
+
+Three commits made this morning on a worktree branch (`c341715`, `f290116`, `0a0c4a0`,
+numbered 0.10.2 and 0.10.3) were never merged; a later session recorded them as merged
+and `main` moved to 0.13.0 in between. Landed as one commit with one bump at the
+2026-09-17 ratify of the weekly maintainer (Q-2026-09-17-1). No behavior differs from
+the three originals apart from the version number and this section.
+
+- **devshell-init (incubator):** step 2 says "Copy from `templates/`", but the skill
+  shipped as SKILL.md only when it was promoted from mac-setup (`c29d054`), so the step
+  could not be followed. `templates/flake.nix`, `templates/.envrc`, and
+  `templates/CLAUDE.md` are now in the skill, byte-identical to
+  `~/src/mac-setup/templates/`. This directory is the editable home (ruled 2026-09-17);
+  the mac-setup copy is retired once this version is installed.
+- **skill-discovery (incubator):** the synthesis prompt carried a hand-maintained list
+  of installed skills and told the reader to regenerate it with
+  `python scripts/list-skills.py`, which never existed. The list had drifted: it named
+  the retired packs `voice`, `deck-build`, `deck-critique`, and `scl`, listed 12 of 25
+  workbench skills, and omitted six plugins, so a run would have proposed skills that
+  already exist. The list is now built at run time from the session's available-skills
+  listing, `docs/inventory.md` when the library clone is present, and capability-index.
+- **pipeline-foundry (incubator):** step 10 said "Generate from `templates/`" and named
+  `templates/scaffold.gitignore`, which reads as the skill's own directory, but the
+  templates live in the `GFMCloud/gfm-foundry` repo, their one editable home (ruled
+  2026-09-17: no copy here). Both references are now `gfm-foundry/templates/...`, and
+  the step says to confirm a local checkout first and to stop and ask for a clone when
+  there is none.
+- **`scripts/validate-skills.sh` F18:** a bare path in SKILL.md starting `assets/`,
+  `evals/`, `fixtures/`, `references/`, `scripts/`, or `templates/` must exist in the
+  skill directory. A file may instead exist at the library root; a bare directory may
+  not. The whole text is scanned, code blocks included, and a path qualified with its
+  owner (`~/x/scripts/`, `gfm-foundry/templates/`) is skipped. F8 covers only markdown
+  links, which is how these defects shipped. Proven by deliberate failure at the
+  ratify: with `main`'s skill-discovery body restored, F18 printed its FAIL line. The
+  rule and its known weaknesses are in the authoring standard under "Body".
+- **Validator header:** no longer points at `docs/validator-spec.md`, which does not
+  exist; the original spec is under `docs/migration/harness/docs/` and stops at F12.
+- **foundry-core 0.4.1, eval-harness:** F18's first run on current `main` flagged the
+  skill's `evals/`, which means the directory beside the thing under test in the target
+  project, not a file of this skill. Written `<target>/evals/` in both places, the
+  qualified form the standard asks for. No behavior change to the skill.
+
 ## 2026-09-17 - workbench 0.13.0: session-memory hooks and the compaction rule (ECC plan-gate H1)
 
 - **handoff 0.4.0 (incubator, workbench):** new `## Before Compaction` section: write the

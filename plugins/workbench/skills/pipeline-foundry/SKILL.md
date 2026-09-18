@@ -314,7 +314,13 @@ projects." So is "come back when you can say what done looks like."
 
 ## 10. Emit the scaffold
 
-Generate from `templates/` in `gfm-foundry`, filling every `{{PLACEHOLDER}}`:
+The scaffold templates do not ship with this skill. They live in the `gfm-foundry` repo
+(`github.com/GFMCloud/gfm-foundry`), which is their one editable home. Before emitting,
+confirm a local checkout exists and `gfm-foundry/templates/` is readable; if it is not,
+stop and ask Graham to clone `GFMCloud/gfm-foundry` rather than writing the files from
+memory.
+
+Generate from `gfm-foundry/templates/`, filling every `{{PLACEHOLDER}}`:
 
 | File | Role |
 | --- | --- |
@@ -324,7 +330,7 @@ Generate from `templates/` in `gfm-foundry`, filling every `{{PLACEHOLDER}}`:
 | `CONTINUATION.md` | Pre-authorized queue for unattended runs |
 | `OPEN-ITEMS.md` | Custodian ledger, checked on every re-entry |
 | `.claude/skills/project-constants/SKILL.md` | The constants |
-| `.gitignore` | From `templates/scaffold.gitignore` |
+| `.gitignore` | From `gfm-foundry/templates/scaffold.gitignore` |
 
 Plus basic file structure appropriate to the project type.
 

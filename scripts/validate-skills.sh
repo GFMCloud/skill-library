@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# validate-skills.sh — reference implementation of docs/validator-spec.md
+# validate-skills.sh — the rules are documented in docs/authoring-standard.md and this
+#   header. The original spec, docs/migration/harness/docs/validator-spec.md, covers
+#   F1 to F12 only and is kept as history; rules added since (F13 to F18, W4 to W7)
+#   are described where they were introduced, in CHANGELOG.md.
 # Usage: bash scripts/validate-skills.sh [plugins/<name>]
 #   STRICT=1        warnings also cause exit 1
 #   STALE_MONTHS=6  staleness threshold for W1
@@ -75,7 +78,26 @@ for d in skill_dirs:
             continue
         if not os.path.exists(os.path.join(d, link.split("#")[0])):
             fails.append(f"F8 {rel}: broken link '{link}'")
-    mat = str(meta.get("maturity", "")).strip()
+    # F18: a bare path into a supporting directory (`templates/flake.nix`,
+    # `python scripts/x.py`) must exist in the skill directory. A file may instead
+    # exist at the library root (`scripts/validate-skills.sh`); a bare directory may
+    # not, because the root has its own `templates/` and would hide a skill's missing
+    # one. F8 sees only markdown links, so two skills shipped pointing at files that
+    # never existed (workbench 0.10.2). The whole text is scanned, code blocks
+    # included: one of the two was an indented command. A path qualified with its
+    # owner (`~/x/scripts/`, `<project>/templates/`) is not the skill's own and is
+    # skipped.
+    seen = set()
+    for m in re.finditer(r"(?<![\w/.~$}>-])((?:assets|evals|fixtures|references|scripts"
+                         r"|templates)/[\w.@/-]*)", text):
+        ref = m.group(1).rstrip(".,:;")
+        if ref in seen:
+            continue
+        seen.add(ref)
+        if not (os.path.exists(os.path.join(d, ref)) or os.path.isfile(ref)):
+            fails.append(f"F18 {rel}: '{ref}' is not in the skill directory"
+                         + ("" if ref.endswith("/") else " or at the library root"))
+    mat =str(meta.get("maturity", "")).strip()
     if mat not in ("incubator", "stable", "deprecated"):
         fails.append(f"F9 {rel}: metadata.maturity missing/invalid ('{mat}')")
     if mat == "stable":
