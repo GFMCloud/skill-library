@@ -22,6 +22,8 @@ metadata:
    with `status: open`, the hypothesis, and the prediction.
 3. Create `runs/run-<NNNN>-<slug>.md` from the run template, with the **Hypothesis**,
    **Prediction**, and **Config** sections filled in and `created` timestamped now.
+   Set `parent` to the run whose result this one builds on, or `baseline`; options of
+   the same decision are siblings and share a parent.
    Leave **Result** and **Verdict** empty: those belong to `/run`, after execution,
    not now.
 4. Save. Do not execute the run in this step, even if it would be convenient. The

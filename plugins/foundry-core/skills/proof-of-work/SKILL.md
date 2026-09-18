@@ -3,8 +3,8 @@ name: "proof-of-work"
 description: "Produce executed evidence that a piece of work actually works before presenting it as done — run the code against representative data, inspect the render, print the validation output. Use before declaring any artifact complete, and whenever a tool reports its own success."
 metadata:
   maturity: stable
-  version: 1.3.0
-  reviewed: 2026-09-11
+  version: 1.4.0
+  reviewed: 2026-09-18
 ---
 
 # proof-of-work
@@ -94,6 +94,36 @@ dangerous than no check at all — it converts an unknown into a false known.
   reports success having silently dropped 12% is the standard failure.
 - **Config and manifests** — installed or loaded somewhere real, and a
   component invoked. Validation is necessary, not sufficient.
+
+## When the evidence is a run's output
+
+Applies when the claim rests on what a command printed: a training or batch run, a
+migration, a load test, any job whose log is read after the fact.
+
+- **Design the printed output before the run.** When a run's result will be judged from
+  its log, decide what the log must contain and make the command print it: the
+  configuration it actually used (so the log identifies which variant ran), one-line
+  progress at intervals for anything long, and a final summary block with the metrics the
+  claim depends on. Unless the tool already prints all three. Proven by: the claim can be
+  checked from the saved log alone, with the session that launched it gone. A result that
+  is not in the log cannot be inspected later, and re-running to see it is a second
+  experiment, not evidence for the first.
+- **Four confirmations before reporting a run-derived claim.** Never infer a result from
+  exit status, a status badge, or memory of the run. Confirm in the output itself that
+  (1) it identifies the variant and effective configuration, (2) the final metric or
+  summary the claim cites is present, (3) for a long run, the trajectory behind the claim
+  is recoverable and not just the last line, and (4) the portion you actually read
+  contains the supporting lines. A confirmation that fails goes in the not-verified list
+  with the claim it would have supported.
+- **Truncated output is not evidence of absence.** When output was cut (`head`, `tail`, a
+  byte cap, a pager, a tool's result limit, a `grep` that may not match), "no errors
+  seen" and "X did not happen" are claims about the window, not the run. Keep reading
+  until the relevant portion has been read: widen the window, read from the other end, or
+  write the output to a file and search that. Unless the full output was read, state the
+  window with the claim ("last 200 lines of 14,000").
+
+Known weakness: nothing mechanical enforces these three; `scripts/run-checks.sh` records
+exit codes and full per-phase output for the code class only.
 
 ## When evidence cannot be produced
 

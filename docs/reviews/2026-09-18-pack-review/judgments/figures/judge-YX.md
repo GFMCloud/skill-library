@@ -1,0 +1,32 @@
+### Steelman Y
+
+`item-95409a14` is built specifically for the "read as deliberate and trustworthy" bar: it enforces exact final print dimensions, vector export, colorblind-safe palettes, and — most importantly — a hard rule that "every plotted number comes from a logged run," never a remembered or synthetic value, with a closing checklist item that the generating script must rerun from scratch and reproduce the same file. That is a direct, mechanical embodiment of the eval's "executed evidence" behavior. It backs this with a real executable audit (`_audit()`/`_text_collisions()`) that inspects the actual rendered PDF/SVG for font embedding, canvas width against known column widths, stray titles, missing axis labels, sub-5pt text, and overlapping text, printing a "clean" or itemized "problem(s)" verdict. Captions are required to disclose seed counts, smoothing, normalization, excluded points, and truncated axes — a direct match to "say what was and was not checked." It is narrowly triggered (one of six reference files, chosen by figure type) rather than always loaded.
+
+### Steelman X
+
+`item-4a425f59` is lean, dependency-free (stdlib only, no rendering, no network), and covers ground Y never touches: turning numeric slides/decks into disciplined, single-message charts via five concrete rules (one hero color, no rainbow ramps, chart type by question not habit, sentence-style annotation, at-a-glance readability), with PowerPoint-specific translation notes and a seven-item pre-flight checklist. It includes an objective, auditable scoring script (`annotate.py`, severity-weighted 0–100) and a pure chart-type recommender, both usable without any install step. It explicitly instructs the agent to disclose to the user when it is substituting a default palette for an unavailable brand kit — a direct, if narrow, instance of "say what was and was not checked." Its low footprint means it can be loaded and run anywhere without touching LaTeX toolchains or external CLIs.
+
+### Scores
+
+| Criterion | Y (item-95409a14) | X (item-4a425f59) |
+|---|---|---|
+| Fit with the bar | 3 — no conflict with any of the three behaviors; strongly reinforces "executed evidence" ("every number comes from a run… reruns from scratch and reproduces the same file") and "say what was checked" (caption must state seeds, normalization, excluded points); planning behavior is merely unaddressed except a narrow font-install pause, not contradicted. | 2 — no conflict either, but reinforcement is thinner: "executed evidence" is only optional ("run it when you want a quick objective gut check"), and "say what checked" is narrowed to one disclosure case (missing brand kit); planning is entirely unaddressed. |
+| Enforcement mechanism | 2 — a genuine tool-layer check (`save()`→`_audit()`) inspects the actual rendered file (font embedding, canvas width, text collisions) and prints pass/fail, but "never raises or returns a non-zero exit," so it fails open and cannot block a handoff. | 1 — `annotate.py` audits a chart-spec dict (not the rendered output) and returns a score, but nothing forces it to run, and it "silently swallows exceptions from individual checks (`except Exception: pass`)," weakening even the advisory signal. |
+| Context cost | 3 — report states the entry file is 216 lines with a 56-word frontmatter description, loads on-demand, and directs to exactly one of six reference files per figure type. | 2 — report confirms on-demand loading via a broad trigger-phrase list, but gives no line count or length figure for the skill file itself, so bounded cost can't be confirmed from the counted facts given. |
+| Maintenance burden | 1 — requires python3/matplotlib/numpy via `uv run`, a LaTeX/TikZ toolchain restricted to `-no-shell-escape`, an external `orx` CLI for vendoring and metrics, `gh`, and references to companion modules not included in the report ("evidence," "reports," "paper" modules) — several pieces the report itself flags as unverifiable. | 3 — report states both scripts use "standard library only… no dependencies… no rendering, no network"; the only optional extra (python-pptx, a brand-kit file) is explicitly optional. |
+| Specificity | 3 — concrete numeric thresholds (5pt text floor, exact column widths), a banned-function list (`ax.set_title`), a specific caption structure/word-count target, and multi-panel composition rules. | 3 — concrete rule set (never pie, bars start at zero, small multiples past ~5 lines), a severity-weighted scoring rubric (25/10/4/1 points), and a seven-item pre-flight checklist. |
+
+### Per-item rows
+
+| Item | Class | Note |
+|---|---|---|
+| item-95409a14 | COMPLEMENT | Fills a gap X's set lacks: rigorous, executable audit of the actual rendered publication figure (font embedding, canvas width, text collisions) and a hard "source every number from a logged run" discipline tied directly to the "executed evidence" bar behavior — none of which X's academic/paper-oriented tooling is designed to do since it targets slide decks, not papers/TikZ diagrams. |
+| item-4a425f59 | COMPLEMENT | Fills a gap Y's set lacks: zero-dependency, slide/deck-oriented chart guidance (PowerPoint-specific translation notes, brand-kit disclosure requirement, chart-type-by-question selection table, sentence-style annotation) for a business-presentation context Y's matplotlib/TikZ/paper-figure skill never addresses. |
+
+### Deciding criteria
+
+Maintenance burden and enforcement mechanism separated the two most: Y's real, file-inspecting audit and tighter evidence discipline outweigh its much heavier dependency chain (LaTeX/TikZ, external `orx` CLI, unverified companion modules), while X's stdlib-only footprint is offset by a weaker, dict-level, exception-swallowing check that nothing compels the agent to run.
+
+### What I could not assess from reading alone
+
+Neither report shows a behavioral trace of the audit actually being run and acted on (or ignored) in a live task, which is the only way to confirm whether either "fails open" mechanism functions as a real backstop or is routinely bypassed. I also can't tell from the reports whether either skill is invoked as intended by a real agent (trigger-phrase matching is asserted, not demonstrated), or whether Y's external `orx` CLI and companion modules — flagged by its own report as unverifiable — actually exist and work as described. I did not attempt to infer either candidate's origin.

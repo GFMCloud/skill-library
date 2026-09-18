@@ -1,6 +1,7 @@
 ---
 id: run-<NNNN>-<slug>
 hypothesis: <h-id from REGISTER.md>
+parent: <run id whose result this run builds on, or "baseline"; siblings share a parent>
 created: <ISO-8601, when Hypothesis/Prediction/Config were saved, BEFORE running>
 executed: <ISO-8601 or empty, filled only after the run actually happens>
 ---

@@ -2,7 +2,7 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
-## 2026-09-18 - eval suites runnable in place: foundry-core 0.5.1, turn-reduction 1.2.3, data-wrangler 0.1.1, verification-kit 0.3.1, workbench 0.14.2
+## 2026-09-18 - eval suites runnable in place: foundry-core 0.6.1, turn-reduction 1.2.3, data-wrangler 0.1.1, verification-kit 0.5.1, workbench 0.16.2
 
 Two defects from the first execution of the proof-of-work eval suite. No skill's
 behavior changes; the plugin bumps are for the files that left each skill directory.
@@ -26,6 +26,104 @@ behavior changes; the plugin bumps are for the files that left each skill direct
 - **output-lint and identity-resolution evals, `max_turns` 6 to 10:** the same 6-turn
   cap, raised without trace data because neither suite has been executed yet. The
   other stable suites were at 4 (Read and Skill only), 8 or 14 and are unchanged.
+
+## 2026-09-18 - verification-kit 0.5.0: pack review set-1, ledger row 9 (security-audit, vendored)
+
+Source: the same set run; both judges classed `security-audit` and the installed
+`security-checklist` COMPLEMENT (a deep full-codebase audit with fail-closed validators
+beside a cheap per-change checklist). Graham ruled "Adopt as a sep skill as well", then
+"approve with defaults" on the plan-gate archived with the review record.
+
+- **security-audit (new, incubator, vendored):** the 20 files of
+  `cloudflare/security-audit-skill` at c1c8a8c (MIT) copied byte-identical, checksum
+  verified against the pinned clone, plus its `LICENSE` and a `SOURCE.md`. The only edit
+  is `SKILL.md` frontmatter: negative scope (not security-checklist, not the built-in
+  /security-review), costs, and `maturity: incubator`. This is an exception to rewriting
+  adopted material in the library's voice, because the value is the two dependency-free
+  validators as written. Both were read in full before anything ran: each opens one named
+  input read-only with no-follow, prints, and exits, with no write, network, process or
+  environment call. Their own suites: `node --test` 65 tests, 65 pass. Proven from this
+  side too: an empty array exits 0 on both; a malformed finding, a malformed ledger unit,
+  truncated JSON and a missing file each exit 1. `security-checklist` is unchanged.
+  Routing between the two skills is untested until the plugin is installed.
+
+## 2026-09-18 - verification-kit 0.4.0: pack review set-1, ledger rows 7 and 8 (overengineering-review)
+
+Source: the same set run. The run found a gap, not a better version: nothing installed
+reviews for unnecessary code and abstraction. Both judges classed `ponytail-review` and
+`ponytail-audit` (`DietrichGebert/ponytail` at e3ba2aa, MIT) COMPLEMENT; one judge classed
+orch-review and review-pair FRAGMENT into them for their evidence contract. Ratified by
+Graham at Gate B. One new skill written in the library's voice; neither file is copied.
+
+- **overengineering-review (new, incubator):** reviews a diff or a repository for
+  unnecessary code only and lists cuts under five tags (`delete`, `yagni`, `stdlib`,
+  `native`, `shrink`). Every finding quotes code re-read at its cited line; a claim about
+  the rest of the codebase (unused, one caller, one implementation) carries the executed
+  search and its output or a `not-checked:` marker and is then reported unconfirmed; a
+  `stdlib` or `native` replacement states the behavior difference, after the source
+  pack's own benchmark finding of a parser substituted for a validator. The report
+  carries a mandatory "not reviewed: correctness, security, performance" line, a
+  seen-in-passing line, and in repo scope the directories not covered. Applies nothing.
+  Not mechanically enforced and has no eval cases; the skill says so.
+
+## 2026-09-18 - workbench 0.16.1: toolkit-review scripts are executable
+
+- **toolkit-review (incubator):** all 18 files under `scripts/` go from mode 100644 to
+  100755. SKILL.md invokes them bare (`scripts/init-run.sh <run-dir> ...`), which failed
+  with `Permission denied`; the set-1 run called every one through `bash` to get round
+  it. Proof: `scripts/sum-budget.sh` invoked directly was `Permission denied` before;
+  after, `scripts/prove-scripts.sh` invoked directly exits 0 with "all proofs PASS". No
+  content change. Found by the 2026-09-18 pack review; Graham ruled it rides that branch.
+
+## 2026-09-18 - workbench 0.16.0: pack review set-1, ledger row 4 (experiment-loop)
+
+Source: the same set run; both judges COMPLEMENT. Ratified by Graham at Gate B. From
+`orx-experiment-tree` in `alphaXiv/OpenResearch` at 69768ff; its CLI-bound launch, wait
+and notes mechanics were not taken. The version skips 0.15.0, which the unmerged
+`adopt-humanizer` branch claims; whichever merges second resolves the manifest and this file.
+
+- **experiment-harness (incubator):** new section "When one hypothesis needs many runs".
+  A verdict is filled in from output that was read, never from exit status; a run that
+  answered nothing (crash, out of memory, timeout, missing dependency) is repaired in
+  place and not scored, with a cap of two such runs in a row before asking; an answered
+  run is frozen; options of one decision are siblings and each new round hangs off the
+  previous winner; three consecutive failed or regressed runs is the scientific stop.
+  The `/run` template reads the output and applies the repair cap before writing Result,
+  and run files carry a `parent:` field that `/hypothesis` sets. Counted by the session,
+  not by a script, and the section says so.
+
+## 2026-09-18 - foundry-core 0.6.0: pack review set-1, ledger row 3 (evidence)
+
+Source: the same set run. Judges split FRAGMENT / SUPERSEDED BY / COMPLEMENT, two of three
+naming pieces to take; the escalation judge listed these three. Ratified by Graham at
+Gate B. The candidate (`orx-evidence` in `alphaXiv/OpenResearch` at 69768ff) is prose
+bound to its own CLI and was not taken whole.
+
+- **proof-of-work 1.4.0 (stable):** new section "When the evidence is a run's output".
+  The run's printed output is designed before the run (effective configuration, periodic
+  one-line progress, final summary block); four confirmations are made in the output
+  before a run-derived claim is reported; truncated output is not evidence of absence, so
+  a claim made from a window states the window. Not mechanically enforced, and the
+  section says so. The skill's two eval cases were not re-run for this change; they are
+  owed before the branch merges.
+
+## 2026-09-18 - decks 0.3.0: pack review set-1, ledger rows 2 (diagram) and 5 (figures)
+
+Source: the `toolkit-review` set run of 2026-09-18 over five candidate packs; both judges
+classed each candidate item COMPLEMENT. Ratified by Graham at Gate B ("yes all as
+recommended"). Fragments are rewritten in the library's voice; no candidate file is copied.
+
+- **html-diagram (incubator):** the screenshot leg of `scripts/validate.py --shots` fails
+  closed. An absent playwright, a capture error, or a missing or empty PNG prints a FAIL
+  and exits 1; before, it printed a note and the run still exited 0. PNGs from an earlier
+  run are deleted before capture. Proven both ways on the bundled example: real playwright
+  exit 0 with both PNGs written, a stub that raises ImportError exit 1 with none left.
+  From `tt-a1i/archify` at 72c750b, whose delivery never records a failed capture as skipped.
+- **chart-discipline (incubator):** new section "Number provenance": every plotted number
+  traces to a source that can be re-read, a generated chart is re-run from the raw source
+  before hand-over, and exclusions, partial periods, single-sample values, smoothing and
+  truncated axes are stated on the slide. Three matching pre-flight items. From
+  `orx-figures` in `alphaXiv/OpenResearch` at 69768ff; its LaTeX and TikZ tooling was not taken.
 
 ## 2026-09-18 - foundry-core 0.5.0, verification-kit 0.3.0: the five TIGHTEN rows from the verification self-review
 

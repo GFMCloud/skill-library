@@ -1,0 +1,34 @@
+### Steelman X
+
+Both items are purpose-built for exactly the slot's job. They share a closed, five-tag vocabulary (`delete:`, `stdlib:`, `native:`, `yagni:`, `shrink:`) with defined meanings, a fixed one-line-per-finding output format, and a numeric close (`net: -<N> lines possible.` or `Lean already. Ship.`). Each explicitly fences off the adjacent territory the slot wants excluded — "Scope: over-engineering and complexity only. Correctness bugs, security holes, and performance are explicitly out of scope" — and each explicitly refuses to act: "Does not apply the fixes, only lists them" / "Lists findings, applies nothing." That makes them safe by construction (read-only, no state written, nothing to revert) and trivially cheap: no named dependencies, on-demand loading, no runtime. The repo-scope item names concrete, recognizable over-engineering smells to hunt for ("single-implementation interfaces, factories with one product, wrappers that only delegate... hand-rolled stdlib"), which is exactly the specificity this slot needs.
+
+### Steelman Y
+
+Both items show real engineering discipline around the bar's second and third behaviors in a way neither X item attempts. item-c3affd53 refuses to report "APPROVE" if any review dimension "errored, timed out, hit a rate limit, or could not be spawned" and mandates an explicit "not checked" line in its output — a direct, structural instantiation of "say what was and was not checked." item-e739493a goes further: it backs "executed evidence before done" with an actual executable, `scripts/verdict-check.sh`, that mechanically rejects a bare quote as evidence ("proven by a dedicated fixture") and fails closed on any malformed or repeat-fail verdict, gating an apply behind multiple named stop conditions and a hold-and-escalate path rather than a third retry. If the goal is a slot whose tools can be trusted not to rubber-stamp their own work, these mechanisms are the strongest examples in either report of that trust being earned by machinery rather than instruction.
+
+### Scores
+
+| Criterion | X | Y |
+|---|---|---|
+| Fit with the bar | 3 — both items are read-only and say so explicitly ("Does not apply the fixes, only lists them" / "Lists findings, applies nothing"), never crossing into consequential action; they don't attempt executed evidence, but that's neutral for a static-review tool, not a conflict. | 3 — c3affd53 withholds "APPROVE" on any incomplete dimension and mandates a "not checked" line; e739493a gates the apply behind multiple explicit stop conditions and treats script failure as "not a pass, never a default approval" — both actively reinforce all three behaviors. |
+| Enforcement mechanism | 0 — both items are "Prose only — instructional text with example good/bad outputs, no script or check that validates the agent's output format or blocks non-compliant behavior." | 2 — c3affd53 is likewise "Prose only; no script or other executable checks it," but e739493a's `scripts/verdict-check.sh` mechanically rejects bare-quote evidence and fails closed with distinct exit codes; the pair is mixed, not uniformly enforced. |
+| Context cost | 3 — both load only "when the user's phrasing matches the description," write no state, name no dependencies, and end in one summary line. | 1 — also on-demand, but c3affd53 fans out one subagent per dimension plus a dedup pass plus an adversarial refutation subagent, and e739493a's procedure spans goal-block confirmation, subagent-spawn config, a run-log write, script validation, a bounded retry, and an escalation path, plus references to an external interface-spec document and a discipline reference document — a much larger procedure surface even though still on-demand. |
+| Maintenance burden | 3 — both items list "Dependencies: None named" and "State it writes: None." | 1 — c3affd53 needs git, `gh` for PR mode, subagent spawning, and "two named external checklists/agents from another plugin bundle" the report could not confirm are present; e739493a needs bash for its script and an agent-definition file the report flags as an install step ("Drop this frontmatter block into a project's `.claude/agents/reviewer.md`"). |
+| Specificity | 3 — a closed five-tag vocabulary with defined meanings, and concrete named patterns to hunt for ("single-implementation interfaces, factories with one product, wrappers that only delegate... hand-rolled stdlib"). | 2 — concrete and checklist-driven for their own topics (dimension list, Verdict field validation, hold/escalate rule), but neither checklist names an over-engineering pattern; c3affd53's dimensions are "correctness/maintainability... silent-failure... security," and e739493a checks a change against a goal block, not against unnecessary-code/abstraction patterns. |
+
+### Per-item rows
+
+| Item | Class | Note |
+|---|---|---|
+| item-4ef8ec23 | COMPLEMENT | Fills a gap Y's set entirely lacks: a diff-scope reviewer whose vocabulary and boundaries are specifically over-engineering (unnecessary code/abstraction), not correctness/security/maintainability. |
+| item-3cb4b1ae | COMPLEMENT | Fills a gap Y's set entirely lacks: a repo-wide over-engineering audit with ranked cuts; Y has no repo-scope tool of any kind. |
+| item-c3affd53 | DISCARD | Its dimensions are "correctness/maintainability... silent-failure... security" — explicitly not over-engineering/unnecessary-abstraction, so it does not do this slot's job regardless of its (real) enforcement rigor. |
+| item-e739493a | DISCARD | A generic pre-apply verdict gate for any change spec against a goal block — not a finder of unnecessary code, abstraction, or scope; its strong evidence-validation script is not aimed at over-engineering findings. |
+
+### Deciding criteria
+
+Specificity (topic fit for the slot's stated purpose) and context cost/maintenance burden decided the rows: Y's enforcement edge is real but confined to one item and buys rigor for the wrong job, while X hits the slot's actual purpose — over-engineering, not correctness/security — cheaply and with nothing to install or verify externally.
+
+### What I could not assess from reading alone
+
+Whether either report's format is actually followed at runtime — X's tag-line format has no check at all, and Y's fan-out/dedup/refutation procedure in item-c3affd53 is likewise unverified by anything mechanical — would need a behavioral run to confirm. For Y's item-e739493a, I could not confirm from the report whether `verdict-check.sh` and the referenced interface-spec document, discipline reference, and retry-budget skill actually exist and interoperate as described, since none of those files were included; the report itself flags this ("none of these referenced files are present in the given file set"). I have no basis to guess either candidate's origin and did not try.

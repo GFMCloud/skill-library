@@ -13,7 +13,8 @@ Usage:
   python3 validate.py path/to/diagram.html            # cross-ref check only
   python3 validate.py path/to/diagram.html --shots     # also write light/dark/flow PNGs (needs playwright)
 
-Exit code is non-zero if any hard check fails, so it can gate a build.
+Exit code is non-zero if any hard check fails, so it can gate a build. With --shots, a
+capture that did not happen (playwright absent, capture error, empty PNG) is a hard fail.
 """
 import re, sys, pathlib
 
@@ -73,26 +74,38 @@ def cross_ref(html):
     return problems, warnings, stats
 
 def shots(path):
+    """Fail closed: returns a list of problems. Screenshots that were asked for and not
+    captured are a FAIL, never a skip - a skipped capture reads as a passed visual gate."""
+    uri = pathlib.Path(path).resolve().as_uri()
+    base = pathlib.Path(path).with_suffix('')
+    pngs = [pathlib.Path(f"{base}-light.png"), pathlib.Path(f"{base}-dark-flow.png")]
+    for png in pngs:
+        png.unlink(missing_ok=True)   # a stale PNG from an earlier run is not evidence
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print("  (playwright not installed - skipping screenshots)")
-        return
-    uri = pathlib.Path(path).resolve().as_uri()
-    base = pathlib.Path(path).with_suffix('')
-    with sync_playwright() as p:
-        b = p.chromium.launch()
-        pg = b.new_page(viewport={'width': 1560, 'height': 900})
-        pg.goto(uri); pg.wait_for_timeout(600)
-        pg.screenshot(path=f"{base}-light.png")
-        # first non-"all" chip, in dark mode
-        pg.evaluate("document.documentElement.classList.add('dark')")
-        chip = pg.query_selector('.chip[data-flow]:not([data-flow="all"])')
-        if chip:
-            chip.click(); pg.wait_for_timeout(400)
-        pg.screenshot(path=f"{base}-dark-flow.png")
-        b.close()
-    print(f"  wrote {base}-light.png and {base}-dark-flow.png")
+        return ["--shots requested but playwright is not installed - no screenshots captured "
+                "(pip install playwright && playwright install chromium)"]
+    try:
+        with sync_playwright() as p:
+            b = p.chromium.launch()
+            pg = b.new_page(viewport={'width': 1560, 'height': 900})
+            pg.goto(uri); pg.wait_for_timeout(600)
+            pg.screenshot(path=str(pngs[0]))
+            # first non-"all" chip, in dark mode
+            pg.evaluate("document.documentElement.classList.add('dark')")
+            chip = pg.query_selector('.chip[data-flow]:not([data-flow="all"])')
+            if chip:
+                chip.click(); pg.wait_for_timeout(400)
+            pg.screenshot(path=str(pngs[1]))
+            b.close()
+    except Exception as e:
+        return [f"--shots requested but the capture failed: {type(e).__name__}: {e}"]
+    missing = [str(png) for png in pngs if not png.is_file() or png.stat().st_size == 0]
+    if missing:
+        return [f"--shots requested but not written or empty: {', '.join(missing)}"]
+    print(f"  wrote {pngs[0]} and {pngs[1]}")
+    return []
 
 def main():
     if len(sys.argv) < 2:
@@ -122,10 +135,13 @@ def main():
     else:
         print("  pass  all cross-references resolve.\n")
 
-    if '--shots' in sys.argv:
-        shots(path)
+    shot_problems = shots(path) if '--shots' in sys.argv else []
+    for pr in shot_problems:
+        print(f"  FAIL  {pr}")
+    if shot_problems:
+        print("\n  -> the visual gate did not run. Do not report it as passed or skipped.\n")
 
-    sys.exit(1 if problems else 0)
+    sys.exit(1 if problems or shot_problems else 0)
 
 if __name__ == '__main__':
     main()

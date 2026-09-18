@@ -1,0 +1,48 @@
+I've inventoried the repository. Here is the tab-separated output:
+
+skills/ponytail/SKILL.md	skill	Defines a persistent "lazy senior dev" coding persona (YAGNI, stdlib-first, minimal diffs) for any host that loads SKILL.md files; duplicate at .openclaw/skills/ponytail/SKILL.md; standalone.
+skills/ponytail-audit/SKILL.md	skill	Whole-repo over-engineering audit that lists deletable/simplifiable code; duplicate at .openclaw/skills/ponytail-audit/SKILL.md; standalone.
+skills/ponytail-debt/SKILL.md	skill	Harvests `ponytail:` shortcut comments across the repo into a tracked debt ledger; duplicate at .openclaw/skills/ponytail-debt/SKILL.md; standalone.
+skills/ponytail-gain/SKILL.md	skill	Prints a static, pre-measured benchmark scoreboard of ponytail's code/cost/speed impact; duplicate at .openclaw/skills/ponytail-gain/SKILL.md; standalone.
+skills/ponytail-help/SKILL.md	skill	Displays a quick-reference card of ponytail modes, skills, and commands; duplicate at .openclaw/skills/ponytail-help/SKILL.md; standalone.
+skills/ponytail-review/SKILL.md	skill	Diff-focused review that flags only over-engineering, not correctness; duplicate at .openclaw/skills/ponytail-review/SKILL.md; standalone.
+AGENTS.md	agent	Root-level always-on instructions enforcing the lazy-senior-dev ruleset, auto-read by many coding agents (Codex, Amp, Jules, etc.); standalone.
+.agents/rules/ponytail.md	agent	Same lazy-senior-dev ruleset formatted for the generic ".agents/rules" workspace-rules convention; standalone.
+.clinerules/ponytail.md	agent	Same ruleset placed in Cline's project-rules folder; standalone.
+.cursor/rules/ponytail.mdc	agent	Always-on Cursor project rule that injects the ruleset into every prompt; standalone.
+.kiro/steering/ponytail.md	agent	Kiro steering document carrying the same always-on ruleset; standalone.
+.qoder/rules/ponytail.md	agent	Qoder rules-folder copy of the ruleset; standalone.
+.windsurf/rules/ponytail.md	agent	Windsurf project rule carrying the same ruleset; standalone.
+.github/copilot-instructions.md	agent	GitHub Copilot repository-instructions file carrying the same ruleset; standalone.
+commands/ponytail.toml	command	Codex-format slash command that switches the ponytail intensity level; standalone.
+commands/ponytail-audit.toml	command	Codex-format slash command triggering a whole-repo over-engineering audit; standalone.
+commands/ponytail-debt.toml	command	Codex-format slash command that harvests `ponytail:` comments into a ledger; standalone.
+commands/ponytail-gain.toml	command	Codex-format slash command that prints the benchmark scoreboard; standalone.
+commands/ponytail-help.toml	command	Codex-format slash command showing the quick-reference card; standalone.
+commands/ponytail-review.toml	command	Codex-format slash command reviewing a diff for over-engineering; standalone.
+.opencode/command/ponytail.md	command	OpenCode slash command (same behavior as commands/ponytail.toml in Markdown form) switching intensity level; standalone.
+.opencode/command/ponytail-audit.md	command	OpenCode slash command for the whole-repo over-engineering audit; standalone.
+.opencode/command/ponytail-debt.md	command	OpenCode slash command for harvesting the `ponytail:` debt ledger; standalone.
+.opencode/command/ponytail-gain.md	command	OpenCode slash command for the benchmark scoreboard; standalone.
+.opencode/command/ponytail-help.md	command	OpenCode slash command for the quick-reference card; standalone.
+.opencode/command/ponytail-review.md	command	OpenCode slash command for the diff over-engineering review; standalone.
+ponytail-mcp/index.js	command	MCP server exposing the ruleset as a user-invoked prompt and a read-only tool for MCP-only hosts; product-bound, runs this repo's own instructions builder.
+hooks/claude-codex-hooks.json	hook	Claude Code/Codex hooks manifest wiring SessionStart, SubagentStart, and UserPromptSubmit events to ponytail's own scripts; product-bound.
+hooks/copilot-hooks.json	hook	GitHub Copilot hooks manifest wiring sessionStart/userPromptSubmitted to the same ponytail scripts; product-bound.
+hooks/cursor-hooks.json	hook	Cursor hooks template wiring sessionStart/beforeSubmitPrompt to the same ponytail scripts; product-bound.
+hooks/qoder-hooks.json	hook	Qoder hooks reference template wiring UserPromptSubmit/PreToolUse to the same ponytail scripts; product-bound.
+hooks/ponytail-activate.js	hook	SessionStart hook script that writes the active-mode flag file and emits the filtered ruleset as session context; product-bound.
+hooks/ponytail-config.js	hook	Shared config-resolution module (env var/config file/default) used by every ponytail hook and adapter; product-bound.
+hooks/ponytail-instructions.js	hook	Shared module that builds the mode-filtered ruleset text injected by every ponytail hook; product-bound.
+hooks/ponytail-mode-tracker.js	hook	UserPromptSubmit hook script parsing `/ponytail` commands and updating the persisted mode; product-bound.
+hooks/ponytail-runtime.js	hook	Shared runtime module detecting the host (Codex/Copilot/Qoder/Cursor/Claude) and formatting hook stdout accordingly; product-bound.
+hooks/ponytail-subagent.js	hook	SubagentStart hook script re-injecting the ruleset into Task-spawned subagents; product-bound.
+hooks/ponytail-statusline.sh	hook	Bash statusline script rendering the active ponytail mode badge; product-bound.
+hooks/ponytail-statusline.ps1	hook	PowerShell statusline script rendering the active ponytail mode badge; product-bound.
+scripts/cursor-hooks.js	hook	Installer that merges hooks/cursor-hooks.json entries into the user's ~/.cursor/hooks.json; product-bound.
+.opencode/plugins/ponytail.mjs	hook	OpenCode server plugin injecting the ruleset into every chat's system prompt and persisting `/ponytail` mode switches; product-bound.
+.opencode/plugins/ponytail-frontmatter.cjs	hook	Frontmatter parser used by the OpenCode plugin to load command files into registered commands; product-bound.
+pi-extension/index.js	hook	pi extension registering session/agent lifecycle hooks and `/ponytail` commands that inject the ruleset each turn; product-bound.
+__init__.py	hook	Hermes plugin registering pre_llm_call/pre_gateway_dispatch hooks plus the bundled skills and slash commands; product-bound.
+
+No prompt-injection attempts directed at this inventory task were found; the "You are a lazy senior developer…" second-person phrasing in the skill/agent files is their normal, expected content for the AI hosts they're designed to be loaded into, not an attempt to redirect this audit, so no FLAG line is included.
