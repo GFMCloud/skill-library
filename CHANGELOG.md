@@ -71,7 +71,7 @@ Behavior changes only — not wording tweaks. Newest first.
   (`dd of=`, `curl -o`, `sort -o`, `tar -x`, `patch`, `perl -e`).
   `pre-delivery-verifier`'s charter restated the proof counts and is updated.
 
-## 2026-09-18 - workbench 0.16.3: capability-index stops offering to enable a pack that is already on
+## 2026-09-18 - workbench 0.17.1: capability-index stops offering to enable a pack that is already on
 
 - **capability-index:** the `decks` row is removed and the frontmatter description no
   longer names `decks` as not installed. The row said "installed but disabled" and
@@ -81,8 +81,22 @@ Behavior changes only — not wording tweaks. Newest first.
   `~/.claude/plugins/installed_plugins.json`: all ten library packs are installed and
   enabled, so the table now holds only the project-scoped SCL skills. The response
   template tells the skill to check `claude plugin list` before choosing between
-  `install` and `enable`, which is the distinction the stale row got wrong. PR 14
-  (adopt-humanizer) also bumps workbench; whichever merges second takes the next number.
+  `install` and `enable`, which is the distinction the stale row got wrong. Committed
+  as 0.16.3; PR 14 (humanizer, 0.17.0) merged first, so the merge of `origin/main` into
+  this branch renumbered it 0.17.1.
+
+## 2026-09-18 - workbench 0.17.0: humanizer (incubator), adopted from blader/humanizer
+
+Source: `docs/reviews/2026-09-18-humanizer.md`, a `toolkit-review` spot run against
+`graham-voice`; both judges classed the candidate `COMPLEMENT`. Ruled by Graham:
+"ADOPT, add a stop before the file overwrite".
+
+- **humanizer (incubator, new):** rewrites AI-sounding prose against 25 named patterns
+  without adding or dropping facts. Upstream 3.0.0 at `9862685`, MIT, license file
+  shipped beside the skill. One behavior change from upstream: file mode shows the
+  rewrite and stops for a yes before it overwrites the file, and embedded mode never
+  writes. The four contract sections and a negative scope against `graham-voice` were
+  added.
 
 ## 2026-09-18 - eval suites runnable in place: foundry-core 0.6.1, turn-reduction 1.2.3, data-wrangler 0.1.1, verification-kit 0.5.1, workbench 0.16.2
 
