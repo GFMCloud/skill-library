@@ -6,7 +6,7 @@ pin: 9862685f575c65a8247f90369951df1b3416e3d6
 reviewed: 2026-09-18
 verdict: ADOPT
 recheck: none
-applied: branch adopt-humanizer, the commit titled "workbench 0.15.0: humanizer (incubator), adopted from blader/humanizer", ruled by Graham 2026-09-18 ("ADOPT, add a stop before the file overwrite")
+applied: branch adopt-humanizer, the commit titled "workbench 0.15.0: humanizer (incubator), adopted from blader/humanizer" (lands as workbench 0.17.0: main reached 0.16.2 first, and the merge of main into the branch took the next minor), ruled by Graham 2026-09-18 ("ADOPT, add a stop before the file overwrite")
 evidence: 2026-09-18-humanizer/ (both extraction reports, both judgments, ledger, decisions, patch list, items, slot map, run.json, usage)
 ---
 

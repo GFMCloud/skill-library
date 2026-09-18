@@ -135,6 +135,43 @@ counts.
   This is the same per-writer-per-file discipline `sweep-harness` uses, applied to a
   register instead of a manifest.
 
+## When one hypothesis needs many runs
+
+The scaffold above is one run file per run. Some questions need a tree of them: a
+decision with several co-equal options, then the next decision made on top of the
+winner. Bake these into the generated `CLAUDE.md` and `/run` when the interview shows
+the project will branch; skip the tree rules (not the first two) when it will not.
+
+- **Read the log, never the status.** A run's verdict is filled in from its output, read
+  in this session: exit 0, "completed", or a green badge says the process ended, not what
+  it measured. `/run` writes Result only from output it has read, and says which part it
+  read if the output was cut.
+- **A run that answered nothing is repaired, not scored.** A crash, an out-of-memory, a
+  timeout or a missing dependency tested nothing, so the same run file is fixed and
+  re-run and the register row stays `open`. Unless the hypothesis is about memory or
+  runtime, in which case that outcome is the result. **Repair cap: two runs in a row that
+  answer nothing on one run file, then stop and ask.** Different errors still count, and
+  so does a bare relaunch. The same failure on a second run file is one setup problem:
+  ask then.
+- **An answered run is frozen.** Once a run produced the result it was after, good, bad,
+  or `nan`, its run file and config are never edited again; a follow-up is a new run
+  file that names it as parent. A disappointing number is a result, not a reason to
+  repair.
+- **Width is the open options of one decision; depth is decisions already resolved.**
+  Before making run X a child of run Y, name what Y established that X builds on. If you
+  can, X records Y as its parent. If you cannot (two learning rates tried side by side),
+  they are siblings under the same parent. Each new round hangs off the previous round's
+  winner, never off the baseline again, or wins never accumulate. Proven by: every run
+  file after the first round has a `parent:` line, and no round's options have different
+  parents.
+- **Scientific stop: three consecutive runs that fail or regress against the current
+  winner, then stop and write up the tree.** This is separate from the repair cap, which
+  counts runs that answered nothing.
+
+Known weaknesses: the caps are counted by the session from the run files, not by a
+script, and nothing here launches or waits on runs; with concurrent runs, re-read the
+state of every run on each wake and do not act only on the one that reported.
+
 ## Done when
 
 - The tree above exists, fully substituted, no stray `<PLACEHOLDER>`.

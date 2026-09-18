@@ -1,0 +1,16 @@
+All confirmed product-bound skills for the `orx` CLI (references subfolders are supporting material within the same skill directories, not separate skills/duplicates). Final inventory:
+
+SKILL.md	skill	Teaches an agent to drive the `orx` CLI's core workflows (projects, experiments, runs, logs); product-bound to this repository's own CLI.
+agent-skills/orx-agent-delegation/SKILL.md	skill	Teaches an agent to delegate independent tasks to helper sessions via `orx agent spawn`; product-bound.
+agent-skills/orx-compute/SKILL.md	skill	Teaches an agent to launch and monitor experiment runs across compute backends (hf, modal, k8s, ssh, slurm, ray, Tinker, local) via `orx`; product-bound.
+agent-skills/orx-create/SKILL.md	skill	Teaches an agent to initialize projects and add experiment nodes via `orx up`/`orx create-experiment`; product-bound.
+agent-skills/orx-customize/SKILL.md	skill	Teaches an agent to save reusable skills and LaTeX templates via `orx skills add`/`orx templates add`; product-bound.
+agent-skills/orx-evidence/SKILL.md	skill	Teaches an agent to design run output for evidence and read logs via `orx logs`; product-bound.
+agent-skills/orx-experiment-tree/SKILL.md	skill	Teaches an agent the experiment-tree model and auto-research loop for driving `orx` projects; product-bound.
+agent-skills/orx-figures/SKILL.md	skill	Teaches an agent to produce publication-quality matplotlib/TikZ figures; standalone (plotting guidance not dependent on the `orx` CLI itself).
+agent-skills/orx-git/SKILL.md	skill	Teaches an agent to read, edit, commit, and diff experiment code with plain git across `orx` worktrees; product-bound.
+agent-skills/orx-instances/SKILL.md	skill	Teaches an agent to create standalone compute instances via `orx instance create`; product-bound.
+agent-skills/orx-lit-review/SKILL.md	skill	Teaches an agent to search and rank literature via alphaXiv/OpenAlex/bioRxiv through `orx discover`/`orx paper`; product-bound.
+agent-skills/orx-paper/SKILL.md	skill	Teaches an agent to draft an academic paper as LaTeX that compiles to PDF in the project working tree; standalone (LaTeX drafting guidance not dependent on the `orx` CLI).
+agent-skills/orx-reports/SKILL.md	skill	Teaches an agent to write and organize durable outputs into a project's artifacts directory; product-bound (assumes `orx`'s artifacts directory convention).
+SYSTEM_PROMPT.md	agent	Defines the OpenResearch agent's identity, project-state framing, evidence-citation rules, and skill-routing instructions injected verbatim into every `orx up` session; product-bound.

@@ -1,0 +1,4 @@
+id	side	source	type	path	judge-ESC.md	judge-XY.md	judge-YX.md
+item-4b5c699b	installed	lib	skill	/Users/gfm/skill-library/plugins/workbench/skills/sweep-harness	COMPLEMENT	COMPLEMENT	COMPLEMENT
+item-5f05bf4c	src3	src3	skill	/private/tmp/tr-runs/set-1/candidates/src3/skills/orchestration	DISCARD	DISCARD	COMPLEMENT
+item-bdc9b27e	installed	lib	agent	/Users/gfm/skill-library/plugins/workbench/agents/loop-operator.md	COMPLEMENT	COMPLEMENT	COMPLEMENT

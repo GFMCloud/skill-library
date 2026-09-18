@@ -1,0 +1,34 @@
+### Steelman Y
+
+item-5d659876 is a complete operational engine for running a branching set of experiments end to end. It gives the agent a concrete tree model (baseline → co-equal sibling hypotheses → descend onto the confirmed winner), a discipline for never disturbing a node once it has produced an answer, and a bounded failure-handling policy (repair in place up to a cap, then escalate) rather than open-ended retrying. The wait loop is explicitly designed not to trust a single status signal ("`orx exp wait --project` as a sleep-until-change signal, not the source of truth") and instead re-reads the run list on every wake, which is a concrete anti-illusion-of-progress mechanism. It requires reading actual run logs before judging a node ("actually read its results with `orx logs <runId>` ... Don't infer from status alone") and defines a numeric stop condition (~3 consecutive failed/regressed runs) instead of leaving "when to stop" to vibes. It also forces a recorded, comparable artifact at the end of every touched turn: a one-line-per-node summary of what was tested, status, and headline result — directly serving the slot's purpose of recorded, comparable, resumable experiments, and doing so for actual multi-branch, multi-compute-run work that the other candidate never attempts.
+
+### Steelman X
+
+item-979f7ecc targets the failure mode that makes experiment logs untrustworthy in the first place: post-hoc rationalization, where a prediction is quietly written after the result is already known. Its scaffolded workflow makes that structurally hard — the register is append-only, the holdout must be frozen before any run, and the generated `/run` skill gate-checks a `created` timestamp and refuses to proceed if Prediction is empty, with the doctrine explicitly naming the failure it exists to prevent ("Do not fill in a prediction now and then immediately run: that is the exact rationalization failure this harness exists to prevent"). It also tracks killed ideas (`dead-ideas.md`) and requires a later agent to stop and confirm with the user before re-registering something that resembles a previously refuted hypothesis, which is a genuine resumability/comparability aid across sessions that nothing else in either report provides. Critically, the scaffolding skill itself has zero named runtime dependencies — no CLI, no service, nothing beyond the filesystem and the agent's own compliance — and it explicitly declines to run inside scopes where it doesn't belong (terminal/irreversible-finish work, one-off sessions), showing deliberate restraint about its own applicability rather than trying to be a universal experiment engine.
+
+### Scores
+
+| Criterion | Y score | Y evidence | X score | X evidence |
+|---|---|---|---|---|
+| Fit with the bar | 1 | Report calls plan-then-stop "partially supported" since the loop "launch[es] rounds, wait, and refill/promote autonomously without a stated checkpoint before each new launch," and say-what-was-checked is also only "partially supported" (no instruction to state what was *not* checked). | 3 | Report cites explicit textual support for all three: a fit-test "stop-and-decide gate before scaffolding," `/run`'s "Do not execute the run in this step" separation, and Verdict's requirement to "state the sample size or interval the verdict rests on." |
+| Enforcement mechanism | 0 | "There is no script, hook, or exit-code check inside the file; compliance depends entirely on the agent following the written procedure." | 0 | "There is no executable script, hook, or CI check in the files... nothing outside the agent's own compliance enforces this," doctrine itself calls the gate "a file-existence check, not a promise." |
+| Context cost | 1 | On-demand trigger, but the item names five external dependents it defers to (session playbook, git skill, evidence skill, compute-backend skill, report skill) that a real invocation would likely also load. | 2 | On-demand with narrow trigger phrases and two explicit decline conditions that shrink when it loads at all; "Dependencies: None named" and sibling skills are referenced "for contrast," not loaded. |
+| Maintenance burden | 0 | Requires an external `orx` CLI and its subcommands plus a private git worktree, none of which are shown present or included in the file set. | 3 | "No runtimes, CLIs, or services are referenced. It depends only on the agent itself following the templates." |
+| Specificity | 3 | Numeric repair cap (two unproductive runs), numeric stop condition (~3 consecutive failed/regressed runs), four named analysis moves (Repair/Refill/Promote/Stop), explicit "stacked bushes" structural rule. | 3 | Concrete fit-test conditions, fixed scaffold file list with a grep-for-placeholder verification step, timestamp-based gate-check, and a named rejected pattern ("Do not fill in a prediction now and then immediately run"). |
+
+Neither candidate scores 0 on "Fit with the bar," so neither is disqualified outright, though Y's autonomous multi-round launching without a per-round checkpoint is a real gap against bar 1.
+
+### Per-item rows
+
+| Item | Class | Note |
+|---|---|---|
+| item-5d659876 | COMPLEMENT | Fills the gap X's own report names explicitly: "Does not itself run or score any experiment — it only scaffolds"; Y provides the actual branching, launching, and comparing of runs against a real compute backend that X never touches. |
+| item-979f7ecc | COMPLEMENT | Fills a gap Y lacks: a structural predict-before-run gate against rationalization (timestamp check, empty-Prediction refusal) and a killed-idea registry (`dead-ideas.md`) that stops re-litigation of refuted hypotheses across sessions — Y's "freeze after answered" rule protects nodes post-hoc but has no mechanism forcing a prediction to exist before execution. |
+
+### Deciding criteria
+
+Maintenance burden and Fit with the bar most sharply separated the two items' character (X self-contained and bar-aligned, Y dependent on an unincluded external CLI and only partially bar-aligned), but the classification itself rests on the two items covering non-overlapping mechanisms — execution/orchestration versus predict-before-look discipline — which is why both land as COMPLEMENT rather than one superseding or being redundant with the other.
+
+### What I could not assess from reading alone
+
+Whether Y's `orx` CLI and its subcommands actually exist, fail open or closed, and enforce anything at the tool layer cannot be verified from the report alone — this would need to be run to see whether `orx exp wait`, `orx runs`, and `orx logs` behave as described. Similarly, whether X's generated `/hypothesis` and `/run` sub-skills reliably block a later agent from writing Prediction and Result in the same turn (versus the agent simply ignoring the prose gate) would need a behavioral test with an agent actively trying to shortcut it. I did not attempt to identify either candidate's origin and have no strong guess to disclose.

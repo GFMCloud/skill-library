@@ -24,7 +24,11 @@ metadata:
    failure this harness exists to prevent. Send the user to `/hypothesis` first.
 3. Execute the run using the Config section exactly as written. Do not silently
    change parameters mid-run; if the config needs to change, that is a new run file.
-4. Fill in **Result** with the raw output, and **Verdict** (confirmed / refuted /
+4. Read the run's output before writing anything: exit status or a "completed" badge says
+   the process ended, not what it measured. If the run crashed, ran out of memory, timed
+   out or hit a missing dependency, it answered nothing: fix and re-run this same run
+   file, leave the register row `open`, and after two such runs in a row stop and ask.
+   Otherwise fill in **Result** with the raw output, and **Verdict** (confirmed / refuted /
    inconclusive) comparing Result against the Prediction written beforehand. Set
    `executed` to now.
 5. Update the hypothesis's row in `REGISTER.md`: `status: tested`, link this run
