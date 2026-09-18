@@ -173,9 +173,11 @@ Route by the largest ratified row:
 - **Any M** (an afternoon, one PR): write one runbook with a gate before the
   push, execute it, same rules.
 - **Any L** (multi-session, or a merge under the 500-line body cap with more
-  than a handful of edits): scaffold `phased-harness` with `decisions.md` as the
-  pre-seeded Gate A table and the pinned clone moved into the harness as
-  read-only evidence. The harness owns execution from there.
+  than a handful of edits): for a skill collection, run `toolkit-review` at
+  `set` size with `decisions.md` as the pre-seeded slot map; otherwise scaffold
+  `phased-harness` with `decisions.md` as the pre-seeded Gate A table and the
+  pinned clone moved into the harness as read-only evidence. The harness owns
+  execution from there.
 
 Whatever the route, replaced files are renamed `.superseded` until verification
 passes (global convention), ingested text is restyled to the no-em-dash rule,

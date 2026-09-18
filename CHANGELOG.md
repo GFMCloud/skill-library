@@ -2,6 +2,27 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - workbench 0.14.0: toolkit-review (incubator), the reusable form of the ECC evaluation
+
+- **toolkit-review (new, incubator):** review installed skills, agents and hooks on their
+  own (`self`) or against one or more candidate repos, in three sizes (`spot`: one
+  session, no harness; `set`: slots and gates through `phased-harness`; `full`: plus a
+  hook bench or a gated review fixture per slot). Ships the runner and check scripts the
+  ECC harness (`~/work/ecc-harness-eval`, 2026-09-17) wrote and proved, parametrized by a
+  run directory, plus `prove-scripts.sh`, a no-model proof set for every script. Rubric v2
+  replaces the ECC judge rubric: per-item classes with the direction in the name
+  (`SUPERSEDES <id>` / `SUPERSEDED BY <id>`), no verdict token, the slot verdict derived
+  from the rows by `make-ledger.py`; `decisions.md` keeps `source-intake`'s contract v1
+  vocabulary by a fixed mapping. Changes forced by the ECC retro: the extraction prompt
+  carries its heading and forbidden-word rules up front and the name check allows names
+  the source itself cites; the fixture has a discrimination gate before its arms run; the
+  `~/.claude` check is the denylist from day one; waves run from a copy of the scripts;
+  the evidence archive precedes any residue deletion.
+- **source-intake (incubator):** Step 5 route L sends a skill collection to
+  `toolkit-review` at `set` size instead of a bare `phased-harness`.
+- The ECC harness's `bin/` and `templates/` are renamed `.superseded` in that directory;
+  this skill is their one editable home.
+
 ## 2026-09-17 - data-wrangler 0.1.0: manifest gains a version field
 
 No skill change. The plugin manifest had no `version`, so Claude Code tracked the

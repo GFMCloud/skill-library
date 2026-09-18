@@ -1,0 +1,6 @@
+id	side	source	type	path	judge-S1.md	judge-S2.md
+item-06c31a80	installed	lib	agent	/Users/gfm/skill-library/plugins/verification-kit/agents/pre-delivery-verifier.md	TIGHTEN Enforcement	TIGHTEN Enforcement
+item-24501ddb	installed	lib	skill	/Users/gfm/skill-library/plugins/verification-kit/skills/smoke-gate	TIGHTEN Stop-hook gating	TIGHTEN Stop-hook
+item-7aed43c3	installed	lib	skill	/Users/gfm/skill-library/plugins/foundry-core/skills/proof-of-work	TIGHTEN Enforcement	TIGHTEN Enforcement
+item-92c76be2	installed	lib	skill	/Users/gfm/skill-library/plugins/foundry-core/skills/evidence-report	TIGHTEN Enforcement	TIGHTEN Enforcement
+item-e739493a	installed	lib	skill	/Users/gfm/skill-library/plugins/verification-kit/skills/review-pair	TIGHTEN Verdict evidence field	TIGHTEN verdict evidence field

@@ -1,0 +1,5 @@
+id	side	source	type	path	judge-XY.md	judge-YX.md
+item-57dd6a97	installed	lib	skill	/Users/gfm/skill-library/plugins/workbench/skills/handoff	SUPERSEDES item-c238a6db	SUPERSEDES item-c238a6db
+item-5fc81ea9	src1	src1	command	/private/tmp/tr-runs/spot-1/candidates/src1/commands/pickup.md	REDUNDANT item-57dd6a97	REDUNDANT item-57dd6a97
+item-c238a6db	src1	src1	skill	/private/tmp/tr-runs/spot-1/candidates/src1/skills/session-handoff	FRAGMENT -> item-57dd6a97	FRAGMENT -> item-57dd6a97
+item-e0eb292d	src1	src1	command	/private/tmp/tr-runs/spot-1/candidates/src1/commands/handoff.md	REDUNDANT item-57dd6a97	REDUNDANT item-57dd6a97

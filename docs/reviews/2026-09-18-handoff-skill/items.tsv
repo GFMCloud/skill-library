@@ -1,0 +1,5 @@
+id	side	source	slot	type	path
+item-57dd6a97	installed	lib	handoff	skill	/Users/gfm/skill-library/plugins/workbench/skills/handoff
+item-c238a6db	src1	src1	handoff	skill	/private/tmp/tr-runs/spot-1/candidates/src1/skills/session-handoff
+item-e0eb292d	src1	src1	handoff	command	/private/tmp/tr-runs/spot-1/candidates/src1/commands/handoff.md
+item-5fc81ea9	src1	src1	handoff	command	/private/tmp/tr-runs/spot-1/candidates/src1/commands/pickup.md

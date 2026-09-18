@@ -1,0 +1,23 @@
+{
+  "name": "",
+  "size": "spot",
+  "mode": "one-repo",
+  "created": "",
+  "sources": [
+    {"id": "", "url": "", "pin": "", "path": ""}
+  ],
+  "models": {
+    "extractor": "sonnet",
+    "judge": "sonnet",
+    "escalation": "opus",
+    "reader": "sonnet",
+    "fixture": "sonnet"
+  },
+  "wave_size": 4,
+  "redispatch_budget": 3,
+  "timeout_s": 1200,
+  "budget_ceiling_tokens": 2000000,
+  "budget_stop_percent": 80,
+  "fixture": {"runs_per_arm": 3, "min_bare_misses": 2},
+  "bench": {"images": {"installed": "python:3.12-slim"}, "data_home_var": "TOOLKIT_REVIEW_DATA_HOME"}
+}

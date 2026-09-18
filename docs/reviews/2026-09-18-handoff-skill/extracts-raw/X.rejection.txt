@@ -1,0 +1,6 @@
+Attempt 1 was rejected. The exact failures, from the mechanical check:
+
+    check-extract: name-list hits:
+    34:item-57dd6a97 (fixtures/setup-fixture-repo.sh and the FIXTURE-*.md files, warnings to whoever runs them): "Never run this checker against the real skill-library repo."
+
+Write the whole report again. Use exactly the four level-three headings and the seven bold fields in the order given. Do not write any of the forbidden words or names, even inside a quotation: paraphrase the quoted line and replace the name with 'the repository' or 'the owner'. Before replying, search your draft for every forbidden word.

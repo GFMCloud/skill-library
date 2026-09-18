@@ -1,0 +1,6 @@
+id	side	source	slot	type	path
+item-7aed43c3	installed	lib	verification	skill	/Users/gfm/skill-library/plugins/foundry-core/skills/proof-of-work
+item-92c76be2	installed	lib	verification	skill	/Users/gfm/skill-library/plugins/foundry-core/skills/evidence-report
+item-24501ddb	installed	lib	verification	skill	/Users/gfm/skill-library/plugins/verification-kit/skills/smoke-gate
+item-e739493a	installed	lib	verification	skill	/Users/gfm/skill-library/plugins/verification-kit/skills/review-pair
+item-06c31a80	installed	lib	verification	agent	/Users/gfm/skill-library/plugins/verification-kit/agents/pre-delivery-verifier.md
