@@ -2,6 +2,13 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-17 - data-wrangler 0.1.0: manifest gains a version field
+
+No skill change. The plugin manifest had no `version`, so Claude Code tracked the
+install by commit hash and validator F17 could not apply its bump rule to it (noted
+2026-09-12). Starts at 0.1.0 like deploy-ops and consistency-checker did; future
+skill or agent changes bump it like every other plugin.
+
 ## 2026-09-17 - workbench 0.13.1: two skills stop naming files that were never there; validator F18 catches the class
 
 Three commits made this morning on a worktree branch (`c341715`, `f290116`, `0a0c4a0`,
