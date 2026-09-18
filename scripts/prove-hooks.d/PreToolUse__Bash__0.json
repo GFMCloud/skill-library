@@ -1,5 +1,5 @@
 {
- "_hook": "deny-destructive.py (PreToolUse, matcher Bash): denies destructive, catastrophic, and credential-reading commands; silent otherwise",
+ "_hook": "deny-destructive.py (PreToolUse, matcher Bash): denies destructive, catastrophic, and credential-reading commands, and fails closed on hook input it cannot parse; silent otherwise",
  "born": "2026-09-07",
  "positive": [
   {
@@ -162,6 +162,15 @@
     "command": "cd /tmp && rm -rf node_modules"
    },
    "cwd": "/Users/gfm/work/claude-scout-weekly"
+  },
+  {
+   "_raw": "{\"tool_name\": \"Bash\", \"tool_input\": {\"command\": \"ls\""
+  },
+  {
+   "_raw": ""
+  },
+  {
+   "_raw": "[\"not\", \"an\", \"object\"]"
   }
  ],
  "negative": [

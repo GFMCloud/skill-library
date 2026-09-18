@@ -44,11 +44,21 @@ explains how to fill it in and how to check it; it does not redefine any field.
    satisfy it, stop and ask exactly one question naming the row. Zero typed claims are
    accepted from the document alone.
 
-`scripts/check-claims.py` in this skill directory implements steps 2, 4, and 5
-mechanically for a single handoff file: `python3 scripts/check-claims.py
-<path-to-handoff.md>`. It exits 1 on any checkable mismatch and 0 when every
-checkable claim matches. It is the same procedure described above, ordered so it can
-be run standalone; it is what the fixtures in `fixtures/` are checked against, and it
+Staleness: `written_at` dates the claims. Before the table, list the files in the
+project's git repo whose mtime is after `written_at`, and name them in the step 3
+status. Matching claims prove the claimed values only; they say nothing about work done
+after the handoff was written. A stale project is not a mismatch. It becomes the one
+question in step 6 only when a changed file is one the first move or a claim depends on.
+Limits: the list covers files that exist now, so a deletion, or a commit that left
+mtimes alone, does not show.
+
+`scripts/check-claims.py` in this skill directory implements steps 2, 4, and 5 and the
+staleness list mechanically for a single handoff file: `python3 scripts/check-claims.py
+<path-to-handoff.md> --project <repo dir>` (`--project` defaults to the current
+directory). It exits 1 on any checkable mismatch and 0 when every checkable claim
+matches; staleness never changes the exit code. It is the same procedure described
+above, ordered so it can be run standalone; it is what the fixtures in `fixtures/` are
+checked against (`bash fixtures/run-fixtures.sh` asserts all three cases), and it
 does not replace the status in step 3 or the "ask one question" judgment call in
 step 6, both of which stay with the session.
 
