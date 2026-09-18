@@ -1,7 +1,8 @@
 # Plan-gate: row 9, security-audit as a separate skill (2026-09-18)
 
-Status: waiting for Graham's approval. Nothing in this plan has been done. No file from
-the candidate has been copied and none of its code has been run.
+Status: approved by Graham 2026-09-18 ("approve with defaults", quoted in `rulings.md`)
+and executed as written; landed as the commit titled "verification-kit 0.5.0". The text
+below is the plan as he approved it, unchanged.
 
 Ruling this serves (Gate B, quoted): "B5 - Adopt as a sep skill as well".
 

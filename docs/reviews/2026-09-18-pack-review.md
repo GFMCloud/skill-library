@@ -6,14 +6,15 @@ pin: see 2026-09-18-pack-review/pins.tsv (11 rows, one sha per repo)
 reviewed: 2026-09-18
 verdict: HARVEST (the landing session's description of the Gate B row rulings; Graham ruled rows, not an overall verdict)
 recheck: none
-applied: branch pack-review-2026-09-18, the commits titled "decks 0.3.0", "foundry-core 0.6.0", "workbench 0.16.0", "workbench 0.16.1" and "verification-kit 0.4.0", each "pack review set-1"; ruled by Graham 2026-09-18 ("yes all as recommended, file-mode fix rides the branch")
+applied: branch pack-review-2026-09-18, the commits titled "decks 0.3.0", "foundry-core 0.6.0", "workbench 0.16.0", "workbench 0.16.1", "verification-kit 0.4.0" and "verification-kit 0.5.0"; ruled by Graham 2026-09-18 ("yes all as recommended, file-mode fix rides the branch"; for row 9, "B5 - Adopt as a sep skill as well" then "approve with defaults")
 evidence: 2026-09-18-pack-review/ (extraction reports, all 18 judgments, ledger and per-item rows, decisions, slot mapping, both gates with Graham's rulings quoted, pins, usage, the seven whole-pack reviews, the generated page). Raw `claude -p` output is not archived here, matching the earlier records.
 ---
 
 # Pack review, set-1
 
-**Verdict:** fragments from four of the five compared repos were worth taking and one
-gap was found; no candidate item replaced an installed one.
+**Verdict:** fragments from three of the five compared repos were worth taking, one gap
+was filled with a new skill, and one skill was vendored whole beside the installed one;
+no candidate item replaced an installed one.
 
 `workbench:toolkit-review` at set size, many-repos mode: 8 slots, two order-swapped
 headless judges per slot, a third on the two slots where they disagreed. 47 headless runs,
@@ -40,12 +41,17 @@ was read as data and checked against the judges' description, and all matched.
 - Not a ledger row: the toolkit-review scripts' file modes, 100644 to 100755. Commit
   "workbench 0.16.1".
 
-## Ratified and not landed
+## Landed by exception
 
-- Row 9, security-audit (`cloudflare/security-audit-skill`): Graham ruled "Adopt as a sep
-  skill as well". It ships 3,037 lines of executable Node, so it is behind a plan-gate,
-  `2026-09-18-pack-review/gate-b/plan-gate-security-audit.md`, waiting for his approval.
-  Nothing from it has been copied or run.
+- Row 9, security-audit (`cloudflare/security-audit-skill` at c1c8a8c, MIT): vendored as
+  `plugins/verification-kit/skills/security-audit/`, 20 files byte-identical to the pin
+  plus `LICENSE` and `SOURCE.md`, frontmatter the only edit. Commit "verification-kit
+  0.5.0". It went through a plan-gate first
+  (`2026-09-18-pack-review/gate-b/plan-gate-security-audit.md`) because it ships 3,037
+  lines of executable Node, and vendoring overrides two boundaries of the harness: "never
+  copy a candidate file in whole" and no candidate code run. Graham approved both in
+  those terms. Both validators were read in full before anything ran; `node --test` 65
+  of 65 pass; pass and fail inputs were proven from this side.
 
 ## What was declined, and why
 
@@ -67,10 +73,11 @@ was read as data and checked against the judges' description, and all matched.
   not in the library and was not compared against `orx-figures`. The built-in `/simplify`
   was not in the slot map for overengineering-review; the new skill's description
   separates the two. proof-of-work's two eval cases were not re-run for its change.
-  overengineering-review has no eval cases and its routing is untested.
+  overengineering-review has no eval cases and its routing is untested. Routing between
+  security-audit and security-checklist is untested until the plugin is installed.
 
 ## Re-review trigger
 
 Any pin in `pins.tsv` moving by a minor version; `adopt-humanizer` merging (it claims
 workbench 0.15.0, this branch takes 0.16.0 and 0.16.1, so the second to merge resolves
-the manifest and CHANGELOG); Graham's answer on the plan-gate for row 9.
+the manifest and CHANGELOG); `cloudflare/security-audit-skill` moving past c1c8a8c, which is a re-vendor per `SOURCE.md`, never an in-place edit.
