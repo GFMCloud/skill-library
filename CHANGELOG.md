@@ -2,6 +2,19 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - validator F19: no evals/ inside a skill directory
+
+- **`scripts/validate-skills.sh`, new failing check F19:** anything named `evals`
+  directly inside `plugins/<plugin>/skills/<skill>/` fails, with the correct
+  destination in the message. PR 16 moved every suite to `plugins/<plugin>/evals/<skill>/`
+  because `claude plugin eval` rejects an eval dir inside `skills/`, but nothing stopped
+  the old layout reappearing. The check runs before F1 and F2, so a skill directory
+  with a broken SKILL.md still reports it. Proof: `scripts/prove-f19.sh` builds a
+  fixture library; against the previous validator the offending skill passed (exit 0),
+  against this one it fails with F19 and the plugin-level location passes. The real
+  tree passes. Documented in `docs/authoring-standard.md` under Change hygiene with its
+  known weaknesses (top-level `evals` name only). No plugin changes, so no bumps.
+
 ## 2026-09-18 - verification-kit 0.5.2: readonly-agent-guard denies writes to /tmp and sees four more redirect forms
 
 - **readonly-agent-guard (hook):** a pre-delivery-verifier run wrote `> /tmp/co.txt`
