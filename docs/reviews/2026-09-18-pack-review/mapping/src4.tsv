@@ -1,0 +1,2 @@
+skills/security-audit	skill	Provides a six-phase security-audit workflow (reconnaissance, hunting, candidate validation, structured findings, independent verification, reporting) that a coding agent runs against an arbitrary target codebase, using bundled Node.js validator scripts; standalone, not bound to this repository's own product or CLI.
+FLAG	skills/security-audit/SKILL.md	"Run the complete workflow only for explicit codebase audit or pen-test requests"

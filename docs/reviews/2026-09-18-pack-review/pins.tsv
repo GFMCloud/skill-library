@@ -1,0 +1,12 @@
+id	lane	repo	sha	clone_exit
+src1	review	DietrichGebert/ponytail	e3ba2aa6f1e6f0bc4d69eb09c9f0d0a93af56156	0
+src2	review	alphaXiv/OpenResearch	69768ff1b0537a4656e69f550fc444ac35b945d2	0
+src3	review	stablyai/orca	71f3bdb700268e1a2d70fa28da84c88081337503	0
+src4	review	cloudflare/security-audit-skill	c1c8a8c1471069fb0e188eeaff69b8e8db6564a8	0
+src5	review	tt-a1i/archify	72c750bb070d95171dbb2244e5b62b1b7da69c12	0
+src6	adopt	Tencent/WeKnora	6db8fdd60172449839f128928a2303f652a253b2	0
+src7	adopt	hypit-ai/hypit	52ec35b01c634bccd0235c5be2fc4577683662e2	0
+src8	adopt	Human-Agent-Society/reef	3c839bb7368d9cdd93712b340f74fd218689ac4a	0
+src9	adopt	deeplethe/utopia	d993006281d81be8fe239890089a55f9d3026228	0
+src10	adopt	webadderallorg/Recordly	b3ea7754c9ebdbb74194bdb902ca63c0579bc7b8	0
+src11	adopt	abue-ammar/tinycast	7dc4450fa011ccebe72d7f7cec9ff53e05806785	0
