@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # validate-skills.sh — the rules are documented in docs/authoring-standard.md and this
 #   header. The original spec, docs/migration/harness/docs/validator-spec.md, covers
-#   F1 to F12 only and is kept as history; rules added since (F13 to F18, W4 to W7)
+#   F1 to F12 only and is kept as history; rules added since (F13 to F19, W4 to W7)
 #   are described where they were introduced, in CHANGELOG.md.
 # Usage: bash scripts/validate-skills.sh [plugins/<name>]
 #   STRICT=1        warnings also cause exit 1
@@ -49,6 +49,13 @@ names = {}
 for d in skill_dirs:
     rel, dirname = d, os.path.basename(d)
     plugin = d.split(os.sep)[1] if len(d.split(os.sep)) > 1 else "?"
+    # F19: eval cases live in plugins/<plugin>/evals/<skill>/, never in the skill
+    # directory. `claude plugin eval` rejects an --eval-dir inside skills/ ("a loaded
+    # component directory"), so a suite placed here cannot run (layout v2, PR 16).
+    # Checked before F1/F2 so a broken SKILL.md does not hide it.
+    if os.path.lexists(os.path.join(d, "evals")):
+        fails.append(f"F19 {rel}: evals/ inside the skill directory; move it to "
+                     f"plugins/{plugin}/evals/{dirname}/")
     sk = os.path.join(d, "SKILL.md")
     if not os.path.isfile(sk):
         fails.append(f"F1 {rel}: no SKILL.md"); continue

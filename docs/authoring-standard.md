@@ -151,6 +151,17 @@ Three states, not four:
   `plugins/<plugin>/evals/<skill>/`, never inside the skill directory, and run with
   `claude plugin eval`; the layout and the run command are in
   `docs/toolkit-interface-spec.md` section 9, the one editable home for both.
+  Enforced by the validator (F19): anything named `evals` directly inside
+  `plugins/<plugin>/skills/<skill>/` fails, because the CLI rejects an `--eval-dir`
+  inside `skills/` and a suite placed there cannot run (PR 16 moved all 15 suites out;
+  nothing stopped one coming back). Proven by `scripts/prove-f19.sh`, which fails the
+  validator on a fixture skill holding `evals/` and passes one using the plugin-level
+  location. It follows that a bare `evals/...` path in a SKILL.md can no longer satisfy
+  F18; name the suite by its full path, `plugins/<plugin>/evals/<skill>/`, which F18
+  skips. Known weaknesses: it checks the name `evals` at the top of the skill directory
+  only, so a suite nested deeper (`references/evals/`) or under another name
+  (`eval-cases/`) is not caught; and it does not check that a stable skill has a suite
+  at the correct location at all.
 - Once a skill has eval cases, they run on any change to that skill, its hooks, or the
   CLAUDE.md it depends on, because that configuration steers the agent and deserves the
   regression testing code gets. A change that drops the pass rate is reviewed before it
