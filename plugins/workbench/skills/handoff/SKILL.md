@@ -4,7 +4,7 @@ description: >-
   Summarizes the current conversation and prepares a structured handoff package for a fresh Claude session, and verifies a handoff's claims when a new session resumes from one. Use when the user says "handoff", "/handoff", "fresh session", "new session", "context is getting long", or "wrap this up" to generate a handoff; also use whenever a session opens from an uploaded, pasted, or referenced handoff file, to re-check its claims before acting on it. Also proactively suggest a handoff when the conversation is clearly getting very long, context has been compacted, or the user is wrapping up a major work block. Generates a work-type-aware markdown summary file with a typed, re-checkable claims block and a copy-paste prompt block so the new session picks up with zero productivity loss, then on resume verifies each claim against the live artifact rather than trusting the document. This is Graham's customized version and supersedes Claude's stock handoff skill, which triggers on the same words: when both are installed, always use this one. It adds rejected-approach and verification tracking, a pointer-first rule that references durable docs instead of copying them, typed claims so resume verification is a re-run command rather than a re-read of prose, and secret redaction.
 metadata:
   maturity: incubator
-  version: 0.4.0
+  version: 0.5.0
   reviewed: 2026-09-11
 ---
 
@@ -271,7 +271,7 @@ Don't start working yet - just confirm you're up to speed and ask how I want to 
 - **Record the dead ends.** TRIED AND REJECTED exists to stop the next session from re-proposing an approach this one already killed. One line each, with the reason. A rejection with no reason invites a re-litigation.
 - **Flag what's fragile.** If something was partially worked out or has a known issue, say so explicitly in the handoff doc - don't bury it.
 - **FIRST MOVE is not a list.** If you find yourself writing several things there, pick the one the session must do first and put the rest in NEXT STEPS.
-- **Memory carries persistent context.** Don't re-explain background that already lives in memory. The handoff carries the session-specific delta only.
+- **Memory carries persistent context.** Don't re-explain background that already lives in memory. The handoff carries the session-specific delta only. The reverse also holds: when a durable fact surfaced this session (a preference, a project decision, a reference that outlives the task), offer to write it to memory rather than leaving it in the handoff, where it is deleted with the task.
 - **The prompt block is opinionated.** It tells the new Claude not to start working until acknowledged. This is intentional - it prevents the new session from making assumptions and charging off in the wrong direction.
 
 ---
@@ -287,7 +287,13 @@ Compaction keeps a summary of the conversation, not the plan. The rule: **write 
 | The state file was just written and nothing has happened since (a phased harness between steps) | Compact; nothing is at risk |
 | The work block is ending, or a different session will continue it | Do not compact. Generate a handoff (Steps 1-6), which carries typed claims a summary cannot |
 | The task is finished and the next one is unrelated | `/clear` instead; there is nothing to carry |
-| Auto-compaction already happened, with no chance to write first | Re-read the state file before the next action, compare it with the newest `STATE-precompact-*.md` beside it if one exists, and say what could not be recovered |
+| Auto-compaction already happened, with no chance to write first | Re-read the state file before the next action, compare it with the newest `STATE-precompact-*.md` beside it if one exists, and say what could not be recovered. Salvage from the compaction summary by triage: **keep** the current goal, changed files, decisions, errors and test results, and the next step; **summarize** exploration, debugging paths and general discussion in a line each; **drop** repeated logs and dead ends already recorded. Then write the file at once |
+
+Write the file early, not at the edge. A handoff or state file written at about half of the
+context budget is sharper than one written at ninety percent, because the model still holds
+the detail it is summarizing; the natural moments are closing a thread, switching tasks, and
+the end of the day on a topic. Do not stop a working change halfway to do it: finish the
+micro-step, then write.
 
 Two hooks in `~/.claude/hooks/` back this rule when they are wired (they are Graham's own, outside this plugin, and this skill works the same without them). `pre-compact-state.py` copies the project's `STATE.md` to a timestamped `STATE-precompact-*.md` beside it before every compaction; it snapshots what is on disk, so it does not replace writing the plan down first. `session-carryover.py` injects the typed claims block of the project's newest handoff at session start, labelled unverified, when the claims are no more than 7 days old. Injected claims are a prompt to run Resume Mode, never a substitute for it: zero typed claims are accepted from the injection alone.
 

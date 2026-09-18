@@ -20,6 +20,13 @@ Behavior changes only — not wording tweaks. Newest first.
   the evidence archive precedes any residue deletion.
 - **source-intake (incubator):** Step 5 route L sends a skill collection to
   `toolkit-review` at `set` size instead of a bare `phased-harness`.
+- **handoff 0.5.0 (incubator):** the first `toolkit-review` spot run
+  (`docs/reviews/2026-09-18-handoff-skill.md`, both judges `FRAGMENT`) landed three lines
+  from `simplybychris/handoff-skill` at `8990d64`: write the handoff or state file at about
+  half of context, not at the edge, and finish the micro-step first; after an
+  auto-compaction, salvage by keep, summarize, drop before writing; and offer durable facts
+  to memory instead of leaving them in the handoff. Nothing else in the candidate was
+  taken (its two slash commands are redundant with the skill's triggers).
 - The ECC harness's `bin/` and `templates/` are renamed `.superseded` in that directory;
   this skill is their one editable home.
 

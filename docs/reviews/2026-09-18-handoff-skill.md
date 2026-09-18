@@ -6,7 +6,7 @@ pin: 8990d64805fe340c9e79f59db5a93da273559dc6
 reviewed: 2026-09-18
 verdict: HARVEST
 recheck: none
-applied: none; one fragment row proposed for the owner to rule on
+applied: branch toolkit-review, the commit titled "handoff 0.5.0: fragment from simplybychris/handoff-skill", ruled by Graham 2026-09-18 ("apply the fragment, merge and push it")
 evidence: 2026-09-18-handoff-skill/ (both extraction reports and the rejected first attempt with its note, both judgments, ledger, decisions, patch, usage)
 ---
 
@@ -33,7 +33,12 @@ the owner's email block (standing limit); both said they did not try to infer or
 
 ## What landed
 
-Nothing yet. Row 2 below is the proposal.
+Row 1, as three additions to `plugins/workbench/skills/handoff/SKILL.md` (handoff 0.5.0):
+the keep, summarize, drop triage in the auto-compaction row of the Before Compaction table;
+a paragraph on writing the file at about half of context and finishing the micro-step
+first; and the offer to move durable facts to memory in Behavior Notes. Checked before
+writing: the source file at the pin says exactly what both judges described, and the
+installed section held none of the three.
 
 ## Rows (rubric v2, both judges)
 
