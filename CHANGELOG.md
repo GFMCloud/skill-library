@@ -2,6 +2,15 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - workbench 0.16.1: toolkit-review scripts are executable
+
+- **toolkit-review (incubator):** all 18 files under `scripts/` go from mode 100644 to
+  100755. SKILL.md invokes them bare (`scripts/init-run.sh <run-dir> ...`), which failed
+  with `Permission denied`; the set-1 run called every one through `bash` to get round
+  it. Proof: `scripts/sum-budget.sh` invoked directly was `Permission denied` before;
+  after, `scripts/prove-scripts.sh` invoked directly exits 0 with "all proofs PASS". No
+  content change. Found by the 2026-09-18 pack review; Graham ruled it rides that branch.
+
 ## 2026-09-18 - workbench 0.16.0: pack review set-1, ledger row 4 (experiment-loop)
 
 Source: the same set run; both judges COMPLEMENT. Ratified by Graham at Gate B. From
