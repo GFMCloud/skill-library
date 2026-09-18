@@ -82,6 +82,9 @@ Run every case `k` independent times and record every trial, including failures.
   paths: pass^3 of 1.00.
 - Report cost and wall time per trial beside the rates. A pass rate bought with a
   tripled cost is a finding, not a success.
+- Read a before/after difference against noise. It counts only when it exceeds the
+  baseline's own run-to-run spread, measured by running the unchanged baseline more
+  than once. At k=3 one flipped trial moves a case's pass fraction by a third.
 
 ## Traps
 
