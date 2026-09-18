@@ -118,5 +118,8 @@ cp "$TR_RUN/judgments/proof2/judge-XY.md" "$TR_RUN/judgments/proof2/judge-YX.md"
 t zero "make-ledger derives a verdict from the rows"               python3 "$S/make-ledger.py"
 /usr/bin/grep -E '^\| proof2' "$TR_RUN/LEDGER.md" | sed 's/^/      | /'
 t zero "make-patches lists the named candidate item"               python3 "$S/make-patches.py"
+# 8. The proofs must leave nothing behind inside the skill directory: no symlink, no new file.
+nlinks=$(find "$SK" -type l | wc -l | tr -d ' ')
+if [ "$nlinks" = "0" ]; then echo "PASS  no symlink inside the skill directory after the proofs"; else echo "FAIL  $nlinks symlink(s) inside the skill directory:"; find "$SK" -type l; fails=$((fails + 1)); fi
 echo "--- result"
 if [ "$fails" -eq 0 ]; then echo "prove-scripts: all proofs PASS (proof dir $P)"; else echo "prove-scripts: $fails FAIL (proof dir $P)"; exit 1; fi

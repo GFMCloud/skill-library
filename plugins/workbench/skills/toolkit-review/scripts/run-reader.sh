@@ -5,7 +5,7 @@
 # Model: models.reader in run.json.
 RUN="${TR_RUN:?run-reader.sh: set TR_RUN to the run directory}"
 S="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REF="$(dirname "$S")/references"
+REF="${TR_SKILL_DIR:-$(dirname "$S")}/references"
 n="$1"
 dir="$RUN/readthrough/input/chunk-$n"
 if [ -z "$n" ] || [ ! -d "$dir" ]; then echo "run-reader.sh: no such chunk: $dir" >&2; exit 2; fi

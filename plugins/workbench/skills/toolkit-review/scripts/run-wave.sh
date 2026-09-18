@@ -21,8 +21,10 @@ mkdir -p "$(dirname "$log")"
 snap="$log.bin"
 rm -rf "$snap"; mkdir -p "$snap"
 cp "$S"/*.sh "$S"/*.py "$snap"/ 2>/dev/null
-# The runners resolve references/ relative to their own directory; give the snapshot one.
-ln -s "$(dirname "$S")/references" "$snap/../references" 2>/dev/null || true
+# The runners read references/ from TR_SKILL_DIR when it is set, so the snapshot needs no
+# link back to the skill (a symlink here once landed inside the skill's own references/
+# directory and broke the library validator, 2026-09-18).
+export TR_SKILL_DIR="$(dirname "$S")"
 stopflag="$log.rate-limited"
 rm -f "$stopflag"
 # Validate every line before launching anything, so a bad job never waits behind good ones.

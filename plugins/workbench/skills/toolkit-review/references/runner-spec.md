@@ -31,7 +31,9 @@ Common rules:
   text is not searched, because a report that discusses rate limits is not a 429).
 - No script reads, writes or echoes a credential. Container runs pass no host environment.
 - `run-wave.sh` copies `scripts/` into `<log>.bin/` before the first job and every job
-  runs from the copy, so an edit to the scripts cannot reach an in-flight run.
+  runs from the copy, so an edit to the scripts cannot reach an in-flight run. The copy
+  finds `references/` through `TR_SKILL_DIR`, which the wave runner exports; a runner
+  called directly falls back to its own skill directory.
 
 The judge flags (extractors, judges, readers):
 

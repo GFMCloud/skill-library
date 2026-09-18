@@ -2,6 +2,17 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - workbench 0.14.1: toolkit-review's wave runner no longer links into the skill
+
+- **toolkit-review (incubator):** `run-wave.sh` created a symlink beside its snapshot so
+  the copied runners could find `references/`; on the second wave of a proof run the
+  target already existed and the link landed inside the skill's own `references/`
+  directory, pointing at itself. It was committed in 0.14.0 and CI's validator crashed on
+  it (run 35309919094). The runners now read `references/` through `TR_SKILL_DIR`, which
+  the wave runner exports; no link is made. `prove-scripts.sh` fails on any symlink inside
+  the skill after the proofs. Residue for the validator: it crashed on the dangling link
+  instead of reporting it.
+
 ## 2026-09-18 - workbench 0.14.0: toolkit-review (incubator), the reusable form of the ECC evaluation
 
 - **toolkit-review (new, incubator):** review installed skills, agents and hooks on their

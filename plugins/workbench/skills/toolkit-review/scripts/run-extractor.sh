@@ -9,7 +9,7 @@
 # Model: models.extractor in run.json.
 RUN="${TR_RUN:?run-extractor.sh: set TR_RUN to the run directory}"
 S="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REF="$(dirname "$S")/references"
+REF="${TR_SKILL_DIR:-$(dirname "$S")}/references"
 slot="$1"; side="$2"
 if [ -z "$slot" ] || [ -z "$side" ]; then echo "usage: run-extractor.sh <slot> <side|X|Y|R>" >&2; exit 2; fi
 # A letter instead of a side name (re-dispatch after a rejection) is resolved through the

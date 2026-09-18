@@ -7,7 +7,7 @@
 # cwd is $TR_RUN/extracts/<slot>/, which must hold only the report files.
 RUN="${TR_RUN:?run-judge.sh: set TR_RUN to the run directory}"
 S="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REF="$(dirname "$S")/references"
+REF="${TR_SKILL_DIR:-$(dirname "$S")}/references"
 slot="$1"; order="$2"
 dir="$RUN/extracts/$slot"
 if [ -z "$slot" ] || [ ! -d "$dir" ]; then echo "run-judge.sh: no extracts for slot: $slot" >&2; exit 2; fi
