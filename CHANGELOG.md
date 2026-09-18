@@ -2,6 +2,19 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - workbench 0.16.3: capability-index stops offering to enable a pack that is already on
+
+- **capability-index:** the `decks` row is removed and the frontmatter description no
+  longer names `decks` as not installed. The row said "installed but disabled" and
+  offered `claude plugin enable decks@skill-library`; on 2026-09-18 the pack was found
+  not installed at all, so that command could not have worked, and it was then installed
+  and enabled (0.3.0, user scope). Checked against `claude plugin list` and
+  `~/.claude/plugins/installed_plugins.json`: all ten library packs are installed and
+  enabled, so the table now holds only the project-scoped SCL skills. The response
+  template tells the skill to check `claude plugin list` before choosing between
+  `install` and `enable`, which is the distinction the stale row got wrong. PR 14
+  (adopt-humanizer) also bumps workbench; whichever merges second takes the next number.
+
 ## 2026-09-18 - eval suites runnable in place: foundry-core 0.6.1, turn-reduction 1.2.3, data-wrangler 0.1.1, verification-kit 0.5.1, workbench 0.16.2
 
 Two defects from the first execution of the proof-of-work eval suite. No skill's
