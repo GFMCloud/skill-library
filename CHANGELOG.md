@@ -2,6 +2,19 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - workbench 0.15.0: humanizer (incubator), adopted from blader/humanizer
+
+Source: `docs/reviews/2026-09-18-humanizer.md`, a `toolkit-review` spot run against
+`graham-voice`; both judges classed the candidate `COMPLEMENT`. Ruled by Graham:
+"ADOPT, add a stop before the file overwrite".
+
+- **humanizer (incubator, new):** rewrites AI-sounding prose against 25 named patterns
+  without adding or dropping facts. Upstream 3.0.0 at `9862685`, MIT, license file
+  shipped beside the skill. One behavior change from upstream: file mode shows the
+  rewrite and stops for a yes before it overwrites the file, and embedded mode never
+  writes. The four contract sections and a negative scope against `graham-voice` were
+  added.
+
 ## 2026-09-18 - foundry-core 0.5.0, verification-kit 0.3.0: the five TIGHTEN rows from the verification self-review
 
 Source: `docs/reviews/2026-09-18-self-review-verification.md`, the first

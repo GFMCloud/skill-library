@@ -1,0 +1,36 @@
+{
+  "name": "spot-2",
+  "size": "spot",
+  "mode": "one-repo",
+  "created": "2026-09-18",
+  "sources": [
+    {
+      "id": "src1",
+      "url": "https://github.com/blader/humanizer",
+      "pin": "9862685f575c65a8247f90369951df1b3416e3d6",
+      "path": "candidates/src1"
+    }
+  ],
+  "models": {
+    "extractor": "sonnet",
+    "judge": "sonnet",
+    "escalation": "opus",
+    "reader": "sonnet",
+    "fixture": "sonnet"
+  },
+  "wave_size": 4,
+  "redispatch_budget": 3,
+  "timeout_s": 1200,
+  "budget_ceiling_tokens": 500000,
+  "budget_stop_percent": 80,
+  "fixture": {
+    "runs_per_arm": 3,
+    "min_bare_misses": 2
+  },
+  "bench": {
+    "images": {
+      "installed": "python:3.12-slim"
+    },
+    "data_home_var": "TOOLKIT_REVIEW_DATA_HOME"
+  }
+}
