@@ -2,6 +2,21 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-18 - foundry-core 0.6.0: pack review set-1, ledger row 3 (evidence)
+
+Source: the same set run. Judges split FRAGMENT / SUPERSEDED BY / COMPLEMENT, two of three
+naming pieces to take; the escalation judge listed these three. Ratified by Graham at
+Gate B. The candidate (`orx-evidence` in `alphaXiv/OpenResearch` at 69768ff) is prose
+bound to its own CLI and was not taken whole.
+
+- **proof-of-work 1.4.0 (stable):** new section "When the evidence is a run's output".
+  The run's printed output is designed before the run (effective configuration, periodic
+  one-line progress, final summary block); four confirmations are made in the output
+  before a run-derived claim is reported; truncated output is not evidence of absence, so
+  a claim made from a window states the window. Not mechanically enforced, and the
+  section says so. The skill's two eval cases were not re-run for this change; they are
+  owed before the branch merges.
+
 ## 2026-09-18 - decks 0.3.0: pack review set-1, ledger rows 2 (diagram) and 5 (figures)
 
 Source: the `toolkit-review` set run of 2026-09-18 over five candidate packs; both judges
