@@ -1,2 +1,5 @@
 # Per-machine Claude Code settings (permission rules); never committed.
 .claude/
+
+# `claude plugin eval` default results path; never committed (interface spec section 9).
+plugins/*/evals/**/results/

@@ -147,7 +147,10 @@ Three states, not four:
   key mentioned in prose, is not checking structure (hstack review, 2026-09-03).
 - Behavior testing: for stable skills keep 2–3 eval cases and run them on change
   (the official `skill-creator` plugin provides evals and version comparison).
-  Reviewing prompt diffs alone tells you almost nothing about behavior.
+  Reviewing prompt diffs alone tells you almost nothing about behavior. Cases live in
+  `plugins/<plugin>/evals/<skill>/`, never inside the skill directory, and run with
+  `claude plugin eval`; the layout and the run command are in
+  `docs/toolkit-interface-spec.md` section 9, the one editable home for both.
 - Once a skill has eval cases, they run on any change to that skill, its hooks, or the
   CLAUDE.md it depends on, because that configuration steers the agent and deserves the
   regression testing code gets. A change that drops the pass rate is reviewed before it

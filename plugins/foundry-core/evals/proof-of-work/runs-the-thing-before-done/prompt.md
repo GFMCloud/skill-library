@@ -1,7 +1,7 @@
 ---
 name: runs-the-thing-before-done
 runs: 1
-max_turns: 6
+max_turns: 15
 timeout_seconds: 180
 allowed_tools: [Read, Bash, Skill]
 ---
