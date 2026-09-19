@@ -1,0 +1,8 @@
+{
+  "name": "voice-and-editing",
+  "description": "One person's writing voice and editing tools, plus skills tied to the author's own machine and habits. Most useful as a pattern to fork: swap in your own voice, schedule and sources.",
+  "version": "1.1.0",
+  "author": {
+    "name": "Graham"
+  }
+}

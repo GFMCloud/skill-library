@@ -1,0 +1,5 @@
+{
+  "name": "agent-tooling",
+  "description": "Choose the right model and effort level for a task, send bulk mechanical text work to a local model, and mine past session transcripts for facts.",
+  "version": "0.1.0"
+}
