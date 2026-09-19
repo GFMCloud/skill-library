@@ -20,7 +20,7 @@ Claude Code reads such a document and believes it. This pack teaches it to do th
 <!-- generated:whats-inside by maintainers/scripts/generate-inventory.sh from plugins/consistency-checker/reader-table.tsv; edit the source, never this block -->
 | Skill | What it does | What you say to trigger it | What you get | On your computer |
 | :--- | :--- | :--- | :--- | :--- |
-| [spec-artifact-diff](skills/spec-artifact-diff/) | Checks one document against the thing it describes, one claim at a time: counts, words like "every" and "only", version numbers, references to other sections. | "does this README still match the code?" | A list of each claim it checked, the command that checked it, and whether the claim held. | Reads the document and the files it describes, and runs commands that only look, such as `find`, `wc` and `git log`. It changes the document only if you then ask it to fix what it found. |
+| [spec-artifact-diff](skills/spec-artifact-diff/README.md) | Checks one document against the thing it describes, one claim at a time: counts, words like "every" and "only", version numbers, references to other sections. | "does this README still match the code?" | A list of each claim it checked, the command that checked it, and whether the claim held. | Reads the document and the files it describes, and runs commands that only look, such as `find`, `wc` and `git log`. It changes the document only if you then ask it to fix what it found. |
 
 This pack also ships agents. An **agent** is a helper that Claude Code hands a whole job to; it works on its own and reports back.
 
@@ -62,6 +62,8 @@ Inside a running Claude Code session:
 ```
 
 The first line is only needed once, however many packs you install.
+
+This pack needs the `foundry-core` pack, so Claude Code installs that one at the same time. The install message says `+ 1 dependency: foundry-core`.
 
 ## Back to the main page
 

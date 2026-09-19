@@ -58,6 +58,8 @@ You should see a confirmation that the marketplace `skill-library` was added.
 
 Claude Code opens a details screen and asks you to pick where to install it. Choose **User scope** if you want the pack available in every folder you work in. Press Enter to confirm.
 
+This pack needs one other pack, `foundry-core`, so Claude Code installs that too and the message says `+ 1 dependency: foundry-core`. That is expected.
+
 **Step 3. Check the install message.** If it says `Run /reload-plugins to activate.`, Claude Code usually runs that for you. If the pack does not seem to be there, type `/reload-plugins` yourself.
 
 If any step did not go as described, see [docs/install-help.md](docs/install-help.md).
@@ -105,18 +107,18 @@ Longer version, including what each pack does **not** do: [docs/which-pack.md](d
 <!-- generated:catalog by maintainers/scripts/generate-inventory.sh from .claude-plugin/marketplace.json and the plugins/ tree; edit the source, never this block -->
 | Pack | What it helps you do | Skills inside | Install |
 | :--- | :--- | :--- | :--- |
-| [foundry-core](plugins/foundry-core/) | Makes Claude Code prove its work: run the real checks before saying done, show the evidence, write the whole file and not a fragment, and stop a fix loop after a set number of tries. | 6 | `/plugin install foundry-core@skill-library` |
-| [turn-reduction](plugins/turn-reduction/) | Cuts the back-and-forth: check access before starting, plan before risky work, agree up front what Claude Code may do without asking, and catch broken instructions before they reach you. | 4 | `/plugin install turn-reduction@skill-library` |
-| [data-wrangler](plugins/data-wrangler/) | Move and clean data between files and systems, and match records that mean the same person or thing under different spellings. | 1, and 1 agent | `/plugin install data-wrangler@skill-library` |
+| [foundry-core](plugins/foundry-core/README.md) | Makes Claude Code prove its work: run the real checks before saying done, show the evidence, write the whole file and not a fragment, and stop a fix loop after a set number of tries. | 6 | `/plugin install foundry-core@skill-library` |
+| [turn-reduction](plugins/turn-reduction/README.md) | Cuts the back-and-forth: check access before starting, plan before risky work, agree up front what Claude Code may do without asking, and catch broken instructions before they reach you. | 4 | `/plugin install turn-reduction@skill-library` |
+| [data-wrangler](plugins/data-wrangler/README.md) | Move and clean data between files and systems, and match records that mean the same person or thing under different spellings. | 1, and 1 agent | `/plugin install data-wrangler@skill-library` |
 | [verification-kit](plugins/verification-kit/README.md) | Check before trusting: whether a claim is still true, whether a change is safe to ship, whether a deploy is really up, whether a website is fast and unbroken, and what code could be deleted. | 7, and 2 agents | `/plugin install verification-kit@skill-library` |
 | [consistency-checker](plugins/consistency-checker/README.md) | Check documents against the files they describe, and against each other, one claim at a time. | 1, and 1 agent | `/plugin install consistency-checker@skill-library` |
-| [deploy-ops](plugins/deploy-ops/) | Deploy, check the result the way a visitor would, fix, and repeat until it works. Includes a step-by-step move of a website to Cloudflare Pages. | 2, and 1 agent | `/plugin install deploy-ops@skill-library` |
-| [decks](plugins/decks/) | Plan, build and critique slide decks: outlines, charts, clickable diagrams, PowerPoint export, and reviews of layout and sales message. | 6 | `/plugin install decks@skill-library` |
-| [frontend-design](plugins/frontend-design/) | Design judgment for websites and apps: a distinctive look for new builds, mobile screens, minimal interfaces, polish, and upgrades to a site that already exists. | 7, and 1 agent | `/plugin install frontend-design@skill-library` |
-| [long-projects](plugins/long-projects/) | Keep work that spans many sessions on track: step-by-step project plans that pause for your approval, handoff notes between sessions, a review routine for everyday changes, and second opinions on hard decisions. | 11, and 2 agents | `/plugin install long-projects@skill-library` |
-| [project-starters](plugins/project-starters/) | Start a new project properly: a project folder set up with a check for leaked passwords, a repeatable set of development tools, a project knowledge base, and pipeline and systems design before any code. | 6 | `/plugin install project-starters@skill-library` |
-| [agent-tooling](plugins/agent-tooling/) | Choose the right model and effort level for a task, send bulk mechanical text work to a local model, and mine past session transcripts for facts. | 3, and 1 agent | `/plugin install agent-tooling@skill-library` |
-| [voice-and-editing](plugins/voice-and-editing/) | One person's writing voice and editing tools, plus skills tied to the author's own computer and habits. Most useful as an example to copy and change: swap in your own voice, schedule and sources. | 13 | `/plugin install voice-and-editing@skill-library` |
+| [deploy-ops](plugins/deploy-ops/README.md) | Deploy, check the result the way a visitor would, fix, and repeat until it works. Includes a step-by-step move of a website to Cloudflare Pages. | 2, and 1 agent | `/plugin install deploy-ops@skill-library` |
+| [decks](plugins/decks/README.md) | Plan, build and critique slide decks: outlines, charts, clickable diagrams, PowerPoint export, and reviews of layout and sales message. | 6 | `/plugin install decks@skill-library` |
+| [frontend-design](plugins/frontend-design/README.md) | Design judgment for websites and apps: a distinctive look for new builds, mobile screens, minimal interfaces, polish, and upgrades to a site that already exists. | 7, and 1 agent | `/plugin install frontend-design@skill-library` |
+| [long-projects](plugins/long-projects/README.md) | Keep work that spans many sessions on track: step-by-step project plans that pause for your approval, handoff notes between sessions, a review routine for everyday changes, and second opinions on hard decisions. | 11, and 2 agents | `/plugin install long-projects@skill-library` |
+| [project-starters](plugins/project-starters/README.md) | Start a new project properly: a project folder set up with a check for leaked passwords, a repeatable set of development tools, a project knowledge base, and pipeline and systems design before any code. | 6 | `/plugin install project-starters@skill-library` |
+| [agent-tooling](plugins/agent-tooling/README.md) | Choose the right model and effort level for a task, send bulk mechanical text work to a local model, and mine past session transcripts for facts. | 3, and 1 agent | `/plugin install agent-tooling@skill-library` |
+| [voice-and-editing](plugins/voice-and-editing/README.md) | One person's writing voice and editing tools, plus skills tied to the author's own computer and habits. Most useful as an example to copy and change: swap in your own voice, schedule and sources. | 13 | `/plugin install voice-and-editing@skill-library` |
 <!-- /generated:catalog -->
 
 Each pack's own page lists its skills, what you say to trigger each one, what you get back, and what it does on your computer. Read that page before you install. The install screen may not list what a pack contains.
