@@ -48,6 +48,7 @@ One package is missing. Run this yourself if you want the serif:
 - **It writes code into the project you are working in.** React, Next.js, CSS or Tailwind, matching what the project already uses. It writes nothing outside that project.
 - **It reads your project's `package.json`.** That is the file listing which packages a project uses. It checks there before using a package or naming a Tailwind version.
 - **It does not install anything.** When a package is missing it prints the `npm install` or `npx` command and leaves you to run it.
+- **It uses an image-generation tool first, if you have one.** If such a tool is connected to Claude Code, the skill uses it to make each section's pictures, which may cost you whatever that tool charges. Without one it falls back to placeholder images.
 - **The code it writes can point at public websites.** Placeholder photographs come from `picsum.photos` and company logos from `cdn.simpleicons.org`. For a Shopify app it includes a script from `cdn.shopify.com` as standard starting code. Your browser or your build loads those; the skill fetches nothing itself.
 - **It asks for no sign-in and no key, and runs no programs.**
 - **It is for pages, not products.** Dashboards, data tables and multi-step forms are outside what it covers, by its own statement.

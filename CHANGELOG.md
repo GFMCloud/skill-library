@@ -2,6 +2,39 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-19 - pages for people: every pack and every skill that touches your computer
+
+No skill's behavior changed. What changed is that a person who has never installed a
+plugin can now read what each pack is for and what it does on their computer.
+
+- **The root README is rewritten for a first-time reader**: what this is, who it is for,
+  install, try your first skill, which pack do I need, the packs, is this safe, status and
+  help. The previous README is kept as `maintainers/README-2026-09-19.md.superseded`.
+- **Every pack has a page** (`plugins/<pack>/README.md`): the problem it solves, when to
+  use it, what is inside, what it does on your computer, how the skills work together,
+  and how to install it.
+- **Every skill that does something on your computer has its own page**
+  (`plugins/<pack>/skills/<skill>/README.md`): what to say, what you get, and what to know
+  first. A skill whose answer is "Nothing" has a line in its pack's table and no page.
+- **Four help pages** under `docs/`: a glossary, a longer pack picker, install help
+  (including how to remove a pack, and `claude plugin prune` for a leftover dependency),
+  and how a skill works.
+- **The safety statements were read from the code, then checked against it again.** Every
+  skill, agent and the one hook was read for what it reads, writes, deletes, runs, installs,
+  sends and signs in to. A second, separate check of each pack's pages against its files
+  found and corrected seven statements.
+- **Tables are generated.** Each pack's "What's inside" tables come from the
+  `reader-table.tsv` beside it, and the root pack table and counts come from
+  `.claude-plugin/marketplace.json` and the tree, all written by
+  `bash maintainers/scripts/generate-inventory.sh`. The validator (F13) fails on a stale
+  table or a skill with no row. Adding a skill now means adding its row.
+- **Five packs need `foundry-core`** (consistency-checker, data-wrangler, deploy-ops,
+  turn-reduction, verification-kit). Claude Code installs it for you and says
+  `+ 1 dependency: foundry-core`. Their pages now say so.
+- Pack descriptions in the marketplace file are reworded for a reader.
+- Versions: every pack's patch version moves, because a skill page sits inside a skill
+  folder (F17).
+
 ## 2026-09-19 - working records move under `maintainers/`
 
 The top level and `docs/` now hold what a reader needs. Everything a maintainer keeps

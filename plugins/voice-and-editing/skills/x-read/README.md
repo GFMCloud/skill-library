@@ -44,7 +44,7 @@ https://x.com/example_account/status/1234567890123456789
 
 ## Good to know
 
-- **It uses your X sign-in, in the form of two session cookies.** They are named `auth_token` and `ct0`. Every run sends them to x.com, one as a cookie and one as a header, which is what makes the request count as you.
+- **It uses your X sign-in, in the form of two session cookies.** They are named `auth_token` and `ct0`. Every run sends both to x.com as cookies, and sends `ct0` a second time as a separate header. That is what makes the request count as you.
 - **You store those two values yourself, and they never pass through the conversation.** A setup program that ships with the skill, `scripts/x-read-auth.sh`, is one you run in your own terminal. It refuses to run on anything but macOS, asks for each value twice with the typing hidden, trims spaces, checks only the shape of what you typed (all hexadecimal characters, exactly 40 for `auth_token` and at least 64 for `ct0`), never shows a value back, and saves each one in your macOS login keychain, the password store built into macOS, as an item named `x-read-AUTH_TOKEN` or `x-read-CT0`. Run it with `--status` to see which are set, or `--delete` to remove both.
 - **At run time it looks for the values in two places, in this order:** the environment it was started with, and then those keychain items, falling back to a pair named `last30days-*` if those exist instead. It fetches them from the keychain using the macOS `security` command. If neither place has them, it stops with a specific error, and you are handed the setup command rather than asked to paste anything.
 - **It never prints a value.** There is a check you can run that reports only whether the values were found and which place they came from, and nothing else.

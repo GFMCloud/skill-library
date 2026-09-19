@@ -52,7 +52,7 @@ by itself; there is no separate deploy step to run.
 ## Good to know
 
 - **It changes a DNS record for real.** One command adds or replaces a single record pointing your chosen address at the new host. It touches no other record, and the change is undone the same way it was made.
-- **It runs two outside programs on your computer:** Cloudflare's `wrangler`, through `npx`, which comes with Node, and Amazon's `aws` command-line tool. Both must already be installed. It also uses `dig`, `curl` and `diff`, which most computers already have, and `gh`, GitHub's command-line tool, for one check on the old host.
+- **It runs two outside programs on your computer:** Cloudflare's `wrangler`, through `npx`, which comes with Node, and Amazon's `aws` command-line tool. Both must already be installed. It also uses `dig`, `curl` and `diff`, which most computers already have. It signs in to AWS with `aws sso login` if your sign-in has lapsed.
 - **It signs in through your browser, never through a pasted key.** `npx wrangler login` opens your Cloudflare account's own sign-in page. The AWS side uses a named profile you already have set up.
 - **Two steps cannot be automated and it says so up front:** creating the project with the repository connected, and attaching your domain, are both done by you in Cloudflare's website.
 - **It goes online throughout.** It talks to Cloudflare, to your DNS provider, to the DNS system, and it downloads both the old and the new site to compare them byte for byte.

@@ -47,7 +47,7 @@ Limits written into the file:
 
 ## Good to know
 
-- **It writes exactly one file, at the path you give it.** Nothing else on your computer is changed.
+- **It writes two small files.** First a short input file listing the seven values the pointer needs, then the pointer file itself, at the path you give it. Nothing else on your computer is changed.
 - **It reads your project's own notes first.** It looks at the project's instruction files and its step-running skill to confirm the step you named exists and to pick up any settings already recorded there.
 - **It runs two small Python programs, and you need Python 3 for them.** One writes the file from a template, the other checks it. If you write your input as YAML rather than JSON, you also need the PyYAML add-on.
 - **It never registers the scheduled task.** That is yours to do in the Claude desktop app, or by approving the scheduling tool when it asks. The skill hands over values, never a password or key.
