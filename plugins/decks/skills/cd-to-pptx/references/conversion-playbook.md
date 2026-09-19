@@ -2,6 +2,22 @@
 
 The repeatable process for turning a Claude Design export into a native, editable PowerPoint file.
 
+## Contents
+
+- The mental model in one paragraph
+- What you need before starting
+- Step 1 - Inspect the folder before asking anything
+- Step 2 - The font decision (this sets one pass or two)
+- Step 3 - Minimal intake questions
+- Step 4 - Confirm the paths out loud
+- Step 5 - The hardened build prompt
+- Step 6 - What to watch during the build
+- Skills and tools - what to call on
+- Pass 2 - font swap (only if you built with Arial)
+- The non-negotiables (why this works)
+- Worked example - FinOps deck (May 2026)
+- Known gaps and open questions
+
 This is the main file in a set of four:
 - wireframe-baseline-rules.md - how to constrain the wireframe before it gets here
 - wireframe-template.html - the boilerplate that follows those rules

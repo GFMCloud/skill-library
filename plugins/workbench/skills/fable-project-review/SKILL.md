@@ -52,7 +52,7 @@ Cap Low findings at five per review and summarize the rest as a count. Do not re
 
 ## Phase 3 - Write the improvement plan
 
-Read `references/plan-template.md` and follow it. Write the plan to the project root (or the output directory on Claude.ai) as `improvement-plan-YYYY-MM-DD.md`. If a plan with that name already exists, append `-v2` rather than overwriting - the history matters for verify mode.
+Read [references/plan-template.md](references/plan-template.md) and follow it. Write the plan to the project root (or the output directory on Claude.ai) as `improvement-plan-YYYY-MM-DD.md`. If a plan with that name already exists, append `-v2` rather than overwriting - the history matters for verify mode.
 
 The plan will be executed by a model with zero access to this session. Write every work item so that model can execute without guessing:
 

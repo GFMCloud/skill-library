@@ -5,6 +5,14 @@ Pick one per watch based on where the source lives and whether local files
 are needed. All three are first-party primitives; this skill wraps them, it
 does not reimplement them.
 
+## Contents
+
+- 1. Desktop scheduled task, polling read-only
+- 2. Routine with an API trigger, alarm-to-agent
+- 3. Channel webhook receiver, once out of research preview
+- Choosing
+- Known weakness
+
 ## 1. Desktop scheduled task, polling read-only
 
 **When.** The source is local: files on this machine, a local marker, a

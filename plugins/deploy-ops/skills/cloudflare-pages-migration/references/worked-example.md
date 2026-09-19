@@ -4,6 +4,14 @@ Full evidence log backing the claims in `SKILL.md`. Two sources, kept
 distinct because SKILL.md is scoped to what beetlewood itself evidences and
 marks anything else as corroborating-but-not-independently-verified there.
 
+## Contents
+
+- beetlewood-north-atlas: what actually happened
+  - Final verified state (all executed, not just checked for existence)
+  - What beetlewood does NOT independently evidence
+- Nana's Recipe Book: nanasrecipes.gfmcloud.com, 2026-08-12
+  - The pretty-URL / 308 parity failure (Nana's Phase 4)
+
 - **Primary:** `beetlewood-north-atlas` migration, 2026-08-13. Source:
   `/Users/gfm/work/beetlewood-north-inaturalist/handoff-beetlewood-cloudflare-migration-2026-08-13.md`
   (read-only; that repo is not part of this skill build).

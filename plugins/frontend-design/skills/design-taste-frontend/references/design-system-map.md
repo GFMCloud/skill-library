@@ -1,5 +1,12 @@
 # Brief to design system map
 
+## Contents
+
+- A. When to reach for a real design system (use the official package)
+- B. When the brief is an aesthetic, not a system
+- Appendix A. Install commands per design system
+- Appendix B. Canonical sources (read these before reinventing)
+
 Derived from upstream `Leonxlnx/taste-skill` v2, `skills/taste-skill/SKILL.md` §2 and Appendices
 A and B, at commit `ccbc15639c97057cbfcf32ecebc38ef716e4bb37`. Restyled to the pack's
 conventions. The flagship body (`../SKILL.md`, section 2) states the rule; this file holds the

@@ -2,6 +2,16 @@
 
 The exact rules for filling the four content slots in `assets/template.html`. Read this before drawing. The `<style>` block and the `<script>` engine are frozen - you only ever touch four things: the SVG zones, the SVG nodes, the SVG edges (+ labels), and the two JS objects `DETAIL` and `FLOWS`.
 
+## Contents
+
+- The mental model
+- SLOT 1 - Zones
+- SLOT 2 - Nodes
+- SLOT 3 - Edges (and labels)
+- SLOT 4 - DETAIL and FLOWS (in the `<script>`)
+- Layout method that works
+- Gotchas (carried from real builds)
+
 The canvas is a fixed SVG `viewBox="0 0 1560 980"`. It scales to fit any screen, so coordinates are abstract units, not pixels. Origin is top-left, x grows right, y grows down.
 
 ---

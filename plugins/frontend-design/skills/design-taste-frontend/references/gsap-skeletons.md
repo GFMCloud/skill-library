@@ -1,5 +1,13 @@
 # GSAP and Motion skeletons for scroll work
 
+## Contents
+
+- When each pattern applies
+- A. Sticky-stack, canonical skeleton
+- B. Horizontal pan, canonical skeleton
+- C. Scroll-reveal stagger, the lighter alternative
+- D. Forbidden animation patterns
+
 Derived from upstream `Leonxlnx/taste-skill` v2, `skills/taste-skill/SKILL.md` §5.A to §5.D, at
 commit `ccbc15639c97057cbfcf32ecebc38ef716e4bb37`. Restyled to the pack's conventions. The flagship
 body (`../SKILL.md`, section 7) decides *when* a pattern is used; this file holds the canonical

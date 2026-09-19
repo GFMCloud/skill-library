@@ -2,6 +2,20 @@
 
 How to take the freshly built PPTX and prompt a structured review pass that closes the gap to the wireframe - without chasing ghosts.
 
+## Contents
+
+- The core principle
+- Step 1 - Get the right comparison surface
+- Step 2 - Structural check (catch the obvious misses first)
+- Step 2b - Object inspection (prove "editable" before you look at pixels)
+- Step 3 - Visual check against the wireframe
+- Step 4 - Build the punch list
+- Step 5 - The targeted fix prompt
+- Step 6 - Re-review and decide when to stop
+- What to finish by hand in PowerPoint
+- Quick reference - which tool for what
+- The one-line version
+
 Fourth file in the set:
 - wireframe-baseline-rules.md - constrain the wireframe
 - wireframe-template.html - the boilerplate

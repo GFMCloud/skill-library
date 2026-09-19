@@ -114,7 +114,9 @@ Rubric, classes, derived verdict and the mapping to contract v1:
 [references/extraction-prompt.md](references/extraction-prompt.md),
 [references/judge-prompt.md](references/judge-prompt.md),
 [references/self-review-prompt.md](references/self-review-prompt.md),
-[references/reader-checklist.md](references/reader-checklist.md). Scripts and exit codes:
+[references/reader-checklist.md](references/reader-checklist.md), and for a
+`challenge-*` slot [references/judge-challenge-note.md](references/judge-challenge-note.md)
+(spliced into the judge prompt by `run-judge.sh`). Scripts and exit codes:
 [references/runner-spec.md](references/runner-spec.md). Standing limits to print in every
 ledger: [references/limits.md](references/limits.md). Fixtures the proofs use:
 `templates/fixtures/`.

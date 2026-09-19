@@ -5,6 +5,20 @@ the source used; the patterns hold in any language. Every row is a question to a
 from the code, not an instruction to change anything. Remediation goes through the stop
 gate in `SKILL.md`.
 
+## Contents
+
+- Secrets
+- Input validation
+- Injection
+- Authentication and authorization
+- XSS
+- CSRF
+- Rate limiting
+- Sensitive data exposure
+- Dependencies
+- Tests worth asking for
+- Pre-deployment summary
+
 ## 1. Secrets
 
 ```typescript

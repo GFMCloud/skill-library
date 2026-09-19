@@ -5,6 +5,17 @@ Distilled from a real run: the machine-wide skill migration executed 2026-08-09
 The harness for that run is preserved at `docs/migration/harness/` in this repo and is
 the worked example every template here generalizes.
 
+## Contents
+
+- Why a harness at all
+- Why the invariant is stated as a state, not tasks
+- Why two gates is the default
+- Why reversibility until Gate B
+- Why the orchestrator owns shared files
+- The overridden-plan failure (2026-08-09)
+- Why evidence, not checkmarks
+- What this is not
+
 ## Why a harness at all
 
 Long-horizon work fails in three specific ways, and each has a structural fix:

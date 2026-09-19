@@ -3,6 +3,26 @@
 Fourteen patterns. Markup is copy-paste ready against
 [scrollback.css](scrollback.css). Use a listed pattern before inventing one.
 
+## Contents
+
+- The frame (the signature element)
+- 1. Data table
+- 2. Flow
+- 3. Spec diagram
+- 4. Document (invoice, receipt, statement)
+- 5. Chart
+- 6. Status pill
+- 7. Log stream
+- 8. Command block
+- 9. Spec sheet
+- 10. Meter
+- 11. Sparkline
+- 12. Note
+- 13. Tree
+- 14. Field and button
+- Interaction states
+- Utility classes
+
 ## The frame (the signature element)
 
 Every block of content sits in one. It carries all the personality; the content

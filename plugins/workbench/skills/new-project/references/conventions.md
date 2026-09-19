@@ -6,6 +6,13 @@ were inconsistent across them and are now settled here: the spec document was ca
 `KICKOFF.md` in one and `KICKOFF_PROMPT.md` in another. Fixed names are `SPEC.md` and
 `KICKOFF.md`. Existing repos do not need renaming; new ones use these.
 
+## Contents
+
+- The four documents (README.md, CLAUDE.md, SPEC.md, KICKOFF.md)
+- Structure
+- Secrets
+- Naming
+
 ## The four documents
 
 Four files, all at the repo root. Root matters for `CLAUDE.md` (that is where Claude Code

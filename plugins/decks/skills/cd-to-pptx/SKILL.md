@@ -11,10 +11,10 @@ Turn a Claude Design export (a `deck-stage` HTML deck) into a native, editable P
 
 This SKILL.md is the orchestration layer - the order of operations and the decisions. The detail lives in four reference files; read them at the point each is needed, not all up front:
 
-- `references/run-intake.md` - the five questions the user answers once per run
-- `references/wireframe-baseline-rules.md` - the conversion math (geometry vs font ratios) and what holds vs what gets hardened
-- `references/conversion-playbook.md` - the full build process and the hardened build prompt
-- `references/pptx-review-playbook.md` - the review-and-touch-up pass
+- [references/run-intake.md](references/run-intake.md) - the five questions the user answers once per run
+- [references/wireframe-baseline-rules.md](references/wireframe-baseline-rules.md) - the conversion math (geometry vs font ratios) and what holds vs what gets hardened
+- [references/conversion-playbook.md](references/conversion-playbook.md) - the full build process and the hardened build prompt
+- [references/pptx-review-playbook.md](references/pptx-review-playbook.md) - the review-and-touch-up pass
 - `assets/wireframe-template.html` - the deck-stage-compatible boilerplate
 
 ## The one-paragraph model

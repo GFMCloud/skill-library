@@ -5,6 +5,14 @@ words it does not. The 2026-09-02 run on bojieli/ai-agent-book (190k words, 13
 markdown files) is the worked example: eleven per-chapter reviews, one synthesis,
 output in `docs/reviews/2026-09-02-ai-agent-book/cleanroom-review.md`.
 
+## Contents
+
+- Model split (default, ruled by Graham 2026-09-02)
+- 1. Split into natural units
+- 2. One clean-room review per unit
+- 3. Synthesis pass
+- 4. Hand-off to Step 3
+
 ## Model split (default, ruled by Graham 2026-09-02)
 
 | Stage | Model | Why |

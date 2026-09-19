@@ -6,6 +6,18 @@ the read-only command or console page that shows it. Every change to IAM, a secr
 manager, MFA or a network rule is the user's to make (see the stop gate in `SKILL.md`);
 infrastructure with real blast radius goes through `turn-reduction:plan-gate` first.
 
+## Contents
+
+- IAM and access
+- Secrets in the cloud
+- Network
+- Logging and monitoring
+- CI/CD
+- CDN and edge
+- Backups and recovery
+- Common misconfigurations to search for
+- Pre-deployment summary
+
 ## 1. IAM and access
 
 ```json
