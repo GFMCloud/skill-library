@@ -13,61 +13,61 @@
       "name": "foundry-core",
       "source": "./plugins/foundry-core",
       "category": "quality",
-      "description": "Core delivery discipline: evidence-report, proof-of-work, full-output-enforcement. Wanted on ~every project."
+      "description": "Makes Claude Code prove its work: run the real checks before saying done, show the evidence, write the whole file and not a fragment, and stop a fix loop after a set number of tries."
     },
     {
       "name": "turn-reduction",
       "source": "./plugins/turn-reduction",
       "category": "workflow",
-      "description": "Fewer wasted turns: capability-preflight, output-lint, standing-authorization, plan-gate."
+      "description": "Cuts the back-and-forth: check access before starting, plan before risky work, agree up front what Claude Code may do without asking, and catch broken instructions before they reach you."
     },
     {
       "name": "data-wrangler",
       "source": "./plugins/data-wrangler",
       "category": "data",
-      "description": "Data movement and matching: identity-resolution skill plus the data-pipeline-owner agent."
+      "description": "Move and clean data between files and systems, and match records that mean the same person or thing under different spellings."
     },
     {
       "name": "verification-kit",
       "source": "./plugins/verification-kit",
       "category": "quality",
-      "description": "Verification helpers: fact-currency-check plus the pre-delivery-verifier agent."
+      "description": "Check before trusting: whether a claim is still true, whether a change is safe to ship, whether a deploy is really up, whether a website is fast and unbroken, and what code could be deleted."
     },
     {
       "name": "consistency-checker",
       "source": "./plugins/consistency-checker",
       "category": "quality",
-      "description": "Spec-vs-artifact consistency: spec-artifact-diff plus the cross-document-checker agent."
+      "description": "Check documents against the files they describe, and against each other, one claim at a time."
     },
     {
       "name": "deploy-ops",
       "source": "./plugins/deploy-ops",
       "category": "deployment",
-      "description": "Deploy loop discipline: deploy-verify-fix and cloudflare-pages-migration plus the deploy-loop-owner agent."
+      "description": "Deploy, check the result the way a visitor would, fix, and repeat until it works. Includes a step-by-step move of a website to Cloudflare Pages."
     },
     {
       "name": "decks",
       "source": "./plugins/decks",
       "category": "presentations",
-      "description": "Build and critique slide decks: scaffolding, charts, HTML diagrams, PPTX export, layout and sales-lens review."
+      "description": "Plan, build and critique slide decks: outlines, charts, clickable diagrams, PowerPoint export, and reviews of layout and sales message."
     },
     {
       "name": "frontend-design",
       "source": "./plugins/frontend-design",
       "category": "design",
-      "description": "Frontend visual design judgment: design taste, image taste, mobile app screens, minimalist UI, redesigns, and UI-polish review guidance."
+      "description": "Design judgment for websites and apps: a distinctive look for new builds, mobile screens, minimal interfaces, polish, and upgrades to a site that already exists."
     },
     {
       "name": "long-projects",
       "source": "./plugins/long-projects",
       "category": "workflow",
-      "description": "Keep work that spans many sessions on track: gated multi-phase project harnesses, session handoffs and retros, a review pipeline for routine changes, and second opinions on hard decisions."
+      "description": "Keep work that spans many sessions on track: step-by-step project plans that pause for your approval, handoff notes between sessions, a review routine for everyday changes, and second opinions on hard decisions."
     },
     {
       "name": "project-starters",
       "source": "./plugins/project-starters",
       "category": "workflow",
-      "description": "Start a new project properly: repo scaffolding with secret scanning, reproducible dev shells, a project knowledge base, and pipeline and systems design before any code."
+      "description": "Start a new project properly: a project folder set up with a check for leaked passwords, a repeatable set of development tools, a project knowledge base, and pipeline and systems design before any code."
     },
     {
       "name": "agent-tooling",
@@ -79,7 +79,7 @@
       "name": "voice-and-editing",
       "source": "./plugins/voice-and-editing",
       "category": "writing",
-      "description": "One person's writing voice and editing tools, plus skills tied to the author's own machine and habits. Most useful as a pattern to fork: swap in your own voice, schedule and sources."
+      "description": "One person's writing voice and editing tools, plus skills tied to the author's own computer and habits. Most useful as an example to copy and change: swap in your own voice, schedule and sources."
     }
   ],
   "renames": {

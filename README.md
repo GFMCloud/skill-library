@@ -3,139 +3,162 @@
 [![validate-skills](https://github.com/GFMCloud/skill-library/actions/workflows/validate.yml/badge.svg)](https://github.com/GFMCloud/skill-library/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A Claude Code plugin marketplace holding 47 reusable skills and 6 subagents, grouped
-into 10 installable plugins. Delivery discipline, deck building, frontend design
-judgment, project harnesses, and the connective tissue that keeps long-running agent
-work honest.
+Add-ons for Claude Code that make it check its own work, plan before risky changes, keep long projects on track, and handle a few specific jobs, such as building slide decks and designing web pages.
 
-## Why this exists
+## What this is
 
-Skills have a way of multiplying. They start as a folder in one project, get copied
-into a second project when they turn out to be useful, get zipped up and emailed to
-yourself, and end up in `~/.claude` under a slightly different name. A year in you
-have four copies of the same skill, three of them stale, and no idea which one the
-agent actually loaded.
+**Claude Code** is a program you run in a terminal window on your own computer. You type a request in plain English, and it does the work on your files.
 
-This repo is the fix: **one editable home per skill**. Everything reusable lives here
-and is consumed everywhere else as an installed plugin. Plugin caches and local copies
-are read-only. A skill lives in its plugin from day one; maturity is a label, not a
-location, so promotion never moves or copies anything. If an
-editable duplicate shows up somewhere else, that's drift to be flagged and removed,
-not a convenience to keep.
+A **skill** is a short set of written instructions that teaches Claude Code how to do one specific job, such as checking that a README still matches the code it describes. You do not run a skill yourself. Claude Code reads it when the job comes up.
 
-It was assembled by sweeping every skill scattered across two older marketplaces,
-several project repos, a home directory, and one orphaned `.skill` zip, then ruling on
-each one individually: move, keep project-local, deprecate, or archive.
-[MIGRATION.md](maintainers/MIGRATION.md) is the permanent record of where each skill came from and
-why it landed where it did.
+A **pack** (Claude Code calls it a *plugin*) is a folder of related skills that install together.
+
+A **repository** is a project folder published on GitHub, a website for sharing code. You are reading one now. Its address is `GFMCloud/skill-library`: the owner's name, then the repository's name.
+
+An **agent** is a helper that Claude Code hands a whole job to. It works on its own, with its own instructions, and reports back. Some packs include one or two.
+
+<!-- generated:counts by maintainers/scripts/generate-inventory.sh from the plugins/ tree; edit the source, never this block -->
+This repository has 12 packs, holding 67 skills and 9 agents.
+<!-- /generated:counts -->
+
+A **hook** is a small program that Claude Code runs by itself at a set moment, without being asked. One pack here installs one. It is described in full under [Is this safe?](#is-this-safe-what-does-it-do-on-my-computer)
+
+A **marketplace** is a list of packs that Claude Code can install from. This repository is one marketplace, called `skill-library`.
+
+A **slash command** is text you type in Claude Code that begins with `/`. It runs something directly instead of asking Claude to decide what to do. Every command below that starts with `/` is a slash command.
+
+## Who this is for, and what you need first
+
+This is for people who use Claude Code for real work, mostly software work, and want it to be more careful and need less hand-holding. You do not need to have installed a pack before. Most skills here assume you are working in a project folder with code or documents in it.
+
+Before you start you need:
+
+1. **Claude Code, installed and signed in.** If you have never installed it, follow the official guide at [code.claude.com/docs](https://code.claude.com/docs/en/quickstart) first. Nothing here works without it.
+2. **A terminal window with Claude Code running.** When Claude Code is running you will see a prompt where you can type. That is where every command below goes.
+
+Nothing here needs an account with us or a payment. A few skills need other free software, such as Node or Python, which are tools many programmers already have. Each pack page says which skill needs what. If you do not have it, that one skill will not work and the rest still will.
 
 ## Install
 
-Add the marketplace, then install the plugins you want:
+Everything below is typed **inside a running Claude Code session**, at the prompt where you normally type your requests. Do not type them at the ordinary terminal prompt, before Claude Code has started. They only work inside Claude Code.
 
-```bash
+**Step 1. Add this marketplace.** This tells Claude Code where to find our packs. It does not install anything yet.
+
+```
 /plugin marketplace add GFMCloud/skill-library
 ```
 
-```bash
-/plugin install foundry-core@skill-library
-```
+You should see a confirmation that the marketplace `skill-library` was added.
 
-Both are interactive Claude Code commands. Plugins are deliberately fine-grained so
-you can enable a few without taking the whole library.
-
-## What's inside
-
-| Plugin | Contents | What it's for |
-|---|---|---|
-| `foundry-core` | evidence-report, proof-of-work, full-output-enforcement | Never present work as done without executed evidence, and never truncate it. The skills most worth having on every project. |
-| `turn-reduction` | capability-preflight, output-lint, standing-authorization, plan-gate | Cut wasted round trips: prove access before starting, lint outgoing instructions, read your authorization from a file instead of asking, plan and stop for approval before work with real blast radius. |
-| `verification-kit` | fact-currency-check, `pre-delivery-verifier` agent | Check a claim is still true today, and verify an artifact against its acceptance criteria before handing it over. |
-| `consistency-checker` | spec-artifact-diff, `cross-document-checker` agent | Catch docs that have drifted from the thing they describe, and documents that contradict each other. |
-| `deploy-ops` | deploy-verify-fix, cloudflare-pages-migration, `deploy-loop-owner` agent | Own the deploy, verify, fix loop end to end instead of handing a half-deployed artifact back to a human. Includes the Cloudflare Pages migration runbook. |
-| `data-wrangler` | identity-resolution, `data-pipeline-owner` agent | Move data between shapes and match records across sources whose keys don't line up. |
-| `decks` | cd-to-pptx, chart-discipline, deck-scaffolding-builder, html-diagram, layout-critique, sales-lens-review | Plan, build, and critique slide decks. Includes HTML-to-PowerPoint conversion and interactive architecture diagrams. |
-| `frontend-design` | design-taste-frontend, image-taste-frontend, mobile-taste-frontend, minimalist-ui, redesign-existing-projects, frontend-design, emil-design-eng, `frontend-surface-builder` agent | Visual design judgment for new builds, app screens, and in-place redesigns, split by aesthetic so the right one fires. |
-| `long-projects` | change-watch, council, experiment-harness, handoff, orch-pipeline, orch-review, phased-harness, retro, rulings-harness, santa-method, sweep-harness, `loop-operator` and `harness-optimizer` agents | Work that spans many sessions: gated multi-phase harnesses, session handoffs and retros, review pipelines, second opinions. Replaces `workbench`. |
-| `project-starters` | devshell-init, new-project, pipeline-foundry, project-kb-builder, project-setup-wizard, systems-design | Start a project properly: repo scaffolding, dev shells, knowledge bases, pipeline and systems design. Split out of `workbench`. |
-| `agent-tooling` | llama-offload, model-effort-advisor, supahcode-review, `transcript-scanner` agent | Route work to the right model, effort level or local model, and mine past session transcripts. Split out of `workbench`. |
-| `voice-and-editing` | graham-voice, humanizer, adhd, capability-index, fable-project-review, folder-to-repo, repo-handoff, schedule-harness, scrollback, skill-discovery, source-intake, toolkit-review, x-read | One person's writing voice and editing tools, plus skills tied to the author's own machine and habits. Replaces `graham-voice`. Fork and swap in your own. |
-
-**If you installed `workbench` before 2026-09-19:** it was split. The marketplace moves
-you to `long-projects` automatically. Add the other two yourself if you used their
-skills: `claude plugin install project-starters@skill-library` and
-`claude plugin install agent-tooling@skill-library`. `graham-voice` became
-`voice-and-editing`, which also took the personal skills from `workbench` and
-`scrollback` from `frontend-design`.
-
-A few skills are personal (`graham-voice` encodes one person's writing style, `adhd`
-shapes output for one reader, `capability-index` points at a private project). They're kept in the open because the shape is more reusable than the
-content: fork them and swap in your own.
-
-## Layout
+**Step 2. Install one pack.** Start with one. You can add others later.
 
 ```
-.claude-plugin/marketplace.json   the catalog; adding a plugin means editing this
-plugins/<plugin>/
-  .claude-plugin/plugin.json
-  skills/<skill>/SKILL.md         the skill body, under 500 lines
-  skills/<skill>/references/      rubrics, schemas, worked examples
-  skills/<skill>/templates/       files the skill writes out
-  agents/<agent>.md               subagent definitions
-maintainers/                      working records: the authoring standard, review
-                                  records, the 2026-08 migration, maintenance scripts
-docs/inventory.md                 generated, one line per skill; validator fails when stale
-scripts/validate-skills.sh        the validator; CI runs the same script
-templates/SKILL.template.md       start new skills from this
+/plugin install consistency-checker@skill-library
 ```
 
-## Authoring standard
+Claude Code opens a details screen and asks you to pick where to install it. Choose **User scope** if you want the pack available in every folder you work in. Press Enter to confirm.
 
-The full contract is in [maintainers/authoring-standard.md](maintainers/authoring-standard.md). The
-parts that matter most:
+**Step 3. Check the install message.** If it says `Run /reload-plugins to activate.`, Claude Code usually runs that for you. If the pack does not seem to be there, type `/reload-plugins` yourself.
 
-**The description is the router.** Auto-invocation keys off `description`, so write it
-as a router and not a summary: what the skill produces, when to use it, and the
-trigger phrases someone would actually say. Vague descriptions are the top cause of
-skills that never fire, or fire at the wrong moment.
+If any step did not go as described, see [docs/install-help.md](docs/install-help.md).
 
-**Bodies stay under 500 lines.** A loaded skill sits in context across turns, so every
-line is a recurring token cost. Rubrics, schemas, and long examples belong in
-`references/`.
+**If you installed a pack called `workbench` or `graham-voice` from here before 19 September 2026:** those two were reorganized. Claude Code moves you to their replacements, `long-projects` and `voice-and-editing`, by itself. Some `workbench` skills now live in two new packs, `project-starters` and `agent-tooling`, which you add yourself with the install command above. [CHANGELOG.md](CHANGELOG.md) has the full list.
 
-**Maturity is a label, not a location.** A new skill goes straight into the plugin it
-belongs to as `incubator`: no stability promise, edited directly on main, and live on
-every machine at the next plugin update. There is no staging plugin. Promotion to
-`stable` (after the skill has proven itself in real use) flips the label and adds a
-semver `version` and a `reviewed` date; later changes go through PR. `deprecated`
-names its replacement via `supersedes`.
+## Try your first skill
 
-**Plugins group by install unit,** meaning skills you'd enable or disable together, not
-by topic.
+Start Claude Code inside a project folder. To do that, open a terminal, type `cd` followed by a space and the folder's location, press Enter, then type `claude` and press Enter. Pick a folder that has a README, the file most projects include to describe themselves. Then type this and press Enter:
 
-## Validation
-
-```bash
-bash scripts/validate-skills.sh
+```
+/consistency-checker:spec-artifact-diff
 ```
 
-Thirteen failure checks and three warnings: frontmatter parses, `name` matches the
-directory, descriptions clear 40 characters, no duplicate names across plugins, bodies
-under 500 lines, no broken relative links, maturity is valid, stable skills carry
-version and review date, deprecated skills name a real replacement. It also fails on
-finding zero skills, because a green run that checked nothing is a false green.
-Warnings cover stale review dates, unintended slash-only skills, and oversized files;
-set `STRICT=1` to make them fail too.
+Claude Code will ask which document to check. Answer in plain English, for example: *check the README against this folder*.
 
-CI runs the same script on every PR and every push to main. Current state: 47 skills
-checked, 0 failures, 0 warnings.
+What you get back is a list of the claims the README makes that a command can test, such as how many files there are, which commands exist, and what the version is. Each one comes with the command that tested it and whether it held. This skill only looks. It changes nothing unless you then ask it to correct the document.
+
+You can also just describe what you want, with no slash command at all: *"does this README still match the code?"* Claude Code reads the skill descriptions and picks the right one on its own. The slash command is there for when you want to be certain which skill runs.
+
+## Which pack do I need?
+
+Answer the first question that matches you.
+
+| If you want... | Install | A good skill to start with |
+| :--- | :--- | :--- |
+| Claude Code to prove work is done before it says so | `foundry-core` | [proof-of-work](plugins/foundry-core/skills/proof-of-work/) |
+| Fewer questions and fewer wasted rounds | `turn-reduction` | [plan-gate](plugins/turn-reduction/skills/plan-gate/), then [output-lint](plugins/turn-reduction/skills/output-lint/) |
+| To check claims, changes, deploys or a website before trusting them | `verification-kit` | [fact-currency-check](plugins/verification-kit/skills/fact-currency-check/) |
+| Documents that stay true to the files they describe | `consistency-checker` | [spec-artifact-diff](plugins/consistency-checker/skills/spec-artifact-diff/) |
+| Work that lasts many sessions to stay on track | `long-projects` | [handoff](plugins/long-projects/skills/handoff/) |
+| To start a new project with the basics in place | `project-starters` | See the pack page |
+| Deploys that get checked and fixed, not just pushed | `deploy-ops` | See the pack page |
+| To clean data or match records across sources | `data-wrangler` | See the pack page |
+| Better-looking websites and app screens | `frontend-design` | [minimalist-ui](plugins/frontend-design/skills/minimalist-ui/) |
+| Slide decks planned, built and critiqued | `decks` | See the pack page |
+| Help choosing a model, or sending bulk text work to a local model | `agent-tooling` | See the pack page |
+| To see how one person set up their own writing voice and personal tools | `voice-and-editing` | Read its page first. Much of it is tied to the author's own computer. |
+| More than one of the above | Install them one at a time, starting with the one you will use this week | |
+
+Longer version, including what each pack does **not** do: [docs/which-pack.md](docs/which-pack.md).
+
+## The packs
+
+<!-- generated:catalog by maintainers/scripts/generate-inventory.sh from .claude-plugin/marketplace.json and the plugins/ tree; edit the source, never this block -->
+| Pack | What it helps you do | Skills inside | Install |
+| :--- | :--- | :--- | :--- |
+| [foundry-core](plugins/foundry-core/) | Makes Claude Code prove its work: run the real checks before saying done, show the evidence, write the whole file and not a fragment, and stop a fix loop after a set number of tries. | 6 | `/plugin install foundry-core@skill-library` |
+| [turn-reduction](plugins/turn-reduction/) | Cuts the back-and-forth: check access before starting, plan before risky work, agree up front what Claude Code may do without asking, and catch broken instructions before they reach you. | 4 | `/plugin install turn-reduction@skill-library` |
+| [data-wrangler](plugins/data-wrangler/) | Move and clean data between files and systems, and match records that mean the same person or thing under different spellings. | 1, and 1 agent | `/plugin install data-wrangler@skill-library` |
+| [verification-kit](plugins/verification-kit/README.md) | Check before trusting: whether a claim is still true, whether a change is safe to ship, whether a deploy is really up, whether a website is fast and unbroken, and what code could be deleted. | 7, and 2 agents | `/plugin install verification-kit@skill-library` |
+| [consistency-checker](plugins/consistency-checker/README.md) | Check documents against the files they describe, and against each other, one claim at a time. | 1, and 1 agent | `/plugin install consistency-checker@skill-library` |
+| [deploy-ops](plugins/deploy-ops/) | Deploy, check the result the way a visitor would, fix, and repeat until it works. Includes a step-by-step move of a website to Cloudflare Pages. | 2, and 1 agent | `/plugin install deploy-ops@skill-library` |
+| [decks](plugins/decks/) | Plan, build and critique slide decks: outlines, charts, clickable diagrams, PowerPoint export, and reviews of layout and sales message. | 6 | `/plugin install decks@skill-library` |
+| [frontend-design](plugins/frontend-design/) | Design judgment for websites and apps: a distinctive look for new builds, mobile screens, minimal interfaces, polish, and upgrades to a site that already exists. | 7, and 1 agent | `/plugin install frontend-design@skill-library` |
+| [long-projects](plugins/long-projects/) | Keep work that spans many sessions on track: step-by-step project plans that pause for your approval, handoff notes between sessions, a review routine for everyday changes, and second opinions on hard decisions. | 11, and 2 agents | `/plugin install long-projects@skill-library` |
+| [project-starters](plugins/project-starters/) | Start a new project properly: a project folder set up with a check for leaked passwords, a repeatable set of development tools, a project knowledge base, and pipeline and systems design before any code. | 6 | `/plugin install project-starters@skill-library` |
+| [agent-tooling](plugins/agent-tooling/) | Choose the right model and effort level for a task, send bulk mechanical text work to a local model, and mine past session transcripts for facts. | 3, and 1 agent | `/plugin install agent-tooling@skill-library` |
+| [voice-and-editing](plugins/voice-and-editing/) | One person's writing voice and editing tools, plus skills tied to the author's own computer and habits. Most useful as an example to copy and change: swap in your own voice, schedule and sources. | 13 | `/plugin install voice-and-editing@skill-library` |
+<!-- /generated:catalog -->
+
+Each pack's own page lists its skills, what you say to trigger each one, what you get back, and what it does on your computer. Read that page before you install. The install screen may not list what a pack contains.
+
+## Is this safe? What does it do on my computer?
+
+Read this before installing anything, here or anywhere else.
+
+**The general warning first.** Installing a pack means trusting it completely. A pack can run programs on your computer with your own user permissions. Anthropic does not check what is inside a third-party pack and cannot promise it does what it says. Only install packs from a source you trust, and only after you have read what it says it does. That warning applies to this repository as much as any other.
+
+**What these packs do.** This is the summary across every pack. Many skills here exist to run your tests, write files, or check a live website, so they do those things. Each pack page has its own table, and each skill that does more than talk has its own page.
+
+| | |
+| :--- | :--- |
+| Files read | The project folder you are working in and any file you point at. A few skills read more: `retro`, `skill-discovery` and the `transcript-scanner` agent read your past Claude Code conversations, which are stored on your computer. `bounded-loop` reads every file in your project to notice changes. |
+| Files written | Most skills that write, write into the project you are working in: reports, plans, check scripts, new code.<br>`new-project`, `experiment-harness`, `phased-harness`, `sweep-harness` and `rulings-harness` create a new folder where you tell them to.<br>`security-audit` writes its reports to `~/security-audit-skill/` (`~` means your home folder).<br>`x-read` keeps one small file in `~/.config/bird`, the settings folder of the program it uses to read X. |
+| Files deleted or moved | No skill deletes your files as its job. Skills that change code (`orch-pipeline`, `review-pair`, `redesign-existing-projects`, the design skills) edit files in place, and `capability-preflight` and `deploy-verify-fix` run commands you wrote, which do whatever you wrote. Two small exceptions:<br>A script in `html-diagram` removes two screenshot images beside your diagram before it takes new ones.<br>`folder-to-repo` removes a file named `START_HERE.md` from the folder if one is there. |
+| Programs and scripts | These packs ship small programs of their own, written in Python, shell or Node: `foundry-core`, `turn-reduction`, `verification-kit`, `decks`, `long-projects`, `project-starters` and `voice-and-editing`. Each pack page lists them.<br>Skills also run tools already on your computer, such as `git` and your project's own tests.<br>Four skills can install software:<br>`cd-to-pptx` installs LibreOffice and poppler, which convert slides, if they are missing.<br>`html-diagram` installs Playwright and its Chromium browser to take screenshots.<br>`site-review` downloads Lighthouse and linkinator, two website-checking tools, from npm, the public download site for Node tools.<br>`devshell-init` downloads a set of development tools through Nix, a package manager. |
+| Internet access | Some skills go online because that is their job:<br>`fact-currency-check` looks claims up.<br>`site-review` and `smoke-gate` contact the website you name.<br>`source-intake` downloads the repository or article you point at.<br>`x-read` reads posts from X.<br>The deploy skills talk to your hosting provider.<br>Web pages made by `html-diagram` and `scrollback` load a font from Google when opened.<br>No pack sends your files to us. We run no service and collect nothing. Claude Code itself sends what it reads to the AI service that powers it, with or without any pack. |
+| Accounts, keys or passwords | No skill asks you to paste a key or password into the conversation. Some act through programs you are already signed in to on your computer:<br>`new-project`, `folder-to-repo` and `repo-handoff` create a repository under your GitHub account.<br>`orch-review`, `source-intake` and `toolkit-review` use your GitHub sign-in.<br>The deploy skills and `plan-gate` use your cloud sign-ins.<br>`x-read` reads a sign-in cookie for X from your Mac's keychain, where you store it once yourself.<br>One more thing to know: `proof-of-work` searches your project for text that looks like a key or password and saves what it finds in its log folder. You choose that folder when you run it. Treat it as private. |
+| Background activity | The `verification-kit` pack installs one hook. It runs before every command Claude Code is about to run on your computer, in every session. It only acts inside six agents that are meant to look and not change anything: `pre-delivery-verifier`, `silent-failure-hunter`, `cross-document-checker`, `transcript-scanner`, `loop-operator` and Claude Code's built-in `Explore`. There it refuses the usual commands that write, move or delete files. It does not catch every way of writing a file, and its pack page lists what it misses.<br>`bounded-loop` and `smoke-gate` can set up a check that runs each time Claude Code finishes a turn, only if you set it up.<br>`change-watch` and `schedule-harness` help you create scheduled jobs, which you register yourself.<br>`devshell-init` makes its development tools switch on whenever you enter that project folder. |
+
+**How to check that for yourself.** Every skill in this repository is a plain text file you can read in your browser before installing. Open `plugins/<pack>/skills/<skill>/SKILL.md` in this repository. Programs a skill ships are in the same folder, usually under `scripts/`. If something does what you did not expect, do not install it, and please open an issue, which is a public report on this repository's GitHub page.
+
+**What we do not promise.** These skills can get things wrong. A check can pass when it should fail. A security review that finds nothing does not mean the code is secure. Check anything that matters before acting on it.
+
+## Status and help
+
+This library is maintained by one person and used daily. It changes often. There is no support commitment. Skills marked `incubator` in the [inventory](docs/inventory.md) are newer and less proven than those marked `stable`.
+
+If something is wrong or confusing:
+
+- Open an issue at [github.com/GFMCloud/skill-library/issues](https://github.com/GFMCloud/skill-library/issues).
+- For install trouble specifically, check [docs/install-help.md](docs/install-help.md) first. It also explains how to remove a pack.
+
+Other pages that may help:
+
+- [docs/glossary.md](docs/glossary.md): every term used here, in one place.
+- [docs/how-a-skill-works.md](docs/how-a-skill-works.md): what actually happens when a skill runs.
+- [CHANGELOG.md](CHANGELOG.md): what changed and when.
+- [maintainers/](maintainers/): where each skill that was adapted from someone else's work came from, with the dated review behind it.
 
 ## License
 
-[MIT](LICENSE).
-
-Two pieces of third-party content are redistributed here with their original terms
-intact: `plugins/frontend-design/skills/frontend-design/` carries its own Apache-2.0
-license file, and `voice-and-editing/adhd` is adapted from
-[ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd) (MIT), itself loosely based
-on *The Adult ADHD Tool Kit* by Ramsay and Rostain. Keep those notices if you fork.
+MIT. See [LICENSE](LICENSE). You can use, copy and change anything here, including in your own projects.
