@@ -2,6 +2,28 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-19 - contributor and community files
+
+No skill's behavior changed.
+
+- **`CONTRIBUTING.md` is the one page for people who write or change a skill.** It takes
+  over the Layout, Authoring standard and Validation sections of the old README, says what
+  belongs here and what does not, and says where eval cases live
+  (`plugins/<pack>/evals/<skill>/`). The skill-repo-standard governs the shape of the
+  repository; the four contract sections, the maturity labels and the change rules stay in
+  `maintainers/authoring-standard.md` as the library's add-on, and that file now says so.
+- **`SECURITY.md` and `CODE_OF_CONDUCT.md`.** Security problems are reported privately
+  through the repository's Security tab, not in a public issue.
+- **Two issue forms** under `.github/ISSUE_TEMPLATE/`: something is not working, and
+  suggest a skill.
+- **Three templates.** `templates/SKILL.template.md` is renamed `templates/SKILL-template.md`
+  and carries its rules as comments; `pack-README-template.md` and
+  `skill-page-README-template.md` are new and follow the pages already written.
+- **`humanizer` gains a `SOURCE.md`** naming its upstream and its local changes
+  (voice-and-editing 1.2.2). Under skill-repo-standard 0.2.1 the em dash check leaves a
+  vendored `SKILL.md` as its author wrote it, and skips text shown inside a code fence or
+  a blockquote.
+
 ## 2026-09-19 - pages for people: every pack and every skill that touches your computer
 
 No skill's behavior changed. What changed is that a person who has never installed a

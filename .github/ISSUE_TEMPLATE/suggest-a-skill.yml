@@ -1,0 +1,74 @@
+name: Suggest a skill
+description: Propose a new skill, or a change to one that exists.
+title: "[Suggestion] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Open this before writing a skill or a pull request. It is much easier to agree on scope here than in a review.
+
+        Please read the "What belongs here and what does not" section of CONTRIBUTING.md first.
+
+  - type: textarea
+    id: the-job
+    attributes:
+      label: What is the job?
+      description: One sentence. What would a person be trying to get done?
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happens-now
+    attributes:
+      label: What happens today, without a skill?
+      description: Ask Claude Code to do this with no pack installed, and say what went wrong. This is the single most useful thing in this form.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: pack
+    attributes:
+      label: Which pack would it belong to?
+      options:
+        - foundry-core
+        - turn-reduction
+        - data-wrangler
+        - verification-kit
+        - consistency-checker
+        - deploy-ops
+        - decks
+        - frontend-design
+        - long-projects
+        - project-starters
+        - agent-tooling
+        - voice-and-editing
+        - A new pack
+        - Not sure
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: on-your-computer
+    attributes:
+      label: What would it do on a person's computer?
+      description: None of these rules a skill out. Each one has to be stated on the pack page, so say so now.
+      options:
+        - label: Write, move or delete files
+          required: false
+        - label: Run a program or a script
+          required: false
+        - label: Go online
+          required: false
+        - label: Use a sign-in, a key or a paid service
+          required: false
+        - label: None of the above
+          required: false
+
+  - type: textarea
+    id: writing-it
+    attributes:
+      label: Would you like to write it?
+      description: Not required. Saying no is fine and the suggestion still helps.
+    validations:
+      required: false

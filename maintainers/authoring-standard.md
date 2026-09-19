@@ -1,7 +1,11 @@
 # Skill authoring standard
 
-The contract every skill in the library must meet. Copied into the library repo's
-`docs/` in Phase 0; the validator enforces the checkable parts.
+The library's add-on to the skill-repo-standard: the metadata block, the four contract
+sections, the maturity labels and the change rules. The skill-repo-standard governs the
+shape of the repository and its pages, and [CONTRIBUTING.md](../CONTRIBUTING.md) is where
+a contributor starts. Where this file and the standard disagree, the standard governs
+(ruled 2026-09-19). This file is the one home of the add-on; the validator enforces the
+checkable parts.
 
 ## Frontmatter
 
@@ -145,7 +149,7 @@ Three states, not four:
 - Structural checks parse frontmatter with the YAML loader (`scripts/skill_meta.py`),
   never grep for a key name: a checker that can match its own documentation, or a
   key mentioned in prose, is not checking structure (hstack review, 2026-09-03).
-- Behavior testing: for stable skills keep 2–3 eval cases and run them on change
+- Behavior testing: for stable skills keep at least three eval cases and run them on change
   (the official `skill-creator` plugin provides evals and version comparison).
   Reviewing prompt diffs alone tells you almost nothing about behavior. Cases live in
   `plugins/<plugin>/evals/<skill>/`, never inside the skill directory, and run with

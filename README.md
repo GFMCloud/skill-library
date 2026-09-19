@@ -153,12 +153,14 @@ If something is wrong or confusing:
 
 - Open an issue at [github.com/GFMCloud/skill-library/issues](https://github.com/GFMCloud/skill-library/issues).
 - For install trouble specifically, check [docs/install-help.md](docs/install-help.md) first. It also explains how to remove a pack.
+- For a security problem, do not open a public issue. [SECURITY.md](SECURITY.md) says how to report it privately.
 
 Other pages that may help:
 
 - [docs/glossary.md](docs/glossary.md): every term used here, in one place.
 - [docs/how-a-skill-works.md](docs/how-a-skill-works.md): what actually happens when a skill runs.
 - [CHANGELOG.md](CHANGELOG.md): what changed and when.
+- [CONTRIBUTING.md](CONTRIBUTING.md): for people who want to write or change a skill.
 - [maintainers/](maintainers/): where each skill that was adapted from someone else's work came from, with the dated review behind it.
 
 ## License
