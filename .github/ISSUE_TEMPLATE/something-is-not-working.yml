@@ -1,0 +1,74 @@
+name: Something is not working
+description: A pack will not install, a skill will not run, or a skill did something you did not expect.
+title: "[Problem] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. You do not need to know what caused it. Say what you did and what happened.
+
+        If this looks like a security problem, please do not use this form. See SECURITY.md instead.
+
+  - type: dropdown
+    id: pack
+    attributes:
+      label: Which pack?
+      options:
+        - foundry-core
+        - turn-reduction
+        - data-wrangler
+        - verification-kit
+        - consistency-checker
+        - deploy-ops
+        - decks
+        - frontend-design
+        - long-projects
+        - project-starters
+        - agent-tooling
+        - voice-and-editing
+        - I do not know
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-you-did
+    attributes:
+      label: What did you type?
+      description: Copy and paste the line, or describe what you asked for in plain English.
+      placeholder: /plugin install consistency-checker@skill-library
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Copy and paste what you saw, including any error message. Remove anything personal first, and any password, key or token.
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-you-expected
+    attributes:
+      label: What did you expect instead?
+    validations:
+      required: true
+
+  - type: input
+    id: claude-code-version
+    attributes:
+      label: Claude Code version
+      description: Type claude --version in your terminal. Leave blank if you cannot find it.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Before you send
+      options:
+        - label: I have read docs/install-help.md and my problem is not covered there.
+          required: false
+        - label: I have removed any personal information, password, key or token from what I pasted above.
+          required: true

@@ -1,4 +1,5 @@
 ---
 type: tool_order
-tools: [Read, Bash]
+before: Read
+after: Bash
 ---

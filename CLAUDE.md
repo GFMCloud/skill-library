@@ -7,8 +7,9 @@ structured as a plugin marketplace.
 
 ## Rules for sessions editing this repo
 
-- Follow [maintainers/authoring-standard.md](maintainers/authoring-standard.md) for every skill.
-  Start new skills from [templates/SKILL.template.md](templates/SKILL.template.md).
+- Follow [CONTRIBUTING.md](CONTRIBUTING.md) for every skill, and the library's add-on in
+  [maintainers/authoring-standard.md](maintainers/authoring-standard.md). Start new skills
+  from [templates/SKILL-template.md](templates/SKILL-template.md).
 - **New skills go straight into the plugin they belong to** (the install unit they
   would be enabled with), with `maturity: incubator` as a label only. There is no
   staging plugin; a skill is live on every machine at the next plugin update. Adding

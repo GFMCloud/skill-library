@@ -5,6 +5,8 @@
 #                                     plugins/<pack>/reader-table.tsv beside it
 #   README.md                         the pack catalog and the counts, from
 #                                     .claude-plugin/marketplace.json and the tree
+#                                     (the pack map's image line and alt text too; the
+#                                     image itself is maintainers/scripts/generate-pack-map.py)
 # Only the text between a page's generated markers is written; the rest of the page is
 # hand-written. Edit the source and run this, never the rendered block.
 # Usage: bash maintainers/scripts/generate-inventory.sh          # regenerate

@@ -183,6 +183,12 @@ if root == "plugins":
         if open(path, encoding="utf-8").read() != text:
             fails.append(f"F13 {path} generated block is stale; "
                          "run: bash maintainers/scripts/generate-inventory.sh")
+    # And for the generated pack map image, through its own generator's --check.
+    r = subprocess.run([sys.executable, "maintainers/scripts/generate-pack-map.py", "--check"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        fails.append("F13 docs/images/pack-map.svg missing or stale; "
+                     "run: python3 maintainers/scripts/generate-pack-map.py")
 
 # F17: any change to a skill's or agent's files bumps the host plugin's manifest
 # version (maintainers/authoring-standard.md "Change hygiene"). Installed caches refresh only
