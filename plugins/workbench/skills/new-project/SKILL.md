@@ -1,6 +1,6 @@
 ---
 name: new-project
-description: Stand up a brand-new repo end to end — directory structure, .gitignore, secret-scanning hooks, licence, the four project docs (README/CLAUDE.md/SPEC.md/KICKOFF.md), the first commit, and the GitHub repo — before any implementation work begins. Use this whenever the user is starting something new and says anything like "new project", "new repo", "start a repo for", "set up a project", "scaffold", "bootstrap", "kick off a new thing", "I want to build X" where X does not exist yet, or asks to get a project "structured properly" / "set up the way I like it". Also use it when they have loose files or a prototype sitting in a folder and want it turned into a real repo. Supports four archetypes — AWS/Terraform infra, homelab service, Python pipeline/CLI, static site. Do NOT use it for adding structure to an existing repo that already has git history and docs.
+description: Stand up a brand-new repo end to end - directory structure, .gitignore, secret-scanning hooks, licence, the four project docs (README/CLAUDE.md/SPEC.md/KICKOFF.md), the first commit, and the GitHub repo - before any implementation work begins. Use this whenever the user is starting something new and says anything like "new project", "new repo", "start a repo for", "set up a project", "scaffold", "bootstrap", "kick off a new thing", "I want to build X" where X does not exist yet, or asks to get a project "structured properly" / "set up the way I like it". Also use it when they have loose files or a prototype sitting in a folder and want it turned into a real repo. Supports four archetypes - AWS/Terraform infra, homelab service, Python pipeline/CLI, static site. Do NOT use it for adding structure to an existing repo that already has git history and docs.
 metadata:
   maturity: incubator
 ---
@@ -12,7 +12,7 @@ scaffolding-only baseline and every later diff is readable against it.
 
 The work splits in two, and the split is the point:
 
-- `scripts/scaffold.sh` does everything deterministic — directories, ignore rules,
+- `scripts/scaffold.sh` does everything deterministic - directories, ignore rules,
   hooks, licence, CI, and **stubs** for the four docs. It is a script so it produces
   byte-identical bones every time and can be tested.
 - **You** do the part that needs judgment: interview the user, then write the four
@@ -20,20 +20,20 @@ The work splits in two, and the split is the point:
 
 `scaffold.sh publish` refuses to push while any doc still contains its
 `<!-- SCAFFOLD-TODO -->` markers. That gate exists because a repo whose `CLAUDE.md` is
-an unfilled template is worse than one with no `CLAUDE.md` — people learn to ignore it,
+an unfilled template is worse than one with no `CLAUDE.md` - people learn to ignore it,
 and then the one time it does say something important, nobody reads it.
 
 ## Workflow
 
-### 1. Interview first — do not run the script yet
+### 1. Interview first - do not run the script yet
 
 You cannot write a useful `CLAUDE.md` or `SPEC.md` from a project name. Ask these,
 batched into one round (use `AskUserQuestion` if you have it), with your best guess
 pre-filled as the default so answering is cheap:
 
-1. **What is this and who uses it?** One paragraph. Push for the non-obvious context —
+1. **What is this and who uses it?** One paragraph. Push for the non-obvious context  - 
    the thing a competent stranger would not infer from the name.
-2. **Archetype** — `infra` (AWS/Terraform), `homelab` (compose service), `python`
+2. **Archetype** - `infra` (AWS/Terraform), `homelab` (compose service), `python`
    (pipeline/CLI/analysis), `site` (static/generated site). Infer it from the answer to
    #1 and just confirm; only ask openly if it is genuinely ambiguous.
 3. **Where does it run?** Laptop, an AWS account, a homelab host, GitHub Pages, CI.
@@ -60,7 +60,7 @@ It prints the created path on the last line. `--dir` overrides the parent.
 
 ### 3. Write the four docs
 
-Read `references/conventions.md` before writing — it defines what belongs in each file
+Read [references/conventions.md](references/conventions.md) before writing - it defines what belongs in each file
 and, more usefully, what does *not*. The short version:
 
 | File | Audience | Holds |
@@ -95,7 +95,7 @@ It checks, in order: no unfilled stubs → `.env` is ignored if present → `git
 nothing → `gh` is authenticated → no `origin` yet. Then one commit
 (`chore: scaffold <name> (<type>)`) and `gh repo create --source=. --push`.
 
-Add `--dry-run` to rehearse. If `gitleaks` is missing it refuses rather than skipping —
+Add `--dry-run` to rehearse. If `gitleaks` is missing it refuses rather than skipping  - 
 that is deliberate, since purging a leaked credential later means a history rewrite, a
 force-push, and rotating the secret anyway. `--no-scan` overrides and records why in the
 commit trailer.
@@ -109,13 +109,13 @@ that is a different request and the scaffold is already safely committed.
 
 ## Archetype notes
 
-Read the matching file in `references/` when writing the docs — each lists what usually
+Read the matching file in `references/` when writing the docs - each lists what usually
 belongs in that archetype's `SPEC.md` and the traps worth a hard rule.
 
-- `references/archetype-infra.md` — Terraform/AWS: state, envs, plan-before-apply.
-- `references/archetype-homelab.md` — compose services: host registry, backups, restore.
-- `references/archetype-python.md` — pipelines/CLIs: pinning, `--check` modes, data hygiene.
-- `references/archetype-site.md` — generated sites: templates vs output, Pages settings.
+- [references/archetype-infra.md](references/archetype-infra.md) - Terraform/AWS: state, envs, plan-before-apply.
+- [references/archetype-homelab.md](references/archetype-homelab.md) - compose services: host registry, backups, restore.
+- [references/archetype-python.md](references/archetype-python.md) - pipelines/CLIs: pinning, `--check` modes, data hygiene.
+- [references/archetype-site.md](references/archetype-site.md) - generated sites: templates vs output, Pages settings.
 
 For infra specifically: if the project will touch IAM, networking, state, or anything
 that spends money, the `plan-gate` skill applies to the *first real session*, not to this
@@ -129,7 +129,7 @@ one. Note that in `KICKOFF.md` rather than trying to do it here.
   how something works, the spec must say so. Half the value of the file is that it is
   trustworthy.
 - **A `CLAUDE.md` State section written as aspiration.** It describes what exists *now*.
-  On a fresh scaffold that is "nothing is built yet" — say that.
+  On a fresh scaffold that is "nothing is built yet" - say that.
 - **Adding directories the project will not use.** Twelve empty folders teach people the
   structure is decorative. The archetypes are already close to minimal; do not pad them.
 - **Being clever with the repo name.** Lowercase slug, matches the directory, matches

@@ -2,6 +2,32 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-19 - six packs: hygiene against skill-repo-standard 0.2.0, no moves
+
+decks 0.3.1, deploy-ops 0.2.1, foundry-core 0.6.3, frontend-design 0.4.2,
+verification-kit 0.5.4, workbench 0.17.2. Stage C phase 2 of the migration onto
+`skill-repo-standard`. No file or folder moved.
+
+- **Seven descriptions changed (routing strings).** Four were over the 1024-character
+  limit and were shortened with their trigger phrases and negative scopes kept:
+  `deck-scaffolding-builder` (1127 to 974), `html-diagram` (1481 to 986), `handoff`
+  (1286 to 992), `llama-offload` (1107 to 1015). Three had no when-clause and gained one:
+  `design-taste-frontend`, `emil-design-eng`, `frontend-design`. Each was tested in a
+  fresh headless session with only the worktree copy of its pack loaded (`--plugin-dir`,
+  user settings excluded, init event checked): 7 of 7 called the intended skill on one
+  of its own documented phrases. The test holds one pack per session, so competition
+  from other packs is not exercised.
+- **verification-kit, `smoke-gate`:** `references/stop-hook.md` no longer links into the
+  `foundry-core` pack. The three Stop-hook facts it relies on are quoted in the file with
+  their source, so the pack stands alone when installed by itself.
+- **Reference files:** 29 reference files that `SKILL.md` named only in backticks are now
+  markdown links (decks, frontend-design, workbench), and 21 reference files over 100
+  lines open with a contents list. `toolkit-review` gains one line naming
+  `references/judge-challenge-note.md`, which `run-judge.sh` already used.
+- **Marketplace:** every entry carries a `category`.
+- Em dashes replaced with ` - ` in the three `SKILL.md` files this change already
+  touched (`emil-design-eng`, `frontend-design`, `new-project`); the rest are untouched.
+
 ## 2026-09-18 - foundry-core 0.6.2: eval-harness reads a delta against measured noise; CI checkout drops its token
 
 Source: `docs/reviews/2026-09-18-reef.md`, a `source-intake` run on

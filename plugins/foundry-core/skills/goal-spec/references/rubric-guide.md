@@ -6,6 +6,13 @@ and scored independently, never rolled into one holistic number. This file
 is guidance for writing that rubric; it does not define the Goal block
 shape (interface spec, section 1) or introduce a new shape of its own.
 
+## Contents
+
+- [Why not one score](#why-not-one-score)
+- [Shape of a rubric file](#shape-of-a-rubric-file)
+- [Worked example](#worked-example)
+- [Common mistakes](#common-mistakes)
+
 ## Why not one score
 
 A single 1-10 "how good is this" number hides which quality failed. It also

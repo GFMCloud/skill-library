@@ -1,5 +1,14 @@
 # Techniques and Craft Reference
 
+## Contents
+
+- CSS Transform Mastery
+- clip-path for Animation
+- Gesture and Drag Interactions
+- The Sonner Principles (Building Loved Components)
+- Stagger Animations
+- Debugging Animations
+
 ## CSS Transform Mastery
 
 ### translateY with percentages

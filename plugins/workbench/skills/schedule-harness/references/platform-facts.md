@@ -5,6 +5,18 @@ Fetched from https://code.claude.com/docs/en/desktop-scheduled-tasks on 2026-09-
 primary-source lines this skill's claims rest on, corresponding to research record
 rows R-6 and R-7. See also `/Users/gfm/work/ai-workflow-roadmap/research-2026-09-11.md`.
 
+## Contents
+
+- Permission mode and saved approvals
+- Overlap skip
+- Catch-up (missed runs)
+- Worktree option
+- Run history and skip reasons
+- `update_scheduled_task` (self-rescheduling)
+- Pointer file location and format
+- Headless `--permission-prompts none` (R-6)
+- Scheduled runs can spawn subagents (R-14)
+
 ## Permission mode and saved approvals
 
 > "Each task has its own permission mode, which you set when creating or editing the

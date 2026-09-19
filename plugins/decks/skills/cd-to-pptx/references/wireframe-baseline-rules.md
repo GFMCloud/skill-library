@@ -2,6 +2,14 @@
 
 How to constrain a Claude Design wireframe so it converts into an editable PPTX cleanly - and what to do when it doesn't.
 
+## Contents
+
+- Read this part first - what you can and can't control in Claude Design
+- Part A - CONSTRAIN: what to push Claude Design toward
+- Part B - HARDEN: the conversion math the builder uses no matter what
+- Quick reference card
+- The one-line version
+
 This is one of four files in the Claude Design to PPTX system:
 - wireframe-baseline-rules.md (this file) - the rules
 - wireframe-template.html - a ready-to-use boilerplate that follows these rules

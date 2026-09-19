@@ -1,5 +1,26 @@
 # AI Tells: the shared banned-pattern list
 
+## Contents
+
+- Typography tells
+- Color and gradient tells
+- Layout and spacing tells
+- Responsive tells
+- Motion tells
+- Icon and symbol tells
+- Hero and top-of-page tells
+- Section numbering and micro-label tells
+- Separator and dot tells
+- Em dash and typographic flourish tells
+- Fake product preview tells
+- Marketing copy tells
+- Pill, label, and version stamp tells
+- List, divider, and scoring tells
+- Locale, time, and scroll cue tells
+- Density tells
+- Visual effect tells
+- Interaction completeness
+
 Canonical list for the frontend-design pack. `design-taste-frontend`, `redesign-existing-projects`,
 `minimalist-ui` and `image-taste-frontend` all defer to this file rather than restating it.
 

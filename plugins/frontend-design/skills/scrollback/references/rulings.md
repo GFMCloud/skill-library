@@ -4,6 +4,19 @@ Every number here was computed, not eyeballed. Ratios use the WCAG 2.x
 relative-luminance formula; regenerate them with
 [../templates/verify.py](../templates/verify.py).
 
+## Contents
+
+- Palette, measured
+- Accent discipline and amendment SB-01/A1
+- Accessibility floors that follow from the numbers
+- Precedence
+- Source-set errata
+- Implementation bugs this system produces
+- Where the CSS lives
+- Amending
+- Revision history
+- Lineage
+
 ## Palette, measured
 
 ### Core: seven tokens, and it stays seven

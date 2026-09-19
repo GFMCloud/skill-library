@@ -56,7 +56,7 @@ Never guess silently. Getting the mode wrong wastes more time than asking once.
 
 1. Read the task or prompt
 2. Score it against `references/decision-rubric.md` (Reasoning, Creativity, Risk, Repetition, Human Oversight)
-3. Pick the model and reasoning effort using `references/model-catalog.md` and `references/effort-sizing.md` (and `references/cache-economics.md` for a long or unattended session)
+3. Pick the model and reasoning effort using `references/model-catalog.md` and `references/effort-sizing.md` (and [references/cache-economics.md](references/cache-economics.md) for a long or unattended session)
 4. Decide inline vs. subagent(s) using `references/subagent-routing.md`
 5. Output the Quick Pass block from `references/output-template.md` - nothing else, no extra sections
 
@@ -82,12 +82,12 @@ Only enter this workflow when the mode selection rule above resolves to Deep Pla
 
 Consult these as needed - quick pass should only need the first three:
 
-- `references/decision-rubric.md` - qualitative task classification (shared by both modes)
-- `references/model-catalog.md` - current Claude model guidance
-- `references/effort-sizing.md` - reasoning effort levels and model/effort tradeoffs
-- `references/subagent-routing.md` - inline vs. subagent decision logic, build/review pairing
-- `references/output-template.md` - required formats for both modes
-- `references/examples.md` - one quick pass example, one deep planning example
+- [references/decision-rubric.md](references/decision-rubric.md) - qualitative task classification (shared by both modes)
+- [references/model-catalog.md](references/model-catalog.md) - current Claude model guidance
+- [references/effort-sizing.md](references/effort-sizing.md) - reasoning effort levels and model/effort tradeoffs
+- [references/subagent-routing.md](references/subagent-routing.md) - inline vs. subagent decision logic, build/review pairing
+- [references/output-template.md](references/output-template.md) - required formats for both modes
+- [references/examples.md](references/examples.md) - one quick pass example, one deep planning example
 
 ---
 

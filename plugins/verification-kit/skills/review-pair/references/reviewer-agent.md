@@ -1,5 +1,11 @@
 # Reviewer subagent definition
 
+## Contents
+
+- [Why these fields, quoted from the primary source](#why-these-fields-quoted-from-the-primary-source)
+- [The definition](#the-definition)
+- [Placement note](#placement-note)
+
 Drop this frontmatter block into a project's `.claude/agents/reviewer.md` (this skill
 cannot write there itself: `plugins/verification-kit/agents/` is outside a builder's
 write boundary in this harness, so the orchestrator decides whether to place a copy

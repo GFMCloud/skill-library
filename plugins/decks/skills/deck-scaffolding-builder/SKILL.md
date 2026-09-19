@@ -1,6 +1,6 @@
 ---
 name: deck-scaffolding-builder
-description: Build the upstream planning scaffolding for a slide deck - the slide-by-slide content blueprint, design spec, layout map, low-fi wireframe, reusable Claude Design build prompts, and build plan. Use whenever the user wants to plan, blueprint, outline, structure, scaffold, or wireframe a deck before it gets built; create or update a "deck blueprint," "slide framework," "design spec," or "layout map"; restructure an existing deck into the standard template; or turn source material (notes, transcript, an old deck, a conversation) into a structured deck plan. Trigger on "blueprint this deck," "plan out a deck on," "scaffold a deck," or "wireframe a deck." This is the PLANNING layer only - it stops before the visual build and hands to Claude Design plus cd-to-pptx. It does NOT build finished slides; if the user wants the deck made now, defer to the build skills (pptx, Claude Design). If the ask is a single standalone architecture or flow diagram rather than a full deck plan, that's html-diagram, not this skill. Use it even when the user doesn't say "skill," as long as the goal is planning a deck before slides exist.
+description: Build the upstream planning scaffolding for a slide deck - the slide-by-slide content blueprint, design spec, layout map, low-fi wireframe, reusable Claude Design build prompts, and build plan. Use whenever the user wants to plan, blueprint, outline, structure, scaffold, or wireframe a deck before it gets built; create or update a "deck blueprint," "slide framework," "design spec," or "layout map"; restructure an existing deck into the standard template; or turn source material (notes, transcript, an old deck, a conversation) into a structured deck plan. Trigger on "blueprint this deck," "plan out a deck on," "scaffold a deck," or "wireframe a deck." This is the PLANNING layer only - it stops before the visual build and hands to Claude Design plus cd-to-pptx. If the user wants the deck made now, defer to the build skills (pptx, Claude Design). For a single standalone architecture or flow diagram, use html-diagram. Use it even when the user doesn't say "skill."
 metadata:
   maturity: incubator
 ---
@@ -108,12 +108,12 @@ Save to the deck's working folder (ask if unclear - never guess the path). Custo
 
 ## Reference files
 
-- `references/slide-schema.md` - the five-field per-slide template and copy blocks. Read before any blueprint.
-- `references/design-system.md` - two-mode system, font resolution, chrome, accent discipline. Points at the project's own brand kit or design tokens for exact palette/type/logos, if one exists.
-- `references/copy-voice.md` - claim-style headlines, pattern-recognition framing. Points at a voice/tone skill for the universal voice rules and banned-word list, if the project has one.
-- `references/layout-patterns.md` - the eight reusable body layouts (A-H), card anatomy, headline-vs-depth rules.
-- `references/chart-handling.md` - the three-way visual split decision guide.
-- `references/build-prompts.md` - the A/B/C/D Claude Design + cd-to-pptx prompt templates.
+- [references/slide-schema.md](references/slide-schema.md) - the five-field per-slide template and copy blocks. Read before any blueprint.
+- [references/design-system.md](references/design-system.md) - two-mode system, font resolution, chrome, accent discipline. Points at the project's own brand kit or design tokens for exact palette/type/logos, if one exists.
+- [references/copy-voice.md](references/copy-voice.md) - claim-style headlines, pattern-recognition framing. Points at a voice/tone skill for the universal voice rules and banned-word list, if the project has one.
+- [references/layout-patterns.md](references/layout-patterns.md) - the eight reusable body layouts (A-H), card anatomy, headline-vs-depth rules.
+- [references/chart-handling.md](references/chart-handling.md) - the three-way visual split decision guide.
+- [references/build-prompts.md](references/build-prompts.md) - the A/B/C/D Claude Design + cd-to-pptx prompt templates.
 
 ## Boundaries
 

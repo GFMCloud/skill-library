@@ -1,6 +1,20 @@
+## Contents
+
+- Improvement Plan header (goal, reviewer, executor, plan version)
+- 1. Project goal
+- 2. What this review covered
+- 3. Summary
+- 4. Execution order
+- 5. Work items (Critical, High, Medium, Low)
+- 6. Global non-goals
+- 7. Handoff notes for the executor
+- 8. Verification tracking
+
 <!--
 INSTRUCTIONS FOR THE MODEL WRITING THIS PLAN (Fable 5, Phase 3) - delete this
-comment block before presenting the plan to the user.
+comment block before presenting the plan to the user. The "Contents" heading
+above is a reference aid for whoever reads this template file; it is not part
+of the plan and is not copied into the generated improvement-plan-*.md output.
 
 This file is the ONLY bridge between the review session and the execution
 session. The executor is a cheaper model, in a brand-new session, with none

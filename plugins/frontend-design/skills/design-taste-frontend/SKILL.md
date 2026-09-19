@@ -1,7 +1,7 @@
 ---
 name: design-taste-frontend
 description: >-
-  Senior UI/UX Engineer for premium, greenfield frontend builds. Architects digital interfaces overriding default LLM biases: metric-based variance dials, named vibe and layout archetypes, strict component architecture, CSS hardware acceleration, and balanced design engineering. For net-new builds only. If the project already exists and must not be rewritten, use redesign-existing-projects. If the request specifically asks for a minimal, quiet, editorial or document-style look, or names Notion, Linear or Stripe docs as a reference, use minimalist-ui instead, since this skill's archetypes run louder. If the design should be settled visually before implementation, use image-taste-frontend.
+  Senior UI/UX Engineer for premium, greenfield frontend builds. Use when the user asks for a new site, landing page, dashboard or app UI built from scratch and wants it to look premium, not templated. Architects digital interfaces overriding default LLM biases: metric-based variance dials, named vibe and layout archetypes, strict component architecture, CSS hardware acceleration, and balanced design engineering. For net-new builds only. If the project already exists and must not be rewritten, use redesign-existing-projects. If the request specifically asks for a minimal, quiet, editorial or document-style look, or names Notion, Linear or Stripe docs as a reference, use minimalist-ui instead, since this skill's archetypes run louder. If the design should be settled visually before implementation, use image-taste-frontend.
 metadata:
   maturity: incubator
 ---
@@ -39,7 +39,7 @@ because the model jumps to a default aesthetic instead of reading the room.
 
 **If the brief is ambiguous, ask exactly one question**, only when the design read genuinely diverges ("Closer to Linear-clean or Awwwards-experimental?"). If you can infer from context, do not ask; declare the read and proceed.
 
-**Anti-default discipline:** the LLM defaults (AI-purple gradients, a centered hero over a dark mesh, three equal feature cards, glass on everything, infinite loops everywhere, Inter plus slate-900) are catalogued in `references/ai-tells.md`. Reach past them deliberately, based on the design read.
+**Anti-default discipline:** the LLM defaults (AI-purple gradients, a centered hero over a dark mesh, three equal feature cards, glass on everything, infinite loops everywhere, Inter plus slate-900) are catalogued in [references/ai-tells.md](references/ai-tells.md). Reach past them deliberately, based on the design read.
 
 ## 1. ACTIVE BASELINE CONFIGURATION (the three dials)
 * DESIGN_VARIANCE: 8 (1=Perfect Symmetry, 10=Artsy Chaos)
@@ -62,7 +62,7 @@ because the model jumps to a default aesthetic instead of reading the room.
 | Redesign, overhaul | +2 | +2 | match existing |
 
 ## 2. BRIEF TO DESIGN SYSTEM MAP
-After the design read and the dials, pick the foundation. If the brief reads as a product that has an official design system (Fluent, Material 3, Carbon, Polaris, Atlaskit, Primer, GOV.UK Frontend, USWDS, Radix Themes, shadcn/ui, Bootstrap), install and use the **official** package. Do not recreate its CSS by hand, and do not import its tokens and then override most of them. **One system per project.** When the brief is an aesthetic rather than a system (glass, bento, brutalism, editorial, dark tech, kinetic type), build with native CSS plus Tailwind and say so honestly in comments. The mapping tables, install commands, and canonical sources are in `references/design-system-map.md`.
+After the design read and the dials, pick the foundation. If the brief reads as a product that has an official design system (Fluent, Material 3, Carbon, Polaris, Atlaskit, Primer, GOV.UK Frontend, USWDS, Radix Themes, shadcn/ui, Bootstrap), install and use the **official** package. Do not recreate its CSS by hand, and do not import its tokens and then override most of them. **One system per project.** When the brief is an aesthetic rather than a system (glass, bento, brutalism, editorial, dark tech, kinetic type), build with native CSS plus Tailwind and say so honestly in comments. The mapping tables, install commands, and canonical sources are in [references/design-system-map.md](references/design-system-map.md).
 
 ## 3. DEFAULT ARCHITECTURE & CONVENTIONS
 Unless the design read picks a real design system or the user specifies a stack, adhere to these:
@@ -200,7 +200,7 @@ When a card, image frame, or container is warranted (section 5.4), this is the d
 - **The "Button-in-Button" Trailing Icon:** If a button has an arrow (`↗`), nest it inside its own circular wrapper (`w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center`), flush with the main button's right inner padding.
 
 ### C. "Liquid Glass" Refraction
-Glass is for premium consumer, Apple-adjacent, luxury, and media-overlay briefs, not dashboards or public-sector. When used, go beyond `backdrop-blur`: add a 1px inner border (`border-white/10`) and a subtle inner shadow (`shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`) for physical edge refraction, and a solid-fill fallback under `prefers-reduced-transparency`. The honest full skeleton is `references/liquid-glass.md`.
+Glass is for premium consumer, Apple-adjacent, luxury, and media-overlay briefs, not dashboards or public-sector. When used, go beyond `backdrop-blur`: add a 1px inner border (`border-white/10`) and a subtle inner shadow (`shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`) for physical edge refraction, and a solid-fill fallback under `prefers-reduced-transparency`. The honest full skeleton is [references/liquid-glass.md](references/liquid-glass.md).
 
 ### D. Spatial Rhythm & Hairlines
 - **Macro-Whitespace:** Double your standard padding. `py-24` to `py-40` for sections (up to `py-40` on Ethereal Glass and Editorial Luxury). Let the design breathe.
@@ -228,11 +228,11 @@ These are tools, not defaults. **Motion must be motivated:** before adding any a
 - **The Modal Expansion:** Menu opens as a screen-filling overlay with heavy glass (`backdrop-blur-3xl bg-black/80` or `bg-white/80`).
 - **Staggered Mask Reveal:** Nav links fade in and slide up (`translate-y-12 opacity-0` to `translate-y-0 opacity-100`) with a staggered delay per item.
 
-**Scroll work:** Entry reveals (`translate-y-16 blur-md opacity-0` resolving over 800ms+) use `whileInView` or `IntersectionObserver`. Pin and scrub work (sticky-stack, horizontal pan) uses GSAP ScrollTrigger with `start: "top top"` and `pin: true`; the canonical skeletons, the failure diagnoses, and the forbidden-pattern list (no `window.addEventListener('scroll')`, no `scrollY` in React state, no `requestAnimationFrame` loops touching state) are in `references/gsap-skeletons.md`. **Never mix GSAP or Three.js with Motion in one component tree:** Motion for UI and bento, GSAP or Three.js only for isolated full-page scrolltelling or canvas backgrounds, wrapped in strict `useEffect` cleanup.
+**Scroll work:** Entry reveals (`translate-y-16 blur-md opacity-0` resolving over 800ms+) use `whileInView` or `IntersectionObserver`. Pin and scrub work (sticky-stack, horizontal pan) uses GSAP ScrollTrigger with `start: "top top"` and `pin: true`; the canonical skeletons, the failure diagnoses, and the forbidden-pattern list (no `window.addEventListener('scroll')`, no `scrollY` in React state, no `requestAnimationFrame` loops touching state) are in [references/gsap-skeletons.md](references/gsap-skeletons.md). **Never mix GSAP or Three.js with Motion in one component tree:** Motion for UI and bento, GSAP or Three.js only for isolated full-page scrolltelling or canvas backgrounds, wrapped in strict `useEffect` cleanup.
 
 ## 8. PERFORMANCE & ACCESSIBILITY GUARDRAILS
 * **REDUCED MOTION [MANDATORY]:** Any motion above `MOTION_INTENSITY > 3` honors `prefers-reduced-motion`. In Motion, `useReducedMotion()` and degrade to static; in CSS, gate under `@media (prefers-reduced-motion: no-preference)` or disable under `@media (prefers-reduced-motion: reduce)`. Infinite loops, parallax, scroll hijack, and magnetic physics collapse to static under reduced motion. Non-negotiable.
-* **Dark mode:** mandatory for consumer-facing pages, designed for both modes from the start, tokens by one strategy, tested in both before finishing. Procedure: `references/dark-mode-protocol.md`.
+* **Dark mode:** mandatory for consumer-facing pages, designed for both modes from the start, tokens by one strategy, tested in both before finishing. Procedure: [references/dark-mode-protocol.md](references/dark-mode-protocol.md).
 * **Hardware Acceleration:** Never animate `top`, `left`, `width`, or `height`. Animate exclusively via `transform` and `opacity`; `will-change: transform` only on elements that actually animate.
 * **Core Web Vitals:** LCP < 2.5s (hero image `next/image priority` or preloaded), INP < 200ms (heavy work off the main thread), CLS < 0.1 (reserve space for images, fonts, embeds). Run Lighthouse before declaring a page done. Lazy-load anything not above the fold; Motion is not tiny and Three.js is large.
 * **DOM Cost:** Apply grain/noise filters exclusively to fixed, `pointer-events-none` pseudo-elements (`fixed inset-0 z-[60] pointer-events-none`) and NEVER to scrolling containers; continuous GPU repaints destroy mobile FPS.
