@@ -30,7 +30,7 @@ logic stays in the harness's `/phase` skill, which is the one editable home for 
 Background reading, not restated here: [references/platform-facts.md](references/platform-facts.md)
 (primary-source quotes on permission mode, overlap skip, catch-up, the worktree
 toggle, and the pointer file's own location and format) and
-`/Users/gfm/skill-library/plugins/workbench/skills/phased-harness/SKILL.md` (how the
+`/Users/gfm/skill-library/plugins/long-projects/skills/phased-harness/SKILL.md` (how the
 harness this skill schedules is built, read for the shape, never duplicated here).
 
 ## Inputs

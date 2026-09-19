@@ -48,7 +48,7 @@ Build a harness only when **all four** hold:
 State the failing criterion plainly, then route in the same breath rather than
 leaving the user at a dead end:
 
-- Multi-session and reversible, no irreversible finish: hand to `workbench:handoff`.
+- Multi-session and reversible, no irreversible finish: hand to `long-projects:handoff`.
 - One irreversible step, otherwise short: a single gated runbook, not a harness.
 - Neither: build it directly, and say so.
 
@@ -175,7 +175,7 @@ is one scope change away from being wrong in one of them.
   scaffolding, check each target directory named in CONFIG.md for a git root, and for
   any target that has none, put a `git init` step in the Phase 0 runbook ahead of the
   first phase that renames toward deletion. Include the secret scan and a `.gitignore`
-  in that step, per `workbench:folder-to-repo`. A one-way delete in an untracked
+  in that step, per `voice-and-editing:folder-to-repo`. A one-way delete in an untracked
   directory is not recoverable by any later gate.
 
 ### Orchestration

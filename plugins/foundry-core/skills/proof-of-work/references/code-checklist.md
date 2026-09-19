@@ -8,7 +8,7 @@ Adapted from the ECC project's `verification-loop` skill (MIT, v2.2.1), reviewed
 2026-09-17. Record: `docs/reviews/2026-09-17-ecc/`. Two changes from the source: its
 commands piped output through `head` and `tail`, which hides the tool's exit code, so the
 pipes are gone; and its "verify every 15 minutes" cadence was left out, because an
-unattended cadence belongs to `workbench:schedule-harness`, not to an evidence standard.
+unattended cadence belongs to `voice-and-editing:schedule-harness`, not to an evidence standard.
 
 Run in this order. Send long output to a file and read the file; never pipe a check
 through `head`, `tail` or `grep`, because the exit code reported is then the pipe's.

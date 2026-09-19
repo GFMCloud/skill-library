@@ -55,9 +55,18 @@ you can enable a few without taking the whole library.
 | `deploy-ops` | deploy-verify-fix, cloudflare-pages-migration, `deploy-loop-owner` agent | Own the deploy, verify, fix loop end to end instead of handing a half-deployed artifact back to a human. Includes the Cloudflare Pages migration runbook. |
 | `data-wrangler` | identity-resolution, `data-pipeline-owner` agent | Move data between shapes and match records across sources whose keys don't line up. |
 | `decks` | cd-to-pptx, chart-discipline, deck-scaffolding-builder, html-diagram, layout-critique, sales-lens-review | Plan, build, and critique slide decks. Includes HTML-to-PowerPoint conversion and interactive architecture diagrams. |
-| `frontend-design` | design-taste-frontend, image-taste-frontend, mobile-taste-frontend, minimalist-ui, redesign-existing-projects, frontend-design, emil-design-eng, scrollback, `frontend-surface-builder` agent | Visual design judgment for new builds, app screens, and in-place redesigns, split by aesthetic so the right one fires. Includes the Scrollback SB-01 design system. |
-| `workbench` | 21 skills including handoff, retro, phased-harness, sweep-harness, rulings-harness, experiment-harness, new-project, devshell-init, source-intake, systems-design, model-effort-advisor, skill-discovery, `transcript-scanner` agent | General-purpose working skills. Session handoffs and retros, project scaffolding, multi-session harnesses, model routing, source intake, mining past sessions for workflows worth codifying. |
-| `graham-voice` | graham-voice | One person's writing voice as its own install unit, so it can be enabled alone. |
+| `frontend-design` | design-taste-frontend, image-taste-frontend, mobile-taste-frontend, minimalist-ui, redesign-existing-projects, frontend-design, emil-design-eng, `frontend-surface-builder` agent | Visual design judgment for new builds, app screens, and in-place redesigns, split by aesthetic so the right one fires. |
+| `long-projects` | change-watch, council, experiment-harness, handoff, orch-pipeline, orch-review, phased-harness, retro, rulings-harness, santa-method, sweep-harness, `loop-operator` and `harness-optimizer` agents | Work that spans many sessions: gated multi-phase harnesses, session handoffs and retros, review pipelines, second opinions. Replaces `workbench`. |
+| `project-starters` | devshell-init, new-project, pipeline-foundry, project-kb-builder, project-setup-wizard, systems-design | Start a project properly: repo scaffolding, dev shells, knowledge bases, pipeline and systems design. Split out of `workbench`. |
+| `agent-tooling` | llama-offload, model-effort-advisor, supahcode-review, `transcript-scanner` agent | Route work to the right model, effort level or local model, and mine past session transcripts. Split out of `workbench`. |
+| `voice-and-editing` | graham-voice, humanizer, adhd, capability-index, fable-project-review, folder-to-repo, repo-handoff, schedule-harness, scrollback, skill-discovery, source-intake, toolkit-review, x-read | One person's writing voice and editing tools, plus skills tied to the author's own machine and habits. Replaces `graham-voice`. Fork and swap in your own. |
+
+**If you installed `workbench` before 2026-09-19:** it was split. The marketplace moves
+you to `long-projects` automatically. Add the other two yourself if you used their
+skills: `claude plugin install project-starters@skill-library` and
+`claude plugin install agent-tooling@skill-library`. `graham-voice` became
+`voice-and-editing`, which also took the personal skills from `workbench` and
+`scrollback` from `frontend-design`.
 
 A few skills are personal (`graham-voice` encodes one person's writing style, `adhd`
 shapes output for one reader, `capability-index` points at a private project). They're kept in the open because the shape is more reusable than the
@@ -126,6 +135,6 @@ checked, 0 failures, 0 warnings.
 
 Two pieces of third-party content are redistributed here with their original terms
 intact: `plugins/frontend-design/skills/frontend-design/` carries its own Apache-2.0
-license file, and `workbench/adhd` is adapted from
+license file, and `voice-and-editing/adhd` is adapted from
 [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd) (MIT), itself loosely based
 on *The Adult ADHD Tool Kit* by Ramsay and Rostain. Keep those notices if you fork.

@@ -6,8 +6,8 @@ timeout_seconds: 120
 allowed_tools: [Read, Bash]
 ---
 Use the change-watch skill at
-plugins/workbench/skills/change-watch/SKILL.md. A seen-index at
-plugins/workbench/skills/change-watch/fixtures/seen-index-ok.yaml (a FIXTURE)
+plugins/long-projects/skills/change-watch/SKILL.md. A seen-index at
+plugins/long-projects/skills/change-watch/fixtures/seen-index-ok.yaml (a FIXTURE)
 currently records source cloudwatch:demo-alarm-fixture at state OK. The
 source has just moved to state ALARM.
 

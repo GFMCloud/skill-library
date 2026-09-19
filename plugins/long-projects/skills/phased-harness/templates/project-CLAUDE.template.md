@@ -66,7 +66,7 @@ same by hand:
 - Delegated work never weakens a guardrail: every subagent prompt restates the
   guardrails that bind it, plus an explicit do-not-touch list.
 - **Git in this harness dir:** no commits unless the user asks; if it should become a
-  repo, use `workbench:folder-to-repo`. (Default; replace only if this project wants
+  repo, use `voice-and-editing:folder-to-repo`. (Default; replace only if this project wants
   its harness under version control from the start.)
 - `<Commit conventions for the repos this project CHANGES: which repos, granularity,
   message style, what a commit must state, and whether pushing is authorized. Delete

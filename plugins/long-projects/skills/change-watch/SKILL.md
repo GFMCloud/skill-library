@@ -22,7 +22,7 @@ metadata:
 Watches one source for a state transition and reports only on the
 transition, never on presence in a fixed state. For the polling transport,
 this skill consumes a Scheduled-task pointer v1 (toolkit interface spec,
-section 7) produced by `schedule-harness` (T7, `workbench`): the watch runs as
+section 7) produced by `schedule-harness` (T7, `voice-and-editing`): the watch runs as
 a mode of an existing phased harness, so the pointer's target is that
 harness's `/phase` skill with the watch as its mode. A watch with no harness
 behind it takes the Routine or webhook transport instead (see

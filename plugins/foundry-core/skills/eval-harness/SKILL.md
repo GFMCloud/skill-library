@@ -116,7 +116,7 @@ report states pass@k and pass^k per case with status `READY FOR REVIEW` or `BLOC
 
 ## Output contract
 
-Version 1. Consumed by `workbench:harness-optimizer`.
+Version 1. Consumed by `long-projects:harness-optimizer`.
 
 ```
 EVAL REPORT: <name>            k=<k>   baseline=<sha>

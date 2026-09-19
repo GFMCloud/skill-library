@@ -59,8 +59,8 @@ version, not what actually happened. Ground every claim in the record:
 - `~/.claude/projects/<cwd-slug>/*.jsonl`, the session transcript(s).
 - `git diff` / `git log`, what actually changed, if there's a repo.
 
-**Do not read the transcript yourself.** Compose the `workbench:transcript-scanner`
-agent (launch it with the `Agent` tool, `subagent_type: "workbench:transcript-scanner"`)
+**Do not read the transcript yourself.** Compose the `agent-tooling:transcript-scanner`
+agent (launch it with the `Agent` tool, `subagent_type: "agent-tooling:transcript-scanner"`)
 and ask it for exactly what section 1 and section 3 need:
 
 - Evidence for each gate leg (commit, failure-then-fix, decision-between-alternatives),

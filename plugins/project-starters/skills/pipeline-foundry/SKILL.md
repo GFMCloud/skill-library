@@ -220,7 +220,7 @@ description-level assessment had missed entirely.
 ### Defer model and effort routing
 
 **Do not build model/effort/subagent-routing logic into the handoff.** If
-`workbench:model-effort-advisor` is available, recommend it — it scores a task and returns
+`agent-tooling:model-effort-advisor` is available, recommend it — it scores a task and returns
 model, reasoning effort, and inline-vs-subagent.
 
 Make it a **soft** reference with a stated fallback. A cross-marketplace reference by
@@ -369,7 +369,7 @@ one of its hard gates with the failure that produced it attached, in exactly thi
 ## 12. Work modes available to the executor
 
 Recommend from this list, with the constraint attached. Defer model and effort choice to
-`workbench:model-effort-advisor` (§6).
+`agent-tooling:model-effort-advisor` (§6).
 
 | Primitive | Use for | Constraint |
 | --- | --- | --- |

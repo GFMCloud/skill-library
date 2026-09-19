@@ -19,7 +19,7 @@ one question Resume Mode calls for when a claim is ambiguous - that judgment sta
 the session, not this script).
 
 This implements the read side described in
-plugins/workbench/skills/handoff/references/claims.md, steps 2-4. The shape itself
+plugins/long-projects/skills/handoff/references/claims.md, steps 2-4. The shape itself
 (Typed claim v1) is defined once in the toolkit interface spec, section 4; this script
 does not redefine it.
 """

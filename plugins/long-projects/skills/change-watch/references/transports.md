@@ -19,7 +19,7 @@ does not reimplement them.
 command that only makes sense run here. Available now, no research-preview
 gate.
 
-**How it fits.** `schedule-harness` (T7, `workbench`) produces a Scheduled-task
+**How it fits.** `schedule-harness` (T7, `voice-and-editing`) produces a Scheduled-task
 pointer v1 (interface spec section 7) that registers the poll. change-watch
 supplies the check the scheduled task runs each cycle: read the source, run
 `scripts/watch-step.py` against the seen-index, and act on `REPORT` lines.

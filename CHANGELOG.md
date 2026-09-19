@@ -2,6 +2,36 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-19 - the regroup: `workbench` splits in three, `graham-voice` becomes `voice-and-editing`
+
+Twelve packs. Eight keep their names and their skills. 33 skill folders and 3 agent files
+moved, all as renames with no content change beyond the references below.
+
+- **`workbench` is gone.** Its heir is **`long-projects` 0.18.0** (change-watch, council,
+  experiment-harness, handoff, orch-pipeline, orch-review, phased-harness, retro,
+  rulings-harness, santa-method, sweep-harness, and the `loop-operator` and
+  `harness-optimizer` agents). The marketplace `renames` map moves an existing
+  `workbench` install onto it.
+- **Two new packs an existing `workbench` installer must add by hand**, because a rename
+  can name only one heir: **`project-starters` 0.1.0** (devshell-init, new-project,
+  pipeline-foundry, project-kb-builder, project-setup-wizard, systems-design) and
+  **`agent-tooling` 0.1.0** (llama-offload, model-effort-advisor, supahcode-review, and
+  the `transcript-scanner` agent). `claude plugin install project-starters@skill-library`
+  and `claude plugin install agent-tooling@skill-library`.
+- **`graham-voice` is now `voice-and-editing` 1.1.0**, also through `renames`. It holds
+  graham-voice and humanizer, and the skills tied to the author's own machine and habits
+  that used to sit in `workbench`: adhd, capability-index, fable-project-review,
+  folder-to-repo, repo-handoff, schedule-harness, skill-discovery, source-intake,
+  toolkit-review, x-read. Anyone who used those from `workbench` installs this pack.
+- **`scrollback` left `frontend-design`** (now 0.5.0, seven skills) for
+  `voice-and-editing`.
+- **A skill's qualified name changes with its pack.** `workbench:handoff` is now
+  `long-projects:handoff`, and so on. Bare skill names are unchanged. Inside the library
+  the 12 qualified references and 7 path references to moved skills were rewritten, and
+  all 72 qualified references were resolved against the new tree (foundry-core 0.6.4 and
+  verification-kit 0.5.5 each had one). Anything outside the library that names
+  `workbench:<skill>` needs the new pack name.
+
 ## 2026-09-19 - six packs: hygiene against skill-repo-standard 0.2.0, no moves
 
 decks 0.3.1, deploy-ops 0.2.1, foundry-core 0.6.3, frontend-design 0.4.2,
