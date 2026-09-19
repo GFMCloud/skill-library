@@ -73,6 +73,7 @@ Start from [templates/SKILL-template.md](templates/SKILL-template.md). Its comme
 
 - **Every pack has a page.** Start from [templates/pack-README-template.md](templates/pack-README-template.md).
 - **Do not type the "What's inside" table.** Add one row per skill and per agent to the pack's `reader-table.tsv`, then run `bash maintainers/scripts/generate-inventory.sh`. It writes the pack tables, the catalog and the counts on the main README, and `docs/inventory.md`. Edit the source, never the generated block.
+- **Do not edit the pack map image.** `docs/images/pack-map.svg` is drawn by `python3 maintainers/scripts/generate-pack-map.py` from `marketplace.json` and each pack's `plugin.json`. Run it after adding a pack or changing a pack's `dependencies`. The validator fails when the image is stale.
 - **The last column of that file says what the skill does on the reader's computer,** or the single word `Nothing`. Write it from reading the skill's files.
 - **A skill needs its own page** when that cell says anything other than `Nothing`, or when the main README sends a first-time reader to it. Start from [templates/skill-page-README-template.md](templates/skill-page-README-template.md).
 - **A worked example is real or it is labelled.** The template carries the exact label for an example written by hand.

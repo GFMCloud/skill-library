@@ -104,6 +104,12 @@ Longer version, including what each pack does **not** do: [docs/which-pack.md](d
 
 ## The packs
 
+<!-- generated:pack-map by maintainers/scripts/generate-inventory.sh from .claude-plugin/marketplace.json and the plugin.json files; edit the source, never this block -->
+![Map of the 12 packs. 5 packs (turn-reduction, data-wrangler, verification-kit, consistency-checker, deploy-ops) each have an arrow to foundry-core, the pack they need. The other 6 (decks, frontend-design, long-projects, project-starters, agent-tooling, voice-and-editing) install on their own. Each box gives the pack's number of skills and agents.](docs/images/pack-map.svg)
+<!-- /generated:pack-map -->
+
+The map is drawn from the same files as the table below. If it does not show, the table says the same thing, and each pack page says whether the pack needs `foundry-core`.
+
 <!-- generated:catalog by maintainers/scripts/generate-inventory.sh from .claude-plugin/marketplace.json and the plugins/ tree; edit the source, never this block -->
 | Pack | What it helps you do | Skills inside | Install |
 | :--- | :--- | :--- | :--- |

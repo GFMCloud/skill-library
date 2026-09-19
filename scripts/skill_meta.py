@@ -240,6 +240,32 @@ def render_eval_status(have, total):
             f"fewer than three, or none.")
 
 
+def pack_dependencies(names, root="plugins"):
+    """{pack: sorted list of the packs its plugin.json says it needs}."""
+    import json
+    deps = {}
+    for name in names:
+        with open(os.path.join(root, name, ".claude-plugin", "plugin.json"),
+                  encoding="utf-8") as f:
+            deps[name] = sorted(json.load(f).get("dependencies", []))
+    return deps
+
+
+def render_pack_map(marketplace, counts, root="plugins"):
+    """The root README's pack map image with its alt text. The image itself is drawn by
+    maintainers/scripts/generate-pack-map.py from the same sources."""
+    names = [p["name"] for p in marketplace["plugins"]]
+    deps = pack_dependencies(names, root)
+    needed = sorted({d for ds in deps.values() for d in ds})
+    dependents = [n for n in names if deps[n]]
+    alone = [n for n in names if not deps[n] and n not in needed]
+    alt = (f"Map of the {len(names)} packs. {len(dependents)} packs ({', '.join(dependents)}) "
+           f"each have an arrow to {' and '.join(needed)}, the pack they need. "
+           f"The other {len(alone)} ({', '.join(alone)}) install on their own. "
+           "Each box gives the pack's number of skills and agents.")
+    return f"![{alt}](docs/images/pack-map.svg)"
+
+
 def replace_block(text, key, src, body):
     """Swap the body between the two markers for `key`. Returns (text, found)."""
     begin = GEN_BEGIN.format(key=key, src=src)
@@ -284,6 +310,8 @@ def generated_pages(root="plugins"):
                 ("counts", "the plugins/ tree", render_counts(counts)),
                 ("eval-status", "the plugins/*/evals/ tree",
                  render_eval_status(*eval_counts(root))),
+                ("pack-map", ".claude-plugin/marketplace.json and the plugin.json files",
+                 render_pack_map(market, counts, root)),
                 ("catalog", ".claude-plugin/marketplace.json and the plugins/ tree",
                  render_catalog(market, counts))):
             text, found = replace_block(text, key, src, body)

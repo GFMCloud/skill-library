@@ -31,6 +31,8 @@ If more than one row matches, install the pack for the row you will use first.
 
 ```mermaid
 flowchart TD
+    accTitle: Which pack do I need, as a flowchart
+    accDescr: Two or three questions lead to one of the twelve packs. The table above this diagram gives the same choices in words.
     A[What are you trying to do?] --> B{Is it about the work,<br/>or about how Claude Code runs?}
 
     B -->|How Claude Code runs| C{What bothers you?}
