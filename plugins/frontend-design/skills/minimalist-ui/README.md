@@ -24,7 +24,34 @@ It will ask what the page is for and who reads it, because the style needs real 
 
 A page built to the style, with the colors, type sizes, borders and spacing all taken from the skill's fixed rules rather than chosen fresh.
 
-EXAMPLE-PENDING-REAL-RUN
+*This example is illustrative. It was written by hand to show the shape of the output, not copied from a real run.*
+
+```
+One page for tiny-notes. Warm bone background, one serif headline, body text in
+charcoal, an uneven three-card grid for add, list and search, and one black
+button. No gradient, no emoji, no drop shadow. Real sentences about keeping
+notes at a terminal, not filler.
+
+<section class="hero">
+  <h1>Notes that stay where you left them.</h1>
+  <p>tiny-notes keeps one note per line, in one file you can read yourself.</p>
+  <a class="cta" href="#install">Install it</a>
+</section>
+
+:root {
+  --canvas: #F7F6F3;
+  --ink: #111111;
+  --muted: #787774;
+  --rule: #EAEAEA;
+}
+body { background: var(--canvas); color: var(--ink); line-height: 1.6; }
+h1 {
+  font-family: 'Lyon Text', 'Newsreader', serif;
+  letter-spacing: -0.03em;
+}
+.cta { background: #111111; color: #FFFFFF; border-radius: 4px; }
+.card { border: 1px solid var(--rule); border-radius: 12px; padding: 32px; }
+```
 
 ## Good to know
 

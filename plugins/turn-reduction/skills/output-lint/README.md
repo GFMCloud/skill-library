@@ -26,7 +26,31 @@ It will ask for the draft: a file to read, or the text itself. It checks one mes
 
 A list of what it found in that one draft, each with its line, and a footer naming the two things it did not check.
 
-EXAMPLE-PENDING-REAL-RUN
+*This example is illustrative. It was written by hand to show the shape of the output, not copied from a real run.*
+
+```
+draft.md:6: ERROR [announced-write] a write is announced before it is made
+draft.md:9: ERROR [cwd] `pytest -q` depends on the working directory and none is stated
+draft.md:14: ERROR [uncited-count] "12 tests" is a bare count
+draft.md:18: WARN [placeholder] unsubstituted <path-to-notes> in prose
+
+SCOPE OF THIS RESULT
+------------------------------------------------------------------------------
+  Checked: 2 fenced block(s) and the prose around them, in this input only.
+  Six mechanical rules ran: placeholder, interpreter, cwd, glob,
+  announced-write, uncited-count. A clean result means those six found
+  nothing here. It is not a statement about the message being good, and it
+  does not carry to any other message.
+
+NOT CHECKED
+------------------------------------------------------------------------------
+  - Lead with the ask.
+    Nothing here checks this.
+  - One decision per message where possible.
+    Nothing here checks this.
+
+FAIL, 3 error(s), 1 warning(s)
+```
 
 ## Good to know
 

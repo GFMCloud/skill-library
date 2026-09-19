@@ -24,7 +24,36 @@ When writing a handoff it will ask nothing if the conversation is clearly at a s
 
 A markdown file to keep, a prompt block to paste into the next conversation, and, when you resume, a table of each claim next to what the command actually printed.
 
-EXAMPLE-PENDING-REAL-RUN
+*This example is illustrative. It was written by hand to show the shape of the output, not copied from a real run.*
+
+````
+# Claude Handoff - tiny-notes export command
+2026-04-08
+
+Session Type: technical
+
+WHAT HAPPENED
+- Added the export subcommand the README already documented.
+
+FIRST MOVE
+Correct the test count in README.md: it says 12, the suite has 3.
+
+## Typed Claims
+
+```yaml
+claims: v1
+written_at: 2026-04-08T17:20:00-05:00
+checkable:
+  - type: branch
+    claim: the work is on the add-export branch
+    check: git -C ~/code/tiny-notes branch --show-current
+    expected: add-export
+  - type: count
+    claim: the test suite holds 3 tests
+    check: /usr/bin/grep -c 'def test_' tests/test_notes.py
+    expected: "3"
+```
+````
 
 ## Good to know
 

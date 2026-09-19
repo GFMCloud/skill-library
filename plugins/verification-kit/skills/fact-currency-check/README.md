@@ -24,7 +24,27 @@ It starts by separating the claims that would change your decision from the ones
 
 One line per checked claim: the claim, the source it was checked against, the date it was checked, and whether it is still current, has changed, or could not be checked.
 
-EXAMPLE-PENDING-REAL-RUN
+*This example is illustrative. It was written by hand to show the shape of the output, not copied from a real run.*
+
+```
+claim:   Python 3.8 is the oldest version Python still supports
+         load-bearing: it sets the floor tiny-notes installs against
+source:  python.org release schedule, checked <date>
+verdict: CHANGED
+new:     <the oldest version that page lists as still supported, on that date>
+breaks:  setup.py pins python_requires=">=3.8" on the strength of this claim,
+         and the README repeats the number. Both are stale if the floor moved.
+
+claim:   tiny-notes runs unchanged on the oldest supported version
+         load-bearing: it decides whether this is a one-line edit or a port
+source:  the test suite run under that interpreter
+verdict: UNVERIFIABLE, no interpreter of that version on this computer
+
+Not checked, because no decision turns on them:
+- the README's "12 tests" figure, a claim about this repo rather than
+  about the world
+- the wording of the export command's help text
+```
 
 ## Good to know
 

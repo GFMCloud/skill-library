@@ -26,7 +26,32 @@ It asks you nothing before it starts investigating. It asks only after, and only
 
 A plan in four parts, with nothing on your computer or in your live systems changed.
 
-EXAMPLE-PENDING-REAL-RUN
+*This example is illustrative. It was written by hand to show the shape of the output, not copied from a real run.*
+
+```
+Goal. tiny-notes gains the `export` command its README already documents:
+every note written out as Markdown, to standard output or to a path given with
+--out. Nothing about `add`, `list` or the note file changes. Accepted when the
+README's own example runs and its output holds every note.
+
+Blocking questions (1).
+1. The README documents `export` with no options. Add `--format` now, or
+   Markdown only for this change? Recommended: Markdown only.
+
+Assumptions.
+1. Notes live in one file, ~/.tiny-notes/notes.json, read by notes.load().
+2. Volume is small, so the whole file is read into memory. Not verifiable
+   from here, please confirm.
+3. Scope: the stored format does not change, so there is nothing to roll back.
+4. Testing: an empty store and a two-note store are covered. Unicode is not.
+
+Plan.
+1. notes.py: add export_markdown(notes) -> str.
+   Verify: python3 -m pytest -q reports 5 passed.
+2. cli.py: add the `export` subparser and call it.
+   Verify: `tiny-notes export` prints both notes.
+Rejected: a separate exporter module, because there is one caller.
+```
 
 ## Good to know
 

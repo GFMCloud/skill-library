@@ -24,7 +24,28 @@ It will ask what kind of thing it is checking (code, a document, something you d
 
 A short report in which every claim carries the command that tested it, that command's real output, and a closing list of anything that could not be checked and why.
 
-EXAMPLE-PENDING-REAL-RUN
+*This example is illustrative. It was written by hand to show the shape of the output, not copied from a real run.*
+
+```
+CLAIM:   tiny-notes passes its own test suite
+CHECK:   python3 -m pytest -q
+OUTPUT:  3 passed in 0.14s
+VERDICT: VERIFIED, rules out a suite that never ran
+
+CLAIM:   the README's test count matches the suite
+CHECK:   /usr/bin/grep -c 'def test_' tests/test_notes.py
+OUTPUT:  3
+VERDICT: FAILED, README.md line 22 says 12 tests against a suite of 3
+
+CLAIM:   the documented export command works
+CHECK:   tiny-notes export --format md
+OUTPUT:  error: unrecognized arguments: export
+VERDICT: FAILED, the command is documented and does not exist
+
+NOT VERIFIED
+- Install on a clean machine: no second computer here. Needs a person.
+- Windows line endings in the note file: no Windows available to run it on.
+```
 
 ## Good to know
 
