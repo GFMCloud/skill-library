@@ -25,7 +25,7 @@ import os, re, sys, datetime, json, subprocess
 
 sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
 # Parser lives in skill_meta.py, shared with generate-inventory.sh: one editable home.
-from skill_meta import parse_frontmatter, skill_rows, render_inventory
+from skill_meta import parse_frontmatter, skill_rows, render_inventory, generated_pages
 
 root = sys.argv[1]
 STRICT = os.environ.get("STRICT", "0") == "1"
@@ -174,6 +174,15 @@ if root == "plugins":
     if actual != expected:
         fails.append("F13 docs/inventory.md missing or stale; "
                      "run: bash maintainers/scripts/generate-inventory.sh")
+    # The same rule for the generated blocks in the root README and the pack pages:
+    # a reader-table.tsv row for every skill and agent, and the rendered table current.
+    pages, problems = generated_pages("plugins")
+    for p in problems:
+        fails.append(f"F13 {p}")
+    for path, text in sorted(pages.items()):
+        if open(path, encoding="utf-8").read() != text:
+            fails.append(f"F13 {path} generated block is stale; "
+                         "run: bash maintainers/scripts/generate-inventory.sh")
 
 # F17: any change to a skill's or agent's files bumps the host plugin's manifest
 # version (maintainers/authoring-standard.md "Change hygiene"). Installed caches refresh only

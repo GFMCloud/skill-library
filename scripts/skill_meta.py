@@ -100,3 +100,166 @@ def render_inventory(rows):
             d=desc, **{k: r[k] for k in ("name", "plugin", "maturity", "version")}))
     lines.append("")
     return "\n".join(lines)
+
+
+# Reader-facing tables. The source for a pack's "What's inside" table is
+# plugins/<pack>/reader-table.tsv (one row per skill and agent, written for a person who
+# has never installed a plugin). The pack README holds the rendered table between two
+# marker comments; the root README holds the pack catalog and the counts the same way.
+# Edit the .tsv or marketplace.json and run the generator, never the rendered block.
+READER_COLUMNS = ["kind", "name", "what_it_does", "what_you_say", "what_you_get",
+                  "on_your_computer"]
+GEN_BEGIN = ("<!-- generated:{key} by maintainers/scripts/generate-inventory.sh "
+             "from {src}; edit the source, never this block -->")
+GEN_END = "<!-- /generated:{key} -->"
+
+
+def reader_rows(pack_dir):
+    """Rows of plugins/<pack>/reader-table.tsv, checked against the pack's tree.
+    Returns (rows, problems); a row for a missing skill or a skill with no row is a
+    problem, as is an empty cell."""
+    path = os.path.join(pack_dir, "reader-table.tsv")
+    rows, problems = [], []
+    lines = open(path, encoding="utf-8").read().splitlines()
+    if not lines or lines[0].split("\t") != READER_COLUMNS:
+        return rows, [f"{path}: first line must be {' <tab> '.join(READER_COLUMNS)}"]
+    for n, line in enumerate(lines[1:], 2):
+        if not line.strip():
+            continue
+        cells = [c.strip() for c in line.split("\t")]
+        if len(cells) != len(READER_COLUMNS) or not all(cells):
+            problems.append(f"{path}:{n}: needs {len(READER_COLUMNS)} non-empty cells")
+            continue
+        rows.append(dict(zip(READER_COLUMNS, cells)))
+    sp, ap = os.path.join(pack_dir, "skills"), os.path.join(pack_dir, "agents")
+    have = {("skill", s) for s in (os.listdir(sp) if os.path.isdir(sp) else [])
+            if os.path.isfile(os.path.join(sp, s, "SKILL.md"))}
+    have |= {("agent", a[:-3]) for a in (os.listdir(ap) if os.path.isdir(ap) else [])
+             if a.endswith(".md")}
+    listed = [(r["kind"], r["name"]) for r in rows]
+    for kind, name in sorted(have - set(listed)):
+        problems.append(f"{path}: no row for {kind} '{name}'")
+    for kind, name in sorted(set(listed) - have):
+        problems.append(f"{path}: row for {kind} '{name}', which is not in the pack")
+    if len(listed) != len(set(listed)):
+        problems.append(f"{path}: a skill or agent has more than one row")
+    return rows, problems
+
+
+def render_whats_inside(pack_dir, rows):
+    """The "What's inside" tables: skills first, then agents if the pack has any. A skill
+    links to its own page when it has one, otherwise to its folder."""
+    def cell(text):
+        return text.replace("|", "\\|")
+
+    def table(first, kind):
+        out = [f"| {first} | What it does | What you say to trigger it | What you get | "
+               "On your computer |", "| :--- | :--- | :--- | :--- | :--- |"]
+        for r in rows:
+            if r["kind"] != kind:
+                continue
+            if kind == "skill":
+                page = os.path.join(pack_dir, "skills", r["name"], "README.md")
+                target = f"skills/{r['name']}/" + ("README.md" if os.path.isfile(page) else "")
+            else:
+                target = f"agents/{r['name']}.md"
+            out.append(f"| [{r['name']}]({target}) | {cell(r['what_it_does'])} | "
+                       f"{cell(r['what_you_say'])} | {cell(r['what_you_get'])} | "
+                       f"{cell(r['on_your_computer'])} |")
+        return out
+
+    lines = table("Skill", "skill")
+    if any(r["kind"] == "agent" for r in rows):
+        lines += ["", "This pack also ships agents. An **agent** is a helper that Claude Code "
+                  "hands a whole job to; it works on its own and reports back.", ""]
+        lines += table("Agent", "agent")
+    return "\n".join(lines)
+
+
+def pack_counts(root="plugins"):
+    """{pack: (skills, agents)} from the tree."""
+    counts = {}
+    for pack in sorted(os.listdir(root)):
+        sp, ap = os.path.join(root, pack, "skills"), os.path.join(root, pack, "agents")
+        if not os.path.isdir(sp):
+            continue
+        skills = sum(os.path.isfile(os.path.join(sp, s, "SKILL.md")) for s in os.listdir(sp))
+        agents = sum(a.endswith(".md") for a in os.listdir(ap)) if os.path.isdir(ap) else 0
+        counts[pack] = (skills, agents)
+    return counts
+
+
+def render_catalog(marketplace, counts):
+    """The root README's pack table, in marketplace order. A pack links to its page once
+    the page exists."""
+    lines = ["| Pack | What it helps you do | Skills inside | Install |",
+             "| :--- | :--- | :--- | :--- |"]
+    for p in marketplace["plugins"]:
+        name = p["name"]
+        skills, agents = counts.get(name, (0, 0))
+        inside = str(skills) + (f", and {agents} agent" + ("s" if agents > 1 else "")
+                                if agents else "")
+        page = os.path.join("plugins", name, "README.md")
+        target = page if os.path.isfile(page) else f"plugins/{name}/"
+        label = f"[{name}]({target})"
+        desc = re.sub(r"\s+", " ", p.get("description", "")).replace("|", "\\|")
+        lines.append(f"| {label} | {desc} | {inside} | "
+                     f"`/plugin install {name}@{marketplace['name']}` |")
+    return "\n".join(lines)
+
+
+def render_counts(counts):
+    packs = len(counts)
+    skills = sum(s for s, _ in counts.values())
+    agents = sum(a for _, a in counts.values())
+    return f"This repository has {packs} packs, holding {skills} skills and {agents} agents."
+
+
+def replace_block(text, key, src, body):
+    """Swap the body between the two markers for `key`. Returns (text, found)."""
+    begin = GEN_BEGIN.format(key=key, src=src)
+    end = GEN_END.format(key=key)
+    pattern = re.compile(r"<!-- generated:" + re.escape(key) + r" .*?-->.*?"
+                         + re.escape(end), re.S)
+    if not pattern.search(text):
+        return text, False
+    return pattern.sub(lambda _: f"{begin}\n{body}\n{end}", text, count=1), True
+
+
+def generated_pages(root="plugins"):
+    """{path: text the page should hold} for every page with a generated block, plus a
+    list of problems. Pages with no markers yet are left alone (they are not written
+    yet); a reader-table.tsv beside a README with no marker is a problem."""
+    import json
+    pages, problems = {}, []
+    counts = pack_counts(root)
+    for pack in counts:
+        pack_dir = os.path.join(root, pack)
+        tsv, readme = (os.path.join(pack_dir, f) for f in ("reader-table.tsv", "README.md"))
+        if not os.path.isfile(tsv):
+            if os.path.isfile(readme):
+                problems.append(f"{readme}: pack page with no reader-table.tsv beside it")
+            continue
+        rows, bad = reader_rows(pack_dir)
+        problems += bad
+        if not os.path.isfile(readme):
+            problems.append(f"{tsv}: no README.md beside it")
+            continue
+        text, found = replace_block(open(readme, encoding="utf-8").read(), "whats-inside",
+                                    f"plugins/{pack}/reader-table.tsv",
+                                    render_whats_inside(pack_dir, rows))
+        if not found:
+            problems.append(f"{readme}: no generated:whats-inside markers")
+        pages[readme] = text
+    if os.path.isfile("README.md"):
+        text = open("README.md", encoding="utf-8").read()
+        market = json.load(open(os.path.join(".claude-plugin", "marketplace.json"),
+                                encoding="utf-8"))
+        for key, src, body in (
+                ("counts", "the plugins/ tree", render_counts(counts)),
+                ("catalog", ".claude-plugin/marketplace.json and the plugins/ tree",
+                 render_catalog(market, counts))):
+            text, found = replace_block(text, key, src, body)
+            if found:
+                pages["README.md"] = text
+    return pages, problems
