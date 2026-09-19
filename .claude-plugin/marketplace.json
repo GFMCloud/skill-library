@@ -55,19 +55,35 @@
       "name": "frontend-design",
       "source": "./plugins/frontend-design",
       "category": "design",
-      "description": "Frontend visual design judgment: design taste, image taste, mobile app screens, minimalist UI, redesigns, the Scrollback SB-01 design system, and UI-polish review guidance."
+      "description": "Frontend visual design judgment: design taste, image taste, mobile app screens, minimalist UI, redesigns, and UI-polish review guidance."
     },
     {
-      "name": "workbench",
-      "source": "./plugins/workbench",
+      "name": "long-projects",
+      "source": "./plugins/long-projects",
       "category": "workflow",
-      "description": "Graham's general-purpose working skills: project setup and scaffolding, phased/sweep/rulings/experiment harnesses, handoffs, retros, source intake, knowledge bases, skill discovery, systems design."
+      "description": "Keep work that spans many sessions on track: gated multi-phase project harnesses, session handoffs and retros, a review pipeline for routine changes, and second opinions on hard decisions."
     },
     {
-      "name": "graham-voice",
-      "source": "./plugins/graham-voice",
+      "name": "project-starters",
+      "source": "./plugins/project-starters",
+      "category": "workflow",
+      "description": "Start a new project properly: repo scaffolding with secret scanning, reproducible dev shells, a project knowledge base, and pipeline and systems design before any code."
+    },
+    {
+      "name": "agent-tooling",
+      "source": "./plugins/agent-tooling",
+      "category": "workflow",
+      "description": "Choose the right model and effort level for a task, send bulk mechanical text work to a local model, and mine past session transcripts for facts."
+    },
+    {
+      "name": "voice-and-editing",
+      "source": "./plugins/voice-and-editing",
       "category": "writing",
-      "description": "Graham's personal writing voice, as its own single-skill install unit. Split out of workbench so it can be installed alone."
+      "description": "One person's writing voice and editing tools, plus skills tied to the author's own machine and habits. Most useful as a pattern to fork: swap in your own voice, schedule and sources."
     }
-  ]
+  ],
+  "renames": {
+    "workbench": "long-projects",
+    "graham-voice": "voice-and-editing"
+  }
 }

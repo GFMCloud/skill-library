@@ -102,7 +102,7 @@ verifiable, and nothing has been changed.
 
 ## Output contract
 
-Version 1. Consumed by `workbench:orch-review` as its security dimension.
+Version 1. Consumed by `long-projects:orch-review` as its security dimension.
 
 ```
 Security checklist: <scope>
