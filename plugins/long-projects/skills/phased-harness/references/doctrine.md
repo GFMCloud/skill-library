@@ -2,7 +2,7 @@
 
 Distilled from a real run: the machine-wide skill migration executed 2026-08-09
 (six phases, two gates, ~63 dispositioned items, completed in one continuous session).
-The harness for that run is preserved at `docs/migration/harness/` in this repo and is
+The harness for that run is preserved at `maintainers/migration/harness/` in this repo and is
 the worked example every template here generalizes.
 
 ## Contents

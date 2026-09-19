@@ -5,7 +5,7 @@ code. It cuts the two ways a model reviewer wastes a verdict: findings it cannot
 behind, and stock complaints that are usually wrong.
 
 Adapted from the ECC project's `code-reviewer` agent (MIT, v2.2.1), reviewed 2026-09-17.
-Record: `docs/reviews/2026-09-17-ecc/`. Both judges of that review found the agent itself
+Record: `maintainers/reviews/2026-09-17-ecc/`. Both judges of that review found the agent itself
 superseded by this skill and asked for these two lists only.
 
 ## Four questions before an issue goes in the verdict

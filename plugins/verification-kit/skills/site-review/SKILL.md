@@ -127,7 +127,7 @@ fix list with a status per item (roadmap entry, "Output").
 ## Output contract
 
 Consumes a Goal block v1 as defined in the toolkit interface spec
-(`docs/toolkit-interface-spec.md`, section 1); fills it per
+(`maintainers/toolkit-interface-spec.md`, section 1); fills it per
 [templates/goal-condition.md](templates/goal-condition.md) and hands it to
 `/goal` for the fix phase.
 

@@ -20,7 +20,7 @@ quietly skipped half. This skill splits the review by dimension, checks the seri
 findings a second time, and refuses to say "approved" unless every dimension ran.
 
 Adapted from the ECC project's `/orch-review` command (MIT, v2.2.1), reviewed
-2026-09-17. Record: `docs/reviews/2026-09-17-ecc/`. The source handed the fan-out to a
+2026-09-17. Record: `maintainers/reviews/2026-09-17-ecc/`. The source handed the fan-out to a
 JavaScript workflow file in the ECC repository. That file was not adopted (no ECC code
 runs here), so the fan-out, dedup and verify steps are specified below and run through
 the Agent tool. What was kept is the input handling, the result shape and the

@@ -150,11 +150,11 @@ Three states, not four:
   Reviewing prompt diffs alone tells you almost nothing about behavior. Cases live in
   `plugins/<plugin>/evals/<skill>/`, never inside the skill directory, and run with
   `claude plugin eval`; the layout and the run command are in
-  `docs/toolkit-interface-spec.md` section 9, the one editable home for both.
+  `maintainers/toolkit-interface-spec.md` section 9, the one editable home for both.
   Enforced by the validator (F19): anything named `evals` directly inside
   `plugins/<plugin>/skills/<skill>/` fails, because the CLI rejects an `--eval-dir`
   inside `skills/` and a suite placed there cannot run (PR 16 moved all 15 suites out;
-  nothing stopped one coming back). Proven by `scripts/prove-f19.sh`, which fails the
+  nothing stopped one coming back). Proven by `maintainers/scripts/prove-f19.sh`, which fails the
   validator on a fixture skill holding `evals/` and passes one using the plugin-level
   location. It follows that a bare `evals/...` path in a SKILL.md can no longer satisfy
   F18; name the suite by its full path, `plugins/<plugin>/evals/<skill>/`, which F18

@@ -10,7 +10,7 @@ itself. This agent proposes small configuration changes and proves each one with
 repeated trials before it stands.
 
 Adapted from the ECC project's agent of the same name (MIT, v2.2.1), reviewed
-2026-09-17. Record: `docs/reviews/2026-09-17-ecc/`. The source ran an audit script and a
+2026-09-17. Record: `maintainers/reviews/2026-09-17-ecc/`. The source ran an audit script and a
 test runner that exist only in the ECC repository. They are not here. The baseline
 check is whatever the caller names; with none named, the agent stops and asks.
 

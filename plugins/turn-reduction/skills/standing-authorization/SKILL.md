@@ -1,6 +1,6 @@
 ---
 name: "standing-authorization"
-description: "Read what you are already authorized to do out of a file instead of asking — a granted list, a stop-list, and ceilings that resolve to one value in one place. Use at the start of every session, and again before sending any question that begins should I, shall I, or do you want me to."
+description: "Read what you are already authorized to do out of a file instead of asking: a granted list, a stop-list, and ceilings that resolve to one value in one place. Use at the start of every session, and again before sending any question that begins should I, shall I, or do you want me to."
 metadata:
   maturity: stable
   version: 1.1.1
@@ -43,10 +43,10 @@ so ask, then add the phrasing rather than widening the keywords.
 ## Run it
 
 ```bash
-# at session start — read what you may already do
+# at session start, read what you may already do
 python3 <this-skill-dir>/authz.py list authorization.json
 
-# before sending any "should I…" — is this already answered?
+# before sending any "should I…", is this already answered?
 python3 <this-skill-dir>/authz.py check authorization.json --ask "should I commit these?"
 
 # after editing the file
@@ -117,7 +117,7 @@ first and always wins.
 ## What `validate` enforces, and why each one
 
 **Every ceiling resolves to one stated value in one place.** A prior project referenced
-"the turn ceiling" from four documents and defined it in none — and the cross-references
+"the turn ceiling" from four documents and defined it in none, and the cross-references
 made the phantom read as *more* settled, not less. So: a referenced-but-undefined ceiling
 is an error; a ceiling with no `value` is an error; a ceiling with no `unit` is an error,
 because a bare number is not a ceiling. Duplicate keys are caught at parse time rather
@@ -132,14 +132,14 @@ original rule was "take it **and log it**"; dropping the second half turns stand
 authorization into an unaudited free hand.
 
 **One keyword, one side.** A `match` keyword appearing in both lists is an error. An
-ambiguous rule is the rule that gets ignored — which is how the prose version died.
+ambiguous rule is the rule that gets ignored: which is how the prose version died.
 
 **An empty granted list is an error.** Empty is the state this file exists to leave.
 
 ## Scope
 
 `validate` checks structure. It does not judge whether the granted list is the *right*
-list — that is Graham's, and only his. `check` classifies a question against the keywords
+list: that is Graham's, and only his. `check` classifies a question against the keywords
 in one file; a question phrased in words no `match` entry anticipates comes back
 `NOT-COVERED`, which is a miss, not a pass. When that happens the fix is to add the
 phrasing, not to widen the keywords until everything matches.
@@ -148,5 +148,5 @@ The file governs one project. It says nothing about any other.
 
 ## Pairs with
 
-- `turn-reduction:output-lint` — improves the asks that survive this.
-- `turn-reduction:capability-preflight` — proves the access that granted actions assume.
+- `turn-reduction:output-lint`: improves the asks that survive this.
+- `turn-reduction:capability-preflight`: proves the access that granted actions assume.

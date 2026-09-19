@@ -111,7 +111,7 @@ independently, never collapsed into one holistic number.
 ## Output contract
 
 Emits a Goal block v1 as defined in the toolkit interface spec
-(`docs/toolkit-interface-spec.md`, section 1). This skill never redefines that
+(`maintainers/toolkit-interface-spec.md`, section 1). This skill never redefines that
 shape's fields; see [references/goal-block.md](references/goal-block.md) for
 guidance on filling each one and the worked example from the spec.
 

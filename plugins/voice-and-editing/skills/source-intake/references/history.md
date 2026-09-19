@@ -36,7 +36,7 @@ Two rules fall out of this, both now in `SKILL.md`:
   degraded mode is where the work went to die.
 - **No index file.** A hand-maintained INDEX.md beside the files it indexes is a
   denormalized cache: it drifts, and it becomes the only merge-conflict surface
-  between concurrent runs. `ls docs/reviews/` is the index.
+  between concurrent runs. `ls maintainers/reviews/` is the index.
 
 Kept from attempt 2 because they were right: the ADOPT / HARVEST / WATCH / SKIP
 vocabulary with SKIP expected to be common, the mandatory adoption cost, the

@@ -60,7 +60,7 @@ first, no model called, and do not proceed on a FAIL.
    interactive session start: expect `ok`.
 3. **Intake and pin** each source with `source-intake` Step 1 (shallow clone into
    `<run>/candidates/<id>`, `rev-parse HEAD` into `run.json`, prior-review check in the
-   library's `docs/reviews/`). Untrusted-content rule as written there.
+   library's `maintainers/reviews/`). Untrusted-content rule as written there.
 4. **Slot map and items.** Fill `slot-map.tsv` (slot, purpose, evidence) and `items.tsv`
    (id `-`, side `installed` or a source id, source, slot, type, path). Then
    `scripts/bin-slots.py` (copies, ids as `item-<hash8>`, X/Y letters into
@@ -97,7 +97,7 @@ first, no model called, and do not proceed on a FAIL.
    each in one batch, each defining its own vocabulary inline. `spot` presents the
    decisions table once, as `source-intake` Step 4 does.
 10. **Landing.** Worktree from `origin/main`, one commit per plugin (validator F17),
-    `scripts/generate-inventory.sh` last, review record from
+    `maintainers/scripts/generate-inventory.sh` last, review record from
     `<source-intake>/templates/review-record.template.md`, secret scan, `scripts/validate-skills.sh`
     exit 0, no push. A row that touches runtime behavior (hooks, settings) lands as a
     `plan-gate` output whose every proof step names its trigger and says whether it is

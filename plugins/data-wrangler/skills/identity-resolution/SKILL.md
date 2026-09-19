@@ -49,7 +49,7 @@ that do not have one.
 
 **2. Exact match after normalisation.** Case-fold, trim, collapse internal
 whitespace, strip known punctuation and honorifics, normalise unicode. Record
-every normalisation applied — this list *is* part of the ruleset and the next
+every normalisation applied: this list *is* part of the ruleset and the next
 project needs it. Case alone is a logged failure here: a table-name casing
 mismatch shipped in this corpus.
 
@@ -57,43 +57,43 @@ mismatch shipped in this corpus.
 names, historical names. This table is an **artifact**, not a code block, and
 it is the single most valuable output of the whole procedure.
 
-**4. Fuzzy match — proposed, never applied silently.** Produce candidates with
+**4. Fuzzy match: proposed, never applied silently.** Produce candidates with
 scores, apply a threshold agreed in advance, and route everything between the
 accept and reject thresholds to review rather than resolving it. A fuzzy match
 applied without a recorded threshold is an invented value.
 
 **5. Unresolved.** A null with a recorded reason. **Never a guess.** The
-strongest rule in this corpus is *never invent a value* — asserted five times
+strongest rule in this corpus is *never invent a value*, asserted five times
 in a single project. An entity that cannot be resolved stays unresolved and
 appears in the reject ledger.
 
 ## The mapping table is the deliverable
 
 Four projects independently rebuilt this work. What each of them failed to
-leave behind was the table — the accumulated knowledge of which strings mean
+leave behind was the table: the accumulated knowledge of which strings mean
 the same thing. Emit it as data, keyed and commented:
 
 ```
 alias            canonical        rule    added
 "acme co"        ACME_CORP        manual  2026-07-27
 "Acme Corp."     ACME_CORP        norm-2
-"ACME"           UNRESOLVED       —       ambiguous: 2 candidates
+"ACME"           UNRESOLVED       -       ambiguous: 2 candidates
 ```
 
 Where an entry encodes a standing project fact rather than a one-off cleanup,
 promote it into the project's standing constants block (spec §4a). The corpus
 records the same nickname→owner mapping being supplied by hand, per file,
-repeatedly — a table that existed in someone's head and nowhere durable.
+repeatedly: a table that existed in someone's head and nowhere durable.
 
 ## Two traps
 
-**Transitive collapse.** A matches B, B matches C, therefore A matches C — and
+**Transitive collapse.** A matches B, B matches C, therefore A matches C. And
 now three distinct entities are one. Fuzzy matching is not transitive. Cluster
 explicitly and inspect any cluster above two members before accepting it.
 
 **The tail is where the entities are.** Resolution rates look excellent
 because most records are easy. The 5% that do not resolve are usually not
-noise — they are the acquisitions, the renames, the joint accounts, the
+noise: they are the acquisitions, the renames, the joint accounts, the
 genuinely ambiguous. Report the tail as a list, not as a percentage.
 
 ## Before you finish

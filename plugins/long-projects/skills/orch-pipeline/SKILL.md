@@ -22,7 +22,7 @@ does, and it scales the ceremony to the size of the change so a one-line fix doe
 get a planning document.
 
 Adapted from the ECC project's `orch-pipeline` skill (MIT, v2.2.1), reviewed 2026-09-17.
-Record: `docs/reviews/2026-09-17-ecc/`. The source delegated each phase to ECC's own
+Record: `maintainers/reviews/2026-09-17-ecc/`. The source delegated each phase to ECC's own
 agents and commands, and had five thin wrapper skills, one per operation. Neither was
 adopted. Phases here delegate to skills and agents already in this library, and the five
 operations are the table below.

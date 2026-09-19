@@ -20,7 +20,7 @@ the question that matters is how often it passes. This skill writes the evals be
 change, runs each one more than once, and reports a rate.
 
 Adapted from the ECC project's `eval-harness` skill (MIT, v2.2.1), reviewed 2026-09-17.
-Record: `docs/reviews/2026-09-17-ecc/`. The source's `/eval` commands and `SHIP IT`
+Record: `maintainers/reviews/2026-09-17-ecc/`. The source's `/eval` commands and `SHIP IT`
 status were not carried over: nothing here declares its own work shippable.
 
 ## Inputs

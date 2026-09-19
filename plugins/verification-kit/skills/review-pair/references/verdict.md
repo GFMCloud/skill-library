@@ -2,7 +2,7 @@
 
 The shape, its field list, and every field's allowed values are defined once: the
 toolkit interface spec, section 3, "Verdict object v1"
-(`docs/toolkit-interface-spec.md`, or, once this spec is
+(`maintainers/toolkit-interface-spec.md`, or, once this spec is
 published with the library, wherever this skill's SKILL.md says it lives). This file
 is guidance on how to fill the shape, not a second definition; if the two ever
 disagree, the interface spec wins and this file is stale.

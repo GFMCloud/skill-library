@@ -2,7 +2,7 @@
 name: phased-harness
 description: >-
   Interview the user and scaffold a phased, gated, file-based project harness for
-  long-horizon work — CONFIG/STATE/end-state docs, per-phase runbooks, a guardrail
+  long-horizon work, CONFIG/STATE/end-state docs, per-phase runbooks, a guardrail
   CLAUDE.md, and a /phase dispatch skill that runs continuously and resumes from
   disk. Use on "phased harness", "set up a phased project", "run this like the
   skill migration", "gated multi-phase project", "long-running project with
@@ -14,15 +14,15 @@ metadata:
   reviewed: 2026-09-12
 ---
 
-# Phased harness — scaffold a gated, resumable project
+# Phased harness: scaffold a gated, resumable project
 
 This skill **interviews and scaffolds**. It does not execute the project. It births a
-per-project harness directory; the generated harness — with its own `/phase` dispatch
-skill — runs the work in later sessions.
+per-project harness directory; the generated harness (with its own `/phase` dispatch
+skill) runs the work in later sessions.
 
 Rationale behind every rule below: [references/doctrine.md](references/doctrine.md).
 
-## Step 1 — Fit test (do this before anything else)
+## Step 1: Fit test (do this before anything else)
 
 Build a harness only when **all four** hold:
 
@@ -33,8 +33,8 @@ Build a harness only when **all four** hold:
    are all the same kind of work are a task list, not a harness.
 3. **Nameable invariant.** The user can state the end state as a *state*, not a task
    list ("every X has exactly one editable home"), before work starts.
-4. **Ends irreversibly.** There is a final step — deletion, publication, cutover,
-   send — that cannot be undone.
+4. **Ends irreversibly.** There is a final step (deletion, publication, cutover,
+   send) that cannot be undone.
 
 **Decline, and say why, when:**
 
@@ -55,7 +55,7 @@ leaving the user at a dead end:
 Do not scaffold a harness "just in case". An unused harness is pure overhead the
 user has to read past, but a bare decline is a dropped user.
 
-## Step 2 — Interview
+## Step 2: Interview
 
 Ask in **one batch** (AskUserQuestion where the options enumerate). Do not scaffold
 with any of these unresolved; an unfilled parameter becomes a `TBD` that stops every
@@ -65,31 +65,31 @@ future session.
 |---|---|---|
 | 1 | **End state + its invariant**, stated as a state | Becomes `docs/end-state.md`, the tiebreaker for every ambiguity later |
 | 2 | **The irreversible step** | Defines Gate B and what "reversible until then" means |
-| 3 | **Standing authorizations** — what may proceed without asking | Becomes the CONFIG table; this is what makes a continuous run possible |
+| 3 | **Standing authorizations**: what may proceed without asking | Becomes the CONFIG table; this is what makes a continuous run possible |
 | 4 | **Never-pre-authorized list** | Always includes the irreversible step; ask what else |
-| 5 | **Phase breakdown** — name + nature + "done when" for each | Becomes `prompts/phase-N-*.md` |
-| 6 | **Project directory** — where the harness lives | Its own dir, separate from the artifact being worked on |
+| 5 | **Phase breakdown**: name + nature + "done when" for each | Becomes `prompts/phase-N-*.md` |
+| 6 | **Project directory**: where the harness lives | Its own dir, separate from the artifact being worked on |
 | 7 | **Decisions that are the user's alone** | Gate A material; everything else Claude proposes and executes |
-| 8 | **Parameters** — repos, paths, orgs, thresholds, targets | Becomes the CONFIG parameter table |
+| 8 | **Parameters**: repos, paths, orgs, thresholds, targets | Becomes the CONFIG parameter table |
 
 Propose a phase breakdown yourself from what the user described, then have them
 correct it. Users describe tasks; you convert to phases-with-natures. Name the nature
 of each phase explicitly (read-only survey / decision gate / execution / verification
-/ irreversible finish) — the nature is what the guardrails attach to.
+/ irreversible finish); the nature is what the guardrails attach to.
 
-## Step 3 — Scaffold
+## Step 3: Scaffold
 
 Create the project directory and instantiate every template, substituting the
 interview answers. Generated tree:
 
 ```text
 <project-dir>/
-├── CLAUDE.md              ← project-CLAUDE.template.md — orientation + hard guardrails
-├── CONFIG.md              ← CONFIG.template.md — parameters + standing authorizations
-├── STATE.md               ← STATE.template.md — the single resume point
+├── CLAUDE.md              ← project-CLAUDE.template.md: orientation + hard guardrails
+├── CONFIG.md              ← CONFIG.template.md: parameters + standing authorizations
+├── STATE.md               ← STATE.template.md: the single resume point
 ├── README.md              ← short: why, how to run (`/phase`), phase table
 ├── docs/
-│   └── end-state.md       ← end-state.template.md — the invariant + tiebreaker
+│   └── end-state.md       ← end-state.template.md: the invariant + tiebreaker
 ├── prompts/
 │   ├── phase-0-<name>.md  ← phase-runbook.template.md, one per phase
 │   └── ...
@@ -107,7 +107,7 @@ Templates: [CONFIG](templates/CONFIG.template.md) ·
 Rules while instantiating:
 
 - **Replace every `<PLACEHOLDER>`.** A placeholder surviving into the generated
-  harness is a bug — grep the tree for `<` before finishing.
+  harness is a bug: grep the tree for `<` before finishing.
 - **The generated CLAUDE.md opens with the pointer line** to `~/.claude/CLAUDE.md` and
   carries only what is specific to this project. Where a guardrail is an instance of a
   global working agreement (move-never-copy, `.superseded`, executed evidence,
@@ -122,13 +122,13 @@ Rules while instantiating:
 - **Phase numbering starts at 0** when there is a greenfield setup step.
 - Keep the harness dir separate from the thing being changed, so the harness survives
   the work and can be archived afterwards as the record.
-- Do not create the project's real artifacts here — scaffolding only.
+- Do not create the project's real artifacts here: scaffolding only.
 
 After writing, verify: every relative link in the generated files resolves; every
 phase named in STATE.md's tracker has a runbook file; CONFIG keys referenced by
 runbooks exist in CONFIG.md. Report the tree with line counts.
 
-## Generation rules — bake these into every harness
+## Generation rules: bake these into every harness
 
 These are not optional flavor. Every generated harness carries all of them.
 
@@ -147,18 +147,18 @@ counts, phase counts, repo counts, and rule counts are enumerated in exactly one
 that enumeration instead of restating the number. A count restated in two documents
 is one scope change away from being wrong in one of them.
 
-- **Gate A** — after the survey/proposal phase. Every decision the user must make is
+- **Gate A**: after the survey/proposal phase. Every decision the user must make is
   presented in **ONE batch**, each with Claude's recommendation and one line of
   reasoning. Rows the user does not object to are ratified as proposed. Execution
   phases run only ratified decisions; unratified rows are skipped and reported, never
   guessed at.
-- **Gate B** — before the irreversible step. The **enumerated** list of what will be
+- **Gate B**: before the irreversible step. The **enumerated** list of what will be
   done, plus where each item remains recoverable, and explicit confirmation. Never
   pre-authorizable, never covered by a standing authorization.
 - Between and after gates the run **never asks "shall I continue?"**. Anomalies are
   logged in STATE.md with a one-line recommendation and reviewed at the next gate. A
-  genuine blocker — something a runbook did not anticipate that cannot be safely
-  deferred — is the only other permitted interruption, and only after the obvious fix
+  genuine blocker (something a runbook did not anticipate that cannot be safely
+  deferred) is the only other permitted interruption, and only after the obvious fix
   is tried.
 
 ### Reversibility until Gate B
@@ -182,7 +182,7 @@ is one scope change away from being wrong in one of them.
 
 - The session model is the **orchestrator**: top-tier model, high effort. It owns
   judgment, gate presentations, git, and **all shared files** (STATE.md, the tracker,
-  any catalog). Shared files never go to a subagent — concurrent writers corrupt the
+  any catalog). Shared files never go to a subagent: concurrent writers corrupt the
   resume point.
 - Bulk mechanical work **fans out to parallel subagents** on a smaller model, each
   given a **disjoint file subtree**, an explicit **do-not-touch list**, and the
@@ -195,7 +195,7 @@ is one scope change away from being wrong in one of them.
 ### Overridden-plan rule
 
 When a gate ruling overrides a proposed action, **explicitly reassign that action's
-side effects** — cleanup, retirement, suffix-renaming — to a named owner in the same
+side effects** (cleanup, retirement, suffix-renaming) to a named owner in the same
 breath. Overridden rows lose their execution task, and the side effects they carried
 vanish silently. This is a real failure that reached the final verification sweep in
 the run this skill generalizes (see doctrine).
@@ -228,7 +228,7 @@ is written down as one.
 
 ### Evidence discipline
 
-- STATE.md records **executed evidence** — the command and its actual output — not
+- STATE.md records **executed evidence** (the command and its actual output), not
   checkmarks.
 - **Prove every gate by deliberate failure before trusting it.** A validator or CI
   check that has never failed is not known to work; feed it a fixture that must fail,
@@ -236,7 +236,7 @@ is written down as one.
 - **Preflight depended-on capabilities** before the phase that needs them (e.g.
   headless `claude -p "Say OK"`, API auth, push access). Discovering a dead capability
   mid-verification costs a whole phase.
-- The **final phase re-verifies the invariant from scratch** — a fresh sweep in a
+- The **final phase re-verifies the invariant from scratch**: a fresh sweep in a
   fresh context, not a re-read of earlier notes.
 - The `.superseded` check is `find`, never `grep`, and any generated catalog or
   inventory is regenerated in the final phase after the last content edit, with its
@@ -251,10 +251,10 @@ restating them:
   authority instead of asking. Its `authz.py` reads a JSON file, not the CONFIG.md
   table, so a harness that wants the `check`/`validate` tooling keeps
   `authorization.json` at the project root as well. See the CONFIG template.
-- `turn-reduction:capability-preflight` — the per-phase capability proofs.
-- `foundry-core:proof-of-work` and `foundry-core:evidence-report` — evidence format
+- `turn-reduction:capability-preflight`: the per-phase capability proofs.
+- `foundry-core:proof-of-work` and `foundry-core:evidence-report`: evidence format
   for STATE.md and gate presentations.
-- `verification-kit:pre-delivery-verifier` — the final-phase verification pass.
+- `verification-kit:pre-delivery-verifier`: the final-phase verification pass.
 - `consistency-checker:cross-document-checker`: any check that compares documents
   against each other or against the artifacts they describe.
 

@@ -3,12 +3,12 @@
 # skill directory). FIXTURE data only: builds a throwaway library under a temp dir with
 # a copy of this repo's scripts/, one clean skill and one skill holding evals/, and
 # asserts the validator passes the first and fails the second with F19.
-# Usage: bash scripts/prove-f19.sh        (from any directory)
+# Usage: bash maintainers/scripts/prove-f19.sh        (from any directory)
 set -u
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 T="$(mktemp -d)"; trap 'rm -rf "$T"' EXIT
 mkdir -p "$T/scripts" "$T/docs"
-cp "$HERE/validate-skills.sh" "$HERE/skill_meta.py" "$T/scripts/"
+cp "$HERE/../../scripts/validate-skills.sh" "$HERE/../../scripts/skill_meta.py" "$T/scripts/"
 skill() { # skill <plugin> <name>
   mkdir -p "$T/plugins/$1/skills/$2"
   printf -- '---\nname: %s\ndescription: FIXTURE skill for the F19 proof, long enough to clear the forty character floor.\nmetadata:\n  maturity: incubator\n---\n\n# %s\n' "$2" "$2" > "$T/plugins/$1/skills/$2/SKILL.md"

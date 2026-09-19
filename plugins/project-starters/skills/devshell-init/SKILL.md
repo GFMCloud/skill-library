@@ -1,6 +1,6 @@
 ---
 name: devshell-init
-description: Add a Nix flake devshell to a repo — flake.nix, .envrc, and a project CLAUDE.md. Use when the user wants a project pinned to a reproducible toolchain, mentions setting up a devshell, or asks why a project's tools aren't isolated.
+description: Add a Nix flake devshell to a repo (flake.nix, .envrc, and a project CLAUDE.md). Use when the user wants a project pinned to a reproducible toolchain, mentions setting up a devshell, or asks why a project's tools aren't isolated.
 argument-hint: "[path to repo, defaults to cwd]"
 allowed-tools: Bash(nix *), Bash(direnv *), Bash(ls *), Bash(git status*), Bash(which *), Read, Write, Edit, Glob, Grep
 metadata:
@@ -21,17 +21,17 @@ Look at what's actually in the repo before writing anything:
 - `*.tf` / `*.tofu` → OpenTofu
 - `Cargo.toml` → Rust
 
-Report what you found. If the repo already has a `flake.nix`, stop — show what's
+Report what you found. If the repo already has a `flake.nix`, stop. Show what's
 in it and ask whether to modify rather than overwrite.
 
 ### 2. Write the files
 
 Copy from `templates/` and edit `packages` to match what you detected:
 
-- `flake.nix` — keep the multi-system output. The same flake must work on the
+- `flake.nix`: keep the multi-system output. The same flake must work on the
   Air *and* on homelab Linux hosts; that's the reason this layer exists.
-- `.envrc` — verbatim
-- `CLAUDE.md` — fill in the project name, the real commands, and the "out of
+- `.envrc`: verbatim
+- `CLAUDE.md`: fill in the project name, the real commands, and the "out of
   scope" section. Leave the environment and secrets sections alone; they are
   the point.
 
@@ -57,8 +57,8 @@ direnv exec . which python      # must resolve under /nix/store, not /opt/homebr
 direnv exec . python --version
 ```
 
-Show the output. If `which python` points at Homebrew, direnv didn't activate —
-say so and diagnose rather than declaring victory.
+Show the output. If `which python` points at Homebrew, direnv didn't activate.
+Say so and diagnose rather than declaring victory.
 
 ### 5. Secrets
 

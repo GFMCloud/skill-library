@@ -2,6 +2,34 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-19 - working records move under `maintainers/`
+
+The top level and `docs/` now hold what a reader needs. Everything a maintainer keeps
+moved as renames, with no content change: `docs/reviews/` (216 files), `docs/migration/`
+(18 files), `docs/authoring-standard.md`, `docs/hooks-registry.md`,
+`docs/toolkit-interface-spec.md` and `MIGRATION.md` are under `maintainers/`, and
+`prove-hooks.sh`, `prove-hooks.d/`, `replay-hooks.py`, `prove-f19.sh` and
+`generate-inventory.sh` are under `maintainers/scripts/`.
+
+- **`source-intake` and `toolkit-review` write and look up review records in
+  `~/skill-library/maintainers/reviews/`** (`voice-and-editing` 1.2.0). The prior-review
+  check lists that folder. A record written to the old folder will not be found by it.
+- **Stayed where they were:** `scripts/validate-skills.sh` (CI runs it) and its parser
+  `scripts/skill_meta.py`; `scripts/update-installed-plugins.sh` (a launchd job on the
+  author's machine calls it by path); `docs/inventory.md` (skills read it by path); the
+  root `CLAUDE.md` (it is only loaded from the root).
+- **The inventory generator is now `bash maintainers/scripts/generate-inventory.sh`.** The
+  validator's F13 message says so.
+- Every path cited in skill and agent text follows: 85 cited paths in 52 files resolve.
+  Review records, the finished migration harness, this changelog and `MIGRATION.md` keep
+  the paths that were true when they were written.
+- Em dashes removed from 13 `SKILL.md` files (punctuation only). `security-audit` is
+  vendored unmodified and `humanizer` has to show the character it teaches against, so
+  both keep theirs until the repo standard says how such files are treated.
+- Versions: foundry-core 0.6.5, long-projects 0.18.1, turn-reduction 1.2.4,
+  verification-kit 0.5.6, voice-and-editing 1.2.0, data-wrangler 0.1.2,
+  consistency-checker 0.1.1, deploy-ops 0.2.2, project-starters 0.1.1.
+
 ## 2026-09-19 - the regroup: `workbench` splits in three, `graham-voice` becomes `voice-and-editing`
 
 Twelve packs. Eight keep their names and their skills. 33 skill folders and 3 agent files

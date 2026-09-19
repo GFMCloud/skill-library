@@ -24,7 +24,7 @@ Nothing else in this plugin carries concrete security examples for a reviewer to
 code against. This skill is that reference, with one hard rule on top of it.
 
 Adapted from the ECC project's `security-review` skill (MIT, v2.2.1), reviewed
-2026-09-17. Record: `docs/reviews/2026-09-17-ecc/`. Changes from the source: renamed,
+2026-09-17. Record: `maintainers/reviews/2026-09-17-ecc/`. Changes from the source: renamed,
 because Claude Code ships a built-in `/security-review`; the source's imperative rows
 ("rotate secrets", "enable MFA", `npm audit fix`) were rewritten as findings plus gated
 proposals, which both judges of the review made a condition of adopting it; its

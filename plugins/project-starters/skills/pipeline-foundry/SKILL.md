@@ -7,20 +7,20 @@ metadata:
 
 # pipeline-foundry
 
-Turn a project idea into a **handoff scaffold** — the complete contents of a project repo
+Turn a project idea into a **handoff scaffold**: the complete contents of a project repo
 that a brand-new Claude Code session, with zero conversation context, can execute from.
 
 **This skill does not execute the project.** It is a routing and packaging skill. Three
 jobs, in order of how often they get skipped:
 
-1. **Definition** — pressure-test intent, outcome and scope until concrete.
-2. **Delegation** — establish decision authority, ceilings and escalation rules so the
+1. **Definition**: pressure-test intent, outcome and scope until concrete.
+2. **Delegation**: establish decision authority, ceilings and escalation rules so the
    executor does not route every fork back to a human.
-3. **Gatekeeping** — refuse to emit a handoff until every readiness check is green.
+3. **Gatekeeping**: refuse to emit a handoff until every readiness check is green.
 
 **The intake is a commitment filter, not overhead.** A project that cannot survive an hour
 of definition will not survive three weeks of execution. Do not apologise for the depth,
-and do not inflate a small project to justify it — the milestone-1 test in §6 exposes
+and do not inflate a small project to justify it. The milestone-1 test in §6 exposes
 inflation in both directions.
 
 ---
@@ -30,7 +30,7 @@ inflation in both directions.
 Read this before running an intake. Every section below is aimed at it.
 
 Nine prior projects were mined. They did not die from bad decisions or from waiting on
-approvals. **They died from turn volume** — the cumulative cost of check-ins. Where
+approvals. **They died from turn volume**: the cumulative cost of check-ins. Where
 intervention density is computable it runs **3+ per hour sustained**, and every source
 report states its own count is a floor.
 
@@ -38,7 +38,7 @@ The turn mix says which turns to attack. Of 133 located interventions, the large
 by far is the human supplying an external fact, a scope call, or domain judgment the
 executor could not derive. The smallest slice is the executor having a recommendation and
 the human agreeing. **Widening decision authority attacks the smallest slice.** So the
-intake's highest-value output is not permissions — it is the constants block (§3) and
+intake's highest-value output is not permissions: it is the constants block (§3) and
 execution ownership (§4).
 
 **Secondary cause, 9 of 9 projects: nothing noticed when the human stopped.** Silences of
@@ -47,9 +47,9 @@ untouched. §8 exists for this.
 
 ---
 
-## 1. Intake — conversational, not a form
+## 1. Intake: conversational, not a form
 
-Take whatever is offered — a sentence or a page. Infer what you can. **Ask only what
+Take whatever is offered: a sentence or a page. Infer what you can. **Ask only what
 blocks routing.** Depth scales with complexity: a small project with good specialist
 coverage gets a fast intake; a novel or fuzzy one gets a deep session and possibly a
 follow-up.
@@ -57,10 +57,10 @@ follow-up.
 Do not walk a checklist at the person. The list below is what must be *established*, in
 whatever order the conversation naturally goes:
 
-- **Intent and outcome** — what is being built, why, and what "done" looks like in
+- **Intent and outcome**: what is being built, why, and what "done" looks like in
   verifiable terms
-- **Classification** — build / research / content / creative / hybrid
-- **Constraints** — platform, stack, budget, timeline, hard boundaries
+- **Classification**: build / research / content / creative / hybrid
+- **Constraints**: platform, stack, budget, timeline, hard boundaries
 - **Standing constants** (§3)
 - **Decision authority** (§4)
 - **Asset mapping** (§5)
@@ -80,17 +80,17 @@ anyone said it out loud.**
 
 | Signal | Intake shape |
 | --- | --- |
-| Small scope, existing specialist coverage, clear outcome | Fast — confirm, map, emit |
-| Novel domain, or outcome stated as an activity rather than a result | Deep — expect to push back on scope |
+| Small scope, existing specialist coverage, clear outcome | Fast: confirm, map, emit |
+| Novel domain, or outcome stated as an activity rather than a result | Deep: expect to push back on scope |
 | Cannot articulate what done looks like | **Do not emit.** Say so, and offer to help define it |
 | Person is describing three projects | Split them, then run the smallest first |
 
 ---
 
-## 3. Standing constants — the highest-value thing you produce
+## 3. Standing constants: the highest-value thing you produce
 
 **This is the single largest category of avoidable human turn.** Not the whole of the
-largest slice — much of that is genuinely novel input only a human can supply — but the
+largest slice (much of that is genuinely novel input only a human can supply) but the
 **re-asked** subset: the executor asking for something already written down.
 
 Evidenced repeatedly in the corpus: an intake route asked twice in two documents an hour
@@ -101,7 +101,7 @@ CLAUDE.md.**
 Elicit, and write into the constants skill:
 
 - named people and channels, with **names, not roles**
-- account structure and identifiers — never credentials
+- account structure and identifiers: never credentials
 - **environment topology** (below)
 - naming and label taxonomies, allowed values for categorical fields
 - terminology the project uses differently from its common meaning
@@ -114,7 +114,7 @@ Ask directly: *"What surprises people about how this environment is put together
 
 Cross-account boundaries, split DNS, required auth profiles, propagation delays, and steps
 that cannot be automated are all constants. In the corpus a DNS zone living in a different
-account from its application cost 30–60 minutes **every time it was rediscovered** — because
+account from its application cost 30–60 minutes **every time it was rediscovered**, because
 it was rediscovered rather than recorded. **A surprise that recurs is a missing constant,
 not bad luck.**
 
@@ -123,14 +123,14 @@ not bad luck.**
 Write them to `.claude/skills/project-constants/SKILL.md`. CLAUDE.md carries the standing
 rule and a pointer.
 
-**Why:** verified on Claude Code 2.1.220 — the `Explore` and `Plan` subagents **do not
+**Why:** verified on Claude Code 2.1.220: the `Explore` and `Plan` subagents **do not
 receive CLAUDE.md**, and no frontmatter field or setting changes that. They are also the
 subagents an executor reaches for when orienting in an unfamiliar repo, which is exactly
 when constants matter. A skill can be preloaded into any agent with
 `skills: ["project-constants"]`, and the full content is injected, not just the description.
 
 **Bound on this:** the `skills` field is **not** applied when a subagent definition runs as
-an agent-team teammate. Teammates read CLAUDE.md normally — which is why the pointer stays
+an agent-team teammate. Teammates read CLAUDE.md normally, which is why the pointer stays
 in CLAUDE.md rather than that section being deleted. The two paths cover each other.
 
 **The standing rule for the executor:** if it is in the constants skill, use it and do not
@@ -142,8 +142,8 @@ ask. If a constant is missing, ask once and write the answer in.
 
 The clearest executor-side gap in the corpus: **verification absent or failed in 7 of 9
 projects**, and the human repeatedly acting as the transport layer between the executor and
-the target system — roughly 15 upload cycles on one app, called "the estate's dominant cost
-sink" in that project's own retrospective.
+the target system (roughly 15 upload cycles on one app, called "the estate's dominant cost
+sink" in that project's own retrospective).
 
 Establish, and write into CLAUDE.md:
 
@@ -158,7 +158,7 @@ Establish, and write into CLAUDE.md:
 - **The executor runs the check itself.** Before routing a verification step to a human,
   establish that it genuinely cannot be run by the executor.
 - **Bulk triage is pre-filtered.** Reduce the set, then present the residue with a
-  recommendation per item — never a raw list.
+  recommendation per item, never a raw list.
 
 ### Enforce at the tool layer where you can
 
@@ -168,23 +168,23 @@ recommended specialist's job is to check or verify, it carries
 merely parsed.**
 
 Apply it with judgment. An agent that must write does not get the restriction, and says
-inline why — "copy, never destroy" is not a line the tool layer can draw.
+inline why: "copy, never destroy" is not a line the tool layer can draw.
 
 ---
 
-## 5. Decision authority — the remaining slice
+## 5. Decision authority: the remaining slice
 
 Establish:
 
-- **Defaults** for unspecified choices (boring over novel, ship over polish, and so on —
+- **Defaults** for unspecified choices (boring over novel, ship over polish, and so on,
   set per project)
-- **Ceilings** — scope, dependency-addition tolerance, spend
+- **Ceilings**: scope, dependency-addition tolerance, spend
 - **The standing rule:** clear recommended action within ceilings → take it, log it in
   PROGRESS.md, continue. Do not ask.
 - **The escalation stop-list**, which is derived from the corpus rather than invented:
   - **Irreversible actions**, specifically **state changes of a different authority class
     than the work in flight**. A "close" pulled out of an approved bulk-update run and
-    handled manually — updates are correctable, closes are visible to other people.
+    handled manually: updates are correctable, closes are visible to other people.
   - **Classification and categorization fields.** Never adjusted to make a narrative fit.
   - **Anything beyond ceilings, touching credentials, or touching production.**
   - **Anything that changes project intent.**
@@ -206,9 +206,9 @@ execution specialists and scaffold templates; it is not the only marketplace on 
 
 **Qualify every name as `<plugin>@<marketplace>`.** Plugin names are not unique across
 marketplaces, and `claude plugin details <bare-name>` will silently resolve to the wrong
-one — observed with a plugin that existed in two installed marketplaces.
+one, observed with a plugin that existed in two installed marketplaces.
 
-**Where an overlap decision is load-bearing — build it or don't — read the body.** A
+**Where an overlap decision is load-bearing (build it or don't) read the body.** A
 plugin's own description is not a primary source for what it does. In this marketplace's
 construction, reading two candidate bodies in full changed the finding: one solved a
 different problem than its description implied, and surfaced a gap that the
@@ -220,7 +220,7 @@ description-level assessment had missed entirely.
 ### Defer model and effort routing
 
 **Do not build model/effort/subagent-routing logic into the handoff.** If
-`agent-tooling:model-effort-advisor` is available, recommend it — it scores a task and returns
+`agent-tooling:model-effort-advisor` is available, recommend it: it scores a task and returns
 model, reasoning effort, and inline-vs-subagent.
 
 Make it a **soft** reference with a stated fallback. A cross-marketplace reference by
@@ -236,10 +236,10 @@ this project and why.
 
 ### Every unknown gets one label, a named owner, and a date
 
-- **Claude-executable** — a factual or technical lookup; becomes an executor task
-- **Human homework** — judgment- or research-heavy; marked blocking-milestone-1 or not
-- **Human decision** — taste, priorities, direction; asked now if blocking, else queued
-- **Deferred** — parked, **with the condition that revives it**
+- **Claude-executable**: a factual or technical lookup; becomes an executor task
+- **Human homework**: judgment- or research-heavy; marked blocking-milestone-1 or not
+- **Human decision**: taste, priorities, direction; asked now if blocking, else queued
+- **Deferred**: parked, **with the condition that revives it**
 
 **A role is not an owner.** And an owner alone is insufficient: one corpus item had a named
 owner *and* a due date and lapsed silently, because nothing was watching. That is why §8
@@ -250,7 +250,7 @@ acknowledged, documented, and then routed around permanently. **An unknown that 
 fixed; an unknown you can work around outlives the project.**
 
 **Returned research is verified before it is acted on.** Treat "no evidence found" as "did
-not look hard." Watch specifically for an open issue being read as an unmet need — one
+not look hard." Watch specifically for an open issue being read as an unmet need: one
 research pass returned a claim that was stale in a way that reversed its own conclusion,
 because a feature request whose ask had shipped was never closed.
 
@@ -261,12 +261,12 @@ With written acceptance criteria.
 **Inability to slice milestone 1 that way is diagnostic.** The project is vaguer or bigger
 than admitted. Say so. Do not emit a handoff and hope.
 
-Multi-session execution is expected and fine — slicing exists for resumability and
+Multi-session execution is expected and fine: slicing exists for resumability and
 demonstrability, not because a session ending is failure.
 
 ---
 
-## 8. Re-entry — how the project notices when the human stops
+## 8. Re-entry: how the project notices when the human stops
 
 Set a cadence at intake. **Default: weekly.**
 
@@ -283,8 +283,8 @@ prompts**, which is what makes the continuation queue real rather than aspiratio
 after creation, and the silences this catches run 11–21 days. A detector that deletes
 itself before the failure it detects is worse than none, because it looks handled.
 
-**Weekly** is set from the detection requirement, not from evidence about optimal cadence —
-there is none. Weekly fires ~3× inside a 21-day silence. Daily is noise for a legitimately
+**Weekly** is set from the detection requirement, not from evidence about optimal cadence.
+There is none. Weekly fires ~3× inside a 21-day silence. Daily is noise for a legitimately
 idle project and burns the run cap.
 
 **CONTINUATION.md is pre-authorized work**, not a wish list. It executes unattended, so
@@ -300,7 +300,7 @@ bigger brief.
 
 1. Intent and verifiable success criteria defined
 2. Constants block populated, including environment topology
-3. Decision authority set — defaults, ceilings, escalation stop-list
+3. Decision authority set: defaults, ceilings, escalation stop-list
 4. Tools and specialists mapped against **all** installed marketplaces; creation needs identified
 5. Every gap dispositioned, each with a named owner and a date
 6. Milestone 1 sliced with acceptance criteria, reachable with no human input
@@ -324,8 +324,8 @@ Generate from `gfm-foundry/templates/`, filling every `{{PLACEHOLDER}}`:
 
 | File | Role |
 | --- | --- |
-| `CLAUDE.md` | The persistent law — read every session |
-| `HANDOFF.md` | The one-time briefing — read once |
+| `CLAUDE.md` | The persistent law: read every session |
+| `HANDOFF.md` | The one-time briefing: read once |
 | `PROGRESS.md` | Running log; the only record of delegated decisions |
 | `CONTINUATION.md` | Pre-authorized queue for unattended runs |
 | `OPEN-ITEMS.md` | Custodian ledger, checked on every re-entry |
@@ -334,13 +334,13 @@ Generate from `gfm-foundry/templates/`, filling every `{{PLACEHOLDER}}`:
 
 Plus basic file structure appropriate to the project type.
 
-**Deliver as a zip.** Repo creation happens outside this session — no GitHub write access
+**Deliver as a zip.** Repo creation happens outside this session: no GitHub write access
 here, and no credential handling.
 
 ### Author every rule with its originating failure inline
 
 This is not a style preference. In the corpus, written rules bound the **executor**
-reliably — one project honored 6 of 7 written defaults without exception, another's locked
+reliably: one project honored 6 of 7 written defaults without exception, another's locked
 decision blocks held across six session boundaries. They did **not** reliably bind the
 human: a "do not rebuild from scratch" instruction was written at 12:48 and violated at
 14:09 by its own author.
@@ -362,7 +362,7 @@ one of its hard gates with the failure that produced it attached, in exactly thi
 - Does not emit a handoff past a red check.
 - Permitted and expected to recommend tabling.
 - **Never handles raw credentials.** Assume CLI-native auth exists.
-- Recommends only mechanisms the executor can actually invoke — no abstract patterns.
+- Recommends only mechanisms the executor can actually invoke: no abstract patterns.
 
 ---
 
@@ -381,6 +381,6 @@ Recommend from this list, with the constraint attached. Defer model and effort c
 | Worktrees | Independent parallel workstreams | Branches from the **default branch**, not parent HEAD |
 | `/goal` | Keep working until a condition holds | Evaluator reads the transcript only; bound it with a turn clause |
 | Monitors | React to a stream instead of polling | Interactive CLI only |
-| Advisor tool | Executor stuck, would otherwise ask | Escalates to a **model**, not a human — not a stop-list substitute |
+| Advisor tool | Executor stuck, would otherwise ask | Escalates to a **model**, not a human, not a stop-list substitute |
 | Agent teams | Parallel exploration needing debate | Experimental, off by default, high token cost |
 | Routines | Unattended scheduled work | Cloud; no local files; 1-hour minimum |

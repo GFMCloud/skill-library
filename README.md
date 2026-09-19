@@ -26,7 +26,7 @@ not a convenience to keep.
 It was assembled by sweeping every skill scattered across two older marketplaces,
 several project repos, a home directory, and one orphaned `.skill` zip, then ruling on
 each one individually: move, keep project-local, deprecate, or archive.
-[MIGRATION.md](MIGRATION.md) is the permanent record of where each skill came from and
+[MIGRATION.md](maintainers/MIGRATION.md) is the permanent record of where each skill came from and
 why it landed where it did.
 
 ## Install
@@ -82,7 +82,8 @@ plugins/<plugin>/
   skills/<skill>/references/      rubrics, schemas, worked examples
   skills/<skill>/templates/       files the skill writes out
   agents/<agent>.md               subagent definitions
-docs/authoring-standard.md        the contract every skill must meet
+maintainers/                      working records: the authoring standard, review
+                                  records, the 2026-08 migration, maintenance scripts
 docs/inventory.md                 generated, one line per skill; validator fails when stale
 scripts/validate-skills.sh        the validator; CI runs the same script
 templates/SKILL.template.md       start new skills from this
@@ -90,7 +91,7 @@ templates/SKILL.template.md       start new skills from this
 
 ## Authoring standard
 
-The full contract is in [docs/authoring-standard.md](docs/authoring-standard.md). The
+The full contract is in [maintainers/authoring-standard.md](maintainers/authoring-standard.md). The
 parts that matter most:
 
 **The description is the router.** Auto-invocation keys off `description`, so write it

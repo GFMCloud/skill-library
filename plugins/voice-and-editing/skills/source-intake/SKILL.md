@@ -55,7 +55,7 @@ State the source type; it picks the rubric in Step 2.
 | Skill collection (SKILL.md files, plugin manifests) | same, then `find . -name SKILL.md` to enumerate | same |
 | Article or post | save to a file via the `anydoc` then `markitdown` routing in `~/.claude/CLAUDE.md`; check the output is non-empty | URL, fetch date, `shasum -a 256` of the saved file |
 
-Prior-review check: `ls ~/skill-library/docs/reviews/ | grep -i <slug>`. If a
+Prior-review check: `ls ~/skill-library/maintainers/reviews/ | grep -i <slug>`. If a
 record exists, read it and re-review only if the pin has moved or the user asks.
 The files are the index; there is no INDEX.md to maintain.
 
@@ -112,7 +112,7 @@ load-bearing claims, whole-source rubric scores, currency risk, folklore
 numbers, flags, reviewer disagreements. Sonnet reads, the frontier model judges.
 Procedure, the loop, and the synthesis prompt:
 [references/large-sources.md](references/large-sources.md). Worked example:
-`docs/reviews/2026-09-02-ai-agent-book/`.
+`maintainers/reviews/2026-09-02-ai-agent-book/`.
 
 ## Step 3: Comparison against incumbents
 
@@ -168,7 +168,7 @@ Route by the largest ratified row:
 - **All S** (under an hour, one sitting): apply in this session. Library rules
   bind: new skills go straight into their plugin, stable-skill edits bump version and
   get a CHANGELOG line, `bash scripts/validate-skills.sh` exits 0 before any
-  commit, `scripts/generate-inventory.sh` runs when a skill is added or removed.
+  commit, `maintainers/scripts/generate-inventory.sh` runs when a skill is added or removed.
   Commit; pushing and PRs are never pre-authorized, ask.
 - **Any M** (an afternoon, one PR): write one runbook with a gate before the
   push, execute it, same rules.
@@ -186,7 +186,7 @@ path, not by the edit tool returning.
 
 ## Step 6: Record
 
-Write `~/skill-library/docs/reviews/YYYY-MM-DD-<slug>.md` from
+Write `~/skill-library/maintainers/reviews/YYYY-MM-DD-<slug>.md` from
 [templates/review-record.template.md](templates/review-record.template.md):
 source, pin, verdict, the row summary, where the evidence lives (the archived
 harness for L, the commit for S and M), and the Flags. Commit it with the change
