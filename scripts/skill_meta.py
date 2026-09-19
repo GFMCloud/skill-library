@@ -215,6 +215,31 @@ def render_counts(counts):
     return f"This repository has {packs} packs, holding {skills} skills and {agents} agents."
 
 
+def eval_counts(root="plugins"):
+    """(skills with at least three eval cases, all skills). A case is a folder holding a
+    prompt.md under plugins/<pack>/evals/<skill>/, the one place cases live (F19)."""
+    have = total = 0
+    for pack in sorted(os.listdir(root)):
+        sp = os.path.join(root, pack, "skills")
+        if not os.path.isdir(sp):
+            continue
+        for skill in os.listdir(sp):
+            if not os.path.isfile(os.path.join(sp, skill, "SKILL.md")):
+                continue
+            total += 1
+            suite = os.path.join(root, pack, "evals", skill)
+            cases = (sum(os.path.isfile(os.path.join(suite, c, "prompt.md"))
+                         for c in os.listdir(suite)) if os.path.isdir(suite) else 0)
+            have += cases >= 3
+    return have, total
+
+
+def render_eval_status(have, total):
+    return (f"{have} of the {total} skills have at least three evaluation cases, which are "
+            f"written tests of whether a skill does its job. The other {total - have} have "
+            f"fewer than three, or none.")
+
+
 def replace_block(text, key, src, body):
     """Swap the body between the two markers for `key`. Returns (text, found)."""
     begin = GEN_BEGIN.format(key=key, src=src)
@@ -257,6 +282,8 @@ def generated_pages(root="plugins"):
                                 encoding="utf-8"))
         for key, src, body in (
                 ("counts", "the plugins/ tree", render_counts(counts)),
+                ("eval-status", "the plugins/*/evals/ tree",
+                 render_eval_status(*eval_counts(root))),
                 ("catalog", ".claude-plugin/marketplace.json and the plugins/ tree",
                  render_catalog(market, counts))):
             text, found = replace_block(text, key, src, body)

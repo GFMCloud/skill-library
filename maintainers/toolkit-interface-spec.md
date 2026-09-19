@@ -344,7 +344,7 @@ plugins/<plugin>/evals/<skill>/
         └── <grader>.md    # frontmatter: type: regex | tool_used | tool_order | file_exists, plus that type's fields
 ```
 
-Rules: at least two cases per skill; graders limited to `regex`, `tool_used`,
+Rules: at least three cases per skill (skill-repo-standard rule 13; two until 2026-09-19); graders limited to `regex`, `tool_used`,
 `tool_order`, `file_exists` (no `llm`, no `baseline`); `runs: 1` in the file so an
 execution is cheap by default; no `results/` directory is ever committed (`.gitignore`
 covers the CLI's default results path, and the run command writes outside the library

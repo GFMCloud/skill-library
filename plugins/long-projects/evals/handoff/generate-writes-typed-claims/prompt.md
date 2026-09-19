@@ -1,14 +1,16 @@
 ---
 name: generate-writes-typed-claims
 runs: 1
-max_turns: 8
+max_turns: 12
 timeout_seconds: 240
 allowed_tools: [Read, Bash, Write, Skill]
 ---
-We just finished a short technical session: we created a scratch git repo at
-/tmp/eval-handoff-repo, committed one file on a branch called `spike`, and confirmed
-`git -C /tmp/eval-handoff-repo branch --show-current` prints `spike`.
+FIXTURE setup, do this first and do not ask about it: in the current folder create
+`spike/notes.txt` containing the single line `branch: spike`, and confirm
+`cat spike/notes.txt` prints `branch: spike`. Do not use git; the run's sandbox does not
+allow it. Treat that as the short technical session we just finished.
 
 Write me a handoff for a fresh session using the handoff skill, including its Typed
-Claims block, so the next session can re-check that we're really on the `spike` branch
-without re-reading this conversation.
+Claims block, so the next session can re-check what is in `spike/notes.txt` without
+re-reading this conversation.
+Save the handoff in the current folder as exactly `handoff-eval.md`.

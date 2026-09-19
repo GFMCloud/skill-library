@@ -88,7 +88,9 @@ Write the cases before the skill body:
 3. Write the shortest instructions that make those cases pass.
 4. Run the cases again and compare with step 1.
 
-A case that passes just as well with the skill turned off is not testing anything. Test in a fresh session, because a session where you have been editing the skill already knows what you meant.
+Most skills here do not have three cases yet. The main README's "Status and help" section gives the current count, which is generated.
+
+A case that passes just as well with the skill turned off is not testing anything. Two traps found the hard way: a `tool_used` grader on `Skill` passes even when the skill was not found, so it never proves the pack loaded; and `claude plugin eval <pack folder>` does not load a pack that declares `dependencies`, so check the run's first event for the plugin list before believing a result. Test in a fresh session, because a session where you have been editing the skill already knows what you meant.
 
 ## Checks
 

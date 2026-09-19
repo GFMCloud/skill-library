@@ -1,5 +1,6 @@
 ---
 type: regex
-pattern: "(?i)\\bready\\b"
+pattern: "\\bready\\b"
 match: not_contains
+flags: i
 ---

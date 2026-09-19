@@ -149,6 +149,12 @@ Read this before installing anything, here or anywhere else.
 
 This library is maintained by one person and used daily. It changes often. There is no support commitment. Skills marked `incubator` in the [inventory](docs/inventory.md) are newer and less proven than those marked `stable`.
 
+<!-- generated:eval-status by maintainers/scripts/generate-inventory.sh from the plugins/*/evals/ tree; edit the source, never this block -->
+19 of the 67 skills have at least three evaluation cases, which are written tests of whether a skill does its job. The other 48 have fewer than three, or none.
+<!-- /generated:eval-status -->
+
+The cases for the seven skills this page sends a first-time reader to were all run on 2026-09-19. Not every case passed, four cases were corrected afterwards and have not been run again, and the results are kept with the maintainer's records, not in this repository. The one case added to each of the other twelve suites that day has not been run yet.
+
 If something is wrong or confusing:
 
 - Open an issue at [github.com/GFMCloud/skill-library/issues](https://github.com/GFMCloud/skill-library/issues).

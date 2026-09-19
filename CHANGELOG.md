@@ -2,6 +2,23 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-19 - evaluation cases for the start-here skills
+
+No skill's behavior changed.
+
+- **Four new suites, three cases each:** `plan-gate`, `fact-currency-check`,
+  `spec-artifact-diff`, `minimalist-ui`. **One case added to each of the 15 existing
+  suites,** so 19 skills now meet the three-case minimum. Every new case names the
+  `SKILL.md` rule and line it tests.
+- **The seven start-here suites were executed.** That found and fixed defects in cases
+  that had never been run: two `handoff` cases (a repo that did not exist, a fixture path
+  the run could not resolve, a turn limit of 6), graders using `(?i)`, which the runner's
+  JavaScript regexes do not accept, and `tool_order` graders using `tools:` where the
+  fields are `before` and `after`.
+- **The main README states the count** of skills with three cases, generated from the
+  `plugins/*/evals/` tree; the validator (F13) fails when it is stale.
+- The interface spec's minimum is three cases, to match skill-repo-standard rule 13.
+
 ## 2026-09-19 - contributor and community files
 
 No skill's behavior changed.
