@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # prove-hooks.sh - prove every hook in a Claude Code settings file by deliberate failure.
-# Usage: bash scripts/prove-hooks.sh [path/to/settings.json]   (default ~/.claude/settings.json)
+# Usage: bash maintainers/scripts/prove-hooks.sh [path/to/settings.json]   (default ~/.claude/settings.json)
 #
 # For every hook command registered in the settings file, run the command twice with the
 # stdin JSON Claude Code would send it: a POSITIVE control (the payload the hook exists to
@@ -11,14 +11,14 @@
 # validator is trusted only after being proven by deliberate failure"; hstack review
 # 2026-09-03 rows 1, 3, 5).
 #
-# Fixtures live in scripts/prove-hooks.d/<Event>__<matcher>[__<index>].json, where <index>
+# Fixtures live in maintainers/scripts/prove-hooks.d/<Event>__<matcher>[__<index>].json, where <index>
 # counts hooks with that matcher across every entry (two entries matching Bash are #0 and #1):
 #   {"positive": <stdin json> | [<stdin json>, ...], "negative": <stdin json> | [...],
 #    "env": {<VAR>: <value>} (optional, exported to the hook for every control),
 #    "positive_verdict": "deny" (default) | "warn" (a WARN-only hook answers with
 #    additionalContext and no permissionDecision; its positives must warn, never deny),
 #    "born": "YYYY-MM-DD" (the date the hook was wired; ignored here, required by
-#    scripts/replay-hooks.py, the second proof, which measures noise on real history)}
+#    maintainers/scripts/replay-hooks.py, the second proof, which measures noise on real history)}
 # Every positive must deny and every negative must allow; the first control that
 # disagrees names the hook RED.
 # Placeholders inside fixture strings are materialized as temp files before the run:
@@ -50,7 +50,7 @@
 # (PreCompact); it is accepted only when every positive control has an "expect" object.
 # Add a fixture for every new hook in the same commit that adds the hook.
 #
-# Registry: every wired hook must also have a row in docs/hooks-registry.md (event, matcher,
+# Registry: every wired hook must also have a row in maintainers/hooks-registry.md (event, matcher,
 # script file name). A wired hook with no row is RED; a row with no wiring is a NOTE.
 #
 # Detector arm vs exemption arm (hstack row 3, the second step, not yet implemented): a
@@ -71,13 +71,13 @@
 #
 # Exit 0 only when every hook is GREEN. Output is one line per hook plus a summary.
 set -uo pipefail
-cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SETTINGS="${1:-$HOME/.claude/settings.json}"
 exec python3 - "$SETTINGS" <<'PY'
 import datetime, fnmatch, hashlib, json, os, re, subprocess, sys, tempfile
 
 settings_path = sys.argv[1]
-fixture_dir = os.path.join(os.getcwd(), "scripts", "prove-hooks.d")
+fixture_dir = os.path.join(os.getcwd(), "maintainers", "scripts", "prove-hooks.d")
 results = []
 
 def red(label, why): results.append(("RED", label, why))
@@ -94,8 +94,8 @@ hooks = settings.get("hooks") if isinstance(settings, dict) else None
 if not hooks:
     red("settings", f"no hooks block in {settings_path} (a key that silently disables hooks? see header)")
 
-# docs/hooks-registry.md: a hook wired in settings with no row there is RED.
-registry_path = os.path.join(os.getcwd(), "docs", "hooks-registry.md")
+# maintainers/hooks-registry.md: a hook wired in settings with no row there is RED.
+registry_path = os.path.join(os.getcwd(), "maintainers", "hooks-registry.md")
 registered = set()  # (event, matcher, script file name)
 try:
     with open(registry_path, encoding="utf-8") as fh:
@@ -106,7 +106,7 @@ try:
             if len(cells) >= 4 and cells[3] in ("blocks", "warns"):
                 registered.add((cells[0], cells[1], cells[2]))
 except OSError as e:
-    red("registry", f"cannot read docs/hooks-registry.md: {e}")
+    red("registry", f"cannot read maintainers/hooks-registry.md: {e}")
 wired = set()
 
 def script_name(command):
@@ -260,12 +260,12 @@ for event, entries in (hooks or {}).items():
             key = (event, matcher, script_name(hook["command"]))
             wired.add(key)
             if key not in registered:
-                red(f"{label} registry", f"unlisted: {key[2]} is wired in settings but has no row in docs/hooks-registry.md")
+                red(f"{label} registry", f"unlisted: {key[2]} is wired in settings but has no row in maintainers/hooks-registry.md")
             candidates = [f"{event}__{safe}__{j}.json", f"{event}__{safe}.json"]
             fixture = next((os.path.join(fixture_dir, c) for c in candidates
                             if os.path.exists(os.path.join(fixture_dir, c))), None)
             if not fixture:
-                red(label, f"unproven: no fixture ({' or '.join(candidates)} in scripts/prove-hooks.d/)")
+                red(label, f"unproven: no fixture ({' or '.join(candidates)} in maintainers/scripts/prove-hooks.d/)")
                 continue
             try:
                 fx = json.load(open(fixture))
@@ -308,7 +308,7 @@ for event, entries in (hooks or {}).items():
                 red(label, "; ".join(why))
 
 if wired and wired <= registered:
-    green("registry", f"all {len(wired)} wired hook(s) are listed in docs/hooks-registry.md")
+    green("registry", f"all {len(wired)} wired hook(s) are listed in maintainers/hooks-registry.md")
 
 reds = [r for r in results if r[0] == "RED"]
 for status, label, why in results:

@@ -149,4 +149,4 @@ cannot loop, green releases silently, a missing script is named on stderr). The
 [references/stop-hook.md](references/stop-hook.md) for the event, the shape and the
 exit-2-with-stderr blocking path, sourced from `foundry-core:bounded-loop`'s
 stop-hook contract reference. It was optional and unproven until the 2026-09-18
-self-review (`docs/reviews/2026-09-18-self-review-verification.md`).
+self-review (`maintainers/reviews/2026-09-18-self-review-verification.md`).

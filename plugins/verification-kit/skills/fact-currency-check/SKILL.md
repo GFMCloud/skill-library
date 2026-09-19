@@ -19,7 +19,7 @@ Two of four needed correction.
 ## Procedure
 
 **1. Mark which claims are load-bearing.** A claim is load-bearing if a
-decision changes when it flips. Check those. Do not check the rest — currency
+decision changes when it flips. Check those. Do not check the rest: currency
 checking everything is how this step gets skipped entirely.
 
 **2. For each, find the primary source and say what "primary" means here.**
@@ -37,13 +37,13 @@ checking everything is how this step gets skipped entirely.
 without one is a claim about an unspecified past.
 
 **4. Record what changed.** If the source now says something different from
-what the research said, that delta is the output — not a silent correction.
+what the research said, that delta is the output, not a silent correction.
 
 ## Two failure modes that recur
 
 **An open issue is not evidence of an unmet need.** Item 2 read a feature
 request as still-current because the issue had never been closed. The ask had
-shipped. Issues go stale open far more often than they go stale closed — check
+shipped. Issues go stale open far more often than they go stale closed: check
 whether the thing was done, not whether the ticket was tidied.
 
 **"No evidence found" means "did not look hard," not "does not exist."** Item 2
@@ -53,8 +53,8 @@ unsuccessful search, and search again differently before recording absence.
 
 ## Also worth re-checking
 
-- **Version floors and deprecations** — "requires v2.1.110+" was true once.
-- **Regressions** — a documented behavior that worked at the time of writing
+- **Version floors and deprecations**: "requires v2.1.110+" was true once.
+- **Regressions**: a documented behavior that worked at the time of writing
   may have regressed since. Symlink dereference within a marketplace is the
   logged case: documented, worked, regressed in v2.1.117, closed as not
   planned.

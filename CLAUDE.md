@@ -7,7 +7,7 @@ structured as a plugin marketplace.
 
 ## Rules for sessions editing this repo
 
-- Follow [docs/authoring-standard.md](docs/authoring-standard.md) for every skill.
+- Follow [maintainers/authoring-standard.md](maintainers/authoring-standard.md) for every skill.
   Start new skills from [templates/SKILL.template.md](templates/SKILL.template.md).
 - **New skills go straight into the plugin they belong to** (the install unit they
   would be enabled with), with `maturity: incubator` as a label only. There is no

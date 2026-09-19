@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """replay-hooks.py - measure a hook's fire rate on real command history before wiring it.
 
-The second proof, beside scripts/prove-hooks.sh: that script proves a hook is correct on
+The second proof, beside maintainers/scripts/prove-hooks.sh: that script proves a hook is correct on
 fixtures; this one measures how often it would fire on real traffic, which is the number
 that decides whether a WARN is signal or fatigue. Rewritten from the oops-i-did-it-again
 review (2026-09-07, rows 1 and 6); ruled Q-2026-09-07-8.
 
 Usage:
-  python3 scripts/replay-hooks.py --hook "<command>" --transcripts <dir> --fixture <fixture.json>
+  python3 maintainers/scripts/replay-hooks.py --hook "<command>" --transcripts <dir> --fixture <fixture.json>
       [--tool Bash] [--threshold 5]
 
   --hook         the hook command exactly as registered in settings.json

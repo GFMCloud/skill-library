@@ -229,7 +229,7 @@ Present the file to the user for download.
 
 ## Step 5: Write the Typed Claims Block
 
-Alongside the narrative fields (Step 4), write a Typed claim v1 block, as defined in the toolkit interface spec section 4 (`docs/toolkit-interface-spec.md`) - never redefine that shape here. See [references/claims.md](references/claims.md) for the full write-side procedure and a worked example.
+Alongside the narrative fields (Step 4), write a Typed claim v1 block, as defined in the toolkit interface spec section 4 (`maintainers/toolkit-interface-spec.md`) - never redefine that shape here. See [references/claims.md](references/claims.md) for the full write-side procedure and a worked example.
 
 The rule that matters most: every `checkable[].expected` value is the output of running that entry's `check` command right now, at write time. Never fill `expected` from what you remember happening, from what the plan said should be true, or from an earlier claim in the same conversation - that gap is exactly how a handoff passes its own writer's checks while naming the wrong branch.
 
@@ -315,4 +315,4 @@ A mismatch is not a reason to silently correct the claim and move on. It is a re
 
 ## Output contract
 
-Generating a handoff emits the narrative markdown file (Steps 1-6 format, unversioned prose) plus a Typed claim v1 block as defined in the toolkit interface spec, section 4 (`docs/toolkit-interface-spec.md`) - reference it by name and version, never redefine its fields here. Resuming from a handoff emits a resume report per the same spec section: status in three sentences, a discrepancy table (claim, command, actual output, match/mismatch), the `not_checkable` list under "unverified by design", then one question or "proceeding". See [references/claims.md](references/claims.md) for one example instance of each side; the field list lives in the interface spec, not here.
+Generating a handoff emits the narrative markdown file (Steps 1-6 format, unversioned prose) plus a Typed claim v1 block as defined in the toolkit interface spec, section 4 (`maintainers/toolkit-interface-spec.md`) - reference it by name and version, never redefine its fields here. Resuming from a handoff emits a resume report per the same spec section: status in three sentences, a discrepancy table (claim, command, actual output, match/mismatch), the `not_checkable` list under "unverified by design", then one question or "proceeding". See [references/claims.md](references/claims.md) for one example instance of each side; the field list lives in the interface spec, not here.

@@ -20,7 +20,7 @@ contexts that never saw the conversation, and makes the synthesizer commit to a 
 before reading them.
 
 Adapted from the ECC project's `council` skill (MIT, v2.2.1), reviewed 2026-09-17.
-Record: `docs/reviews/2026-09-17-ecc/`.
+Record: `maintainers/reviews/2026-09-17-ecc/`.
 
 ## Inputs
 

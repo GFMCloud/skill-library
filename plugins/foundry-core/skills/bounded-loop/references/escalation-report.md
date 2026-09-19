@@ -1,6 +1,6 @@
 # Filling out Escalation report v1
 
-The shape and its fields are defined once, in `docs/toolkit-interface-spec.md` section 2
+The shape and its fields are defined once, in `maintainers/toolkit-interface-spec.md` section 2
 (Escalation report v1) in the harness that built this skill; this page never
 redefines a field. `stop-hook-verify.sh` writes the file; this page is how a
 reader (human or agent) checks that what it wrote is right, and how to fill
@@ -26,7 +26,7 @@ question: should an empty header row count as a record?
 
 ## What the script fills automatically
 
-`cause_class` is set per the rules in `docs/toolkit-interface-spec.md` section 2
+`cause_class` is set per the rules in `maintainers/toolkit-interface-spec.md` section 2
 (Escalation report v1); this page does not redefine them. The script fills
 `attempts`, `last_failing_output`, `tried` (with real `diff_hash` values from
 the workspace snapshot), and `cause_class` straight out of

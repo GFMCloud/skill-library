@@ -1,6 +1,6 @@
 ---
 name: "spec-artifact-diff"
-description: "Check a document against the thing it describes — does this README match the code, do these counts and claims hold against the tree, has this spec drifted from the artifacts. Use whenever a document's claims need checking against a directory, repo, or running system, and after editing a spec and its dependent documents in the same session."
+description: "Check a document against the thing it describes, does this README match the code, do these counts and claims hold against the tree, has this spec drifted from the artifacts. Use whenever a document's claims need checking against a directory, repo, or running system, and after editing a spec and its dependent documents in the same session."
 metadata:
   maturity: incubator
 ---
@@ -11,10 +11,10 @@ The procedure for turning prose into a list of falsifiable claims and checking
 each one against the thing it describes.
 
 Use inline for a single document. For a document *set*, use the
-`consistency-checker:cross-document-checker` agent instead — the check is more
+`consistency-checker:cross-document-checker` agent instead: the check is more
 reliable when run by something that did not write the documents.
 
-## Step 1 — Name the ground truth
+## Step 1: Name the ground truth
 
 Before reading any prose, decide what the authority is and get it in front of
 you. In order of preference:
@@ -25,7 +25,7 @@ you. In order of preference:
 
 Record the command you used. It goes in the report.
 
-## Step 2 — Extract claims, not meaning
+## Step 2: Extract claims, not meaning
 
 Read each document once looking only for assertions a command could falsify.
 Ignore argument, rationale, and intent. Write each claim down verbatim with its
@@ -46,7 +46,7 @@ A quantifier is a claim about **every** member of a set. Checking one member
 and generalising is how "one placeholder component each" survived a review over
 a set that was unevenly distributed.
 
-## Step 3 — Run the check
+## Step 3: Run the check
 
 One check per claim, executed. Not inferred, not recalled, not read off a
 second document.
@@ -78,7 +78,7 @@ Byte counts matched the repo. The check passed. **It was not a check.**
 ### Why it proves nothing
 
 The plugin cache stores **each installed version in its own directory**, and
-orphaned versions are only removed **14 days** after they are superseded — a
+orphaned versions are only removed **14 days** after they are superseded: a
 deliberate grace period so concurrent sessions that already loaded the old
 version keep working.
 
@@ -91,7 +91,7 @@ In the session where this was used it passed for the right answer by luck. The
 same command had already been wrong once that day: after a shared dependency
 was edited, both `marketplace update` and a dependent's `install` reported
 success while the dependency's cache still held the superseded file and was
-missing a new one entirely — because reinstalling a *dependent* does not
+missing a new one entirely, because reinstalling a *dependent* does not
 refresh an already-installed *dependency*.
 
 ### The correct form
@@ -120,31 +120,31 @@ excluded the place the failure lives.**
 **When writing a check, state what it would fail to detect.** If that answer
 is "the thing I am checking for," the check is decoration.
 
-Note also that Glob and Grep *do* skip orphaned version directories — so a
+Note also that Glob and Grep *do* skip orphaned version directories, so a
 check written with those tools would not have had this flaw. Shell `find`
 does not skip them. **The tool you reach for changes what your check can
 see**, which is one more reason to name the scope explicitly rather than
 trusting a search to do it for you.
 
-## Step 4 — Classify each defect
+## Step 4: Classify each defect
 
-- **Documentation defect** — the artifact is right, the prose is wrong. The fix
+- **Documentation defect**: the artifact is right, the prose is wrong. The fix
   is to the prose. This is the overwhelming majority. *Who* applies it depends
   on who is running this procedure: a session working inline fixes its own
   prose; `cross-document-checker` reports and never edits, whatever it is told.
-- **Artifact defect** — the prose describes the intended state and the artifact
+- **Artifact defect**: the prose describes the intended state and the artifact
   missed it. Fix the artifact, separately, as its own piece of work.
-- **Conflict** — two documents assert different decisions. Not a diff. Escalate
+- **Conflict**: two documents assert different decisions. Not a diff. Escalate
   with both locations named.
 
 Never resolve a defect by changing the artifact so the prose becomes true.
 
-## Step 5 — Report
+## Step 5: Report
 
 Four fields per defect, all required:
 
 ```
-CLAIM:  "18 files" — status.md, "Where item 3 landed"
+CLAIM:  "18 files" - status.md, "Where item 3 landed"
 WHERE:  claude/status.md:14
 TRUTH:  16 tracked files
 CHECK:  git ls-files | wc -l
@@ -156,7 +156,7 @@ clean, how many defects, split by class. A clean pass still gets a report.
 ## Known failure mode of this skill
 
 Extraction is the weak step, not verification. Claims that read as narrative
-rather than as numbers get skipped — "the acceptance check ran against this
+rather than as numbers get skipped: "the acceptance check ran against this
 exact tree" is a falsifiable claim about a commit SHA wearing prose clothing.
 When a sentence asserts *that something happened*, it is a claim; find the
 identifier it implies and check that.

@@ -10,7 +10,7 @@ The harness skills in this plugin scaffold a loop before it runs. None of them w
 one while it runs. This agent does that and nothing else.
 
 Adapted from the ECC project's agent of the same name (MIT, v2.2.1), reviewed
-2026-09-17. Record: `docs/reviews/2026-09-17-ecc/`. The source agent could edit and
+2026-09-17. Record: `maintainers/reviews/2026-09-17-ecc/`. The source agent could edit and
 restart loops; this one cannot, because a supervisor that repairs what it supervises
 hides the failure it was there to report.
 

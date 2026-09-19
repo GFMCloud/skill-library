@@ -45,22 +45,22 @@ check's output was not read; a report cannot summarise what nobody looked at.
 
 ## The format
 
-One block per claim. All four fields, no exceptions — a block missing `OUTPUT`
+One block per claim. All four fields, no exceptions: a block missing `OUTPUT`
 is an assertion wearing a report's clothing.
 
 ```
 CLAIM:   foundry-core's skill lands in the plugin cache with real content
 CHECK:   wc -c ~/.claude/plugins/cache/gfm-foundry/foundry-core/*/skills/proof-of-work/SKILL.md
 OUTPUT:  1636 /root/.claude/.../proof-of-work/SKILL.md
-VERDICT: VERIFIED — rules out #53948 (empty skills/ dir, success reported)
+VERDICT: VERIFIED, rules out #53948 (empty skills/ dir, success reported)
 ```
 
-- **CLAIM** — the falsifiable statement, in the form it will be repeated.
-- **CHECK** — the command or action, verbatim and re-runnable. Not "validated
+- **CLAIM**: the falsifiable statement, in the form it will be repeated.
+- **CHECK**: the command or action, verbatim and re-runnable. Not "validated
   the manifest."
-- **OUTPUT** — what actually came back, quoted. Trim to the decisive lines;
+- **OUTPUT**: what actually came back, quoted. Trim to the decisive lines;
   never paraphrase them.
-- **VERDICT** — `VERIFIED` / `UNVERIFIED` / `FAILED`, plus what the result
+- **VERDICT**: `VERIFIED` / `UNVERIFIED` / `FAILED`, plus what the result
   rules out. A verdict that does not say what failure mode it eliminates is
   decoration.
 
@@ -72,8 +72,8 @@ dropped.
 
 ```
 NOT VERIFIED
-- Install over the GitHub source — container has no gh auth. Needs Graham.
-- disallowedTools enforcement — frontmatter parsed, enforcement untested.
+- Install over the GitHub source: container has no gh auth. Needs Graham.
+- disallowedTools enforcement: frontmatter parsed, enforcement untested.
 ```
 
 An omitted not-verified list reads as "everything was checked." Silence and
@@ -90,7 +90,7 @@ be explicit.
   you were looking for.
 - **Count errors, not adjectives.** Tools emit reassuring words alongside
   failures. `gfm-foundry`'s normal clean state is literally "Validation passed
-  with warnings" — five warnings by design, one per plugin, from the deliberate
+  with warnings": five warnings by design, one per plugin, from the deliberate
   no-`version` policy. The number that matters is the error count.
 - **Attach the identifier.** A commit SHA, a byte count, a row count, a
   timestamp. An acceptance record that does not name what it ran against cannot

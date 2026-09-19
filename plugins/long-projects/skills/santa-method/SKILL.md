@@ -23,7 +23,7 @@ exists to cover.
 
 Adapted from the ECC project's `santa-method` skill (MIT, v2.2.1; the source credits
 Ronald Skelton, RapportScore.ai), reviewed 2026-09-17. Record:
-`docs/reviews/2026-09-17-ecc/`. The source's effectiveness figures were not carried
+`maintainers/reviews/2026-09-17-ecc/`. The source's effectiveness figures were not carried
 over: none of them has been measured here.
 
 ## Inputs

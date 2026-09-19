@@ -3,7 +3,7 @@
 This is the how-to for the Typed claim v1 shape this skill produces and consumes
 (writer: handoff generation; reader: handoff resume mode). The shape itself is defined
 once, in the toolkit interface spec:
-`docs/toolkit-interface-spec.md`, section 4. This file
+`maintainers/toolkit-interface-spec.md`, section 4. This file
 explains how to fill it in and how to check it; it does not redefine any field.
 
 ## Write side

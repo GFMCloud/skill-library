@@ -14,7 +14,7 @@ its own voice. The value here is two dependency-free validators
 (`validate-findings.cjs`, `validate-coverage-ledger.cjs`) and their tests, which are only
 worth having as written. Ruled by Graham at Gate B of the 2026-09-18 pack review ("B5 -
 Adopt as a sep skill as well", then "approve with defaults" on the plan-gate); record in
-`docs/reviews/2026-09-18-pack-review.md`.
+`maintainers/reviews/2026-09-18-pack-review.md`.
 
 To update: re-vendor from a newer commit, re-run both test files, and change the commit
 above. Do not edit the vendored files in place; an edit here is drift from upstream.

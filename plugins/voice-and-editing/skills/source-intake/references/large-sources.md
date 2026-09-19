@@ -3,7 +3,7 @@
 Step 2 assumes the whole source fits one `claude -p` context. Above roughly 40k
 words it does not. The 2026-09-02 run on bojieli/ai-agent-book (190k words, 13
 markdown files) is the worked example: eleven per-chapter reviews, one synthesis,
-output in `docs/reviews/2026-09-02-ai-agent-book/cleanroom-review.md`.
+output in `maintainers/reviews/2026-09-02-ai-agent-book/cleanroom-review.md`.
 
 ## Contents
 

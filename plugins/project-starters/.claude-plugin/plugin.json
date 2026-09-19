@@ -1,5 +1,5 @@
 {
   "name": "project-starters",
   "description": "Start a new project properly: repo scaffolding with secret scanning, reproducible dev shells, a project knowledge base, and pipeline and systems design before any code.",
-  "version": "0.1.0"
+  "version": "0.1.1"
 }

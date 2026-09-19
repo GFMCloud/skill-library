@@ -13,7 +13,7 @@ Status: Ratified 2026-09-11 (Gate A, all ten shapes as proposed). Binding on eve
 
 Every shape one toolkit skill produces and another consumes is defined here, once.
 Builders reference a shape by name and version ("emits a Goal block v1 as defined in
-`docs/toolkit-interface-spec.md`"); they never redefine it in a SKILL.md. A field change after
+`maintainers/toolkit-interface-spec.md`"); they never redefine it in a SKILL.md. A field change after
 ratification is a breaking change: bump the shape's version here, note the migration in
 the library CHANGELOG, and treat the amendment as its own gated act.
 
@@ -326,7 +326,7 @@ before `## Output contract`: `## Inputs`, `## Verify`, `## Done when`, `## Stop 
 Enforced by `scripts/validate-skills.sh` as committed in Phase 1 (d0356db): stable skills
 fail (F14 missing, F15 out of order, F16 vacuous Stop when); incubator skills warn (W4,
 W5, W6). `## Stop when` must contain at least one line that is not "done". Full wording
-in the library's `docs/authoring-standard.md`, "Contract sections", which is the one
+in the library's `maintainers/authoring-standard.md`, "Contract sections", which is the one
 editable home; this section points at it.
 
 ## 9. Eval suite layout v2 (binding on every new skill)
@@ -435,7 +435,7 @@ seen-index, a snapshot, and any hook or skill that injects stored text into a se
    back from storage enters a session labelled unverified, and a Typed claim v1 block
    is accepted only through the resume procedure in section 4.
 
-Each invariant has a fixture that fails when it is violated: `scripts/prove-hooks.d/`
+Each invariant has a fixture that fails when it is violated: `maintainers/scripts/prove-hooks.d/`
 `SessionStart__startup_clear.json` and `PreCompact__manual_auto.json` (their
 `_invariants` lines map controls to invariants), enforced for the hooks by
 `~/.claude/hooks/memory_safety.py`.

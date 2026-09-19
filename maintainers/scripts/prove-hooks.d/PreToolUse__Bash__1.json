@@ -225,7 +225,7 @@
   {
    "tool_name": "Bash",
    "tool_input": {
-    "command": "bash ~/skill-library/scripts/prove-hooks.sh"
+    "command": "bash ~/skill-library/maintainers/scripts/prove-hooks.sh"
    },
    "cwd": "/Users/gfm/work/x"
   },

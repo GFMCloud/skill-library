@@ -11,7 +11,7 @@ checks a diff against its task and `pre-delivery-verifier` checks an artifact ag
 its criteria; neither asks what happens when a call fails and the code carries on.
 
 Adapted from the ECC project's agent of the same name (MIT, v2.2.1), reviewed
-2026-09-17. Record: `docs/reviews/2026-09-17-ecc/`.
+2026-09-17. Record: `maintainers/reviews/2026-09-17-ecc/`.
 
 ## What to hunt
 

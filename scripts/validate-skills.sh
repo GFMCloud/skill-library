@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# validate-skills.sh — the rules are documented in docs/authoring-standard.md and this
-#   header. The original spec, docs/migration/harness/docs/validator-spec.md, covers
+# validate-skills.sh — the rules are documented in maintainers/authoring-standard.md and this
+#   header. The original spec, maintainers/migration/harness/docs/validator-spec.md, covers
 #   F1 to F12 only and is kept as history; rules added since (F13 to F19, W4 to W7)
 #   are described where they were introduced, in CHANGELOG.md.
 # Usage: bash scripts/validate-skills.sh [plugins/<name>]
@@ -12,7 +12,7 @@
 # Checks every plugins/*/skills/*/ skill (or just the given plugin's).
 # Contract sections (F14-F16 stable, W4-W6 incubator): Inputs, Verify, Done when,
 # Stop when, in that order, with a non-vacuous Stop when. See
-# docs/authoring-standard.md "Contract sections".
+# maintainers/authoring-standard.md "Contract sections".
 # Structural checks parse frontmatter through skill_meta.py, never grep the file for a
 # key name: a grep would match the key inside prose or inside this validator's own
 # documentation and call a broken skill green (hstack review 2026-09-03, row 4).
@@ -120,7 +120,7 @@ for d in skill_dirs:
                 warns.append(f"W1 {rel}: reviewed {rev} is >{STALE_MONTHS} months old")
     if mat == "deprecated" and not str(meta.get("supersedes", "")).strip():
         fails.append(f"F11 {rel}: deprecated without metadata.supersedes")
-    # Contract sections (docs/authoring-standard.md "Contract sections"): four H2
+    # Contract sections (maintainers/authoring-standard.md "Contract sections"): four H2
     # headings in order, and a non-vacuous "Stop when". Stable fails, incubator warns.
     # Headings are matched on their own line, so a mention in prose does not count.
     CONTRACT = ["Inputs", "Verify", "Done when", "Stop when"]
@@ -173,10 +173,10 @@ if root == "plugins":
               if os.path.isfile(inv_path) else None)
     if actual != expected:
         fails.append("F13 docs/inventory.md missing or stale; "
-                     "run: bash scripts/generate-inventory.sh")
+                     "run: bash maintainers/scripts/generate-inventory.sh")
 
 # F17: any change to a skill's or agent's files bumps the host plugin's manifest
-# version (docs/authoring-standard.md "Change hygiene"). Installed caches refresh only
+# version (maintainers/authoring-standard.md "Change hygiene"). Installed caches refresh only
 # on a manifest change (workbench 0.10.1, 2026-09-12), and agents are cached the same
 # way. The diff is the working tree plus untracked files against the merge-base with
 # BASE_REF, so it fires before commit.

@@ -106,6 +106,6 @@ an independent reviewer is sufficient; do not seek a second opinion after a pass
 
 ## Output contract
 
-Produces a Verdict object v1 as defined in `docs/toolkit-interface-spec.md` section 3. Consumes
-a Goal block v1 as defined in `docs/toolkit-interface-spec.md` section 1. Field lists live only
+Produces a Verdict object v1 as defined in `maintainers/toolkit-interface-spec.md` section 3. Consumes
+a Goal block v1 as defined in `maintainers/toolkit-interface-spec.md` section 1. Field lists live only
 in the interface spec; this skill and its references cite them by name and version.

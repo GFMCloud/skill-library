@@ -151,7 +151,7 @@ this version and note the migration in this file.
   the review once a corpus of retros exists to review, per the original
   design's own recommendation.
   Reference technique for that review, from Headroom's `headroom learn`
-  writer (review record `docs/reviews/2026-09-07-headroom.md`): a
+  writer (review record `maintainers/reviews/2026-09-07-headroom.md`): a
   marker-delimited block where the current run's sections replace same-named
   prior sections and prior sections not re-emitted are carried forward, so a
   re-run never silently drops accumulated lessons. Its limit is the next
