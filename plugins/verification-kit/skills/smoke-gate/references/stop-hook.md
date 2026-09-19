@@ -5,11 +5,28 @@ while the smoke check is red. Required by "Done when" and proven by
 `fixtures/run-fixture-proof.FIXTURE.sh` steps 6 to 9 since 2026-09-18; before that it
 was optional and unproven.
 
-The event, the exit-code behavior, and what a Stop hook's stdin and stdout do are
-verified facts, not this skill's derivation; they are quoted and sourced in
-`foundry-core:bounded-loop`'s
-[references/stop-hook-contract.md](../../../../foundry-core/skills/bounded-loop/references/stop-hook-contract.md).
-This file only applies those facts to a generated smoke script.
+The event, the exit-code behavior, and what a Stop hook's stdout does are verified
+facts, not this skill's derivation. They are quoted under "Verified contract" below so
+this pack stands alone when it is installed without `foundry-core`. The same quotes,
+with the stdin shape and the notes on `additionalContext` and `SubagentStop`, are kept by
+the `bounded-loop` skill in the `foundry-core` pack. This file only applies those facts
+to a generated smoke script.
+
+## Verified contract
+
+Source: `code.claude.com/docs/en/hooks`, fetched 2026-09-11.
+
+- Exit code 2 blocks the stop. From the "exit code 2 behavior per event" table:
+  "`Stop` | Yes | Prevents Claude from stopping, continues the conversation."
+- The blocking message is the hook's stderr. "Exit 2 means a blocking error. On events
+  that can block, exit 2 blocks whether or not you print JSON". And: "The blocking
+  message is the reason from your JSON's blocking decision when it makes one, and your
+  stderr text otherwise." The hook script here prints no JSON, so its stderr is what
+  Claude sees.
+- Exit code 0 releases the turn, and its stdout is not shown. "For most events, Claude
+  Code writes stdout to the debug log and doesn't show it in the transcript. The
+  exceptions are `UserPromptSubmit`, `UserPromptExpansion`, `SessionStart`, and
+  `PostModelSwitch`". `Stop` is not one of the four.
 
 ## Event
 
