@@ -138,6 +138,8 @@ Keep the original license file beside the skill and say where it came from. If t
 
 Never just delete an entry. Anyone who installed it will break. Add the old name to the `renames` map in `marketplace.json`, pointing at the new name, or at `null` if the pack is gone for good.
 
+A rename does not reach copies of a skill kept outside this repository. If you once uploaded a skill to your claude.ai account and later switched it off there, that copy still holds the text and the pack name from before the rename. Do not switch such a copy back on without comparing it with the skill here first: it would load beside the installed pack under the old content. Delete it instead, and install the pack.
+
 ## Style
 
 Plain, short sentences. No marketing. No popularity badges. No em dashes. Define a term the first time it appears, or link to [docs/glossary.md](docs/glossary.md). Write the pages for someone who has never installed a plugin, because that is who reads them.
