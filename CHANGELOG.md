@@ -2,6 +2,14 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-19 - the superseded README is removed
+
+No skill's behavior changed.
+
+- `maintainers/README-2026-09-19.md.superseded`, the main README from before the rewrite
+  for first-time readers, is deleted. Its contributor sections live in `CONTRIBUTING.md`.
+  The file stays in git history (last present at `f06518f`).
+
 ## 2026-09-19 - after the regroup: two stale statements corrected
 
 No skill's behavior changed.
