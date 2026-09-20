@@ -56,7 +56,35 @@ You should see a confirmation that the marketplace `skill-library` was added.
 /plugin install consistency-checker@skill-library
 ```
 
-Claude Code opens a details screen and asks you to pick where to install it. Choose **User scope** if you want the pack available in every folder you work in. Press Enter to confirm.
+Claude Code opens a details screen and asks you to pick where to install it. Choose **Install for you (user scope)** if you want the pack available in every folder you work in. Press Enter to confirm.
+
+This is the text of that screen, copied from a real session on 19 September 2026 (Claude Code 2.1.278). The pack in this capture is `agent-tooling`. Yours will show the name and description of the pack you asked for.
+
+```text
+   Plugins  Discover   Installed   Marketplaces   Errors   Stats
+
+   Plugin Details
+
+   agent-tooling
+
+   Choose the right model and effort level for a task, send bulk mechanical text
+   work to a local model, and mine past session transcripts for facts.
+
+   Will install:
+   · Components will be discovered at installation
+
+   ⚠ Make sure you trust a plugin before installing, updating, or using it.
+     Anthropic does not control what MCP servers, files, or other software are
+     included in plugins and cannot verify that they will work as intended or
+     that they won't change. See each plugin's homepage for more information.
+
+   > Install for you (user scope)
+     Install for all collaborators on this repository (project scope)
+     Install for you, in this repo only (local scope)
+     Back to plugin list
+
+    Enter to select · Esc to go back
+```
 
 This pack needs one other pack, `foundry-core`, so Claude Code installs that too and the message says `+ 1 dependency: foundry-core`. That is expected.
 
@@ -77,6 +105,36 @@ Start Claude Code inside a project folder. To do that, open a terminal, type `cd
 Claude Code will ask which document to check. Answer in plain English, for example: *check the README against this folder*.
 
 What you get back is a list of the claims the README makes that a command can test, such as how many files there are, which commands exist, and what the version is. Each one comes with the command that tested it and whether it held. This skill only looks. It changes nothing unless you then ask it to correct the document.
+
+This is part of what it printed in a real session on 19 September 2026. The folder was a small made-up project whose README is wrong on purpose, so the findings are about that example and not about real work. The request was `/consistency-checker:spec-artifact-diff check the README against this folder`.
+
+```text
+Bottom line: 6 of 10 falsifiable claims in the README are false. [...]
+
+CLAIM:  "It has 4 source files"
+WHERE:  README.md:5
+TRUTH:  2 files in src/ (__init__.py is 0 bytes); 3 .py files in the whole tree
+CHECK:  find /private/tmp/notes-demo/src -type f -name '*.py' | wc -l  ->  2
+
+CLAIM:  "and 12 tests"
+WHERE:  README.md:5
+TRUTH:  3 tests
+CHECK:  python3 -m unittest discover -s tests -v  ->  "Ran 3 tests ... OK"
+
+CLAIM:  "Version 1.2.0"
+WHERE:  README.md:15
+TRUTH:  __version__ = "1.3.0"
+CHECK:  Read src/notes.py:4
+
+[...]
+
+Pass summary: 10 claims extracted from README.md. 3 checked clean, 6 defects
+(3 counts, 1 scope quantifier, 1 identifier, 1 external-currency), 1
+unverifiable against this folder. All 6 defects are documentation defects. I
+have not changed any file. [...]
+```
+
+`[...]` marks where the capture leaves text out: three more findings and some notes. Yours will differ, because it depends on your README and your folder.
 
 You can also just describe what you want, with no slash command at all: *"does this README still match the code?"* Claude Code reads the skill descriptions and picks the right one on its own. The slash command is there for when you want to be certain which skill runs.
 
