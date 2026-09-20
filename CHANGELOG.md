@@ -2,6 +2,17 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-19 - after the regroup: two stale statements corrected
+
+No skill's behavior changed.
+
+- **`capability-index` says twelve packs, not ten** (voice-and-editing 1.2.3). Its
+  description and body still described the layout from before the regroup. Checked
+  against `installed_plugins.json` and a fresh session's loaded-plugin list.
+- **CONTRIBUTING warns about copies outside the repository**: a skill once uploaded to a
+  claude.ai account and switched off there keeps its old text and pack name, so it is
+  compared or deleted, never switched back on as it is.
+
 ## 2026-09-19 - pack map
 
 No skill's behavior changed.

@@ -1,10 +1,10 @@
 ---
 name: capability-index
 description: >-
-  Points at capability that exists on this machine but is not loaded in the current session, so it does not become invisible. Consult whenever the user asks for something no loaded skill covers, specifically: anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys; or a skill in a skill-library plugin that is not installed here (none as of 2026-09-18, all ten packs are installed and enabled, `decks` included). Do not attempt those tasks unaided. Say what covers it and where it lives, and offer to load it.
+  Points at capability that exists on this machine but is not loaded in the current session, so it does not become invisible. Consult whenever the user asks for something no loaded skill covers, specifically: anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys; or a skill in a skill-library plugin that is not installed here (none as of 2026-09-19, all twelve packs are installed and enabled). Do not attempt those tasks unaided. Say what covers it and where it lives, and offer to load it.
 metadata:
   maturity: incubator
-  reviewed: 2026-09-18
+  reviewed: 2026-09-19
 ---
 
 # Capability index
@@ -18,12 +18,13 @@ answer.
 ## What is not loaded, and where it actually lives
 
 Verified against `claude plugin list` and `~/.claude/plugins/installed_plugins.json`
-on 2026-09-18. The former `_incubator` pack is gone: its skills now live inside the
-plugins they belong to (workbench, frontend-design, deploy-ops, foundry-core) and load
-with them. All ten `skill-library` packs are installed and enabled at user scope, so no
-pack has a row. The `decks` pack had one until 2026-09-18: the row called it "installed
-but disabled" when it was not installed at all, and it was then installed and enabled
-(0.3.0).
+on 2026-09-19, after the regroup into twelve packs (`workbench` split into
+`long-projects`, `project-starters` and `agent-tooling`; `graham-voice` became
+`voice-and-editing`). The former `_incubator` pack is gone: its skills live inside the
+packs they belong to and load with them. All twelve `skill-library` packs are installed
+and enabled at user scope, so no pack has a row. The `decks` pack had one until
+2026-09-18: the row called it "installed but disabled" when it was not installed at all,
+and it was then installed and enabled.
 
 | Not loaded | Covers | Where it lives | How to reach it |
 |---|---|---|---|
