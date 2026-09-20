@@ -21,6 +21,10 @@ An **agent** is a helper that Claude Code hands a whole job to. It works on its 
 This repository has 12 packs, holding 67 skills and 9 agents.
 <!-- /generated:counts -->
 
+![Overview of the toolkit in eight groups, in priority order. 1, delivery discipline: foundry-core. 2, fewer wasted turns: turn-reduction. 3, continuity across sessions: long-projects. 4, checks and review: verification-kit. 5, model and effort: agent-tooling. 6, writing and personal tools: voice-and-editing. 7, domain packs: decks, frontend-design, project-starters, deploy-ops. 8, single-skill packs: consistency-checker and data-wrangler. Below the groups, the nine specialist agents are listed with the pack each one lives in.](docs/images/toolkit-overview.webp)
+
+*Snapshot at `e32f6a4`, 20 Sep 2026. This picture is not regenerated when skills change; the counts line above is the live number.*
+
 A **hook** is a small program that Claude Code runs by itself at a set moment, without being asked. One pack here installs one. It is described in full under [Is this safe?](#is-this-safe-what-does-it-do-on-my-computer)
 
 A **marketplace** is a list of packs that Claude Code can install from. This repository is one marketplace, called `skill-library`.
