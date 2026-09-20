@@ -12,6 +12,9 @@ No skill's behavior changed.
   the `plugin.json` files and the `plugins/` tree, and its alt text is a generated block.
   The validator (F13) fails when either is stale.
 - The picker flowchart in `docs/which-pack.md` carries an accessible title and description.
+- The main README shows the install details screen and part of a first skill's reply as
+  text copied from real sessions, in place of screenshots: readable by a screen reader,
+  searchable, and with no private detail to crop.
 
 ## 2026-09-19 - evaluation cases for the start-here skills
 
