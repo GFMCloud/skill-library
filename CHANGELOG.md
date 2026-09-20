@@ -2,6 +2,16 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-20 - toolkit overview picture
+
+No skill's behavior changed.
+
+- **An overview picture** on the main README, `docs/images/toolkit-overview.webp`: the
+  twelve packs in eight groups, with featured skills and the nine agents. Unlike the
+  pack map it is a static snapshot taken at `e32f6a4` with no generator, so its counts
+  are not checked by the validator. Its caption says so and points to the generated
+  counts line.
+
 ## 2026-09-19 - the superseded README is removed
 
 No skill's behavior changed.
