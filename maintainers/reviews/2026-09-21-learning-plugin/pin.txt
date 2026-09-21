@@ -1,0 +1,4 @@
+source: https://github.com/ahasha/learning-plugin
+pin: 947f9eedb26d715e2a38e78ad96259c06820802e
+cloned: 2026-09-21T23:16Z (depth 1)
+files: 10
