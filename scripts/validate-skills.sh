@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # validate-skills.sh — the rules are documented in maintainers/authoring-standard.md and this
 #   header. The original spec, maintainers/migration/harness/docs/validator-spec.md, covers
-#   F1 to F12 only and is kept as history; rules added since (F13 to F19, W4 to W7)
+#   F1 to F12 only and is kept as history; rules added since (F13 to F20, W4 to W7)
 #   are described where they were introduced, in CHANGELOG.md.
 # Usage: bash scripts/validate-skills.sh [plugins/<name>]
 #   STRICT=1        warnings also cause exit 1
 #   STALE_MONTHS=6  staleness threshold for W1
-#   BASE_REF=origin/main  ref the plugin-bump check (F17) diffs against; a skill or
-#                   agent changed since the merge-base with BASE_REF whose plugin
+#   BASE_REF=origin/main  ref the plugin-bump check (F17) diffs against; a skill,
+#                   agent or plugin hook changed since the merge-base with BASE_REF whose plugin
 #                   manifest version is unchanged fails. Unresolvable ref warns (W7).
 # Checks every plugins/*/skills/*/ skill (or just the given plugin's).
 # Contract sections (F14-F16 stable, W4-W6 incubator): Inputs, Verify, Done when,
@@ -190,8 +190,8 @@ if root == "plugins":
         fails.append("F13 docs/images/pack-map.svg missing or stale; "
                      "run: python3 maintainers/scripts/generate-pack-map.py")
 
-# F17: any change to a skill's or agent's files bumps the host plugin's manifest
-# version (maintainers/authoring-standard.md "Change hygiene"). Installed caches refresh only
+# F17: any change to a skill's, agent's or plugin hook's files bumps the host plugin's
+# manifest version (maintainers/authoring-standard.md "Change hygiene"). Installed caches refresh only
 # on a manifest change (workbench 0.10.1, 2026-09-12), and agents are cached the same
 # way. The diff is the working tree plus untracked files against the merge-base with
 # BASE_REF, so it fires before commit.
@@ -208,7 +208,7 @@ else:
     changed += (git("ls-files", "--others", "--exclude-standard") or "").splitlines()
     touched = {}
     for path in changed:
-        m = re.match(r"^plugins/([^/]+)/(?:skills|agents)/", path)
+        m = re.match(r"^plugins/([^/]+)/(?:skills|agents|hooks)/", path)
         if m and (root == "plugins" or root.rstrip("/") == f"plugins/{m.group(1)}"):
             touched.setdefault(m.group(1), path)
     for plug, example in sorted(touched.items()):
@@ -223,11 +223,48 @@ else:
         except (json.JSONDecodeError, OSError) as e:
             fails.append(f"F17 {manifest}: unreadable ({e})"); continue
         if v_now is None:
-            fails.append(f"F17 plugins/{plug}: skill or agent files changed since {BASE_REF} "
+            fails.append(f"F17 plugins/{plug}: skill, agent or hook files changed since {BASE_REF} "
                          f"(e.g. {example}) but {manifest} has no version field to bump")
         elif v_before == v_now:
-            fails.append(f"F17 plugins/{plug}: skill or agent files changed since {BASE_REF} "
+            fails.append(f"F17 plugins/{plug}: skill, agent or hook files changed since {BASE_REF} "
                          f"(e.g. {example}) but {manifest} version is still '{v_now}'")
+
+# F20: attribution travels with derived skills. A skill whose metadata carries a
+# `source:` key (an upstream it was derived from) needs a row in its plugin's NOTICE.md
+# "Derived skills" table, and every row there must name a skill that exists and carries
+# `source:`. The NOTICE file holds the upstream, commit, licence and copyright; the
+# licence texts sit beside it in LICENSES/ (maintainers/authoring-standard.md
+# "Third-party content").
+sourced = {}
+for d in skill_dirs:
+    sk = os.path.join(d, "SKILL.md")
+    if not os.path.isfile(sk):
+        continue
+    parsed = parse_frontmatter(open(sk, encoding="utf-8", errors="replace").read())
+    meta = (parsed[0].get("metadata") or {}) if parsed else {}
+    if isinstance(meta, dict) and str(meta.get("source", "")).strip():
+        sourced.setdefault(d.split(os.sep)[1], set()).add(os.path.basename(d))
+plugin_dirs = ([root] if root != "plugins" else
+               [os.path.join("plugins", p) for p in sorted(os.listdir("plugins"))])
+for pdir in plugin_dirs:
+    plug = os.path.basename(pdir.rstrip("/"))
+    notice = os.path.join(pdir, "NOTICE.md")
+    rows = set()
+    if os.path.isfile(notice):
+        sec = re.search(r"^## Derived skills\s*$(.*?)(?=^## |\Z)",
+                        open(notice, encoding="utf-8").read(), re.M | re.S)
+        for line in (sec.group(1) if sec else "").splitlines():
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            if len(cells) > 1 and line.lstrip().startswith("|") and cells[0] \
+                    and not set(cells[0]) <= set("-: ") and cells[0].lower() != "skill":
+                rows.add(cells[0].strip("`"))
+    want = sourced.get(plug, set())
+    for s in sorted(want - rows):
+        fails.append(f"F20 plugins/{plug}/skills/{s}: metadata.source set but no row in "
+                     f"plugins/{plug}/NOTICE.md '## Derived skills'")
+    for s in sorted(rows - want):
+        fails.append(f"F20 plugins/{plug}/NOTICE.md: row '{s}' names no skill in this "
+                     f"plugin with metadata.source")
 
 if not skill_dirs:
     fails.append("F0: zero skills found; a green run that checked nothing is a false green")

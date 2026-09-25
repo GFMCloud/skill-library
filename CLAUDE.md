@@ -18,10 +18,15 @@ structured as a plugin marketplace.
   plus a CHANGELOG line. Nothing moves.
 - **Stable-skill changes** bump `metadata.version`, update `metadata.reviewed`, and
   get a CHANGELOG entry describing the behavior change (not the wording change).
-- **Any skill or agent change bumps the host plugin's `version` in the same commit.**
+- **Any skill, agent or plugin hook change bumps the host plugin's `version` in the same commit.**
   Installed caches refresh only on a manifest version change, never on a skill's
   own `metadata.version` (workbench 0.10.1, 2026-09-12). The validator enforces
   this (F17) against `origin/main`.
+- **This repo is public. Install the hooks once per clone** (`bash scripts/install-hooks.sh`)
+  and never bypass them. They run `scripts/brand-gate.py` and gitleaks before every
+  commit and push. Employer content arrives here only after it has been de-branded
+  somewhere private and passed the gate there; nothing branded is ever pushed to a
+  branch of this repo, even briefly.
 - **Run the validator before committing:**
 
   ```bash

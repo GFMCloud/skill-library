@@ -1,0 +1,4 @@
+# brand-gate review flags: plain words, warn only. Read the text around each one before it ships.
+sharepoint
+power automate
+cppo

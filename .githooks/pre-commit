@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Employer-term and secret gate on what is about to be committed. This repo is public:
+# a commit that is pushed can't be taken back, so the check runs before it exists.
+# Installed by scripts/install-hooks.sh. Bypassing it (--no-verify) is not allowed here.
+set -euo pipefail
+root="$(git rev-parse --show-toplevel)"
+python3 "$root/scripts/brand-gate.py" --staged
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-commit: gitleaks is not installed; install it (brew install gitleaks) and retry." >&2
+  exit 1
+fi
+gitleaks git --pre-commit --staged --redact --no-banner "$root"

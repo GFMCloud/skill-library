@@ -2,6 +2,33 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-25 - hardening before skills arrive from a private library
+
+No skill's behavior changed. This prepares the repository to take in de-branded skills
+from a private work library without ever publishing the private content.
+
+- **Employer-term gate.** `scripts/brand-gate.py` refuses a denied word, a 12-digit AWS
+  account id or a secret in added lines, file paths, commit messages and PR text. The
+  denied words are stored as SHA-256 hashes in `maintainers/brand-gate/denylist.sha256`,
+  so the list doesn't publish them. It runs locally as `pre-commit`, `commit-msg` and
+  `pre-push` hooks (`scripts/install-hooks.sh`, with gitleaks), and in CI as the new
+  `brand-gate` workflow, which pins gitleaks 8.28.0 by checksum. Proven by
+  `maintainers/scripts/prove-brand-gate.sh`. At merge the existing tree passes with 0
+  failures; 29 review-flag warnings, all in `decks/html-diagram`.
+- **F17 now covers plugin hooks.** A change under `plugins/<p>/hooks/` without a
+  plugin version bump fails, like a skill or agent change. Before this, a hook fix
+  could merge and never reach installed caches.
+- **F20, new: attribution travels with derived skills.** A skill with
+  `metadata.source` needs a row in its plugin's `NOTICE.md` `## Derived skills` table,
+  and every row must name such a skill. Proven by `maintainers/scripts/prove-f20.sh`.
+- **Brand kit contract v1** (`maintainers/brand-kit-contract.md`) and a neutral default
+  kit (`templates/brand-kit/`). It fixes the folder shape and token names that deck,
+  diagram and frontend skills read a brand from, and an optional
+  `brand-assets.py check` drift call.
+- **A ruleset for `main`** (`maintainers/rulesets/main.json`), to import by hand: a PR
+  and the `validate` and `brand-gate` checks are required, and the admin role can
+  bypass.
+
 ## 2026-09-20 - toolkit overview picture
 
 No skill's behavior changed.

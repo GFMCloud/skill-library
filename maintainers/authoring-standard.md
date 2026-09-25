@@ -136,8 +136,10 @@ Three states, not four:
 - Stable skills: change by PR; bump `metadata.version`; update `metadata.reviewed`;
   CHANGELOG describes the behavior change, not the wording change.
 - Incubator skills: edit directly on main.
-- Any change to a skill's or agent's files, stable or incubator, bumps the host
-  plugin's `version` in the same commit. A versioned plugin's installed cache refreshes only
+- Any change to a skill's, agent's or plugin hook's files (`plugins/<p>/hooks/`),
+  stable or incubator, bumps the host plugin's `version` in the same commit. Hooks were
+  added to the check 2026-09-25: a hook fix that didn't bump the version never reached
+  installed caches, the same failure as the skill case below. A versioned plugin's installed cache refreshes only
   when the manifest version changes; the skill's own `metadata.version` does not
   trigger it. Recorded 2026-09-12: phased-harness 1.2.6 shipped in PR #7 without a
   workbench bump, `claude plugin update` reported workbench "already at the latest
@@ -146,6 +148,18 @@ Three states, not four:
   `BASE_REF` (default `origin/main`; CI passes the PR base) with an unchanged
   manifest version fail.
 - Run `scripts/validate-skills.sh` before committing anything.
+- Third-party content: a derived skill sets `metadata.source` to `owner/repo@commit`,
+  and its plugin's `NOTICE.md` carries a `## Derived skills` row for it, with licence
+  texts in the plugin's `LICENSES/`. Enforced by the validator (F20) in both
+  directions: a `source` without a row fails, and a row naming no sourced skill fails.
+  Proven by `maintainers/scripts/prove-f20.sh`.
+- Brand-styled output (decks, diagrams, frontend, charts) reads its brand from a kit
+  shaped by `maintainers/brand-kit-contract.md`, never from values written into the
+  skill. The neutral default kit is `templates/brand-kit/`.
+- This repository is public. `scripts/brand-gate.py` runs as local hooks
+  (`scripts/install-hooks.sh`) and in CI, and refuses denied words, AWS account ids and
+  secrets in added lines, paths, commit messages and PR text. Proven by
+  `maintainers/scripts/prove-brand-gate.sh`.
 - Structural checks parse frontmatter with the YAML loader (`scripts/skill_meta.py`),
   never grep for a key name: a checker that can match its own documentation, or a
   key mentioned in prose, is not checking structure (hstack review, 2026-09-03).
