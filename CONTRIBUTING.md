@@ -6,7 +6,7 @@ This library is maintained by one person. Suggestions and fixes are welcome, and
 
 ## Before you start
 
-Run `bash scripts/install-hooks.sh` once in your clone. It turns on the hooks in `.githooks/`, which stop a commit or push that carries a denied word, an AWS account id or a secret. This repository is public, and a pushed branch is public the moment it lands, so the check has to run before the push. It needs `gitleaks` installed. Don't bypass it with `--no-verify`.
+Run `bash scripts/install-hooks.sh` once in your clone. It turns on the hooks in `.githooks/`, which stop a commit or push that carries a denied word, an AWS account id or a secret. This repository is public, and a pushed branch is public the moment it lands, so the check has to run before the push. The script also installs gitleaks at the version CI pins, checksum-verified, when it is missing. A project `SessionStart` hook (`.claude/settings.json`) re-runs it in every Claude session opened on this repo, and the validator fails (F22) in any clone where the hooks aren't on. Don't bypass them with `--no-verify`.
 
 Open an issue first using the "Suggest a skill" form. A skill that duplicates one already here, or that is really three skills, is better caught in an issue than in a pull request.
 
@@ -103,7 +103,7 @@ bash scripts/validate-skills.sh
 
 It must exit 0. CI runs the same script on every pull request and every push to `main`. It checks that frontmatter parses, names match folders and are unique, bodies are under 500 lines, relative links resolve, the generated tables and `docs/inventory.md` are current, the contract sections are present, no eval suite sits inside a skill folder, and that a change to a skill or an agent came with a version bump for its pack. It also fails when it finds no skills at all, because a run that checked nothing proves nothing. Set `STRICT=1` to make warnings fail too.
 
-A second workflow, `brand-gate`, runs `scripts/brand-gate.py` and gitleaks on the changed lines, file paths, commit messages and pull request text. It is the backstop for the local hooks, not a replacement for them. The words it refuses are stored as hashes in `maintainers/brand-gate/denylist.sha256`, so the list doesn't publish them. Add one with `python3 scripts/brand-gate.py --hash '<word>' >> maintainers/brand-gate/denylist.sha256`, and keep the word itself out of the commit message.
+A second workflow, `brand-gate`, runs `scripts/brand-gate.py` and gitleaks on the changed lines, file paths, commit messages and pull request text. It is the backstop for the local hooks, not a replacement for them. The words it refuses are stored as hashes in `maintainers/brand-gate/denylist.sha256`, so the list doesn't spell them out. Unsalted hashes of short words can be reversed by guessing, so the file still confirms a guessed word; that is an accepted trade. Add one with `python3 scripts/brand-gate.py --hash '<word>' >> maintainers/brand-gate/denylist.sha256`, and keep the word itself out of the commit message.
 
 ## Checklist before you open a pull request
 

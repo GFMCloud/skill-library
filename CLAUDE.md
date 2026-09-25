@@ -26,7 +26,13 @@ structured as a plugin marketplace.
   and never bypass them. They run `scripts/brand-gate.py` and gitleaks before every
   commit and push. Employer content arrives here only after it has been de-branded
   somewhere private and passed the gate there; nothing branded is ever pushed to a
-  branch of this repo, even briefly.
+  branch of this repo, even briefly. The validator fails (F22) until the hooks are on.
+- **Never write to this repo through GitHub API file tools** (`create_or_update_file`,
+  `push_files`, `delete_file`, web edits). Those commits skip every local hook. Commit
+  in a clone and push.
+- **Gate PR text before it is published.** Pipe a PR's title and body, and a branch
+  name, through `python3 scripts/brand-gate.py --text` before creating or editing the
+  PR. GitHub publishes them before CI can check them.
 - **Run the validator before committing:**
 
   ```bash

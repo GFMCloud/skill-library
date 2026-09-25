@@ -1,0 +1,30 @@
+/* Neutral default brand kit (maintainers/brand-kit-contract.md v1).
+   Used when no kit is given. System fonts only, so nothing needs installing.
+   Accent passes WCAG AA as text on --c-bg and as a fill under white text. */
+:root {
+  /* Type scale, 1920x1080 slide pixels */
+  --t-hero: 120px;
+  --t-title: 72px;
+  --t-subtitle: 46px;
+  --t-body: 30px;
+  --t-small: 26px;
+  --t-micro: 24px;
+  --t-eyebrow: 24px;
+
+  /* Font stacks */
+  --font-display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Color, by role */
+  --c-bg: #ffffff;
+  --c-surface: #f4f5f7;
+  --c-fg: #1c1f24;
+  --c-fg-muted: #5b626e;
+  --c-line: #d9dce1;
+  --c-accent: #1f5fbf;
+  --c-accent-soft: #dce7f7;
+  --c-good: #1e7a46;
+  --c-warn: #9a6400;
+  --c-bad: #b3261e;
+}

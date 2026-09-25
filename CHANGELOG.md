@@ -8,26 +8,39 @@ No skill's behavior changed. This prepares the repository to take in de-branded 
 from a private work library without ever publishing the private content.
 
 - **Employer-term gate.** `scripts/brand-gate.py` refuses a denied word, a 12-digit AWS
-  account id or a secret in added lines, file paths, commit messages and PR text. The
-  denied words are stored as SHA-256 hashes in `maintainers/brand-gate/denylist.sha256`,
-  so the list doesn't publish them. It runs locally as `pre-commit`, `commit-msg` and
-  `pre-push` hooks (`scripts/install-hooks.sh`, with gitleaks), and in CI as the new
-  `brand-gate` workflow, which pins gitleaks 8.28.0 by checksum. Proven by
-  `maintainers/scripts/prove-brand-gate.sh`. At merge the existing tree passes with 0
-  failures; 29 review-flag warnings, all in `decks/html-diagram`.
-- **F17 now covers plugin hooks.** A change under `plugins/<p>/hooks/` without a
-  plugin version bump fails, like a skill or agent change. Before this, a hook fix
-  could merge and never reach installed caches.
+  account id (also inside CDK bucket names and in the console's dashed form) or a
+  secret in added lines, file paths, branch names, commit messages and PR text. Words
+  are matched after Unicode folding and case splitting, so camelCase and PascalCase
+  identifiers are caught; a term buried in a longer lowercase token warns. Binary files
+  have their text scanned (each XML part of an Office file or zip, the printable
+  strings of anything else) and always warn by name. The denied words are stored as
+  SHA-256 hashes in `maintainers/brand-gate/denylist.sha256`, so the list doesn't spell
+  them out; a non-hash line or an empty list stops the gate (exit 2) instead of passing
+  everything. It runs locally as `pre-commit`, `commit-msg` and `pre-push` hooks and in
+  CI as the new `brand-gate` workflow; both pin gitleaks 8.28.0 by checksum. Proven by
+  `maintainers/scripts/prove-brand-gate.sh`, which CI now runs. At merge the existing
+  tree passes with 0 failures; 30 warnings (29 review flags in `decks/html-diagram`,
+  one binary image).
+- **The hooks are on by default.** `scripts/install-hooks.sh` installs the pinned
+  gitleaks when it is missing, a project `SessionStart` hook runs it in every Claude
+  session on this repo, and the validator fails (F22, new) in a clone without them.
+- **F17 covers every cached plugin file.** A change anywhere under `plugins/<p>/`
+  (hooks, commands, scripts, brand-kit, `.mcp.json`), except the README, reader table,
+  evals, tests and manifest, fails without a plugin version bump. Before this, only
+  skill and agent changes were caught.
 - **F20, new: attribution travels with derived skills.** A skill with
-  `metadata.source` needs a row in its plugin's `NOTICE.md` `## Derived skills` table,
-  and every row must name such a skill. Proven by `maintainers/scripts/prove-f20.sh`.
+  `metadata.source` (pinned as `owner/repo@<commit>`) needs a row in its plugin's
+  `NOTICE.md` `## Derived skills` table and licence texts in `LICENSES/`, and every row
+  must name such a skill. Proven by `maintainers/scripts/prove-f20.sh`, which CI runs.
 - **Brand kit contract v1** (`maintainers/brand-kit-contract.md`) and a neutral default
   kit (`templates/brand-kit/`). It fixes the folder shape and token names that deck,
   diagram and frontend skills read a brand from, and an optional
-  `brand-assets.py check` drift call.
+  `brand-assets.py check` drift call. `decks` (0.3.3) and `frontend-design` (0.5.2) ship
+  an identical copy of the kit at `brand-kit/`, since an install copies only the plugin
+  folder; F21 (new) fails when a copy drifts.
 - **A ruleset for `main`** (`maintainers/rulesets/main.json`), to import by hand: a PR
-  and the `validate` and `brand-gate` checks are required, and the admin role can
-  bypass.
+  and the `validate` and `brand-gate` checks (pinned to GitHub Actions) are required,
+  merge commits only, and nobody bypasses it.
 
 ## 2026-09-20 - toolkit overview picture
 

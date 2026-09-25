@@ -26,8 +26,7 @@
         "require_last_push_approval": false,
         "required_review_thread_resolution": false,
         "allowed_merge_methods": [
-          "merge",
-          "squash"
+          "merge"
         ]
       }
     },
@@ -38,20 +37,16 @@
         "do_not_enforce_on_create": false,
         "required_status_checks": [
           {
-            "context": "validate"
+            "context": "validate",
+            "integration_id": 15368
           },
           {
-            "context": "brand-gate"
+            "context": "brand-gate",
+            "integration_id": 15368
           }
         ]
       }
     }
   ],
-  "bypass_actors": [
-    {
-      "actor_id": 5,
-      "actor_type": "RepositoryRole",
-      "bypass_mode": "always"
-    }
-  ]
+  "bypass_actors": []
 }

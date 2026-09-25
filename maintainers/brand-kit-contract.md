@@ -26,8 +26,15 @@ skill uses it.
 ```
 
 A kit is found in this order: the path the user gives, then `./brand-kit/` in the
-project, then the neutral default kit in this repo at `templates/brand-kit/`. A skill
-that falls back to the default says so in its output.
+project, then the neutral default kit shipped inside the skill's own plugin at
+`${CLAUDE_PLUGIN_ROOT}/brand-kit/`. A skill that falls back to the default says so in
+its output.
+
+An install copies only the plugin's folder, so a root-level path in this repo is never
+on disk next to an installed skill. The source of truth is `templates/brand-kit/`; each
+plugin that reads a kit (`decks`, `frontend-design`) carries an identical copy, and
+validator rule F21 fails when a copy drifts. A new plugin that reads a kit copies it
+the same way.
 
 ## Tokens in colors_and_type.css
 
@@ -61,6 +68,10 @@ Fonts and color, by role:
 | `--c-accent-soft` | accent at low strength (fills, hover) |
 | `--c-good`, `--c-warn`, `--c-bad` | status colors, separate from the accent |
 
+Charts use `--c-accent` for the one series that matters. Every other series is drawn in
+`--c-fg-muted` or `--c-line` greys, never in extra invented hues; status colors mark
+status only.
+
 A kit may declare more tokens. A skill uses only the ones above unless its own
 SKILL.md names an extra token and says what happens when a kit lacks it.
 
@@ -77,7 +88,11 @@ SKILL.md names an extra token and says what happens when a kit lacks it.
    absent, skip the check and say it was skipped. The contract fixes only the `check`
    subcommand and its exit code; a brand's script may do more.
 4. **Assets are copied, never linked.** Fonts and logos used by an output are copied
-   into it from the kit, so the output stands alone.
+   into it from the kit, so the output stands alone. Copy a font only when the kit's
+   licence allows embedding it; otherwise name the family in the CSS and let the stack
+   fall back.
+5. **No logo, no stand-in.** When `assets/logos/` is empty (always, in the default
+   kit), omit the logo. Never draw, generate or text-set a substitute.
 
 ## Precedence
 

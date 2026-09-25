@@ -144,7 +144,8 @@ Three states, not four:
   trigger it. Recorded 2026-09-12: phased-harness 1.2.6 shipped in PR #7 without a
   workbench bump, `claude plugin update` reported workbench "already at the latest
   version (0.10.0)", and every installed cache stayed at 1.2.5 until PR #8 bumped
-  the manifest. Enforced by the validator (F17): skill or agent files changed against
+  the manifest. Enforced by the validator (F17): any cached plugin file (everything under
+  `plugins/<p>/` except its README, reader table, evals, tests and manifest) changed against
   `BASE_REF` (default `origin/main`; CI passes the PR base) with an unchanged
   manifest version fail.
 - Run `scripts/validate-skills.sh` before committing anything.
@@ -152,10 +153,13 @@ Three states, not four:
   and its plugin's `NOTICE.md` carries a `## Derived skills` row for it, with licence
   texts in the plugin's `LICENSES/`. Enforced by the validator (F20) in both
   directions: a `source` without a row fails, and a row naming no sourced skill fails.
+  It also fails an unpinned `source` and a plugin with derived skills and no licence
+  texts.
   Proven by `maintainers/scripts/prove-f20.sh`.
 - Brand-styled output (decks, diagrams, frontend, charts) reads its brand from a kit
   shaped by `maintainers/brand-kit-contract.md`, never from values written into the
-  skill. The neutral default kit is `templates/brand-kit/`.
+  skill. The neutral default kit is `templates/brand-kit/`, shipped as an identical copy
+  in each plugin that reads a kit (`plugins/<p>/brand-kit/`, F21).
 - This repository is public. `scripts/brand-gate.py` runs as local hooks
   (`scripts/install-hooks.sh`) and in CI, and refuses denied words, AWS account ids and
   secrets in added lines, paths, commit messages and PR text. Proven by

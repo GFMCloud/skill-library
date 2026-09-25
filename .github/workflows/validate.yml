@@ -15,3 +15,7 @@ jobs:
         env:
           BASE_REF: origin/${{ github.base_ref || 'main' }}
         run: STRICT=0 bash scripts/validate-skills.sh
+      - name: Prove the employer-term gate still catches its fixtures
+        run: bash maintainers/scripts/prove-brand-gate.sh
+      - name: Prove F20 still catches its fixtures
+        run: bash maintainers/scripts/prove-f20.sh

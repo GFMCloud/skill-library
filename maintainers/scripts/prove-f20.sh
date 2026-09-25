@@ -3,7 +3,8 @@
 # metadata.source has a row in its plugin's NOTICE.md, and every row names such a
 # skill). FIXTURE data only: builds a throwaway library under a temp dir with a copy of
 # this repo's scripts/ and three plugins, and asserts the validator passes the
-# attributed one and fails the other two with F20.
+# attributed one and fails the other four with F20 (no NOTICE row, a stray row, no
+# LICENSES/, an unpinned source).
 # Usage: bash maintainers/scripts/prove-f20.sh        (from any directory)
 set -u
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -19,9 +20,12 @@ skill() { # skill <plugin> <name> [source]
 notice() { # notice <plugin> <row-name>
   printf '# NOTICE\n\n## Derived skills\n\n| skill | source key |\n|---|---|\n| %s | fixture/upstream@0000000 |\n' "$2" > "$T/plugins/$1/NOTICE.md"
 }
-skill good-plugin derived fixture/upstream@0000000; notice good-plugin derived
-skill unlisted-plugin derived fixture/upstream@0000000          # source, no NOTICE row
+lic() { mkdir -p "$T/plugins/$1/LICENSES"; printf 'FIXTURE licence\n' > "$T/plugins/$1/LICENSES/MIT.txt"; }
+skill good-plugin derived fixture/upstream@0000000; notice good-plugin derived; lic good-plugin
+skill unlisted-plugin derived fixture/upstream@0000000; lic unlisted-plugin   # source, no NOTICE row
 skill stray-plugin plain; notice stray-plugin ghost             # row, no such sourced skill
+skill nolicence-plugin derived fixture/upstream@0000000; notice nolicence-plugin derived   # no LICENSES/
+skill unpinned-plugin derived fixture/upstream; notice unpinned-plugin derived; lic unpinned-plugin  # no @commit
 fail=0
 check() { # check <expect-exit> <expect-F20: yes|no> <plugin>
   local out rc has
@@ -34,4 +38,6 @@ check() { # check <expect-exit> <expect-F20: yes|no> <plugin>
 check 0 no  good-plugin
 check 1 yes unlisted-plugin
 check 1 yes stray-plugin
+check 1 yes nolicence-plugin
+check 1 yes unpinned-plugin
 if [ "$fail" -eq 0 ]; then echo "prove-f20: all cases PASS"; else echo "prove-f20: FAIL"; exit 1; fi
