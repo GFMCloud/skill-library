@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Commit messages are public too: the same employer-term gate runs on them.
+set -euo pipefail
+python3 "$(git rev-parse --show-toplevel)/scripts/brand-gate.py" --message "$1"

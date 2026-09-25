@@ -1,5 +1,9 @@
-# Per-machine Claude Code settings (permission rules); never committed.
-.claude/
+# Per-machine Claude Code settings (permission rules); never committed. The shared
+# project settings file holds only the SessionStart hook that installs the brand gate.
+.claude/*
+!.claude/settings.json
 
 # `claude plugin eval` default results path; never committed (interface spec section 9).
 plugins/*/evals/**/results/
+
+__pycache__/

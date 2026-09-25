@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # validate-skills.sh — the rules are documented in maintainers/authoring-standard.md and this
 #   header. The original spec, maintainers/migration/harness/docs/validator-spec.md, covers
-#   F1 to F12 only and is kept as history; rules added since (F13 to F19, W4 to W7)
+#   F1 to F12 only and is kept as history; rules added since (F13 to F22, W4 to W7)
 #   are described where they were introduced, in CHANGELOG.md.
 # Usage: bash scripts/validate-skills.sh [plugins/<name>]
 #   STRICT=1        warnings also cause exit 1
 #   STALE_MONTHS=6  staleness threshold for W1
-#   BASE_REF=origin/main  ref the plugin-bump check (F17) diffs against; a skill or
-#                   agent changed since the merge-base with BASE_REF whose plugin
+#   BASE_REF=origin/main  ref the plugin-bump check (F17) diffs against; any cached
+#                   file of a plugin changed since the merge-base with BASE_REF whose plugin
 #                   manifest version is unchanged fails. Unresolvable ref warns (W7).
+#   CI=true         set by CI; outside it, F22 requires this clone's hooks installed.
 # Checks every plugins/*/skills/*/ skill (or just the given plugin's).
 # Contract sections (F14-F16 stable, W4-W6 incubator): Inputs, Verify, Done when,
 # Stop when, in that order, with a non-vacuous Stop when. See
@@ -190,11 +191,14 @@ if root == "plugins":
         fails.append("F13 docs/images/pack-map.svg missing or stale; "
                      "run: python3 maintainers/scripts/generate-pack-map.py")
 
-# F17: any change to a skill's or agent's files bumps the host plugin's manifest
-# version (maintainers/authoring-standard.md "Change hygiene"). Installed caches refresh only
-# on a manifest change (workbench 0.10.1, 2026-09-12), and agents are cached the same
-# way. The diff is the working tree plus untracked files against the merge-base with
-# BASE_REF, so it fires before commit.
+# F17: any change to a file an install copies into the plugin cache bumps the host
+# plugin's version. Installed caches refresh only on a manifest version change
+# (workbench 0.10.1, 2026-09-12), and the cache holds the whole plugin folder: skills,
+# agents, hooks, commands, scripts, brand-kit, .mcp.json. Only the files listed in
+# F17_EXEMPT are not read at run time. The diff is the working tree plus untracked
+# files against the merge-base with BASE_REF, so it fires before commit.
+F17_EXEMPT = re.compile(r"^plugins/[^/]+/(?:README\.md|reader-table\.tsv|"
+                        r"\.claude-plugin/plugin\.json|evals/.*|tests/.*|skills/[^/]+/evals/.*)$")
 BASE_REF = os.environ.get("BASE_REF", "origin/main")
 def git(*args):
     r = subprocess.run(["git", *args], capture_output=True, text=True)
@@ -208,8 +212,8 @@ else:
     changed += (git("ls-files", "--others", "--exclude-standard") or "").splitlines()
     touched = {}
     for path in changed:
-        m = re.match(r"^plugins/([^/]+)/(?:skills|agents)/", path)
-        if m and (root == "plugins" or root.rstrip("/") == f"plugins/{m.group(1)}"):
+        m = re.match(r"^plugins/([^/]+)/", path)
+        if m and not F17_EXEMPT.match(path) and (root == "plugins" or root.rstrip("/") == f"plugins/{m.group(1)}"):
             touched.setdefault(m.group(1), path)
     for plug, example in sorted(touched.items()):
         manifest = f"plugins/{plug}/.claude-plugin/plugin.json"
@@ -223,11 +227,93 @@ else:
         except (json.JSONDecodeError, OSError) as e:
             fails.append(f"F17 {manifest}: unreadable ({e})"); continue
         if v_now is None:
-            fails.append(f"F17 plugins/{plug}: skill or agent files changed since {BASE_REF} "
+            fails.append(f"F17 plugins/{plug}: cached plugin files changed since {BASE_REF} "
                          f"(e.g. {example}) but {manifest} has no version field to bump")
         elif v_before == v_now:
-            fails.append(f"F17 plugins/{plug}: skill or agent files changed since {BASE_REF} "
+            fails.append(f"F17 plugins/{plug}: cached plugin files changed since {BASE_REF} "
                          f"(e.g. {example}) but {manifest} version is still '{v_now}'")
+
+# F20: attribution travels with derived skills. A skill whose metadata carries a
+# `source:` key (an upstream it was derived from) needs a row in its plugin's NOTICE.md
+# "Derived skills" table, and every row there must name a skill that exists and carries
+# `source:`. The NOTICE file holds the upstream, commit, licence and copyright; the
+# licence texts sit beside it in LICENSES/ (maintainers/authoring-standard.md
+# "Third-party content").
+sourced = {}
+for d in skill_dirs:
+    sk = os.path.join(d, "SKILL.md")
+    if not os.path.isfile(sk):
+        continue
+    parsed = parse_frontmatter(open(sk, encoding="utf-8", errors="replace").read())
+    meta = (parsed[0].get("metadata") or {}) if parsed else {}
+    if isinstance(meta, dict) and str(meta.get("source", "")).strip():
+        sourced.setdefault(d.split(os.sep)[1], set()).add(os.path.basename(d))
+plugin_dirs = ([root] if root != "plugins" else
+               [os.path.join("plugins", p) for p in sorted(os.listdir("plugins"))])
+for pdir in plugin_dirs:
+    plug = os.path.basename(pdir.rstrip("/"))
+    notice = os.path.join(pdir, "NOTICE.md")
+    rows = set()
+    if os.path.isfile(notice):
+        sec = re.search(r"^## Derived skills\s*$(.*?)(?=^## |\Z)",
+                        open(notice, encoding="utf-8").read(), re.M | re.S)
+        for line in (sec.group(1) if sec else "").splitlines():
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            if len(cells) > 1 and line.lstrip().startswith("|") and cells[0] \
+                    and not set(cells[0]) <= set("-: ") and cells[0].lower() != "skill":
+                rows.add(cells[0].strip("`"))
+    want = sourced.get(plug, set())
+    for s in sorted(want - rows):
+        fails.append(f"F20 plugins/{plug}/skills/{s}: metadata.source set but no row in "
+                     f"plugins/{plug}/NOTICE.md '## Derived skills'")
+    for s in sorted(rows - want):
+        fails.append(f"F20 plugins/{plug}/NOTICE.md: row '{s}' names no skill in this "
+                     f"plugin with metadata.source")
+
+# F20, second half: a derived skill's source is pinned (`owner/repo@<commit>`), and
+# its plugin ships the licence texts in a non-empty LICENSES/.
+SOURCE_SHAPE = re.compile(r"^[\w.-]+/[\w.-]+@[0-9a-f]{7,40}$")
+for d in skill_dirs:
+    sk = os.path.join(d, "SKILL.md")
+    if not os.path.isfile(sk):
+        continue
+    parsed = parse_frontmatter(open(sk, encoding="utf-8", errors="replace").read())
+    meta = (parsed[0].get("metadata") or {}) if parsed else {}
+    src = str(meta.get("source", "")).strip() if isinstance(meta, dict) else ""
+    if src and not SOURCE_SHAPE.match(src):
+        fails.append(f"F20 {d}: metadata.source '{src}' is not owner/repo@<commit>")
+for plug in sorted(sourced):
+    lic = os.path.join("plugins", plug, "LICENSES")
+    if not (os.path.isdir(lic) and any(f for f in os.listdir(lic) if not f.startswith("."))):
+        fails.append(f"F20 plugins/{plug}: has derived skills but no licence texts in {lic}/")
+
+# F21: the neutral brand kit (templates/brand-kit/, maintainers/brand-kit-contract.md)
+# ships inside each plugin that reads a kit, because an install copies only the plugin
+# folder. Every plugins/*/brand-kit/ must match the template file for file.
+def tree(top):
+    out = {}
+    for dp, _, fs in os.walk(top):
+        for f in fs:
+            fp = os.path.join(dp, f)
+            out[os.path.relpath(fp, top)] = open(fp, "rb").read()
+    return out
+if os.path.isdir("templates/brand-kit"):
+    kit = tree("templates/brand-kit")
+    for pdir in plugin_dirs:
+        copy = os.path.join(pdir, "brand-kit")
+        if os.path.isdir(copy) and tree(copy) != kit:
+            fails.append(f"F21 {copy}: differs from templates/brand-kit/; re-copy it "
+                         f"(rm -rf {copy} && cp -R templates/brand-kit {copy})")
+
+# F22: outside CI, this clone runs the employer-term and secret gate. The repo is
+# public and a pushed branch is public at once, so a clone without the hooks fails
+# here before it can commit (scripts/install-hooks.sh).
+inside = git("rev-parse", "--is-inside-work-tree")
+if not os.environ.get("CI") and inside and inside.strip() == "true":
+    hp = (git("config", "core.hooksPath") or "").strip()
+    if hp != ".githooks":
+        fails.append("F22 git hooks not installed in this clone (core.hooksPath is "
+                     f"'{hp or 'unset'}'); run: bash scripts/install-hooks.sh")
 
 if not skill_dirs:
     fails.append("F0: zero skills found; a green run that checked nothing is a false green")
