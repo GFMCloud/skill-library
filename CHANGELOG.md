@@ -2,6 +2,22 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-24 - validator F20: a version bump must go up
+
+No skill's behavior changed.
+
+- **`scripts/validate-skills.sh`, new failing check F20:** when skill or agent files
+  changed against `BASE_REF` and the manifest version changed (so F17 passes), the new
+  version must be numerically higher than the one on `BASE_REF`; equal or lower fails
+  with both versions in the message. Motivation: on 2026-09-18 a branch carried a
+  workbench 0.16.3 bump onto a main already at 0.17.0 and only a reader caught it
+  (pack-review retro, ruled Q-2026-09-24-6 by the weekly maintainer's ratify). The
+  comparison is per dotted part as integers, so `1.2.10` is higher than `1.2.9`; a
+  non-numeric part counts as 0. Proven by deliberate failure on a manifest set below
+  its `origin/main` version (printed FAIL F20 line, then restored hash-identical).
+  Documented in `maintainers/authoring-standard.md` under Change hygiene with its
+  known weakness (pre-release suffixes ignored). No plugin changes, so no bumps.
+
 ## 2026-09-20 - toolkit overview picture
 
 No skill's behavior changed.

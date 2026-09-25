@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # validate-skills.sh — the rules are documented in maintainers/authoring-standard.md and this
 #   header. The original spec, maintainers/migration/harness/docs/validator-spec.md, covers
-#   F1 to F12 only and is kept as history; rules added since (F13 to F19, W4 to W7)
+#   F1 to F12 only and is kept as history; rules added since (F13 to F20, W4 to W7)
 #   are described where they were introduced, in CHANGELOG.md.
 # Usage: bash scripts/validate-skills.sh [plugins/<name>]
 #   STRICT=1        warnings also cause exit 1
 #   STALE_MONTHS=6  staleness threshold for W1
 #   BASE_REF=origin/main  ref the plugin-bump check (F17) diffs against; a skill or
 #                   agent changed since the merge-base with BASE_REF whose plugin
-#                   manifest version is unchanged fails. Unresolvable ref warns (W7).
+#                   manifest version is unchanged fails (F17) or not higher (F20).
+#                   Unresolvable ref warns (W7).
 # Checks every plugins/*/skills/*/ skill (or just the given plugin's).
 # Contract sections (F14-F16 stable, W4-W6 incubator): Inputs, Verify, Done when,
 # Stop when, in that order, with a non-vacuous Stop when. See
@@ -196,6 +197,14 @@ if root == "plugins":
 # way. The diff is the working tree plus untracked files against the merge-base with
 # BASE_REF, so it fires before commit.
 BASE_REF = os.environ.get("BASE_REF", "origin/main")
+def semver_key(v):
+    """Numeric tuple for a dotted version; a non-numeric part sorts as 0 (a version
+    F17 could not parse is not silently 'higher'). '1.2.10' > '1.2.9'."""
+    parts = []
+    for p in str(v).strip().split("."):
+        m = re.match(r"\d+", p)
+        parts.append(int(m.group()) if m else 0)
+    return tuple(parts)
 def git(*args):
     r = subprocess.run(["git", *args], capture_output=True, text=True)
     return r.stdout if r.returncode == 0 else None
@@ -228,6 +237,12 @@ else:
         elif v_before == v_now:
             fails.append(f"F17 plugins/{plug}: skill or agent files changed since {BASE_REF} "
                          f"(e.g. {example}) but {manifest} version is still '{v_now}'")
+        elif semver_key(v_now) <= semver_key(v_before):
+            # F20: changed is not enough; the bump must go up. A 0.16.3 manifest nearly
+            # landed on a main that was already at 0.17.0 (2026-09-18), which F17 would
+            # have passed as "changed". Ruled Q-2026-09-24-6.
+            fails.append(f"F20 plugins/{plug}: {manifest} version '{v_now}' is not higher "
+                         f"than '{v_before}' on {BASE_REF}; a bump must go up, not sideways")
 
 if not skill_dirs:
     fails.append("F0: zero skills found; a green run that checked nothing is a false green")

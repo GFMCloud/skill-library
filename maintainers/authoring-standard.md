@@ -144,7 +144,11 @@ Three states, not four:
   version (0.10.0)", and every installed cache stayed at 1.2.5 until PR #8 bumped
   the manifest. Enforced by the validator (F17): skill or agent files changed against
   `BASE_REF` (default `origin/main`; CI passes the PR base) with an unchanged
-  manifest version fail.
+  manifest version fail. The bump must also go up (F20): a changed version that is
+  not numerically higher than the one on `BASE_REF` fails, because a branch cut
+  before a merge can carry a bump below main's current version (a 0.16.3 manifest
+  nearly landed on a main already at 0.17.0, 2026-09-18). Known weakness: the
+  comparison is numeric per dotted part, so a pre-release suffix is ignored.
 - Run `scripts/validate-skills.sh` before committing anything.
 - Structural checks parse frontmatter with the YAML loader (`scripts/skill_meta.py`),
   never grep for a key name: a checker that can match its own documentation, or a
