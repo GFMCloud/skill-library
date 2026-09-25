@@ -20,4 +20,7 @@ for plugin in $(claude plugin list | awk '/@skill-library/ {print $2}'); do
 done
 
 echo "=== done (updates apply to newly started sessions)"
+
+# Then say where every pack stands (install record, cache, clone, origin), read-only.
+bash "$(dirname "$0")/reconcile-installed-plugins.sh" || true
 exit $fail
