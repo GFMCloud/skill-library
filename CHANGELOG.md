@@ -2,6 +2,37 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-24 - long-projects 0.19.0: handoff prints and gates its check commands
+
+- **`handoff` 0.6.0.** Resume Mode prints every `check` command before running any, and
+  `scripts/check-claims.py` refuses a write-shaped check (`rm`, `mv`, `cp`, `chmod`,
+  `chown`, `sudo`, `tee`, a redirect into a file other than `/dev/null`, a pipe into a
+  shell or interpreter, `git push`, `reset`, `checkout`, `rebase`, `merge`, `commit`,
+  `clean`, a branch or worktree deletion) with status `refused` and exit 1 instead of
+  running it; a refused row is a stop-and-ask like a mismatch. A handoff written by
+  someone other than this account's own sessions is not run until Graham has seen the
+  printed list. Generation side: quote any `check` containing a colon followed by a
+  space, or YAML reads it as a mapping and the checker finds zero claims (two sessions
+  lost a resume to this on 2026-09-19). Motivation: three sessions in the week of
+  2026-09-18 flagged that a resumed handoff runs whatever its checks contain
+  (`shell=True`); ruled Q-2026-09-24-7 at the weekly maintainer's ratify. Proof:
+  `fixtures/run-fixtures.sh` gains a fourth fixture whose `rm` check must be refused and
+  whose target file must still exist afterwards. Known weakness: a pattern list, so a
+  write hidden behind an alias, a here-doc, or a program's own write flag passes, and a
+  `>` inside a quoted argument is refused as if it were a redirect; the printed list is
+  the human's chance to see the first kind.
+
+## 2026-09-24 - reconcile-installed-plugins.sh: where every pack stands
+
+No skill's behavior changed.
+
+- **`scripts/reconcile-installed-plugins.sh`, new, read-only:** one row per installed
+  skill-library pack with its version in the install record, whether its cache path
+  exists, the clone's manifest version and `origin/main`'s, plus the clone's git state,
+  old cache-version counts, and packs cached but no longer installed. Three sessions in
+  the week of 2026-09-18 rebuilt this check by hand around the updater; ruled
+  Q-2026-09-24-9. `scripts/update-installed-plugins.sh` now runs it at the end.
+
 ## 2026-09-24 - validator F20: a version bump must go up
 
 No skill's behavior changed.

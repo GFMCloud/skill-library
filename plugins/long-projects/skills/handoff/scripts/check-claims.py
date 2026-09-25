@@ -13,8 +13,10 @@ files in the project's git repo (--project, default the current directory) whose
 is after the block's `written_at`; it warns and never changes the exit code, because a
 project that moved on is a fact for the status, not a failed claim. It sees files that
 exist now: a deletion or a commit that left mtimes alone does not show.
-Exits 1 if any checkable claim mismatches, exits 0
-if every checkable claim matches (this is a re-check, not a substitute for asking the
+Every check is printed before any runs, and a write-shaped check (rm, mv, cp, chmod,
+sudo, a redirect into a file, a pipe into a shell, git push and its cousins) is refused
+with status "refused" and never run. Exits 1 if any check is refused or any checkable
+claim mismatches, exits 0 if every checkable claim matches (this is a re-check, not a substitute for asking the
 one question Resume Mode calls for when a claim is ambiguous - that judgment stays with
 the session, not this script).
 
@@ -30,6 +32,32 @@ import subprocess
 import sys
 
 FENCE_RE = re.compile(r"```yaml\s*\n(claims: v1\n.*?)```", re.DOTALL)
+
+# Write-shaped check commands are refused, never run (added 2026-09-24, ruled
+# Q-2026-09-24-7): a handoff file is data, and its checks are supposed to read the
+# live artifact, not change it. Documented in references/claims.md; proven by the
+# fourth fixture in fixtures/run-fixtures.sh. Known weakness: a pattern list, so a
+# write hidden behind an alias, a here-doc, or a program's own write flag passes, and
+# a `>` inside a quoted argument (`grep '=>' f`) is refused as if it were a redirect.
+WRITE_SHAPES = [
+    re.compile(r"(?<![\w-])(rm|mv|cp|chmod|chown|sudo|tee|truncate|dd|mkfs|ln)\b"),
+    # git: the verb must be the subcommand itself (after -C <dir> or --flags), so
+    # `git log --grep merge` and `git stash list` stay read-only.
+    re.compile(r"\bgit\b(?:\s+-C\s+\S+|\s+--?[\w-]+(?:=\S+)?)*\s+(push|reset|checkout|rebase|"
+               r"merge|commit|clean|stash\s+(?:push|pop|drop|apply|clear)|branch\s+-[dD]\b|"
+               r"worktree\s+(?:remove|prune)|tag\s+-[dfa]\b)\b"),
+    re.compile(r"\|\s*(sh|bash|zsh|python3?|perl|ruby|node)\b"),
+    re.compile(r"(?<![<>0-9])>{1,2}\s*(?!/dev/null)[^\s|&;]"),   # redirect into a file
+]
+
+
+def write_shaped(command: str):
+    """The first write-shaped fragment in `command`, or None when it looks read-only."""
+    for pattern in WRITE_SHAPES:
+        m = pattern.search(command)
+        if m:
+            return m.group(0)
+    return None
 
 
 def extract_claims_yaml(text: str) -> str:
@@ -141,12 +169,25 @@ def main(argv):
     checkable = doc.get("checkable", [])
     not_checkable = doc.get("not_checkable", [])
 
+    # Print every check before running any: these are shell commands read from a file.
+    print("Checks to run")
+    print("=============")
+    for entry in checkable:
+        print(f"  {entry['check']}")
+    print()
+
     rows = []
     any_mismatch = False
+    any_refused = False
     for entry in checkable:
         claim = entry["claim"]
         command = entry["check"]
         expected = str(entry["expected"]).strip()
+        shape = write_shaped(command)
+        if shape:
+            any_refused = True
+            rows.append((claim, command, f"(not run: write-shaped, '{shape}')", "refused"))
+            continue
         actual = run_check(command)
         status = "match" if actual == expected else "mismatch"
         if status == "mismatch":
@@ -174,6 +215,10 @@ def main(argv):
             print(f"[{entry.get('kind')}] {entry.get('text')}")
 
     print()
+    if any_refused:
+        print("RESULT: refused - a check is write-shaped and was not run; show the row and "
+              "ask before acting on this handoff.")
+        return 1
     if any_mismatch:
         print("RESULT: mismatch - stop and ask before acting on this handoff.")
         return 1

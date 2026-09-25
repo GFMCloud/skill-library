@@ -62,6 +62,17 @@ checked against (`bash fixtures/run-fixtures.sh` asserts all three cases), and i
 does not replace the status in step 3 or the "ask one question" judgment call in
 step 6, both of which stay with the session.
 
+Two guards on the check strings themselves (added 2026-09-24). Writing: quote any
+`check` containing a colon followed by a space, or YAML parses it as a mapping and the
+checker finds zero claims. Resuming: the script prints every check before running any,
+and refuses a write-shaped one (`rm`, `mv`, `cp`, `chmod`, `chown`, `sudo`, `tee`, a
+redirect into a file other than `/dev/null`, a pipe into `sh`, `bash`, `zsh` or
+`python`, `git push`, `git reset`, `git checkout`, `git rebase`, `git merge`, `git
+commit`, `git clean`, a branch or worktree deletion) with status `refused`, exit 1, so a
+handoff file can never make a resume write anything. `bash fixtures/run-fixtures.sh`
+proves the refusal too: its fourth fixture carries an `rm` check, and the target file
+must still exist afterwards.
+
 ## Example (FIXTURE, from the interface spec, reproduced for reference - the spec is
 ## still the source of truth for the shape; these values are the spec's worked
 ## example and match no real tree state)
