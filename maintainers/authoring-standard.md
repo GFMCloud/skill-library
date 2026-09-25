@@ -135,7 +135,7 @@ Three states, not four:
 
 - Stable skills: change by PR; bump `metadata.version`; update `metadata.reviewed`;
   CHANGELOG describes the behavior change, not the wording change.
-- Incubator skills: edit directly on main.
+- Incubator skills: merge by PR without review. `main` takes no direct pushes once the ruleset in `maintainers/rulesets/` is imported.
 - Any change to a skill's, agent's or plugin hook's files (`plugins/<p>/hooks/`),
   stable or incubator, bumps the host plugin's `version` in the same commit. Hooks were
   added to the check 2026-09-25: a hook fix that didn't bump the version never reached
