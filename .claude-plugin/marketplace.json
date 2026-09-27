@@ -73,7 +73,7 @@
       "name": "agent-tooling",
       "source": "./plugins/agent-tooling",
       "category": "workflow",
-      "description": "Choose the right model and effort level for a task, send bulk mechanical text work to a local model, and mine past session transcripts for facts."
+      "description": "Choose the right model and effort level for a task, send bulk mechanical text work to a local model, fold cheap typed Jev judgments into a project where they fit, and mine past session transcripts for facts."
     },
     {
       "name": "voice-and-editing",

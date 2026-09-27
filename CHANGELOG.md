@@ -2,6 +2,17 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-27 - agent-tooling 0.2.0: jev added (incubator)
+
+- **New skill `jev`.** Finds where TypeSafe's Jev model fits in the current project and
+  builds it in: a fit check that asks whether code can assemble the evidence in full,
+  drafts of the decision and its definitions from the project's own past decisions for
+  Graham to edit, then a reviewed `questions.py` with a pinned model, fail-closed
+  validation, a review band, and agreement measured on tuning and held-out sets. Ships
+  three templates, the fail-closed test proven by deliberate failure. Defers to the
+  official `typesafe:typesafe-ai` skill for the API. Built from the 2026-09-27 lessons
+  in `~/work/jev-lab/lab/LESSONS.md`; measured on one project, thresholds provisional.
+
 ## 2026-09-27 - voice-and-editing 1.2.4: adhd removed
 
 - **`adhd` removed.** Graham asked for it on 2026-09-27. The skill folder was deleted
