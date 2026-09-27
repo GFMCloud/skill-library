@@ -2,6 +2,13 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-27 - voice-and-editing 1.2.4: adhd removed
+
+- **`adhd` removed.** Graham asked for it on 2026-09-27. The skill folder was deleted
+  with `git rm` rather than renamed `.superseded`, because a renamed folder still holds
+  a `SKILL.md` named `adhd` and would keep loading. Git history is the undo. `/adhd` no
+  longer exists after the next plugin update.
+
 ## 2026-09-26 - long-projects 0.19.1: every handoff message carries the full prompt
 
 - **`handoff` 0.6.1.** The copy-paste prompt block goes out in full in every message that
