@@ -4,8 +4,8 @@ description: >-
   Summarizes the current conversation and prepares a structured handoff package for a fresh Claude session, and verifies a handoff's claims when a new session resumes from one. Use when the user says "handoff", "/handoff", "fresh session", "new session", "context is getting long", or "wrap this up" to generate a handoff; also use whenever a session opens from an uploaded, pasted, or referenced handoff file, to re-check its claims before acting on it. Also proactively suggest a handoff when the conversation is clearly getting very long, context has been compacted, or the user is wrapping up a major work block. Generates a work-type-aware markdown summary file with a typed, re-checkable claims block and a copy-paste prompt block, then on resume verifies each claim against the live artifact rather than trusting the document. This is Graham's customized version and supersedes Claude's stock handoff skill, which triggers on the same words: when both are installed, always use this one.
 metadata:
   maturity: incubator
-  version: 0.6.0
-  reviewed: 2026-09-24
+  version: 0.6.1
+  reviewed: 2026-09-26
 ---
 
 # Handoff Skill
@@ -31,7 +31,7 @@ Generating: every `checkable` entry's `check` command was actually run at write 
 
 ## Done when
 
-Generating: the handoff file exists with the narrative sections, the `## Typed Claims` block, and the copy-paste prompt block, and every `expected` value in that block is the verbatim output of its `check` at write time. Resuming: every checkable claim has been checked against the live artifact, the discrepancy table and unverified-by-design list have been shown, and either one question was asked (a claim is ambiguous or mismatched) or the session has said "proceeding".
+Generating: the handoff file exists with the narrative sections, the `## Typed Claims` block, and the copy-paste prompt block, the full prompt block (with the file's absolute path) is in the message that delivers or last updates the file, and every `expected` value in that block is the verbatim output of its `check` at write time. Resuming: every checkable claim has been checked against the live artifact, the discrepancy table and unverified-by-design list have been shown, and either one question was asked (a claim is ambiguous or mismatched) or the session has said "proceeding".
 
 ## Stop when
 
@@ -239,14 +239,16 @@ Typical checkable claims for this skill's own work: which branch the work landed
 
 ## Step 6: Output the Copy-Paste Prompt Block
 
-After presenting the file, output this block clearly labeled for copy-paste. Customize the bracketed fields based on the actual session content:
+After presenting the file, output this block clearly labeled for copy-paste. Customize the bracketed fields based on the actual session content, and put the handoff file's absolute path in the first line so the block works without an upload.
+
+**Every message that delivers or updates the handoff carries this block in full.** That includes a follow-up after the file was edited, re-checked, committed or pushed. Never write "the prompt from earlier still works": the user copies from the last message, not from scrollback. Graham asked for this on 2026-09-26, after a final handoff message pointed back to a block two turns up.
 
 ---
 
 **Copy this prompt into your new chat (upload the handoff file alongside it):**
 
 ```
-I'm uploading a handoff file from a previous Claude session. Please read it carefully before responding.
+I'm uploading a handoff file from a previous Claude session. Please read it carefully before responding: [absolute path of the handoff file]
 
 Once you've read it:
 1. Before anything else, append a line to the handoff file itself: `CLAIMED-by: <session identifier> <ISO timestamp>`. If a CLAIMED-by line is already there and is not yours, stop and tell me: another session is or was on this. Do not continue on the assumption it went stale.

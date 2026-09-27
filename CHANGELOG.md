@@ -2,6 +2,16 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-26 - long-projects 0.19.1: every handoff message carries the full prompt
+
+- **`handoff` 0.6.1.** The copy-paste prompt block goes out in full in every message that
+  delivers or updates a handoff, including follow-ups after the file is edited,
+  re-checked, committed or pushed. Pointing back to an earlier block is no longer
+  allowed. The block's first line now names the handoff file's absolute path, so it
+  works without an upload. "Done when" checks for the block in the last delivering
+  message. Graham asked for it on 2026-09-26 in the SCL V2 session, after a final
+  handoff message pointed back two turns.
+
 ## 2026-09-24 - long-projects 0.19.0: handoff prints and gates its check commands
 
 - **`handoff` 0.6.0.** Resume Mode prints every `check` command before running any, and
