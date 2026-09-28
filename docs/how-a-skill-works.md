@@ -51,13 +51,15 @@ Some packs here include one or two. You do not start an agent yourself. A skill 
 
 An agent can be set up without some of Claude Code's tools, and several here are. That is a real limit, enforced by the software. Several other agents here are held to their stated limits only by their own written instructions, which is weaker. Each pack page says which is which, in as many words. Read that before you trust an agent to stay inside a set of files.
 
-## The one hook
+## The two hooks
 
-A hook is a small program Claude Code runs by itself at a set moment, without being asked. The `verification-kit` pack installs one. Nothing else here does.
+A hook is a small program Claude Code runs by itself at a set moment, without being asked. Two packs here install one each: `verification-kit` and `turn-reduction`. Nothing else here does.
 
-That hook runs before every command Claude Code is about to run on your computer, in every session, whether or not you are using the pack. It only acts inside a fixed list of agents that are meant to look at things and not change them: `pre-delivery-verifier`, `silent-failure-hunter`, `cross-document-checker`, `transcript-scanner`, `loop-operator` and Claude Code's built-in `Explore`. Inside those, it refuses the usual commands that write, move or delete files. Everywhere else it does nothing.
+The `verification-kit` hook runs before every command Claude Code is about to run on your computer, in every session, whether or not you are using the pack. It only acts inside a fixed list of agents that are meant to look at things and not change them: `pre-delivery-verifier`, `silent-failure-hunter`, `cross-document-checker`, `transcript-scanner`, `loop-operator` and Claude Code's built-in `Explore`. Inside those, it refuses the usual commands that write, move or delete files. Everywhere else it does nothing.
 
 It does not catch every way of writing a file. A write hidden inside another script gets past it. The [verification-kit page](../plugins/verification-kit/README.md) says what it misses.
+
+The `turn-reduction` hook runs each time Claude Code finishes a turn, in every session. It does nothing in a project without a work board (a `.claude/board.json` file). In a project with one, it reads that session's conversation record and can stop the turn from ending, once, when the session changed something without updating the board, or ended by asking you a should-I question in the chat instead of adding it to the board's inbox. The [turn-reduction page](../plugins/turn-reduction/README.md) says how to turn it off for one project.
 
 ## Why a skill sometimes does not start
 

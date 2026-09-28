@@ -116,9 +116,78 @@ run 0 "asking about something uncovered is correct" -- \
 because "NOT-COVERED"
 
 echo
+echo "work-board"
+WB="$PLUGIN_ROOT/skills/work-board/scripts/work_board.py"
+P="$scratch/wb-project"
+mkdir -p "$P"
+URL="https://claude.ai/artifact/FixtureBoard123"
+run 0 "first render from flags, before a URL exists" -- \
+  python3 "$WB" render --name wb-project --lane now:"This week" --out "$P/.claude/work-board.html"
+because "rendered"
+run 0 "init writes board.json and the starter authorization.json" -- \
+  python3 "$WB" init --project-dir "$P" --url "$URL" --name wb-project --lane now:"This week"
+because "wrote $P/.claude/board.json"
+run 0 "generated authorization.json validates" -- python3 "$AUTHZ" validate "$P/authorization.json"
+because "0 errors, 0 warning(s)"
+run 1 "asking to push is already granted" -- python3 "$AUTHZ" check "$P/authorization.json" --ask "should i push"
+because "ALREADY-GRANTED"
+because "pushes_per_session = 5"
+run 0 "asking to deploy to prod is stop-listed" -- python3 "$AUTHZ" check "$P/authorization.json" --ask "deploy to prod"
+because "STOP-LISTED"
+run 0 "republishing the board page is not stop-listed" -- \
+  python3 "$AUTHZ" check "$P/authorization.json" --ask "should I republish the board page to the same url"
+because "NOT-COVERED"
+run 0 "making the repo public is still stop-listed" -- \
+  python3 "$AUTHZ" check "$P/authorization.json" --ask "Should I make it public?"
+because "STOP-LISTED"
+run 1 "init refuses to overwrite an existing board" -- \
+  python3 "$WB" init --project-dir "$P" --url "$URL"
+because "refusing to overwrite"
+run 0 "validate passes a fresh board and page" -- python3 "$WB" validate "$P/.claude/board.json"
+because "VALID: 0 errors"
+printf '<!-- hand edit -->\n' >> "$P/.claude/work-board.html"
+run 1 "validate catches a hand-edited page" -- python3 "$WB" validate "$P/.claude/board.json"
+because "does not match a fresh render"
+run 0 "render --board regenerates the page" -- python3 "$WB" render --board "$P/.claude/board.json"
+run 0 "and validate passes again" -- python3 "$WB" validate "$P/.claude/board.json"
+run 1 "validate rejects a bad url, lane and trigger" -- \
+  python3 "$WB" validate "$FIXTURES/work-board/red-board.json"
+because "'url' must be the board artifact's claude.ai URL"
+because "lanes[1].id 'now' is used twice"
+because "triggers[0] does not compile"
+A="$scratch/wb-adopt"
+mkdir -p "$A"
+printf '{"project": "kept"}\n' > "$A/authorization.json"
+run 0 "adopt keeps an existing authorization.json and records project triggers" -- \
+  python3 "$WB" adopt --project-dir "$A" --url "$URL" --trigger 'seed write=\bseed\.py\b.*--apply\b'
+because "kept the existing"
+run 0 "adopted board carries its trigger" -- python3 "$WB" validate "$A/.claude/board.json"
+because "1 project trigger(s)"
+N="$scratch/wb-has-authz"
+mkdir -p "$N"
+printf '{"project": "kept"}\n' > "$N/authorization.json"
+run 1 "init refuses a project that already has authorization.json" -- \
+  python3 "$WB" init --project-dir "$N" --url "$URL"
+because "use adopt"
+
+echo
+echo "board-gate hook"
+run 0 "every fixture case gets its expected verdict" -- bash "$PLUGIN_ROOT/tests/prove-board-gate.sh"
+because "BOARD-GATE PROOF: PASS"
+run 1 "the prover fails a hook that never blocks" -- \
+  bash "$PLUGIN_ROOT/tests/prove-board-gate.sh" "$FIXTURES/board-gate/stub-never-blocks.py"
+because "BOARD-GATE PROOF: FAIL"
+
+echo
+echo "push check"
+run 0 "push_check.sh stops on every planted fault in throwaway clones" -- bash "$PLUGIN_ROOT/tests/prove-push-check.sh"
+because "PUSH-CHECK PROOF: PASS"
+
+echo
 echo "------------------------------------------------------------------------------"
-echo "SCOPE: $((PASS + FAIL)) assertions over the three components in this plugin, run"
-echo "against the fixtures in tests/fixtures only. It says nothing about any other"
-echo "plugin, and nothing about inputs these fixtures do not represent."
+echo "SCOPE: $((PASS + FAIL)) assertions over the components in this plugin, run against"
+echo "the fixtures in tests/fixtures and throwaway projects and clones under a temp"
+echo "directory only. It says nothing about any other plugin, and nothing about inputs"
+echo "these fixtures do not represent."
 printf 'RESULT: %d passed, %d failed\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]

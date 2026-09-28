@@ -1,6 +1,6 @@
 ---
 name: new-project
-description: Stand up a brand-new repo end to end - directory structure, .gitignore, secret-scanning hooks, licence, the four project docs (README/CLAUDE.md/SPEC.md/KICKOFF.md), the first commit, and the GitHub repo - before any implementation work begins. Use this whenever the user is starting something new and says anything like "new project", "new repo", "start a repo for", "set up a project", "scaffold", "bootstrap", "kick off a new thing", "I want to build X" where X does not exist yet, or asks to get a project "structured properly" / "set up the way I like it". Also use it when they have loose files or a prototype sitting in a folder and want it turned into a real repo. Supports four archetypes - AWS/Terraform infra, homelab service, Python pipeline/CLI, static site. Do NOT use it for adding structure to an existing repo that already has git history and docs.
+description: Stand up a brand-new repo end to end - directory structure, .gitignore, secret-scanning hooks, licence, the four project docs (README/CLAUDE.md/SPEC.md/KICKOFF.md), the work board (a private claude.ai page with a decision inbox), the first commit, and the GitHub repo under GFMCloud - before any implementation work begins. Use this whenever the user is starting something new and says anything like "new project", "new repo", "start a repo for", "set up a project", "scaffold", "bootstrap", "kick off a new thing", "I want to build X" where X does not exist yet, or asks to get a project "structured properly" / "set up the way I like it". Also use it when they have loose files or a prototype sitting in a folder and want it turned into a real repo. Supports four archetypes - AWS/Terraform infra, homelab service, Python pipeline/CLI, static site. Do NOT use it for adding structure to an existing repo that already has git history and docs.
 metadata:
   maturity: incubator
 ---
@@ -19,8 +19,8 @@ The work splits in two, and the split is the point:
   docs with real content.
 
 `scaffold.sh publish` refuses to push while any doc still contains its
-`<!-- SCAFFOLD-TODO -->` markers. That gate exists because a repo whose `CLAUDE.md` is
-an unfilled template is worse than one with no `CLAUDE.md` - people learn to ignore it,
+`<!-- SCAFFOLD-TODO -->` markers, and while the project has no work board. The stub gate
+exists because a repo whose `CLAUDE.md` is an unfilled template is worse than one with no `CLAUDE.md` - people learn to ignore it,
 and then the one time it does say something important, nobody reads it.
 
 ## Workflow
@@ -84,28 +84,70 @@ Rules for filling them:
   done, and a spec without it produces confident false "complete" claims.
 - **Every count, version and size is a dated snapshot.** Say so where you write one.
 
-### 4. Publish
+### 4. Stand up the work board
+
+Every project gets a work board at birth, like its README and git. The board is a private
+claude.ai artifact; the skill that owns it is `turn-reduction:work-board`, and its SKILL.md
+has the full flow. Creation is two parts, because Bash cannot publish an artifact:
+
+1. Render the page and publish it: run the work-board skill's `work_board.py render
+   --name <slug> --out <repo>/.claude/work-board.html` (add `--lane ID:NAME[:WHEN]` for
+   deadline groups), then publish that file with the Artifact tool and
+   `capabilities: {"db": {}}`.
+2. Write the config from the URL the Artifact tool returned: `work_board.py init
+   --project-dir <repo> --url <artifact url> --name <slug>`. It writes
+   `.claude/board.json` and a starter `authorization.json`, and refuses to overwrite either.
+3. Seed the first cards from `SPEC.md`'s scope with ArtifactData (collection `cards`), one
+   card per v1 deliverable in `ready`, and one `inbox` card per open question in SPEC.md
+   §7 with a recommended default.
+4. Add the board link to `README.md` and `CLAUDE.md`, and trim `authorization.json`'s
+   granted list to what is true for this project.
+
+`scaffold.sh publish` refuses while `.claude/board.json` is missing.
+
+### 5. Publish
 
 ```bash
 scripts/scaffold.sh publish --path <repo>            # private (default)
 scripts/scaffold.sh publish --path <repo> --public
 ```
 
-It checks, in order: no unfilled stubs → `.env` is ignored if present → `gitleaks` finds
-nothing → `gh` is authenticated → no `origin` yet. Then one commit
-(`chore: scaffold <name> (<type>)`) and `gh repo create --source=. --push`.
+It checks, in order: no unfilled stubs → `.claude/board.json` exists → `.env` is ignored if
+present → `gitleaks` finds nothing → `gh` is authenticated → the active gh account
+(`gh api user --jq .login`) is GFMCloud → no `origin` yet. Then one commit
+(`chore: scaffold <name> (<type>)`) and `gh repo create --source=. --push`. If the account
+check fails, run `gh auth switch --user GFMCloud`; never publish under another account.
 
 Add `--dry-run` to rehearse. If `gitleaks` is missing it refuses rather than skipping  - 
 that is deliberate, since purging a leaked credential later means a history rewrite, a
 force-push, and rotating the secret anyway. `--no-scan` overrides and records why in the
 commit trailer.
 
-### 5. Stop
+### 6. Stop
 
 Report the repo URL and hand over `KICKOFF.md`. **Do not start implementing.** The user
 asked for a scaffold; the clean baseline commit is the deliverable, and the first real
 session starts fresh with `CLAUDE.md` auto-loaded. If they explicitly say to keep going,
 that is a different request and the scaffold is already safely committed.
+
+## Inputs
+
+The interview answers (step 1), and a signed-in `gh` whose active account is GFMCloud.
+
+## Verify
+
+`scripts/scaffold.sh publish --path <repo> --dry-run` exits 0 and prints a check line for
+each gate, including `work board: .claude/board.json present` and `gh account: GFMCloud`.
+
+## Done when
+
+The repo exists on GitHub under GFMCloud with the scaffold commit, `.claude/board.json`
+points at a published board with its first cards, and `KICKOFF.md` is handed over.
+
+## Stop when
+
+A publish gate refuses (unfilled stubs, no board, a secret, the wrong gh account): fix the
+cause, never bypass it. The user has not answered the interview and did not say to go on.
 
 ## Archetype notes
 

@@ -2,7 +2,7 @@
 
 Part of the [project-starters](../../README.md) pack.
 
-This skill sets up a new project before any code is written. It asks you six questions about what the thing is, where it runs and what must never happen, then creates the folder, the git setup, an ignore list, a licence, an automated build job and four documents that say what the project is for. The first commit holds the setup and nothing else, so every later change is readable against a clean starting point. Publishing to GitHub is a separate step you ask for, and it refuses to publish while any document still contains its unfilled placeholder text.
+This skill sets up a new project before any code is written. It asks you six questions about what the thing is, where it runs and what must never happen, then creates the folder, the git setup, an ignore list, a licence, an automated build job and four documents that say what the project is for. The first commit holds the setup and nothing else, so every later change is readable against a clean starting point. Publishing to GitHub is a separate step you ask for, and it refuses to publish while any document still contains its unfilled placeholder text or the project has no work board.
 
 ## Say this to use it
 
@@ -49,6 +49,8 @@ creates a private GitHub repository and pushes the first commit.
 - **New repositories are private unless you ask for public.** Public is a separate flag.
 - **It scans for leaked passwords before the first commit.** The scanner is `gitleaks`, and the publish step refuses to run if `gitleaks` is not installed. The skill's own text says a `--no-scan` option overrides the scan. In the code that option only takes effect when `gitleaks` is missing. With `gitleaks` installed the scan runs and can still stop the publish. The code is stricter than the text.
 - **It installs a check that runs on every future commit in that project.** From then on, each commit you make there is scanned for secrets first. A website project also gets an automated job that rebuilds the site weekly.
+- **It stands up a work board before publishing.** Between writing the documents and publishing, Claude publishes a private board page to your claude.ai account and writes `.claude/board.json` and a starter `authorization.json` into the project, using the `work-board` skill from the turn-reduction pack. The publish step refuses while `.claude/board.json` is missing.
+- **It publishes only under the GFMCloud GitHub account.** The publish step checks which account `gh` is signed in as and refuses, before creating anything, unless it is GFMCloud.
 - **It uses the GitHub sign-in you already have.** It acts through the `gh` command line tool and prints the account it is signed in as, so you can see which one before anything is created. It never asks you for a password or a key.
 - **It refuses to start if the folder is already there.** It creates the new folder, by default under `~/work/GitHub/<name>`, where `~` means your home folder. It deletes and moves nothing.
 - **It stops when the setup is committed.** It does not begin building the project. The clean starting point is the deliverable, and the first real session starts fresh from `KICKOFF.md`.

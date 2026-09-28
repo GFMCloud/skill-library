@@ -6,7 +6,7 @@ A Claude Code pack can run programs on your computer with your own user permissi
 
 ## What the packs here do
 
-Some packs here are instructions only. Others ship programs, go online, or use a sign-in that is already on your computer. One pack, `verification-kit`, installs a hook, which is a program that runs by itself in every session.
+Some packs here are instructions only. Others ship programs, go online, or use a sign-in that is already on your computer. Two packs, `verification-kit` and `turn-reduction`, each install a hook, which is a program that runs by itself in every session.
 
 The list of what each pack does is kept in one place so it cannot disagree with itself: the section "Is this safe? What does it do on my computer?" on the [main README](README.md), and the table "What this does on your computer" on each pack's own page. Those tables were written from reading the files, and a change that makes one untrue has to correct it in the same change.
 
@@ -31,7 +31,7 @@ Only people who maintain this repository can read what you send. You need a GitH
 - **A credential written somewhere it should not be,** such as a log, a report or a file that gets committed.
 - **Instructions that could make Claude Code act on text from a file or a web page it was asked to read,** rather than treating that text as data.
 - **A delete, move or overwrite without an explicit yes,** where the pack page says one is required.
-- **A way past the `verification-kit` hook that its pack page does not already list.** That page says plainly what the hook does not catch.
+- **A way past the `verification-kit` or `turn-reduction` hook that its pack page does not already list.** Each page says plainly what its hook does not catch.
 - **A claim in a safety table that is no longer true** after a change.
 
 ## What is not a security problem

@@ -56,7 +56,7 @@ Rejected: a separate exporter module, because there is one caller.
 ## Good to know
 
 - **It writes nothing and changes nothing.** Producing a plan and stopping is the whole point of the skill. Implementation happens afterwards, once you approve it.
-- **It reads your live systems, not only your project files.** For infrastructure work it runs look-only commands such as `terraform state list` and `terraform plan -refresh-only`, AWS `describe`, `get` and `list` calls, `kubectl get` and `describe`, and `docker compose ps`. This is further than the other three skills in the pack go: it reaches what is actually running, including production, in read-only form.
+- **It reads your live systems, not only your project files.** For infrastructure work it runs look-only commands such as `terraform state list` and `terraform plan -refresh-only`, AWS `describe`, `get` and `list` calls, `kubectl get` and `describe`, and `docker compose ps`. This is further than the other skills in the pack go: it reaches what is actually running, including production, in read-only form.
 - **Those commands go over the internet.** Cloud and cluster commands talk to remote services. Nothing is sent anywhere else.
 - **It uses the sign-ins already on your computer.** It is told never to ask you for a key or token, and to flag it as a design problem if the plan itself would need one written out in plain text.
 - **It names the account or workspace it looked at.** A plan written against one environment should not be used on another, so the plan says which one it read.
