@@ -70,6 +70,13 @@ h1 .cur{display:inline-block;width:.45em;height:.85em;background:var(--accent);v
 .ask .q{font:600 15px/1.35 var(--sans)}
 .ask .d{font-size:13px;color:var(--muted)}
 .ask .d b{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--fg)}
+/* A command Graham runs himself: "You run this" chip, the command in mono, one-click Copy */
+.ask.run{cursor:default}
+.ask .open{align-self:flex-start}
+.cmd{display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 8px 8px 12px}
+.cmd code{flex:1;min-width:0;font:13px/1.55 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;user-select:all;padding-top:3px}
+.cmd .btn{padding:5px 10px;font-size:12px;min-width:74px}
+.rank.run{color:var(--bg);border-color:var(--fg);background:var(--fg)}
 
 /* Board */
 .colchips{display:none;flex-wrap:wrap;gap:6px;margin-bottom:10px}
@@ -118,6 +125,7 @@ dialog::backdrop{background:rgba(11,11,12,.55)}
 .perm .pq .qm{color:var(--accent-ink)}
 .opts{display:flex;flex-direction:column;gap:2px}
 .opt{font:500 14px/1.4 var(--mono);text-align:left;background:none;border:0;border-radius:4px;color:var(--fg);padding:6px 8px;cursor:pointer;display:flex;gap:8px}
+.opt[hidden]{display:none}
 .opt .ptr{width:1em;color:var(--accent-ink)}
 .opt[aria-checked="true"]{background:var(--sel)}
 .opt .k{color:var(--muted)}
@@ -187,7 +195,7 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
   </div>
 
   <section class="view" id="view-inbox" role="tabpanel" aria-labelledby="tab-inbox">
-    <p class="hint">Questions only you can answer. Open one, then Accept the recommended default, Amend it, or ask to Discuss. Sessions act on an answer only while the question has not changed since you answered.</p>
+    <p class="hint">Questions only you can answer. Open one, then Accept the recommended default, Amend it, or ask to Discuss. A card marked You run this carries a command: copy it, run it, then answer I ran it. Sessions act on an answer only while the question has not changed since you answered.</p>
     <div class="inbox" id="inbox"><div class="status">Loading the board...</div></div>
   </section>
 
@@ -210,19 +218,30 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
     <div class="perm">
       <p class="lbl">Needs you</p>
       <p class="pq"><span id="a-q"></span></p>
-      <p class="lbl">Recommended default</p>
-      <div class="box" id="a-default"></div>
+      <div id="a-run" hidden>
+        <p class="lbl">Run this in a terminal</p>
+        <div id="a-cmd"></div>
+        <div id="a-expect-wrap">
+          <p class="lbl" style="margin-top:10px">Expect</p>
+          <div class="box" id="a-expect"></div>
+        </div>
+      </div>
+      <div id="a-default-wrap">
+        <p class="lbl">Recommended default</p>
+        <div class="box" id="a-default"></div>
+      </div>
     </div>
     <p class="why" id="a-why"></p>
     <div id="a-evidence"></div>
     <div id="a-current"></div>
     <div class="perm">
       <div class="opts" role="radiogroup" aria-label="Your answer" id="a-opts">
+        <button type="button" class="opt" role="radio" aria-checked="false" data-choice="ran" id="c-ran" hidden><span class="ptr"></span><span><span class="k">1.</span> I ran it</span></button>
         <button type="button" class="opt" role="radio" aria-checked="false" data-choice="accept" id="c-accept"><span class="ptr"></span><span><span class="k">1.</span> Accept</span></button>
         <button type="button" class="opt" role="radio" aria-checked="false" data-choice="amend" id="c-amend"><span class="ptr"></span><span><span class="k">2.</span> Amend the default</span></button>
         <button type="button" class="opt" role="radio" aria-checked="false" data-choice="discuss" id="c-discuss"><span class="ptr"></span><span><span class="k">3.</span> Discuss</span></button>
       </div>
-      <div class="keys">Press 1, 2 or 3, or move with the arrow keys</div>
+      <div class="keys" id="a-keys">Press 1, 2 or 3, or move with the arrow keys</div>
     </div>
     <div id="a-amend-wrap" hidden>
       <label class="f" for="a-amend">Your version of the default
@@ -241,6 +260,8 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
         <label class="f" for="e-default">Recommended default <textarea id="e-default"></textarea></label>
         <label class="f" for="e-why">Why <input type="text" id="e-why"></label>
         <label class="f" for="e-link">Evidence link <input type="text" id="e-link"></label>
+        <label class="f" for="e-command">Command you run (makes this a You run this card) <textarea id="e-command" class="code"></textarea></label>
+        <label class="f" for="e-expect">Expect <input type="text" id="e-expect"></label>
         <div><button type="button" class="btn" id="e-save">Save the new question</button></div>
       </div>
     </details>
@@ -330,6 +351,35 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
   function hasEvidence(c, ev){ return !!String(ev != null ? ev : (c.evidence || "")).trim(); }
   function answerCurrent(c){ return !!(c.answer && c.ask && c.answer.ask_rev === c.ask.ask_rev); }
   function needsAnswer(c){ return c.column === "inbox" && !answerCurrent(c); }
+  function isCommand(c){ return !!(c.ask && typeof c.ask.command === "string" && c.ask.command.trim()); }
+
+  // Copy exactly the command text. The clipboard API can be refused inside the artifact
+  // frame, so fall back to selecting the text: the button then says to copy it by hand.
+  function copyText(text, node){
+    function fallback(){
+      try {
+        var r = document.createRange(); r.selectNodeContents(node);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        return document.execCommand("copy");
+      } catch (e) { return false; }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText)
+      return navigator.clipboard.writeText(text).then(function(){ return true; }, function(){ return fallback(); });
+    return Promise.resolve(fallback());
+  }
+  function cmdNode(text){
+    var box = el("div", "cmd"), code = el("code", null, text);
+    var btn = el("button", "btn", "Copy"); btn.type = "button"; btn.setAttribute("aria-label", "Copy the command");
+    btn.addEventListener("click", function(e){
+      e.stopPropagation();
+      copyText(text, code).then(function(ok){
+        btn.textContent = ok ? "Copied" : "Selected: copy it";
+        clearTimeout(btn._t); btn._t = setTimeout(function(){ btn.textContent = "Copy"; }, 2200);
+      });
+    });
+    box.appendChild(code); box.appendChild(btn);
+    return box;
+  }
 
   $("project").textContent = CONFIG.project || "Project";
   (function(){
@@ -355,6 +405,7 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
   function chipsFor(c, box){
     if (state.fixture) box.appendChild(el("span", "rank fixture", "Fixture"));
     box.appendChild(el("span", "rank", KIND[c.kind] || c.kind || "Item"));
+    if (c.column === "inbox" && isCommand(c)) box.appendChild(el("span", "rank run", "You run this"));
     if (c.column === "inbox") {
       if (answerCurrent(c)) box.appendChild(el("span", "rank green", "Answered: " + c.answer.choice));
       else if (c.answer) box.appendChild(el("span", "rank red", "Answer out of date"));
@@ -401,6 +452,7 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
     });
     if (!cards.length) { box.appendChild(el("div", "status", "Nothing needs you right now.")); return; }
     cards.forEach(function(c){
+      if (isCommand(c)) { box.appendChild(commandRow(c)); return; }
       var b = el("button", "ask" + (answerCurrent(c) ? " answered" : "")); b.type = "button";
       var top = el("div", "chips"); chipsFor(c, top); b.appendChild(top);
       b.appendChild(el("div", "q", (c.ask && c.ask.question) || c.title || c.id));
@@ -409,6 +461,21 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
       b.addEventListener("click", function(){ c.ask ? openAsk(c.id) : openCard(c.id); });
       box.appendChild(b);
     });
+  }
+
+  // A command card is a block, not one big button, so its Copy button is a real button of
+  // its own and the command can be copied without opening the card.
+  function commandRow(c){
+    var b = el("div", "ask run" + (answerCurrent(c) ? " answered" : ""));
+    var top = el("div", "chips"); chipsFor(c, top); b.appendChild(top);
+    b.appendChild(el("div", "q", c.ask.question || c.title || c.id));
+    b.appendChild(cmdNode(c.ask.command));
+    if (c.ask.expect) { var d = el("div", "d"); d.appendChild(el("b", null, "Expect: ")); d.appendChild(document.createTextNode(c.ask.expect)); b.appendChild(d); }
+    if (c.answer && !answerCurrent(c)) b.appendChild(el("div", "d", "The question changed after your last answer. Answer again."));
+    var open = el("button", "btn open", answerCurrent(c) ? "Change your answer" : "Answer: I ran it, or Discuss"); open.type = "button";
+    open.addEventListener("click", function(){ openAsk(c.id); });
+    b.appendChild(open);
+    return b;
   }
 
   function cellNode(colId, cards){
@@ -503,18 +570,30 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
 
   // ---- inbox dialog
   var askId = null, askRev = null, choice = null;
-  var CHOICES = ["accept","amend","discuss"];
-  var SAVE_LABEL = {accept:"Accept", amend:"Save amendment", discuss:"Ask to discuss"};
+  // A command card answers "I ran it" or Discuss; every other card Accept, Amend or Discuss.
+  var ALL_CHOICES = ["ran","accept","amend","discuss"];
+  var ASK_CHOICES = ["accept","amend","discuss"], RUN_CHOICES = ["ran","discuss"];
+  var CHOICES = ASK_CHOICES;
+  var SAVE_LABEL = {ran:"I ran it", accept:"Accept", amend:"Save amendment", discuss:"Ask to discuss"};
+  function setChoices(list){
+    CHOICES = list;
+    ALL_CHOICES.forEach(function(k){
+      var o = $("c-" + k), i = list.indexOf(k);
+      o.hidden = i < 0;
+      if (i >= 0) o.querySelector(".k").textContent = (i + 1) + ".";
+    });
+    $("a-keys").textContent = "Press " + (list.length === 2 ? "1 or 2" : "1, 2 or 3") + ", or move with the arrow keys";
+  }
   function setChoice(ch, focusOpt){
     choice = ch;
-    CHOICES.forEach(function(k){
+    ALL_CHOICES.forEach(function(k){
       var o = $("c-" + k), on = k === ch;
-      o.setAttribute("aria-checked", String(on)); o.tabIndex = (on || (!ch && k === "accept")) ? 0 : -1;
+      o.setAttribute("aria-checked", String(on)); o.tabIndex = (on || (!ch && k === CHOICES[0])) ? 0 : -1;
       o.querySelector(".ptr").textContent = on ? "\u276F" : "";
     });
     $("a-amend-wrap").hidden = ch !== "amend";
     $("a-save").textContent = ch ? SAVE_LABEL[ch] : "Save answer";
-    if (ch === "accept") { var k = el("span", "kbd", "\u21B5"); $("a-save").appendChild(k); }
+    if (ch === "accept" || ch === "ran") { var k = el("span", "kbd", "\u21B5"); $("a-save").appendChild(k); }
     if (ch === "amend") renderDiff();
     if (focusOpt && ch) $("c-" + ch).focus();
   }
@@ -530,7 +609,7 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
   $("ask-dlg").addEventListener("keydown", function(e){
     var tag = (e.target && e.target.tagName) || "";
     if (tag === "TEXTAREA" || tag === "INPUT" || tag === "SELECT") return;
-    if (e.key === "1" || e.key === "2" || e.key === "3") { e.preventDefault(); setChoice(CHOICES[+e.key - 1], true); return; }
+    if (/^[1-3]$/.test(e.key) && +e.key <= CHOICES.length) { e.preventDefault(); setChoice(CHOICES[+e.key - 1], true); return; }
     if (e.key === "Enter" && choice && e.target && e.target.classList && e.target.classList.contains("opt") && e.target.dataset.choice === choice) {
       e.preventDefault(); if (choice === "amend") $("a-amend").focus(); else $("a-save").click(); return;
     }
@@ -546,6 +625,14 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
     askId = id; askRev = c.ask.ask_rev; showErr("a-err", "");
     var chips = $("a-chips"); chips.textContent = ""; chipsFor(c, chips);
     $("a-q").textContent = c.ask.question || c.title || c.id;
+    var run = isCommand(c);
+    setChoices(run ? RUN_CHOICES : ASK_CHOICES);
+    $("a-run").hidden = !run;
+    $("a-cmd").textContent = ""; if (run) $("a-cmd").appendChild(cmdNode(c.ask.command));
+    $("a-expect").textContent = c.ask.expect || ""; $("a-expect-wrap").hidden = !c.ask.expect;
+    $("a-default-wrap").hidden = run && !c.ask.default;
+    $("a-comment").placeholder = run ? "Optional for I ran it: paste what it printed. Say what to discuss for Discuss"
+                                     : "Optional for Accept and Amend; say what to discuss for Discuss";
     $("a-default").textContent = c.ask.default || "(no default given)";
     $("a-why").textContent = c.ask.why || "";
     $("a-why").hidden = !c.ask.why;
@@ -560,18 +647,19 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
     $("a-comment").value = "";
     setChoice(null); $("a-amend-wrap").hidden = true;
     $("e-q").value = c.ask.question || ""; $("e-default").value = c.ask.default || ""; $("e-why").value = c.ask.why || ""; $("e-link").value = c.ask.evidence_link || "";
+    $("e-command").value = c.ask.command || ""; $("e-expect").value = c.ask.expect || "";
     $("a-edit").open = false;
     $("a-rev").textContent = "Question revision " + (c.ask.ask_rev != null ? c.ask.ask_rev : "?");
     $("a-save").disabled = !state.db; $("e-save").disabled = !state.db;
     try { $("ask-dlg").showModal(); } catch (e) { $("ask-dlg").setAttribute("open", ""); }
-    $("c-accept").focus();
+    $("c-" + CHOICES[0]).focus();
   }
-  CHOICES.forEach(function(k){ $("c-" + k).addEventListener("click", function(){ setChoice(k); if (k === "amend") $("a-amend").focus(); }); });
+  ALL_CHOICES.forEach(function(k){ $("c-" + k).addEventListener("click", function(){ setChoice(k); if (k === "amend") $("a-amend").focus(); }); });
   $("a-close").addEventListener("click", function(){ $("ask-dlg").close(); });
   $("a-save").addEventListener("click", function(){
     var c = findCard(askId); if (!c || !c.ask) return;
     if (c.ask.ask_rev !== askRev) { showErr("a-err", "The question changed while you had it open. Close and reopen it to answer the new version."); return; }
-    if (!choice) { showErr("a-err", "Choose Accept, Amend or Discuss."); return; }
+    if (!choice || CHOICES.indexOf(choice) < 0) { showErr("a-err", isCommand(c) ? "Choose I ran it or Discuss." : "Choose Accept, Amend or Discuss."); return; }
     var comment = $("a-comment").value.trim(), text;
     if (choice === "amend") {
       text = $("a-amend").value.trim();
@@ -591,6 +679,9 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
     var c = findCard(askId); if (!c || !c.ask) return;
     var q = $("e-q").value.trim(); if (!q) { showErr("a-err", "The question can't be empty."); return; }
     var ask = {question: q, default: $("e-default").value.trim(), why: $("e-why").value.trim(), evidence_link: $("e-link").value.trim(), ask_rev: (+c.ask.ask_rev || 0) + 1};
+    var command = $("e-command").value.trim(), expect = $("e-expect").value.trim();
+    if (command) ask.command = command;
+    if (expect) ask.expect = expect;
     write(askId, {ask: ask, answer: null}).then(function(ok){ if (ok) { $("ask-dlg").close(); toast("Question updated to revision " + ask.ask_rev + "; the old answer was cleared."); } });
   });
 
@@ -652,6 +743,9 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
       {id:"f2", title:"FIXTURE: Merge the scaffold branch", column:"inbox", lane:LANES[0].id, kind:"merge",
        ask:{question:"FIXTURE: Merge feature/scaffold to main after CI?", default:"Merge after CI is green", why:"Reviewer gave a green verdict.", evidence_link:"", ask_rev:2},
        answer:{choice:"accept", text:"", at:at, ask_rev:1}},
+      {id:"f8", title:"FIXTURE: Remove the merged worktree", column:"inbox", lane:LANES[0].id, kind:"run",
+       ask:{question:"FIXTURE: Remove the merged worktree (a deletion, so you run it)", command:"git -C /Users/example/project worktree remove /Users/example/project/wt && echo \"worktree removed\"",
+            expect:"The line: worktree removed, in any terminal window.", why:"Clean and merged into main; the branch stays.", evidence_link:"", ask_rev:1}},
       {id:"f3", title:"FIXTURE: Build the importer", column:"ready", lane:LANES[0].id, kind:"build", due:"2026-10-05", done_when:"DONE.md#importer"},
       {id:"f4", title:"FIXTURE: Nightly backup run", column:"doing", lane:LANES[LANES.length - 1].id, kind:"run", blocked_by:["f3"]},
       {id:"f5", title:"FIXTURE: Importer review, no verdict yet", column:"review", lane:LANES[0].id, kind:"build", evidence:"pytest -q: 12 passed"},
@@ -704,7 +798,7 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
     var lines = ["Board update: " + (CONFIG.project || "this board") + "."];
     if (answered.length) {
       lines.push("Answered in Needs you, ready to act on:");
-      answered.forEach(function(c){ lines.push("- " + c.id + ": " + (c.title || "") + " (" + c.answer.choice + ")"); });
+      answered.forEach(function(c){ lines.push("- " + c.id + ": " + (c.title || "") + " (" + (c.answer.choice === "ran" ? "ran: I ran the command myself; read the result back" : c.answer.choice) + ")"); });
     } else lines.push("No new answers in Needs you.");
     lines.push("Please read the board and pick up.");
     return lines.join("\n");

@@ -20,13 +20,21 @@ same documents live.
 | `links` | list of `{label, url}` | https only; the page ignores anything else |
 | `evidence` | string | what was run or checked and what it showed; required for done |
 | `review` | object | `{verdict, builder_model, reviewer_model, agent_id, at}`; written by the reviewer session, never the builder; a read-only reviewer that cannot write the board has the builder transcribe its verdict, naming the reviewer and "transcribed" in `agent_id`; for an exempt card (see Rules), by the session that verified it |
-| `ask` | object | `{question, default, why, evidence_link, ask_rev}`; only on inbox cards |
-| `answer` | object | `{choice: accept or amend or discuss, text, at, ask_rev}`; written by the page when Graham answers |
+| `ask` | object | `{question, default, why, evidence_link, ask_rev}`, plus `command` and `expect` on a command card (below); only on inbox cards |
+| `answer` | object | `{choice: accept or amend or discuss, text, at, ask_rev}`, or `choice: ran` on a command card; written by the page when Graham answers |
 | `updated_at` | ISO time, UTC | every write sets it |
 | `updated_by` | string | who wrote, and why in a few words (`session 2026-09-28: merged e5c0766`) |
 
 `why` inside `ask` is an addition to PROPOSAL section 2's field list: section 3 puts "one
 line of why" on the inbox card, and it needs a field to live in.
+
+**Command cards.** When the ask is for Graham to run a command, the command goes in
+`ask.command` and never inside `question` prose. `question` says what the command does and
+why it is his to run; `expect` says what he should see and in which window. The page marks
+the card "You run this", shows the command in a monospace block with a Copy button (on the
+Needs you list and in the card), and offers only **I ran it** (`choice: "ran"`, with any
+output he pasted in `text`) and Discuss. The command follows the global rule for handed-over
+commands: one self-contained paste from any directory, printing its own result.
 
 ## Rules
 
@@ -70,6 +78,23 @@ Act on an Accept or Amend (revs match): do the work, then move the card on:
 ```
 
 A Discuss answer stays in the inbox; raise it at the top of the next message to Graham.
+
+Open a command card (Graham runs it; the session never runs it after his answer):
+
+```json
+{"action": "set", "url": "<board url>", "collection": "cards", "doc_id": "q-rm-wt",
+ "data": {"title": "Remove the merged worktree", "column": "inbox", "lane": "now", "kind": "run",
+          "ask": {"question": "Remove the merged worktree (a deletion, so yours to run)",
+                  "command": "git -C /Users/gfm/repo worktree remove /Users/gfm/repo/wt && echo \"worktree removed\"",
+                  "expect": "The line: worktree removed, in any terminal window.",
+                  "why": "Clean, merged into main and even with origin; the branch stays.",
+                  "evidence_link": "", "ask_rev": 1},
+          "answer": null, "updated_at": "...", "updated_by": "session: worktree cleanup"}}
+```
+
+Act on a `ran` answer (revs match): read every result back, then close the card with the
+Graham-run exemption (`reviewer_model: "exempt: Graham-run, read back"`). If the read-back
+does not show the expected result, say so on the card and leave it open.
 
 Record a review (the reviewer session writes this, then the builder may move to done):
 
