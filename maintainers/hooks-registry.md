@@ -38,12 +38,13 @@ shipped by the `turn-reduction` plugin in its `hooks/hooks.json` (its one editab
 the repo; it installs with the plugin). Event `Stop`, no matcher, **blocks** (exit 2, once
 per stop; `stop_hook_active` lets the next stop through). It does nothing unless the
 project has `.claude/board.json`; with one, it blocks a turn that changed state (commit,
-merge, push, deploy, mutating aws, board.json `triggers[]`) with no work-board write after
-it, and, while `authorization.json` exists, a turn that ends on a should-I ask in chat with
-no inbox card written. Fails open on any error. Proof:
+merge, push, deploy, mutating aws, board.json `triggers[]`) with no write after it to the
+board it is owed to (the nearest `.claude/board.json` above the repo the command ran in,
+else the project's), and, while `authorization.json` exists, a turn that ends on a
+should-I ask in chat with no inbox card written. Fails open on any error. Proof:
 `plugins/turn-reduction/tests/prove-board-gate.sh`, plus the same prover run against
-`tests/fixtures/board-gate/stub-never-blocks.py`, which must fail. SCL V2 still wires its
-own `scripts/hooks/board-gate.py` in its project settings until its conversion retires it.
+`tests/fixtures/board-gate/stub-never-blocks.py`, which must fail. SCL V2 retired its own
+`scripts/hooks/board-gate.py` registration on 2026-09-28; this hook now covers it.
 
 The fixtures cover the cases someone thought of. Replay mode covers what sessions really
 ran: `python3 plugins/turn-reduction/tests/replay-board-gate.py --n 60` feeds the shell

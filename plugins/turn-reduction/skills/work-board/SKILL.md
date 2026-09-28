@@ -48,7 +48,8 @@ The page refuses a move to Done without evidence and a green review. A **Tell Cl
 button in the header posts a comment on the board and sends it to Claude (the `comments`
 capability's `sendToClaude`), pre-filled with the inbox cards Graham has answered; it says
 so plainly when no session is watching, since his answers are on the cards either way. It
-is one self-contained file, light and dark, usable at phone width.
+is one self-contained file, light and dark, usable at phone width. Its one external call
+is Google Fonts, for the mood board's type pairing; offline it falls back to system fonts.
 
 ## Stand one up: `init` (new project) or `adopt` (existing project)
 
@@ -133,8 +134,9 @@ In a project with `.claude/board.json`:
   Graham ran himself, closed on the session's read-back of the result
   ([references/cards.md](references/cards.md)).
 - **Every state change is logged on the board** before the turn ends: commit, merge,
-  push, deploy, cloud write. If no card is affected, end with a line
-  `BOARD: no card affected: <reason>`.
+  push, deploy, cloud write. A change in another repo that has its own board is logged on
+  that board; a repo without one logs on the project's. If no card is affected, end with a
+  line `BOARD: no card affected: <reason>`.
 - **Close-out:** re-read the inbox; the closing message says only "N new items in your
   inbox" plus the board link. If the turn would otherwise end on a should-I question with
   no inbox card, either write the card or add a line `INBOX: none needed: <reason>`.
