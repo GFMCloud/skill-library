@@ -2,6 +2,30 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-27 - turn-reduction 1.3.1: push check on a first push, board hook hardening, replay mode
+
+- **`push_check.sh` works on a branch's first push.** New `--base <ref>`. With no
+  `--base` and no `origin/<branch>`, the outgoing range is measured from origin's default
+  branch (`refs/remotes/origin/HEAD`, else `origin/main`), and the base used and why is
+  printed. The recorded-SHA check stays exact against that base, so a foreign commit on a
+  new branch still stops. `--base` accepts only a ref under `refs/remotes/origin/`: a SHA,
+  `HEAD~N` or a local branch stops, since it could start the range above a foreign commit.
+  Proven by `tests/prove-push-check.sh` (19 cases, 10 new; the 6 first-push and base
+  cases are red against the 1.3.0 script, and the 3 narrowing-base cases pass wrongly on
+  a --base that accepts any ref).
+- **`board_gate.py` sees state changes it missed.** `sh -lc "git push"` (any combined
+  short flags containing `c`), `eval 'git push'`, `xargs git push` (xargs options and
+  their values skipped) and unquoted backtick substitution now count. Two false hits found
+  by replaying real transcripts no longer count: `git merge-tree` and any aws call with
+  `--generate-cli-skeleton`. Proven by `tests/prove-board-gate.sh` (42 cases, 8 new; the
+  5 new must-block cases and the merge-tree case are red against the 1.3.0 hook, and all
+  21 must-block cases are red against the never-blocking stub).
+- **Replay mode for the hook proof.** `tests/replay-board-gate.py --n 60` reads the N most
+  recent local transcripts read-only and prints every (a) and (b) hit with the firing
+  shell segment or sentence, for a person to judge. Opt-in, never in CI; documented in
+  `maintainers/hooks-registry.md`. `board_gate.trigger_hits` returns the segment behind
+  each trigger; `triggers_in` is unchanged in behavior.
+
 ## 2026-09-27 - turn-reduction 1.3.0 and project-starters 0.2.0: work boards
 
 - **New skill `work-board` (incubator, turn-reduction).** Stands up a project's work board:

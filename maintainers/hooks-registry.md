@@ -45,6 +45,16 @@ no inbox card written. Fails open on any error. Proof:
 `tests/fixtures/board-gate/stub-never-blocks.py`, which must fail. SCL V2 still wires its
 own `scripts/hooks/board-gate.py` in its project settings until its conversion retires it.
 
+The fixtures cover the cases someone thought of. Replay mode covers what sessions really
+ran: `python3 plugins/turn-reduction/tests/replay-board-gate.py --n 60` feeds the shell
+commands and turn-ending assistant messages of the 60 most recent main-session
+transcripts (`~/.claude/projects/*/*.jsonl`) through the hook's matching functions and
+prints every (a) and (b) hit with the firing shell segment or the matching sentence, then
+the counts. A person judges each hit; a false one becomes a fixture and a fix. It opens
+transcripts read-only and prints short excerpts only. It is opt-in and never runs in CI,
+because transcripts exist only on this machine; `run-tests.sh` proves the tool itself on a
+synthetic, read-only transcript. Run it after any change to the trigger list or the lexer.
+
 Two hooks answer PreToolUse:Bash in `settings.json` (three with the plugin hook) and two answer PreToolUse:Read. How Claude Code
 arbitrates two answers to one event is not recorded here: the arbitration warning from
 plan H2 item 3 was left out of this change.

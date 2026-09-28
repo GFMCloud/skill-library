@@ -128,7 +128,11 @@ In a project with `.claude/board.json`:
   `bash <skill>/scripts/push_check.sh --repo <repo> --branch <branch> --sha <sha>...`,
   and push as a separate command only after it prints `PUSH CHECK: PASS`. It checks the
   gh account is GFMCloud, origin is under `github.com/GFMCloud/`, gitleaks is clean, and
-  the outgoing commits are exactly the recorded SHAs. It never pushes.
+  the outgoing commits are exactly the recorded SHAs. It never pushes. On a branch's
+  first push there is no `origin/<branch>`, so it measures from origin's default branch
+  and prints the base it used; for a branch stacked on another, add `--base origin/<that
+  branch>`. `--base` accepts only a ref under `refs/remotes/origin/`; a SHA, `HEAD~N` or a
+  local branch stops, because it could hide a foreign commit from the range.
 
 The Stop hook `turn-reduction/hooks/board_gate.py` enforces the logging rule and the
 inbox rule. It blocks once per stop and lets the next stop through.
