@@ -2,7 +2,7 @@
 
 Part of the [turn-reduction](../../README.md) pack.
 
-This skill gives a project one board where its open work and your pending decisions live, so a session does not stop to ask you things in the chat. The board is a private page on your claude.ai account with five fixed columns and a "Needs you" tab. Each question there comes with a recommended answer and one line of why, and you answer with Accept, Amend or Discuss from any device, including your phone. Sessions read your answers when they start and finish, act only on answers to the current version of a question, and move on to the next ready card by themselves. A card reaches Done only with evidence and a green light from a reviewing session.
+This skill gives a project one board where its open work and your pending decisions live, so a session does not stop to ask you things in the chat. The board is a private page on your claude.ai account with five fixed columns and a "Needs you" tab. Each question there comes with a recommended answer and one line of why, and you answer with Accept, Amend or Discuss from any device, including your phone. Sessions read your answers when they start and finish, act only on answers to the current version of a question, and move on to the next ready card by themselves. A card reaches Done only with evidence and a green light from a reviewing session. When you have answered or finished cards and want a session to know now, press **Tell Claude** at the top of the board: it posts a comment on the board and sends it to a Claude session that is watching it. If no session is watching, the button says so, and your answers wait on the cards for the next session.
 
 ## Say this to use it
 

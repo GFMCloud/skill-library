@@ -5,12 +5,15 @@ Behavior changes only — not wording tweaks. Newest first.
 ## 2026-09-27 - turn-reduction 1.3.0 and project-starters 0.2.0: work boards
 
 - **New skill `work-board` (incubator, turn-reduction).** Stands up a project's work board:
-  a private claude.ai page with the `db` capability, generated from
+  a private claude.ai page with the `db` and `comments` capabilities, generated from
   `skills/work-board/templates/work-board.html`, with fixed columns (Needs you, Ready, In
   progress, In review, Done), per-project lanes, and a Needs you inbox whose cards answer
   with Accept, Amend or Discuss into `answer {choice, text, at, ask_rev}`. The page refuses
-  a move to Done without evidence and a green review, and editing a question bumps
-  `ask_rev` and clears the answer. `scripts/work_board.py` renders the page, writes
+  a move to Done without evidence and a green review, refuses an Amend whose text equals
+  the default, and editing a question bumps `ask_rev` and clears the answer. A Tell Claude
+  button posts a board comment through `sendToClaude` to wake a watching session, checks
+  `canSendToClaude` first and says so when no session is watching; the session protocol
+  adds watching the board at pickup. `scripts/work_board.py` renders the page, writes
   `.claude/board.json` from the published URL (`init` for new projects, `adopt` for
   existing ones, both refuse to overwrite), writes a starter `authorization.json` with the
   autonomy tiers and the push procedure (`pushes_per_session` ceiling), and validates

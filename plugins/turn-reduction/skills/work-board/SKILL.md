@@ -24,7 +24,7 @@ page is generated from `templates/work-board.html`, never hand-edited.
 
 ## What a board is
 
-A private claude.ai artifact with the `db` capability; its cards are documents in one
+A private claude.ai artifact with the `db` and `comments` capabilities; its cards are documents in one
 collection (default `cards`). Columns are fixed so every board reads the same:
 
 | id | label | meaning |
@@ -43,8 +43,12 @@ The page opens on **Needs you** with a count badge of unanswered questions; the 
 are Board (columns by lane) and Done (collapsed). An inbox card shows the question, the
 recommended default (labelled), one line of why and the evidence link, then Accept,
 Amend (the default as editable text), Discuss and one comment box; one save writes
-`answer {choice, text, at, ask_rev}`. The page refuses a move to Done without evidence
-and a green review. It is one self-contained file, light and dark, usable at phone width.
+`answer {choice, text, at, ask_rev}`; an Amend whose text equals the default is refused.
+The page refuses a move to Done without evidence and a green review. A **Tell Claude**
+button in the header posts a comment on the board and sends it to Claude (the `comments`
+capability's `sendToClaude`), pre-filled with the inbox cards Graham has answered; it says
+so plainly when no session is watching, since his answers are on the cards either way. It
+is one self-contained file, light and dark, usable at phone width.
 
 ## Stand one up: `init` (new project) or `adopt` (existing project)
 
@@ -60,7 +64,9 @@ directory; read `installPath` for `turn-reduction` out of
    ```
 
 2. **Publish it** with the Artifact tool: `file_path` the rendered page,
-   `capabilities: {"db": {}}`, `icon: "board"`. Keep the URL it returns.
+   `capabilities: {"db": {}, "comments": {}}`, `icon: "board"`. Keep the URL it returns.
+   The publish starts a watch on the board. Before relying on Tell Claude, confirm with
+   ArtifactComments `watch` (no URL) that the board's row says "auto-replies armed".
 3. **Write the config** from that URL. `init` for a project `new-project` just scaffolded;
    `adopt` for an existing project (it keeps an existing `authorization.json`, and takes
    `--trigger NAME=REGEX` for the project's own state-changing scripts).
@@ -90,6 +96,15 @@ In a project with `.claude/board.json`:
   `inbox`, `doing` and `review`. Act on every inbox card whose `answer.ask_rev` equals
   `ask.ask_rev`: Accept means do the default, Amend means do the amended text, Discuss
   means raise it first thing. Ignore an answer whose rev does not match.
+- **Watch the board** so Graham's Tell Claude reaches the session: ArtifactComments
+  `watch` with the board URL, then `watch` with no URL to confirm the row says
+  "auto-replies armed". Arming needs comment auto-replies on for the session, and happens
+  only when this session publishes the board or Graham pasted the board link in his own
+  message; if the row is not armed, republish the same page to the board's URL (no
+  re-render needed) or ask for the link. Only a main session holds a watch: a subagent,
+  teammate or print session cannot receive a Tell Claude. A Tell Claude comment that wakes the session is
+  read with ArtifactComments `read`, handled like a pickup, answered in its thread with
+  what was done, and resolved.
 - **Asks go to the inbox, not chat.** Anything that needs Graham becomes an inbox card
   with a recommended default, and the session keeps working on what it can. Check
   `authorization.json` first (`authz.py check`): an ask it already grants is not asked.
@@ -126,7 +141,8 @@ python3 <skill>/scripts/work_board.py validate <project>/.claude/board.json
 ```
 
 Then republish the page to the board's `url` with the Artifact tool (omit `capabilities`
-so the `db` grant carries forward). Cards live in the database and survive a republish.
+so the grants carry forward). A board first published with `db` only has its Tell Claude
+button hidden: republish it once with `capabilities: {"db": {}, "comments": {}}`. Cards live in the database and survive a republish.
 `validate` fails when the page on disk differs from a fresh render: that is a hand edit or
 a stale page, and the fix is always render plus republish. Lanes change in board.json,
 then regenerate.

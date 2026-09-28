@@ -93,7 +93,8 @@ has the full flow. Creation is two parts, because Bash cannot publish an artifac
 1. Render the page and publish it: run the work-board skill's `work_board.py render
    --name <slug> --out <repo>/.claude/work-board.html` (add `--lane ID:NAME[:WHEN]` for
    deadline groups), then publish that file with the Artifact tool and
-   `capabilities: {"db": {}}`.
+   `capabilities: {"db": {}, "comments": {}}` (`comments` powers the board's Tell Claude
+   button).
 2. Write the config from the URL the Artifact tool returned: `work_board.py init
    --project-dir <repo> --url <artifact url> --name <slug>`. It writes
    `.claude/board.json` and a starter `authorization.json`, and refuses to overwrite either.

@@ -145,6 +145,8 @@ dialog::backdrop{background:rgba(11,11,12,.55)}
 a.link{color:var(--fg);font-weight:600;text-decoration-color:var(--accent);text-underline-offset:3px;overflow-wrap:anywhere}
 details.edit summary{cursor:pointer;font:12px var(--mono);color:var(--muted)}
 details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px}
+.toprt{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.tellnote{font:13px/1.45 var(--sans);color:var(--muted);margin:0}
 .toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:8px;font:13px var(--sans);max-width:calc(100vw - 32px);z-index:10}
 
 @media (max-width: 820px){
@@ -167,7 +169,10 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
         <div class="eyebrow" id="project"></div>
         <h1>Work board<span class="cur" aria-hidden="true"></span></h1>
       </div>
-      <div class="sync" id="sync">Connecting to the board</div>
+      <div class="toprt">
+        <div class="sync" id="sync">Connecting to the board</div>
+        <button type="button" class="btn" id="tell" hidden>Tell Claude</button>
+      </div>
     </div>
     <div class="fixture-banner" id="fixture" hidden>FIXTURE MODE · demo cards, not real data. Local preview with no board database; saves stay in this browser tab and vanish on reload.</div>
   </div>
@@ -267,6 +272,24 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
       <span style="display:flex;gap:8px">
         <button type="button" class="btn" id="d-close">Close</button>
         <button type="button" class="btn go" id="d-save">Save</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="tell-dlg" aria-labelledby="t-h">
+  <form class="dlg" method="dialog" id="t-form">
+    <h2 id="t-h">Tell Claude</h2>
+    <p class="tellnote" id="t-state"></p>
+    <label class="f" for="t-text">Message
+      <textarea id="t-text" class="code" maxlength="4000"></textarea>
+    </label>
+    <p class="err" id="t-err" hidden></p>
+    <div class="row">
+      <span class="meta">Posts a comment on this board and sends it to a watching Claude session</span>
+      <span style="display:flex;gap:8px">
+        <button type="button" class="btn" id="t-close">Close</button>
+        <button type="button" class="btn go" id="t-send">Send to Claude</button>
       </span>
     </div>
   </form>
@@ -553,6 +576,7 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
     if (choice === "amend") {
       text = $("a-amend").value.trim();
       if (!text) { showErr("a-err", "Write your version of the default, or choose Accept."); return; }
+      if (text === String(c.ask.default || "").trim()) { showErr("a-err", "Your version is the same as the default. Change the text, or choose Accept (put any instruction in the comment), or Discuss."); return; }
       if (comment) text += "\n\nComment: " + comment;
     } else if (choice === "discuss") {
       if (!comment) { showErr("a-err", "Say in the comment what you want to discuss."); return; }
@@ -658,15 +682,96 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
     }, function(){ state.db = false; state.loaded = false; render(); });
   }
 
+  // ---- Tell Claude: post a comment on this board and send it to a watching Claude session
+  // (comments capability, sendToClaude). The page never reads threads; the shell shows them.
+  var comments = null, tellBusy = false;
+  var TELL_STATE = {
+    available: "",
+    no_session: "No Claude session is watching this board right now, so this can't be sent. Your answers are saved on the cards, and the next session reads them when it starts.",
+    writers_only: "Only editors of this board can send to Claude.",
+    off: "Sending to Claude isn't available in this view."
+  };
+  var TELL_ERR = {
+    consent_required: "Not sent: this board needs your OK to comment as you. Reload the page, send again, and allow it when asked. Your message is kept.",
+    forbidden: "Not sent: commenting from this board is off for you here. It can be turned back on from the comment panel in claude.ai.",
+    claude_unavailable: "Not sent: no Claude session could take it just now. Nothing was posted, and your message is kept.",
+    rate_limited: "Not sent: too many sends in a short time. Wait a minute, then send again.",
+    invalid: "Not sent: the message was rejected (over 4 KB, or an odd character). Shorten it and send again."
+  };
+  var TELL_OFF = {forbidden:1, not_granted:1, capability_disabled:1, capability_removed:1};
+  function tellDraft(){
+    var answered = state.cards.filter(function(c){ return c.column === "inbox" && answerCurrent(c); }).sort(sortCards);
+    var lines = ["Board update: " + (CONFIG.project || "this board") + "."];
+    if (answered.length) {
+      lines.push("Answered in Needs you, ready to act on:");
+      answered.forEach(function(c){ lines.push("- " + c.id + ": " + (c.title || "") + " (" + c.answer.choice + ")"); });
+    } else lines.push("No new answers in Needs you.");
+    lines.push("Please read the board and pick up.");
+    return lines.join("\n");
+  }
+  function checkTell(){
+    if (!comments) return Promise.resolve("off");
+    return Promise.resolve().then(function(){ return comments.canSendToClaude(); }).then(null, function(){ return "off"; });
+  }
+  function showTellState(s){
+    var k = Object.prototype.hasOwnProperty.call(TELL_STATE, s) ? s : "off";
+    $("t-state").textContent = TELL_STATE[k]; $("t-state").hidden = k === "available";
+    $("t-send").disabled = k !== "available" || tellBusy;
+  }
+  $("tell").addEventListener("click", function(){
+    showErr("t-err", "");
+    if (!$("t-text").value.trim()) $("t-text").value = tellDraft();
+    $("t-send").disabled = true; $("t-state").hidden = false;
+    $("t-state").textContent = "Checking whether a Claude session is watching...";
+    try { $("tell-dlg").showModal(); } catch (e) { $("tell-dlg").setAttribute("open", ""); }
+    checkTell().then(showTellState);
+  });
+  $("t-close").addEventListener("click", function(){ $("tell-dlg").close(); });
+  $("t-send").addEventListener("click", function(){
+    var text = $("t-text").value.trim();
+    if (!text) { showErr("t-err", "Write a message first."); return; }
+    if (!comments || tellBusy) return;
+    tellBusy = true; $("t-send").disabled = true; showErr("t-err", "");
+    comments.anchorFor($("tell")).then(function(anchor){
+      return comments.sendToClaude({anchor: anchor, text: text});
+    }).then(function(){
+      tellBusy = false; $("t-text").value = ""; $("tell-dlg").close();
+      toast("Sent to Claude. The reply appears in this board's comments.");
+    }, function(err){
+      tellBusy = false;
+      var code = (err && err.code) || "upstream_error";
+      showErr("t-err", TELL_ERR[code] || "Not sent (" + code + "). A failed send can still have posted, so check this board's comments before sending again. Your message is kept.");
+      if (TELL_OFF[code]) { comments = null; $("tell").hidden = true; $("t-send").disabled = true; return; }
+      checkTell().then(showTellState);
+    });
+  });
+  function fixtureComments(){
+    var m = /[#&]claude=([a-z_]+)/.exec(location.hash), sends = [];
+    var can = m ? m[1] : "available";
+    window.boardFixture.sends = sends;
+    return {
+      canSendToClaude: function(){ return Promise.resolve(can); },
+      anchorFor: function(){ return Promise.resolve({path: "fixture", x: 0, y: 0}); },
+      sendToClaude: function(t){
+        if (can !== "available") return Promise.reject({code: "claude_unavailable", message: "fixture"});
+        sends.push(JSON.parse(JSON.stringify(t))); return Promise.resolve({threadId: "fixture-thread", commentId: "fixture-comment"});
+      }
+    };
+  }
+
   render();
   var runtime = window.claude && typeof window.claude.use === "function";
-  if (!runtime || location.hash === "#fixture") {
-    state.fixture = true; $("fixture").hidden = false; attach(fixtureDb()); return;
+  if (!runtime || /^#fixture/.test(location.hash)) {
+    state.fixture = true; $("fixture").hidden = false; attach(fixtureDb());
+    comments = fixtureComments(); $("tell").hidden = false; return;
   }
   window.claude.use("db").then(function(db){
     if (!db) { state.db = false; render(); return; }
     attach(db);
   }, function(){ state.db = false; render(); });
+  window.claude.use("comments").then(function(c){
+    if (c) { comments = c; $("tell").hidden = false; }
+  }, function(){});
 })();
 </script>
 </body>

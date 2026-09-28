@@ -2,7 +2,7 @@
 """work_board.py: the scripted half of the work-board skill.
 
 A board is a private claude.ai artifact (the page from templates/work-board.html, with the
-`db` capability, collection `cards`). Bash cannot publish an artifact, so standing one up is
+`db` and `comments` capabilities, collection `cards`). Bash cannot publish an artifact, so standing one up is
 two parts (PROPOSAL V6): this script renders the page, Claude publishes it with the
 Artifact tool, then this script writes `.claude/board.json` from the returned URL and
 Claude seeds the cards with ArtifactData.
@@ -193,8 +193,8 @@ def cmd_render(args):
     with open(out, "w", encoding="utf-8") as fh:
         fh.write(html)
     print("rendered %s (%d bytes) for project %r, %d lane(s)" % (out, len(html), cfg["project"], len(cfg["lanes"])))
-    print("next: publish it with the Artifact tool and capabilities {\"db\": {}} (first time), or "
-          "republish to the board's url (regeneration)")
+    print("next: publish it with the Artifact tool and capabilities {\"db\": {}, \"comments\": {}} "
+          "(first time), or republish to the board's url (regeneration)")
     return 0
 
 
