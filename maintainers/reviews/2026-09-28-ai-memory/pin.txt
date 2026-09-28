@@ -1,0 +1,1 @@
+b46b1d18d7c8efe5cc0329b3f04a45f67f68ce73  https://github.com/akitaonrails/ai-memory  cloned 2026-09-28 (depth 1, hooksPath disabled)
