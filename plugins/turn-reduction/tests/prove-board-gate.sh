@@ -14,6 +14,10 @@
 #   noauthz     .claude/board.json only (authorization.json renamed .superseded)
 #   superseded  .claude/board.json renamed .superseded + authorization.json
 #   none        no .claude/board.json at all
+# Two more repos for cross-repo cases, never a case's project: other (its own board,
+# OtherBoard456, with a sub/ dir) and plain (no board, with a sub/ dir). Case strings may
+# name them as @other@ and @plain@, and the full project as @full@. A case may set a
+# step's "cwd" and a "stderr_has" string the block must carry.
 set -u -o pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 HOOK="${1:-$HERE/../hooks/board_gate.py}"
@@ -45,7 +49,9 @@ proj("none", None, "", "authorization.json")
 proj("other", dict(board, url="https://claude.ai/artifact/OtherBoard456"), "board.json", None)
 os.makedirs(os.path.join(tmp, "proj-other", "sub"), exist_ok=True)
 os.makedirs(os.path.join(tmp, "plain", "sub"), exist_ok=True)
+proj("badurl", dict(board, url=123), "board.json", None)  # a malformed board.json: url not a string
 places = {"@other@": os.path.join(tmp, "proj-other"), "@plain@": os.path.join(tmp, "plain"),
+          "@badurl@": os.path.join(tmp, "proj-badurl"),
           "@full@": os.path.join(tmp, "proj-full")}
 def sub(s):
     for k, v in places.items():
@@ -90,7 +96,8 @@ FAIL=0
 i=0
 while [ "$i" -lt "$N" ]; do
   IFS=$'\t' read -r EXPECT PROJ NAME HAS < "$TMP/meta$i"
-  CLAUDE_PROJECT_DIR="$PROJ" python3 "$HOOK" < "$TMP/in$i.json" > /dev/null 2> "$TMP/err$i.txt"
+  # HOME is the fixture root, so a case can use ~/proj-other for the tilde form of -C
+  HOME="$TMP" CLAUDE_PROJECT_DIR="$PROJ" python3 "$HOOK" < "$TMP/in$i.json" > /dev/null 2> "$TMP/err$i.txt"
   GOT=$?
   # a blocked case must block for the reason its name gives, (a) or (b), and only that one
   WHY=""

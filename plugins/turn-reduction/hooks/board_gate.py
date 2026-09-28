@@ -35,6 +35,9 @@ Known weaknesses, stated beside the rule:
   script not named in triggers[] is not seen, nor one inside `$(...)` or backticks within
   double quotes. Project triggers[] regexes are matched against the segment from its
   command position, so they need no anchor, but a loose one can still match an argument.
+- The board a change is owed to comes from `git -C <dir>` (with `~` expanded) or the
+  transcript entry's cwd. `cd <dir> && git commit` and `$HOME/...` paths are charged to
+  the entry's cwd board, not `<dir>`'s; sessions here use `git -C`, so this is rare.
 - The should-I check reads the first and last paragraph of the final message and matches
   a phrase list. An ask phrased another way ("Thoughts?") passes; a rhetorical
   "should I" in prose that ends in a question mark blocks.
@@ -314,7 +317,7 @@ def board_for(start, fallback):
 
 
 def board_id(url):
-    m = re.search(r"/artifact/([A-Za-z0-9_-]+)", url or "")
+    m = re.search(r"/artifact/([A-Za-z0-9_-]+)", str(url or ""))
     return m.group(1) if m else ""
 
 
@@ -389,19 +392,23 @@ def evaluate(data, project_dir):
     # board above a command's repo (`git -C <dir>`, else the entry's cwd) when that repo
     # has its own .claude/board.json.
     boards = {bid: board}
+    owed_cache = {}  # board.json path -> board id it resolves to
 
     def owed_to(start):
         found = board_for(start, board_path)
-        try:
-            with open(found, encoding="utf-8") as fh:
-                other = json.load(fh)
-            obid = board_id(other.get("url"))
-        except (OSError, ValueError, AttributeError):
-            return bid
-        if not obid:
-            return bid
-        boards.setdefault(obid, other)
-        return obid
+        if found not in owed_cache:
+            owed_cache[found] = bid
+            try:
+                if os.path.getsize(found) <= 1 << 20:  # a board.json is small; skip anything odd
+                    with open(found, encoding="utf-8") as fh:
+                        other = json.load(fh)
+                    obid = board_id(other.get("url"))
+                    if obid:
+                        boards.setdefault(obid, other)
+                        owed_cache[found] = obid
+            except (OSError, ValueError, AttributeError, TypeError):
+                pass
+        return owed_cache[found]
 
     pending = []          # (kind, command, board id) since that board's last write or a BOARD marker
     turn_inbox = False    # an inbox write or INBOX marker in the current turn
@@ -444,7 +451,7 @@ def evaluate(data, project_dir):
                         cmd = str(inp.get("command") or "")
                         base = entry.get("cwd") or project_dir
                         for kind, cdir in trigger_dirs(cmd, extra):
-                            start = os.path.join(base, cdir) if cdir else base
+                            start = os.path.join(base, os.path.expanduser(cdir)) if cdir else base
                             pending.append((kind, cmd, owed_to(start)))
             used_tool = any(isinstance(b, dict) and b.get("type") == "tool_use"
                             for b in (entry.get("message") or {}).get("content") or [])
