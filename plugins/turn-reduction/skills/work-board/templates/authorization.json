@@ -10,7 +10,7 @@
     "applies_to": "a session's own commits, to a repo whose origin is under github.com/GFMCloud/. Other sessions' commits, force pushes and anything under gmorris1221 stay stop-listed.",
     "steps": [
       "Record the SHA of every commit this session creates.",
-      "Run push_check.sh --repo <repo> --branch <branch> --sha <each recorded SHA>. It checks: the active gh account is GFMCloud; origin is under github.com/GFMCloud/; gitleaks finds nothing; git log --oneline origin/<branch>..HEAD lists exactly the recorded SHAs. Any mismatch is a hard stop.",
+      "Run push_check.sh --repo <repo> --branch <branch> [--base <ref>] --sha <each recorded SHA>. It checks: the active gh account is GFMCloud; origin is under github.com/GFMCloud/; gitleaks finds nothing; git log --oneline <base>..HEAD lists exactly the recorded SHAs, where the base is origin/<branch>, or on a branch's first push origin's default branch (pass --base origin/<branch> for a branch stacked on another; --base takes only a ref under refs/remotes/origin/, never a SHA, HEAD~N or local branch). Any mismatch is a hard stop.",
       "Push as a separate command, never chained to the check.",
       "Code: push a branch first and wait for CI green where the repo has CI. Docs-only commits may go direct with no CI, stated on the card.",
       "Stay inside the pushes_per_session ceiling."

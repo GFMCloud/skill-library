@@ -177,6 +177,31 @@ because "BOARD-GATE PROOF: PASS"
 run 1 "the prover fails a hook that never blocks" -- \
   bash "$PLUGIN_ROOT/tests/prove-board-gate.sh" "$FIXTURES/board-gate/stub-never-blocks.py"
 because "BOARD-GATE PROOF: FAIL"
+# Replay mode on a synthetic projects dir made read-only: a write would fail the run.
+RP="$scratch/replay-projects"
+mkdir -p "$RP/-fixture-project" "$scratch/replay-empty"
+{
+  printf '%s\n' '{"type":"user","message":{"role":"user","content":"ship it"}}'
+  printf '%s\n' '{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","name":"Bash","input":{"command":"git -C /repo push origin main"}}]}}'
+  printf '%s\n' '{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Pushed."}]}}'
+  printf '%s\n' '{"type":"user","message":{"role":"user","content":"next"}}'
+  printf '%s\n' '{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"The branch is green.\n\nShould I merge it to main?"}]}}'
+  printf '%s\n' '{"type":"user","message":{"role":"user","content":"find it"}}'
+  printf '%s\n' '{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","name":"Bash","input":{"command":"grep -n \"git push\" notes.md"}}]}}'
+  printf '%s\n' '{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Found it."}]}}'
+} > "$RP/-fixture-project/fixture-session.jsonl"
+chmod -R a-w "$RP"
+run 0 "replay mode reports each hit from local transcripts and writes nothing" -- \
+  python3 "$PLUGIN_ROOT/tests/replay-board-gate.py" --n 5 --projects-dir "$RP"
+because "(a) git push"
+because "(b) should-I ask"
+because "Should I merge it to main?"
+because "REPLAY: 1 transcripts, 2 shell commands, 3 final messages"
+because "REPLAY: (a) 1 hits (git push 1); (b) 1 hits"
+chmod -R u+w "$RP"
+run 2 "replay mode with no transcripts says so" -- \
+  python3 "$PLUGIN_ROOT/tests/replay-board-gate.py" --projects-dir "$scratch/replay-empty"
+because "REPLAY: no transcripts"
 
 echo
 echo "push check"

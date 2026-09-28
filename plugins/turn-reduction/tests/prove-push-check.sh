@@ -88,5 +88,40 @@ STUB_GH_LOGIN=GFMCloud run 1 "gitleaks found a secret" "secret in an outgoing co
 
 run 2 "usage" "no SHAs given: usage error" -- --repo "$R" --branch main
 
+# First push of a new branch: there is no origin/<branch>, so the base falls back to
+# origin's default branch and the range must still be exactly the recorded SHAs.
+R=$(fresh newbranch "$GOOD_URL"); git -C "$R" checkout -q -b feature; A=$(commit "$R" a.txt one)
+STUB_GH_LOGIN=GFMCloud run 0 "base origin/main (no origin/feature yet" "first push of a new branch, own commit only: passes on origin/main" -- --repo "$R" --branch feature --sha "$A"
+
+R=$(fresh newforeign "$GOOD_URL"); git -C "$R" checkout -q -b feature; A=$(commit "$R" a.txt one); F=$(commit "$R" planted.txt "another session")
+STUB_GH_LOGIN=GFMCloud run 1 "not recorded by this session" "first push of a new branch with a foreign commit: stops" -- --repo "$R" --branch feature --sha "$A"
+
+# origin's default branch is read from refs/remotes/origin/HEAD when it is set: here the
+# default is trunk, which is one commit ahead of main, so origin/main would list a foreign
+# commit and only origin/trunk gives exactly the recorded SHA.
+R=$(fresh defaulthead "$GOOD_URL"); git -C "$R" checkout -q -b trunk; T=$(commit "$R" t.txt trunk)
+G -C "$R" push -q "$TMP/defaulthead/remote.git" trunk 2>/dev/null; G -C "$R" fetch -q "$TMP/defaulthead/remote.git" '+refs/heads/*:refs/remotes/origin/*'
+git -C "$R" symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/trunk
+git -C "$R" checkout -q -b feature; A=$(commit "$R" a.txt one)
+STUB_GH_LOGIN=GFMCloud run 0 "base origin/trunk (no origin/feature yet (first push); origin's default branch" "first push reads origin's default branch from origin/HEAD: passes on origin/trunk" -- --repo "$R" --branch feature --sha "$A"
+
+# Explicit --base: a new branch stacked on a pushed branch. The default-branch fallback
+# counts the stacked-on commit as foreign and stops; --base origin/stack passes.
+R=$(fresh stacked "$GOOD_URL"); git -C "$R" checkout -q -b stack; S=$(commit "$R" s.txt stack)
+G -C "$R" push -q "$TMP/stacked/remote.git" stack 2>/dev/null; G -C "$R" fetch -q "$TMP/stacked/remote.git" '+refs/heads/*:refs/remotes/origin/*'
+git -C "$R" checkout -q -b feature; A=$(commit "$R" a.txt one)
+STUB_GH_LOGIN=GFMCloud run 1 "not recorded by this session" "stacked branch without --base: fallback to origin/main stops" -- --repo "$R" --branch feature --sha "$A"
+STUB_GH_LOGIN=GFMCloud run 0 "base origin/stack (given with --base, refs/remotes/origin/stack)" "stacked branch with explicit --base origin/stack: passes" -- --repo "$R" --branch feature --base origin/stack --sha "$A"
+STUB_GH_LOGIN=GFMCloud run 1 "--base origin/nope is not a ref under refs/remotes/origin/" "explicit --base that does not resolve: stops" -- --repo "$R" --branch feature --base origin/nope --sha "$A"
+
+# --base must be a ref under refs/remotes/origin/. A foreign commit F sits under the
+# session's own commit M; any base at or above F would hide it, so each one stops.
+R=$(fresh narrowbase "$GOOD_URL"); git -C "$R" checkout -q -b feature; F=$(commit "$R" planted.txt "another session"); M=$(commit "$R" a.txt one)
+git -C "$R" branch -q localbase "$F"
+STUB_GH_LOGIN=GFMCloud run 1 "is not a ref under refs/remotes/origin/" "--base HEAD~1 above a foreign commit: stops" -- --repo "$R" --branch feature --base HEAD~1 --sha "$M"
+STUB_GH_LOGIN=GFMCloud run 1 "is not a ref under refs/remotes/origin/" "--base <sha> of a foreign commit: stops" -- --repo "$R" --branch feature --base "$F" --sha "$M"
+STUB_GH_LOGIN=GFMCloud run 1 "is not a ref under refs/remotes/origin/" "--base <local branch> at a foreign commit: stops" -- --repo "$R" --branch feature --base localbase --sha "$M"
+STUB_GH_LOGIN=GFMCloud run 1 "not recorded by this session" "same repo with --base origin/main: stops on the foreign commit" -- --repo "$R" --branch feature --base origin/main --sha "$M"
+
 if [ "$FAIL" -ne 0 ]; then echo "PUSH-CHECK PROOF: FAIL"; exit 1; fi
-echo "PUSH-CHECK PROOF: PASS (9 cases)"
+echo "PUSH-CHECK PROOF: PASS (19 cases)"

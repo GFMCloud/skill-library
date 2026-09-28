@@ -27,10 +27,10 @@ stop through. Exit 0 when nothing is owed. Any error fails open (exit 0).
 
 Known weaknesses, stated beside the rule:
 - The trigger list is a pattern list, matched at the command position of each shell
-  segment. A state change behind an alias, a Makefile target, a shell function, `eval` or
-  a script not named in triggers[] is not seen. Project triggers[] regexes are matched
-  against the segment from its command position, so they need no anchor, but a loose one
-  can still match an argument.
+  segment. A state change behind an alias, a Makefile target, a shell function or a
+  script not named in triggers[] is not seen, nor one inside `$(...)` or backticks within
+  double quotes. Project triggers[] regexes are matched against the segment from its
+  command position, so they need no anchor, but a loose one can still match an argument.
 - The should-I check reads the first and last paragraph of the final message and matches
   a phrase list. An ask phrased another way ("Thoughts?") passes; a rhetorical
   "should I" in prose that ends in a question mark blocks.
@@ -56,13 +56,15 @@ INBOX_MARKER = re.compile(r"(?m)^[ \t]*INBOX: none needed:[ \t]*(?!<)(\S.{7,})$"
 
 # Command text that changes state. Each regex is matched against one shell segment
 # rewritten from its command position (after VAR=val, sudo, time, env, nohup, command,
-# exec, and an interpreter such as bash or sh), with quoted words that contain spaces
-# replaced by Q and heredoc bodies removed. So `grep "sam deploy" f`, `cat deploy.sh` and
-# a heredoc line mentioning `git push` are not state changes. Project-specific scripts
+# exec, xargs and its options, and an interpreter such as bash or sh; the string after
+# `bash -c` or `sh -lc` and the words after `eval` are read as commands of their own),
+# with quoted words that contain spaces replaced by Q and heredoc bodies removed.
+# Backtick substitution outside quotes opens a segment of its own. So `grep "sam deploy"
+# f`, `cat deploy.sh` and a heredoc line mentioning `git push` are not state changes. Project-specific scripts
 # belong in board.json triggers[], not here.
 TRIGGERS = [
     ("git commit", re.compile(r"^git\b(\s+-\S+(\s+\S+)?)*\s+commit\b(?!.*--dry-run)")),
-    ("git merge", re.compile(r"^git\b(\s+-\S+(\s+\S+)?)*\s+merge\b(?!-base)")),
+    ("git merge", re.compile(r"^git\b(\s+-\S+(\s+\S+)?)*\s+merge\b(?!-)")),  # not merge-base, merge-tree
     ("git push", re.compile(r"^git\b(\s+-\S+(\s+\S+)?)*\s+push\b(?!.*--dry-run)")),
     ("gh pr merge", re.compile(r"^gh\s+pr\s+merge\b")),
     ("gh repo create", re.compile(r"^gh\s+repo\s+create\b")),
@@ -71,7 +73,9 @@ TRIGGERS = [
     ("terraform apply", re.compile(r"^terraform\b.*\s(apply|destroy)\b")),
     ("cdk deploy", re.compile(r"^(npx\s+)?cdk\s+(deploy|destroy)\b")),
 ]
-PREFIXES = {"sudo", "time", "env", "nohup", "command", "exec"}
+PREFIXES = {"sudo", "time", "env", "nohup", "command", "exec", "xargs"}
+# xargs options that take the next word as their value (BSD and GNU spellings).
+XARGS_VALUE_FLAGS = {"-I", "-J", "-L", "-n", "-P", "-s", "-E", "-e", "-d", "-a", "-R", "-S"}
 INTERPRETERS = {"bash", "sh", "zsh", "source", "."}
 ASSIGN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\1")
@@ -110,8 +114,8 @@ def strip_heredocs(command):
 
 def lex(command):
     """Split a command into segments of (word, quoted) pairs. Separators outside quotes:
-    ; & | && || newline ( ). Quotes are removed from the word; `quoted` records that any
-    part of the word was quoted."""
+    ; & | && || newline ( ) and backtick. Quotes are removed from the word; `quoted`
+    records that any part of the word was quoted."""
     segs, words, cur, quoted, have, q = [], [], [], False, False, None
     i, n = 0, len(command)
 
@@ -149,7 +153,7 @@ def lex(command):
                 have = True
         elif c in " \t":
             end_word()
-        elif c in ";&|\n()":
+        elif c in ";&|\n()`":
             end_seg()
         else:
             cur.append(c)
@@ -160,7 +164,8 @@ def lex(command):
 
 
 def command_words(words):
-    """Words from the command position on, plus the body of any `bash -c` string."""
+    """Words from the command position on, plus the command string of any `bash -c`
+    (also combined flags such as `sh -lc`) or `eval`."""
     k = 0
     while k < len(words):
         w = words[k][0]
@@ -169,14 +174,19 @@ def command_words(words):
         elif w in PREFIXES:
             k += 1
             while k < len(words) and words[k][0].startswith("-"):
+                if w == "xargs" and words[k][0] in XARGS_VALUE_FLAGS:
+                    k += 1
                 k += 1
         else:
             break
     rest = words[k:]
+    if rest and rest[0][0] == "eval":
+        return [], " ".join(w for w, _ in rest[1:])
     if rest and os.path.basename(rest[0][0]) in INTERPRETERS:
         j = 1
         while j < len(rest) and rest[j][0].startswith("-"):
-            if rest[j][0] == "-c" and j + 1 < len(rest):
+            flag = rest[j][0]
+            if not flag.startswith("--") and "c" in flag[1:] and j + 1 < len(rest):
                 return [], rest[j + 1][0]
             j += 1
         rest = rest[j:]
@@ -211,7 +221,7 @@ def aws_writes(toks):
             skip = "=" not in t and t not in ("--no-cli-pager", "--debug", "--no-paginate")
             continue
         words.append(t)
-    if len(words) < 2:
+    if len(words) < 2 or "--generate-cli-skeleton" in toks:
         return False
     service, op = words[0], words[1]
     if service == "s3":
@@ -242,17 +252,23 @@ def project_triggers(board):
     return out
 
 
-def triggers_in(command, extra):
+def trigger_hits(command, extra):
+    """(trigger name, cleaned segment text) for each segment of the command that changes
+    state. tests/replay-board-gate.py prints the segment so a person can judge the hit."""
     found = []
     for text, toks in segments(command):
         for name, rx in TRIGGERS + extra:
             if rx.search(text):
-                found.append(name)
+                found.append((name, text))
                 break
         else:
             if aws_writes(toks):
-                found.append("aws write")
+                found.append(("aws write", text))
     return found
+
+
+def triggers_in(command, extra):
+    return [name for name, _ in trigger_hits(command, extra)]
 
 
 def board_id(url):
