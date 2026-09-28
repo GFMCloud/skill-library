@@ -4,8 +4,8 @@ description: >-
   Summarizes the current conversation and prepares a structured handoff package for a fresh Claude session, and verifies a handoff's claims when a new session resumes from one. Use when the user says "handoff", "/handoff", "fresh session", "new session", "context is getting long", or "wrap this up" to generate a handoff; also use whenever a session opens from an uploaded, pasted, or referenced handoff file, to re-check its claims before acting on it. Also proactively suggest a handoff when the conversation is clearly getting very long, context has been compacted, or the user is wrapping up a major work block. Generates a work-type-aware markdown summary file with a typed, re-checkable claims block and a copy-paste prompt block, then on resume verifies each claim against the live artifact rather than trusting the document. This is Graham's customized version and supersedes Claude's stock handoff skill, which triggers on the same words: when both are installed, always use this one.
 metadata:
   maturity: incubator
-  version: 0.6.1
-  reviewed: 2026-09-26
+  version: 0.6.2
+  reviewed: 2026-09-28
 ---
 
 # Handoff Skill
@@ -224,6 +224,8 @@ NOTES FOR NEXT CLAUDE
 Save this file as: `handoff-[topic]-[YYYY-MM-DD].md`
 
 Present the file to the user for download.
+
+In a project with `.claude/board.json`, release this session's board watches before the message that delivers the file, per `turn-reduction:work-board` ("Release the watch when you hand off", source of truth), so Graham's Tell Claude reaches the session that resumes rather than this one.
 
 ---
 
