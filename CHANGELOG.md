@@ -2,6 +2,15 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-28 - turn-reduction 1.3.4: watch every board you write to
+
+- **work-board: the watch step names every board and comes before the first write.** A
+  session working in SCL watched only the SCL board (armed by its publish) and never the
+  rollout board it also wrote to; Graham's Tell Claude sends on the rollout board were
+  answered by a claude.ai chat Claude that could not reach this Mac, and the page did not
+  show its "no session is watching" state. SKILL.md now says so and requires a confirmed
+  "auto-replies armed" row for each board before the session writes to it.
+
 ## 2026-09-28 - turn-reduction 1.3.3: board hook charges a change to its own repo's board
 
 - **`board_gate.py` (a) is per board.** A state change is owed to the nearest
