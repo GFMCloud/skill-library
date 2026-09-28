@@ -679,9 +679,9 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
     var c = findCard(askId); if (!c || !c.ask) return;
     var q = $("e-q").value.trim(); if (!q) { showErr("a-err", "The question can't be empty."); return; }
     var ask = {question: q, default: $("e-default").value.trim(), why: $("e-why").value.trim(), evidence_link: $("e-link").value.trim(), ask_rev: (+c.ask.ask_rev || 0) + 1};
-    var command = $("e-command").value.trim(), expect = $("e-expect").value.trim();
-    if (command) ask.command = command;
-    if (expect) ask.expect = expect;
+    // Always written, empty when cleared: the board's update merges nested objects, so a
+    // left-out key would keep the old command and the card would stay "You run this".
+    ask.command = $("e-command").value.trim(); ask.expect = $("e-expect").value.trim();
     write(askId, {ask: ask, answer: null}).then(function(ok){ if (ok) { $("ask-dlg").close(); toast("Question updated to revision " + ask.ask_rev + "; the old answer was cleared."); } });
   });
 
@@ -759,7 +759,12 @@ details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px
       collection: function(){ return {onSnapshot: function(cb){ subs.push(cb); setTimeout(emit, 0); return function(){}; }}; },
       doc: function(path){ var id = path.split("/").pop(); return {update: function(patch){
         writes.push({id:id, patch:JSON.parse(JSON.stringify(patch))});
-        Object.keys(patch).forEach(function(k){ cards[id][k] = patch[k]; });
+        // Merge like the board's update: nested objects merge key by key, anything else replaces.
+        (function merge(t, p){ Object.keys(p).forEach(function(k){
+          var v = p[k], o = t[k];
+          if (v && typeof v === "object" && !Array.isArray(v) && o && typeof o === "object" && !Array.isArray(o)) merge(o, v);
+          else t[k] = v;
+        }); })(cards[id], JSON.parse(JSON.stringify(patch)));
         setTimeout(emit, 0); return Promise.resolve();
       }}; }
     };
