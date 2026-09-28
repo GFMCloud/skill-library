@@ -46,8 +46,11 @@ Amend (the default as editable text), Discuss and one comment box; one save writ
 `answer {choice, text, at, ask_rev}`; an Amend whose text equals the default is refused.
 The page refuses a move to Done without evidence and a green review. A **Tell Claude**
 button in the header posts a comment on the board and sends it to Claude (the `comments`
-capability's `sendToClaude`), pre-filled with the inbox cards Graham has answered; it says
-so plainly when no session is watching, since his answers are on the cards either way. It
+capability's `sendToClaude`), pre-filled with the inbox cards Graham has answered. When no
+Claude Code session is watching the board, claude.ai may answer the send with its own chat
+Claude, which cannot reach this machine, rather than the page saying no session is watching
+(seen 2026-09-28); his answers are on the cards either way, and a session's pickup reads
+them. It
 is one self-contained file, light and dark, usable at phone width. Its one external call
 is Google Fonts, for the mood board's type pairing; offline it falls back to system fonts.
 
@@ -97,9 +100,11 @@ In a project with `.claude/board.json`:
   `inbox`, `doing` and `review`. Act on every inbox card whose `answer.ask_rev` equals
   `ask.ask_rev`: Accept means do the default, Amend means do the amended text, Discuss
   means raise it first thing. Ignore an answer whose rev does not match.
-- **Watch the board** so Graham's Tell Claude reaches the session: ArtifactComments
-  `watch` with the board URL, then `watch` with no URL to confirm the row says
-  "auto-replies armed". Arming needs comment auto-replies on for the session, and happens
+- **Watch every board you write to**, at pickup and before your first write to it, so
+  Graham's Tell Claude reaches this session and not a chat Claude: ArtifactComments `watch`
+  with the board URL, then `watch` with no URL to confirm its row says "auto-replies armed".
+  A session working across two projects watches both boards; publishing one board arms
+  only that one. Arming needs comment auto-replies on for the session, and happens
   only when this session publishes the board or Graham pasted the board link in his own
   message; if the row is not armed, republish the same page to the board's URL (no
   re-render needed) or ask for the link. Only a main session holds a watch: a subagent,
