@@ -1,0 +1,778 @@
+<!doctype html>
+<!-- GENERATED FILE. Rendered by turn-reduction:work-board (scripts/work_board.py render) from
+     templates/work-board.html. Do not edit this copy: change the template and regenerate. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__PAGE_TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* Visual direction: Graham's AI visual mood board (2026-09-24). Page chrome tokens, one
+   amber accent, diff green and red for approved and rejected, the JetBrains Mono + Inter +
+   IBM Plex Serif pairing, the permission-prompt block and the inline diff with Accept.
+   Its "what to avoid" list binds: no gradients, glass, glow borders, unlabelled sparkles
+   or AI badges; motion minimal and off under prefers-reduced-motion. */
+:root{
+  --bg:#f6f6f4; --fg:#16171a; --muted:#5f6268; --line:#dcdcd8; --card:#ffffff;
+  --accent:#e5b93c; --accent-ink:#8a6a0e; --accent-bg:rgba(229,185,60,.12); --accent-line:rgba(229,185,60,.75);
+  --add:#2ea043; --rem:#f85149; --add-bg:rgba(46,160,67,.16); --rem-bg:rgba(248,81,73,.16);
+  --add-ink:#1a7f37; --rem-ink:#cf222e; --sel:rgba(22,23,26,.06);
+  --focus:#16171a;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"IBM Plex Serif",Georgia,serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0b0b0c; --fg:#ececec; --muted:#9a9ca1; --line:#26272a; --card:#141517;
+    --accent-ink:#e5b93c; --add-ink:#3fb950; --rem-ink:#f85149; --sel:rgba(255,255,255,.07); --focus:#e5b93c;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0b0b0c; --fg:#ececec; --muted:#9a9ca1; --line:#26272a; --card:#141517;
+  --accent-ink:#e5b93c; --add-ink:#3fb950; --rem-ink:#f85149; --sel:rgba(255,255,255,.07); --focus:#e5b93c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:hidden}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{padding-inline:16px;max-width:1480px;margin-inline:auto}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+code{font:12px var(--mono);overflow-wrap:anywhere}
+
+header.top{border-bottom:1px solid var(--line);padding-block:22px 16px}
+.band-top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);overflow-wrap:anywhere}
+h1{font:600 30px/1.05 var(--sans);letter-spacing:-.02em;margin:10px 0 0}
+h1 .cur{display:inline-block;width:.45em;height:.85em;background:var(--accent);vertical-align:-.06em;margin-left:.1em}
+.sync{font:500 12px var(--mono);color:var(--muted)}
+.gen{font:12px/1.5 var(--mono);color:var(--muted);border-bottom:1px solid var(--line);padding-block:8px}
+.fixture-banner{border:1px solid var(--accent);background:var(--accent-bg);border-radius:8px;padding:10px 12px;margin-top:14px;font:600 12.5px/1.45 var(--mono);color:var(--accent-ink)}
+
+.tabs{display:flex;flex-wrap:wrap;gap:4px 18px;border-bottom:1px solid var(--line);margin-top:10px}
+.tab{font:600 14px var(--sans);border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);padding:12px 2px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.badge{font:600 11px/1 var(--mono);min-width:22px;text-align:center;border-radius:4px;padding:4px 6px;border:1px solid var(--line);color:var(--muted)}
+.badge.hot{border-color:var(--accent);background:var(--accent);color:#16171a}
+.view{padding-top:16px}
+.view[hidden]{display:none}
+.status{padding:24px 0;color:var(--muted)}
+.hint{font-size:13px;color:var(--muted);margin:0 0 14px;max-width:760px}
+
+/* Needs you: each card is a permission prompt */
+.inbox{display:flex;flex-direction:column;gap:12px;max-width:760px;padding-bottom:28px}
+.ask{background:var(--accent-bg);border:1px solid var(--accent-line);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%;display:flex;flex-direction:column;gap:6px}
+.ask.answered{background:var(--card);border-color:color-mix(in srgb,var(--add) 55%,transparent)}
+.ask .q{font:600 15px/1.35 var(--sans)}
+.ask .d{font-size:13px;color:var(--muted)}
+.ask .d b{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--fg)}
+
+/* Board */
+.colchips{display:none;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.colchip{font:600 12px var(--mono);border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:6px;padding:6px 10px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.colchip[aria-pressed="true"]{color:var(--fg);border-color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent)}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0 12px;padding-bottom:28px}
+.colhead{padding:4px 2px 10px;border-bottom:1px solid var(--fg)}
+.colhead .t{font:600 13px var(--sans);display:flex;justify-content:space-between;gap:8px}
+.colhead .t .c{font:500 12px var(--mono);color:var(--muted)}
+.colhead .h{font-size:12px;color:var(--muted)}
+.lane{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:18px 2px 8px;border-bottom:1px solid var(--line)}
+.lane .t{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.lane .d{font:12px var(--mono);color:var(--muted)}
+.cell{display:flex;flex-direction:column;gap:8px;padding:10px 0 4px;min-height:48px;border-radius:10px;min-width:0}
+.cell.over{background:var(--sel)}
+.empty{font:12px var(--mono);color:var(--muted);opacity:.7;padding:6px 2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 12px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%;display:flex;flex-direction:column;gap:7px;min-width:0}
+.card:hover,.ask:hover{border-color:var(--muted)}
+.card.dragging{opacity:.45}
+.chips{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.rank{display:inline-block;font:600 10px/1 var(--mono);padding:4px 6px;border-radius:4px;border:1px solid var(--line);color:var(--muted);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.rank.green{color:var(--add-ink);border-color:color-mix(in srgb,var(--add) 55%,transparent);background:var(--add-bg)}
+.rank.red{color:var(--rem-ink);border-color:color-mix(in srgb,var(--rem) 55%,transparent);background:var(--rem-bg)}
+.rank.need{color:var(--accent-ink);border-color:var(--accent-line);background:var(--accent-bg)}
+.rank.fixture{color:#16171a;border-color:var(--accent);background:var(--accent)}
+.card .title{font:600 13.5px/1.35 var(--sans);overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:4px 10px;font:12px var(--mono);color:var(--muted)}
+.due.soon{color:var(--rem-ink);font-weight:600}
+
+/* Done */
+details.done{max-width:760px;padding-bottom:28px}
+details.done summary{cursor:pointer;font:600 13px var(--mono);padding:8px 0;color:var(--muted)}
+.donelist{display:flex;flex-direction:column;gap:8px}
+.ev{font:12px/1.5 var(--mono);color:var(--muted);overflow-wrap:anywhere}
+
+/* Dialogs */
+dialog{border:1px solid var(--line);border-radius:10px;padding:0;background:var(--card);color:var(--fg);width:min(600px,calc(100vw - 32px));max-height:calc(100vh - 48px)}
+dialog::backdrop{background:rgba(11,11,12,.55)}
+.dlg{display:flex;flex-direction:column;gap:14px;padding:18px}
+.dlg h2{font:600 18px/1.35 var(--sans);margin:0;overflow-wrap:anywhere}
+.lbl{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.box{border:1px solid var(--line);border-radius:8px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.why{font:italic 400 15px/1.5 var(--serif);color:var(--muted);margin:0}
+.perm{border:1px solid var(--accent-line);background:var(--accent-bg);border-radius:8px;padding:12px}
+.perm .pq{font:600 16px/1.35 var(--sans);margin:0 0 10px;overflow-wrap:anywhere}
+.perm .pq .qm{color:var(--accent-ink)}
+.opts{display:flex;flex-direction:column;gap:2px}
+.opt{font:500 14px/1.4 var(--mono);text-align:left;background:none;border:0;border-radius:4px;color:var(--fg);padding:6px 8px;cursor:pointer;display:flex;gap:8px}
+.opt .ptr{width:1em;color:var(--accent-ink)}
+.opt[aria-checked="true"]{background:var(--sel)}
+.opt .k{color:var(--muted)}
+.keys{font:11.5px var(--mono);color:var(--muted);margin-top:8px}
+.diff{border:1px solid var(--line);border-radius:8px;overflow:hidden;font:13px/1.6 var(--mono)}
+.diff .ln{display:block;padding:4px 10px;white-space:pre-wrap;overflow-wrap:anywhere}
+.diff .ln.rem{background:var(--rem-bg);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--rem) 60%,transparent)}
+.diff .ln.add{background:var(--add-bg)}
+.diff .ln .sg{display:inline-block;width:1.3em;font-weight:700}
+.diff .ln.rem .sg{color:var(--rem-ink)} .diff .ln.add .sg{color:var(--add-ink)}
+.diff .ln.same{color:var(--muted)}
+.dlg dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:0;font-size:13px}
+.dlg dt{font:500 11px/1.8 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.dlg dd{margin:0;overflow-wrap:anywhere}
+.dlg label.f{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.dlg select,.dlg textarea,.dlg input[type=text]{font:14px/1.45 var(--sans);letter-spacing:normal;text-transform:none;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+.dlg textarea{min-height:80px;resize:vertical}
+.dlg textarea.code{font:13px/1.5 var(--mono)}
+.err{margin:0;font:600 13px/1.45 var(--sans);color:var(--rem-ink)}
+.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center}
+.btn{font:500 13px var(--sans);border-radius:6px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--fg);white-space:nowrap}
+.btn.go{background:var(--add);border-color:var(--add);color:#fff}
+.btn.go .kbd{font:500 11px var(--mono);opacity:.85;margin-left:6px}
+.btn[disabled]{opacity:.5;cursor:default}
+a.link{color:var(--fg);font-weight:600;text-decoration-color:var(--accent);text-underline-offset:3px;overflow-wrap:anywhere}
+details.edit summary{cursor:pointer;font:12px var(--mono);color:var(--muted)}
+details.edit .inner{display:flex;flex-direction:column;gap:10px;padding-top:10px}
+.toprt{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.tellnote{font:13px/1.45 var(--sans);color:var(--muted);margin:0}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:8px;font:13px var(--sans);max-width:calc(100vw - 32px);z-index:10}
+
+@media (max-width: 820px){
+  .colchips{display:flex}
+  .board{grid-template-columns:minmax(0,1fr)}
+  .colhead{display:none}
+  h1{font-size:25px}
+}
+@media (prefers-reduced-motion: no-preference){
+  .card,.ask,.opt{transition:border-color .12s ease,background-color .12s ease}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="band-top">
+      <div>
+        <div class="eyebrow" id="project"></div>
+        <h1>Work board<span class="cur" aria-hidden="true"></span></h1>
+      </div>
+      <div class="toprt">
+        <div class="sync" id="sync">Connecting to the board</div>
+        <button type="button" class="btn" id="tell" hidden>Tell Claude</button>
+      </div>
+    </div>
+    <div class="fixture-banner" id="fixture" hidden>FIXTURE MODE · demo cards, not real data. Local preview with no board database; saves stay in this browser tab and vanish on reload.</div>
+  </div>
+</header>
+<div class="gen"><div class="wrap" id="gen"></div></div>
+
+<div class="wrap">
+  <div class="tabs" role="tablist" aria-label="Board views">
+    <button class="tab" role="tab" id="tab-inbox" aria-controls="view-inbox">Needs you <span class="badge" id="badge">0</span></button>
+    <button class="tab" role="tab" id="tab-board" aria-controls="view-board">Board</button>
+    <button class="tab" role="tab" id="tab-done" aria-controls="view-done">Done <span class="badge" id="badge-done">0</span></button>
+  </div>
+
+  <section class="view" id="view-inbox" role="tabpanel" aria-labelledby="tab-inbox">
+    <p class="hint">Questions only you can answer. Open one, then Accept the recommended default, Amend it, or ask to Discuss. Sessions act on an answer only while the question has not changed since you answered.</p>
+    <div class="inbox" id="inbox"><div class="status">Loading the board...</div></div>
+  </section>
+
+  <section class="view" id="view-board" role="tabpanel" aria-labelledby="tab-board" hidden>
+    <div class="colchips" id="colchips" role="group" aria-label="Column"></div>
+    <div class="board" id="board"></div>
+  </section>
+
+  <section class="view" id="view-done" role="tabpanel" aria-labelledby="tab-done" hidden>
+    <details class="done" id="done-details">
+      <summary id="done-summary">Done cards</summary>
+      <div class="donelist" id="donelist"></div>
+    </details>
+  </section>
+</div>
+
+<dialog id="ask-dlg" aria-labelledby="a-q">
+  <form class="dlg" method="dialog" id="a-form">
+    <div class="chips" id="a-chips"></div>
+    <div class="perm">
+      <p class="lbl">Needs you</p>
+      <p class="pq"><span id="a-q"></span></p>
+      <p class="lbl">Recommended default</p>
+      <div class="box" id="a-default"></div>
+    </div>
+    <p class="why" id="a-why"></p>
+    <div id="a-evidence"></div>
+    <div id="a-current"></div>
+    <div class="perm">
+      <div class="opts" role="radiogroup" aria-label="Your answer" id="a-opts">
+        <button type="button" class="opt" role="radio" aria-checked="false" data-choice="accept" id="c-accept"><span class="ptr"></span><span><span class="k">1.</span> Accept</span></button>
+        <button type="button" class="opt" role="radio" aria-checked="false" data-choice="amend" id="c-amend"><span class="ptr"></span><span><span class="k">2.</span> Amend the default</span></button>
+        <button type="button" class="opt" role="radio" aria-checked="false" data-choice="discuss" id="c-discuss"><span class="ptr"></span><span><span class="k">3.</span> Discuss</span></button>
+      </div>
+      <div class="keys">Press 1, 2 or 3, or move with the arrow keys</div>
+    </div>
+    <div id="a-amend-wrap" hidden>
+      <label class="f" for="a-amend">Your version of the default
+        <textarea id="a-amend" class="code"></textarea>
+      </label>
+      <p class="lbl" style="margin-top:10px">Change</p>
+      <div class="diff" id="a-diff" aria-live="polite"></div>
+    </div>
+    <label class="f" for="a-comment">Comment
+      <textarea id="a-comment" placeholder="Optional for Accept and Amend; say what to discuss for Discuss"></textarea>
+    </label>
+    <details class="edit" id="a-edit">
+      <summary>Edit the question (clears any answer)</summary>
+      <div class="inner">
+        <label class="f" for="e-q">Question <textarea id="e-q"></textarea></label>
+        <label class="f" for="e-default">Recommended default <textarea id="e-default"></textarea></label>
+        <label class="f" for="e-why">Why <input type="text" id="e-why"></label>
+        <label class="f" for="e-link">Evidence link <input type="text" id="e-link"></label>
+        <div><button type="button" class="btn" id="e-save">Save the new question</button></div>
+      </div>
+    </details>
+    <p class="err" id="a-err" hidden></p>
+    <div class="row">
+      <span class="meta" id="a-rev"></span>
+      <span style="display:flex;gap:8px">
+        <button type="button" class="btn" id="a-close">Close</button>
+        <button type="button" class="btn go" id="a-save">Save answer</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="card-dlg" aria-labelledby="d-title">
+  <form class="dlg" method="dialog" id="d-form">
+    <div class="chips" id="d-chips"></div>
+    <h2 id="d-title"></h2>
+    <div class="box" id="d-notes-view"></div>
+    <dl id="d-meta"></dl>
+    <label class="f" for="d-col">Column <select id="d-col"></select></label>
+    <label class="f" for="d-evidence">Evidence (required for done, with a green review)
+      <textarea id="d-evidence" class="code" placeholder="What was run or checked, and what it showed"></textarea>
+    </label>
+    <label class="f" for="d-notes">Notes <textarea id="d-notes"></textarea></label>
+    <p class="err" id="d-err" hidden></p>
+    <div class="row">
+      <span id="d-links" class="meta"></span>
+      <span style="display:flex;gap:8px">
+        <button type="button" class="btn" id="d-close">Close</button>
+        <button type="button" class="btn go" id="d-save">Save</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="tell-dlg" aria-labelledby="t-h">
+  <form class="dlg" method="dialog" id="t-form">
+    <h2 id="t-h">Tell Claude</h2>
+    <p class="tellnote" id="t-state"></p>
+    <label class="f" for="t-text">Message
+      <textarea id="t-text" class="code" maxlength="4000"></textarea>
+    </label>
+    <p class="err" id="t-err" hidden></p>
+    <div class="row">
+      <span class="meta">Posts a comment on this board and sends it to a watching Claude session</span>
+      <span style="display:flex;gap:8px">
+        <button type="button" class="btn" id="t-close">Close</button>
+        <button type="button" class="btn go" id="t-send">Send to Claude</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" hidden></div>
+
+<script type="application/json" id="board-config">__BOARD_CONFIG__</script>
+<script>
+(function(){
+  var CONFIG = {};
+  try { CONFIG = JSON.parse(document.getElementById("board-config").textContent); } catch (e) { CONFIG = {}; }
+  var COLLECTION = CONFIG.collection || "cards";
+  var COLS = [
+    {id:"inbox", name:"Needs you", hint:"A question, sign-off or action only you can take"},
+    {id:"ready", name:"Ready", hint:"Decided and unblocked; a session may pull it"},
+    {id:"doing", name:"In progress", hint:"A session or agent is on it, or it is scheduled"},
+    {id:"review", name:"In review", hint:"Built, waiting on the higher-tier reviewer"},
+    {id:"done", name:"Done", hint:"Reviewer green light plus evidence"}
+  ];
+  var LANES = (CONFIG.lanes && CONFIG.lanes.length) ? CONFIG.lanes : [{id:"main", name:"All work"}];
+  var KIND = {build:"Build", decision:"Decision", run:"Run", merge:"Merge", milestone:"Milestone"};
+  var GREEN = {green:1, pass:1, passed:1, approved:1};
+  var BASE_TITLE = document.title;
+
+  var $ = function(id){ return document.getElementById(id); };
+  function el(tag, cls, text){ var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function now(){ return new Date().toISOString().replace(/\.\d+Z$/, "Z"); }
+  function toast(msg){ var t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(function(){ t.hidden = true; }, 4200); }
+  function today(){ var d = new Date(); d.setHours(0,0,0,0); return d; }
+  function daysUntil(s){ if (!s) return null; var p = String(s).split("-"); var d = new Date(+p[0], +p[1]-1, +p[2]); return isNaN(d) ? null : Math.round((d - today()) / 86400000); }
+  function countdown(s){ var n = daysUntil(s); if (n == null) return ""; if (n === 0) return "today"; if (n === 1) return "tomorrow"; if (n === -1) return "yesterday"; return n > 0 ? "in " + n + " days" : Math.abs(n) + " days ago"; }
+  function safeUrl(u){ return typeof u === "string" && /^https:\/\//.test(u) ? u : ""; }
+  function arr(v){ return Array.isArray(v) ? v : (v ? [v] : []); }
+
+  // The rules the page enforces (PROPOSAL section 2).
+  function isGreen(c){ return !!(c.review && GREEN[String(c.review.verdict || "").toLowerCase()]); }
+  function hasEvidence(c, ev){ return !!String(ev != null ? ev : (c.evidence || "")).trim(); }
+  function answerCurrent(c){ return !!(c.answer && c.ask && c.answer.ask_rev === c.ask.ask_rev); }
+  function needsAnswer(c){ return c.column === "inbox" && !answerCurrent(c); }
+
+  $("project").textContent = CONFIG.project || "Project";
+  (function(){
+    var g = $("gen");
+    g.appendChild(document.createTextNode("Generated from "));
+    g.appendChild(el("code", null, CONFIG.template || "templates/work-board.html"));
+    g.appendChild(document.createTextNode(". Regenerate with "));
+    g.appendChild(el("code", null, CONFIG.regenerate || "work_board.py render"));
+    g.appendChild(document.createTextNode(" and republish. Hand edits are drift."));
+  })();
+
+  var state = {cards:[], tab:"inbox", col:"inbox", db:null, loaded:false, fixture:false};
+  try { var sv = JSON.parse(localStorage.getItem("work-board-col") || "null"); if (sv) state.col = sv; } catch (e) {}
+
+  function findCard(id){ for (var i = 0; i < state.cards.length; i++) if (state.cards[i].id === id) return state.cards[i]; return null; }
+  function sortCards(a, b){
+    var da = a.due || "9999", db_ = b.due || "9999";
+    if (da !== db_) return da < db_ ? -1 : 1;
+    return String(a.title || a.id).localeCompare(String(b.title || b.id));
+  }
+  function laneOf(c){ var ids = LANES.map(function(l){ return l.id; }); return ids.indexOf(c.lane) >= 0 ? c.lane : LANES[LANES.length - 1].id; }
+
+  function chipsFor(c, box){
+    if (state.fixture) box.appendChild(el("span", "rank fixture", "Fixture"));
+    box.appendChild(el("span", "rank", KIND[c.kind] || c.kind || "Item"));
+    if (c.column === "inbox") {
+      if (answerCurrent(c)) box.appendChild(el("span", "rank green", "Answered: " + c.answer.choice));
+      else if (c.answer) box.appendChild(el("span", "rank red", "Answer out of date"));
+      else box.appendChild(el("span", "rank need", "Needs you"));
+    }
+    var bl = arr(c.blocked_by);
+    if (bl.length && c.column !== "done") box.appendChild(el("span", "rank red", "Blocked by " + bl.join(", ")));
+    if (isGreen(c)) box.appendChild(el("span", "rank green", "\u2713 Green light"));
+    else if (c.review && c.review.verdict) box.appendChild(el("span", "rank red", "Review: " + c.review.verdict));
+  }
+
+  function cardNode(c){
+    var b = el("button", "card"); b.type = "button"; b.draggable = true; b.dataset.id = c.id;
+    var top = el("div", "chips"); chipsFor(c, top); b.appendChild(top);
+    b.appendChild(el("div", "title", c.title || c.id));
+    if (c.due) {
+      var n = daysUntil(c.due), meta = el("div", "meta");
+      meta.appendChild(el("span", "due" + (n != null && n <= 3 && c.column !== "done" ? " soon" : ""), "Due " + c.due + (c.column !== "done" ? " (" + countdown(c.due) + ")" : "")));
+      b.appendChild(meta);
+    }
+    b.addEventListener("click", function(){ c.column === "inbox" && c.ask ? openAsk(c.id) : openCard(c.id); });
+    b.addEventListener("dragstart", function(e){ b.classList.add("dragging"); try { e.dataTransfer.setData("text/plain", c.id); } catch (x) {} });
+    b.addEventListener("dragend", function(){ b.classList.remove("dragging"); });
+    return b;
+  }
+
+  function renderTabs(){
+    ["inbox","board","done"].forEach(function(t){
+      $("tab-" + t).setAttribute("aria-selected", String(state.tab === t));
+      $("view-" + t).hidden = state.tab !== t;
+    });
+    var n = state.cards.filter(needsAnswer).length;
+    document.title = (n ? "(" + n + ") " : "") + BASE_TITLE;
+    $("badge").textContent = String(n); $("badge").className = "badge" + (n ? " hot" : "");
+    $("badge").setAttribute("aria-label", n + " waiting on you");
+    $("badge-done").textContent = String(state.cards.filter(function(c){ return c.column === "done"; }).length);
+  }
+
+  function renderInbox(){
+    var box = $("inbox"); box.textContent = "";
+    if (!state.loaded) { box.appendChild(el("div", "status", state.db === false ? "The board's data isn't available in this view. Open it on claude.ai while signed in." : "Loading the board...")); return; }
+    var cards = state.cards.filter(function(c){ return c.column === "inbox"; }).sort(function(a, b){
+      var na = needsAnswer(a) ? 0 : 1, nb = needsAnswer(b) ? 0 : 1; return na !== nb ? na - nb : sortCards(a, b);
+    });
+    if (!cards.length) { box.appendChild(el("div", "status", "Nothing needs you right now.")); return; }
+    cards.forEach(function(c){
+      var b = el("button", "ask" + (answerCurrent(c) ? " answered" : "")); b.type = "button";
+      var top = el("div", "chips"); chipsFor(c, top); b.appendChild(top);
+      b.appendChild(el("div", "q", (c.ask && c.ask.question) || c.title || c.id));
+      if (c.ask && c.ask.default) { var d = el("div", "d"); d.appendChild(el("b", null, "Default: ")); d.appendChild(document.createTextNode(c.ask.default)); b.appendChild(d); }
+      if (c.answer && c.ask && !answerCurrent(c)) b.appendChild(el("div", "d", "The question changed after your last answer. Answer again."));
+      b.addEventListener("click", function(){ c.ask ? openAsk(c.id) : openCard(c.id); });
+      box.appendChild(b);
+    });
+  }
+
+  function cellNode(colId, cards){
+    var cell = el("div", "cell"); cell.dataset.col = colId;
+    if (!cards.length) cell.appendChild(el("div", "empty", "Nothing here"));
+    cards.forEach(function(c){ cell.appendChild(cardNode(c)); });
+    cell.addEventListener("dragover", function(e){ e.preventDefault(); cell.classList.add("over"); });
+    cell.addEventListener("dragleave", function(){ cell.classList.remove("over"); });
+    cell.addEventListener("drop", function(e){ e.preventDefault(); cell.classList.remove("over"); var id = ""; try { id = e.dataTransfer.getData("text/plain"); } catch (x) {} if (id) moveCard(id, colId); });
+    return cell;
+  }
+
+  function renderBoard(){
+    var narrow = window.matchMedia("(max-width: 820px)").matches;
+    var chips = $("colchips"); chips.textContent = "";
+    COLS.forEach(function(col){
+      var n = state.cards.filter(function(c){ return c.column === col.id; }).length;
+      var t = el("button", "colchip"); t.type = "button"; t.setAttribute("aria-pressed", String(state.col === col.id));
+      t.appendChild(document.createTextNode(col.name)); t.appendChild(el("span", "badge", String(n)));
+      t.addEventListener("click", function(){ state.col = col.id; try { localStorage.setItem("work-board-col", JSON.stringify(col.id)); } catch (e) {} render(); });
+      chips.appendChild(t);
+    });
+    var board = $("board"); board.textContent = "";
+    if (!state.loaded) { board.appendChild(el("div", "status", state.db === false ? "The board's data isn't available in this view." : "Loading the board...")); return; }
+    var shown = narrow ? COLS.filter(function(c){ return c.id === state.col; }) : COLS;
+    board.style.gridTemplateColumns = narrow ? "minmax(0,1fr)" : "repeat(5,minmax(0,1fr))";
+    if (!narrow) shown.forEach(function(col){
+      var n = state.cards.filter(function(c){ return c.column === col.id; }).length;
+      var h = el("div", "colhead"), t = el("div", "t");
+      t.appendChild(el("span", null, col.name)); t.appendChild(el("span", "c", String(n)));
+      h.appendChild(t); h.appendChild(el("div", "h", col.hint)); board.appendChild(h);
+    });
+    LANES.forEach(function(lane){
+      var inLane = state.cards.filter(function(c){ return laneOf(c) === lane.id; });
+      var lh = el("div", "lane"); lh.appendChild(el("span", "t", lane.name)); if (lane.when) lh.appendChild(el("span", "d", lane.when));
+      board.appendChild(lh);
+      shown.forEach(function(col){
+        var cards = inLane.filter(function(c){ return c.column === col.id; }).sort(sortCards);
+        if (col.id === "done") {
+          var cell = cellNode("done", []); cell.textContent = "";
+          var a = el("button", "btn", cards.length + " done: open the Done tab"); a.type = "button";
+          a.addEventListener("click", function(){ state.tab = "done"; $("done-details").open = true; render(); });
+          cell.appendChild(a); board.appendChild(cell);
+        } else board.appendChild(cellNode(col.id, cards));
+      });
+    });
+  }
+
+  function renderDone(){
+    var list = $("donelist"); list.textContent = "";
+    var done = state.cards.filter(function(c){ return c.column === "done"; }).sort(function(a, b){ return String(b.updated_at || "").localeCompare(String(a.updated_at || "")); });
+    $("done-summary").textContent = done.length + " done card" + (done.length === 1 ? "" : "s") + " (show)";
+    done.forEach(function(c){
+      var n = cardNode(c);
+      if (c.evidence) n.appendChild(el("div", "ev", "Evidence: " + c.evidence));
+      list.appendChild(n);
+    });
+  }
+
+  function renderSync(){
+    var latest = state.cards.reduce(function(m, c){ return c.updated_at && c.updated_at > m ? c.updated_at : m; }, "");
+    $("sync").textContent = state.fixture ? "Fixture data, local preview" : state.db === false ? "Board data unavailable in this view" : !state.loaded ? "Connecting to the board" :
+      state.cards.length + " cards" + (latest ? " · last change " + latest.slice(0, 16).replace("T", " ") + " UTC" : "");
+  }
+
+  function render(){ renderTabs(); renderInbox(); renderBoard(); renderDone(); renderSync(); }
+
+  // ---- writes
+  var writing = false;
+  function write(id, patch){
+    if (!state.db) { toast("Can't save: the board's data isn't available in this view."); return Promise.resolve(false); }
+    patch.updated_at = now(); patch.updated_by = "board page";
+    writing = true;
+    return state.db.doc(COLLECTION + "/" + id).update(patch).then(function(){ writing = false; return true; }, function(err){
+      writing = false;
+      toast(err && err.code === "invalid_argument" ? "Couldn't save. This view may be read-only." : "Couldn't save. Try again in a moment.");
+      return false;
+    });
+  }
+  function doneRefusal(c, evidence){
+    var missing = [];
+    if (!hasEvidence(c, evidence)) missing.push("an evidence line");
+    if (!isGreen(c)) missing.push("a green review from the higher-tier reviewer (recorded on the card by the reviewer session)");
+    return missing.length ? "A card moves to Done only with evidence and a green review. Missing: " + missing.join(" and ") + "." : "";
+  }
+  function moveCard(id, colId){
+    var c = findCard(id); if (!c || c.column === colId || writing) return;
+    if (colId === "done" && doneRefusal(c)) { openCard(id, "done"); return; }
+    var name = (COLS.filter(function(x){ return x.id === colId; })[0] || {}).name;
+    write(id, {column: colId}).then(function(ok){ if (ok) toast("Moved to " + name + "."); });
+  }
+
+  // ---- inbox dialog
+  var askId = null, askRev = null, choice = null;
+  var CHOICES = ["accept","amend","discuss"];
+  var SAVE_LABEL = {accept:"Accept", amend:"Save amendment", discuss:"Ask to discuss"};
+  function setChoice(ch, focusOpt){
+    choice = ch;
+    CHOICES.forEach(function(k){
+      var o = $("c-" + k), on = k === ch;
+      o.setAttribute("aria-checked", String(on)); o.tabIndex = (on || (!ch && k === "accept")) ? 0 : -1;
+      o.querySelector(".ptr").textContent = on ? "\u276F" : "";
+    });
+    $("a-amend-wrap").hidden = ch !== "amend";
+    $("a-save").textContent = ch ? SAVE_LABEL[ch] : "Save answer";
+    if (ch === "accept") { var k = el("span", "kbd", "\u21B5"); $("a-save").appendChild(k); }
+    if (ch === "amend") renderDiff();
+    if (focusOpt && ch) $("c-" + ch).focus();
+  }
+  function renderDiff(){
+    var c = findCard(askId), box = $("a-diff"); box.textContent = "";
+    var before = (c && c.ask && c.ask.default) || "", after = $("a-amend").value;
+    function line(cls, sign, text){ var l = el("span", "ln " + cls); l.appendChild(el("span", "sg", sign)); l.appendChild(document.createTextNode(text)); box.appendChild(l); }
+    if (after.trim() === before.trim()) { line("same", " ", "No change yet: edit the text above."); return; }
+    line("rem", "-", before || "(no default)");
+    line("add", "+", after || "(empty)");
+  }
+  $("a-amend").addEventListener("input", renderDiff);
+  $("ask-dlg").addEventListener("keydown", function(e){
+    var tag = (e.target && e.target.tagName) || "";
+    if (tag === "TEXTAREA" || tag === "INPUT" || tag === "SELECT") return;
+    if (e.key === "1" || e.key === "2" || e.key === "3") { e.preventDefault(); setChoice(CHOICES[+e.key - 1], true); return; }
+    if (e.key === "Enter" && choice && e.target && e.target.classList && e.target.classList.contains("opt") && e.target.dataset.choice === choice) {
+      e.preventDefault(); if (choice === "amend") $("a-amend").focus(); else $("a-save").click(); return;
+    }
+    if (e.target && e.target.classList && e.target.classList.contains("opt") && /^Arrow(Up|Down|Left|Right)$/.test(e.key)) {
+      e.preventDefault();
+      var i = CHOICES.indexOf(e.target.dataset.choice), d = (e.key === "ArrowUp" || e.key === "ArrowLeft") ? -1 : 1;
+      setChoice(CHOICES[(i + d + CHOICES.length) % CHOICES.length], true);
+    }
+  });
+  function showErr(id, msg){ $(id).textContent = msg; $(id).hidden = !msg; }
+  function openAsk(id){
+    var c = findCard(id); if (!c || !c.ask) return;
+    askId = id; askRev = c.ask.ask_rev; showErr("a-err", "");
+    var chips = $("a-chips"); chips.textContent = ""; chipsFor(c, chips);
+    $("a-q").textContent = c.ask.question || c.title || c.id;
+    $("a-default").textContent = c.ask.default || "(no default given)";
+    $("a-why").textContent = c.ask.why || "";
+    $("a-why").hidden = !c.ask.why;
+    var ev = $("a-evidence"); ev.textContent = "";
+    var u = safeUrl(c.ask.evidence_link);
+    if (u) { var a = el("a", "link", "Open the evidence"); a.href = u; a.target = "_blank"; a.rel = "noopener"; ev.appendChild(a); }
+    else if (c.ask.evidence_link) ev.appendChild(el("span", "meta", "Evidence: " + c.ask.evidence_link));
+    var cur = $("a-current"); cur.textContent = "";
+    if (answerCurrent(c)) cur.appendChild(el("div", "meta", "Your answer: " + c.answer.choice + (c.answer.text ? ": " + c.answer.text : "") + " (" + String(c.answer.at || "").replace("T", " ") + "). Saving again replaces it."));
+    else if (c.answer) cur.appendChild(el("div", "err", "The question changed after your last answer, so that answer no longer counts."));
+    $("a-amend").value = c.ask.default || "";
+    $("a-comment").value = "";
+    setChoice(null); $("a-amend-wrap").hidden = true;
+    $("e-q").value = c.ask.question || ""; $("e-default").value = c.ask.default || ""; $("e-why").value = c.ask.why || ""; $("e-link").value = c.ask.evidence_link || "";
+    $("a-edit").open = false;
+    $("a-rev").textContent = "Question revision " + (c.ask.ask_rev != null ? c.ask.ask_rev : "?");
+    $("a-save").disabled = !state.db; $("e-save").disabled = !state.db;
+    try { $("ask-dlg").showModal(); } catch (e) { $("ask-dlg").setAttribute("open", ""); }
+    $("c-accept").focus();
+  }
+  CHOICES.forEach(function(k){ $("c-" + k).addEventListener("click", function(){ setChoice(k); if (k === "amend") $("a-amend").focus(); }); });
+  $("a-close").addEventListener("click", function(){ $("ask-dlg").close(); });
+  $("a-save").addEventListener("click", function(){
+    var c = findCard(askId); if (!c || !c.ask) return;
+    if (c.ask.ask_rev !== askRev) { showErr("a-err", "The question changed while you had it open. Close and reopen it to answer the new version."); return; }
+    if (!choice) { showErr("a-err", "Choose Accept, Amend or Discuss."); return; }
+    var comment = $("a-comment").value.trim(), text;
+    if (choice === "amend") {
+      text = $("a-amend").value.trim();
+      if (!text) { showErr("a-err", "Write your version of the default, or choose Accept."); return; }
+      if (text === String(c.ask.default || "").trim()) { showErr("a-err", "Your version is the same as the default. Change the text, or choose Accept (put any instruction in the comment), or Discuss."); return; }
+      if (comment) text += "\n\nComment: " + comment;
+    } else if (choice === "discuss") {
+      if (!comment) { showErr("a-err", "Say in the comment what you want to discuss."); return; }
+      text = comment;
+    } else text = comment;
+    $("a-save").disabled = true;
+    write(askId, {answer: {choice: choice, text: text, at: now(), ask_rev: askRev}}).then(function(ok){
+      $("a-save").disabled = false; if (ok) { $("ask-dlg").close(); toast("Answer saved."); }
+    });
+  });
+  $("e-save").addEventListener("click", function(){
+    var c = findCard(askId); if (!c || !c.ask) return;
+    var q = $("e-q").value.trim(); if (!q) { showErr("a-err", "The question can't be empty."); return; }
+    var ask = {question: q, default: $("e-default").value.trim(), why: $("e-why").value.trim(), evidence_link: $("e-link").value.trim(), ask_rev: (+c.ask.ask_rev || 0) + 1};
+    write(askId, {ask: ask, answer: null}).then(function(ok){ if (ok) { $("ask-dlg").close(); toast("Question updated to revision " + ask.ask_rev + "; the old answer was cleared."); } });
+  });
+
+  // ---- card dialog
+  var openId = null;
+  function openCard(id, presetCol){
+    var c = findCard(id); if (!c) return;
+    openId = id; showErr("d-err", "");
+    var chips = $("d-chips"); chips.textContent = ""; chipsFor(c, chips);
+    $("d-title").textContent = c.title || c.id;
+    $("d-notes-view").textContent = c.notes || "No notes.";
+    var meta = $("d-meta"); meta.textContent = "";
+    var lane = LANES.filter(function(l){ return l.id === laneOf(c); })[0];
+    var r = c.review || {};
+    [["Lane", lane ? lane.name + (lane.when ? " (" + lane.when + ")" : "") : ""],
+     ["Due", c.due ? c.due + " (" + countdown(c.due) + ")" : ""],
+     ["Blocked by", arr(c.blocked_by).join(", ")],
+     ["Done when", c.done_when || ""],
+     ["Review", c.review ? (r.verdict || "?") + (r.reviewer_model ? ", " + r.reviewer_model + " reviewed " + (r.builder_model || "?") + "'s work" : "") + (r.at ? " at " + r.at : "") : "none yet"],
+     ["Evidence", c.evidence || ""],
+     ["Last change", c.updated_at ? String(c.updated_at).replace("T", " ") + (c.updated_by ? " by " + c.updated_by : "") : ""]]
+      .forEach(function(row){ if (!row[1]) return; meta.appendChild(el("dt", null, row[0])); meta.appendChild(el("dd", null, row[1])); });
+    var sel = $("d-col"); sel.textContent = "";
+    var target = presetCol || c.column;
+    COLS.forEach(function(col){ var o = el("option", null, col.name); o.value = col.id; if (col.id === target) o.selected = true; sel.appendChild(o); });
+    $("d-evidence").value = c.evidence || ""; $("d-notes").value = c.notes || "";
+    var lk = $("d-links"); lk.textContent = "";
+    arr(c.links).forEach(function(l){ var u = safeUrl(typeof l === "string" ? l : l && l.url); if (!u) return; var a = el("a", "link", (l && l.label) || "Link"); a.href = u; a.target = "_blank"; a.rel = "noopener"; lk.appendChild(a); });
+    if (presetCol === "done") showErr("d-err", doneRefusal(c));
+    $("d-save").disabled = !state.db;
+    try { $("card-dlg").showModal(); } catch (e) { $("card-dlg").setAttribute("open", ""); }
+  }
+  $("d-close").addEventListener("click", function(){ $("card-dlg").close(); });
+  $("d-save").addEventListener("click", function(){
+    var c = findCard(openId); if (!c) return;
+    var patch = {}, col = $("d-col").value, notes = $("d-notes").value, evidence = $("d-evidence").value.trim();
+    if (col === "done" && c.column !== "done") {
+      var why = doneRefusal(c, evidence);
+      if (why) { showErr("d-err", why); return; }
+    }
+    if (col !== c.column) patch.column = col;
+    if (notes !== (c.notes || "")) patch.notes = notes;
+    if (evidence !== String(c.evidence || "").trim()) patch.evidence = evidence;
+    if (!Object.keys(patch).length) { $("card-dlg").close(); return; }
+    $("d-save").disabled = true;
+    write(openId, patch).then(function(ok){ $("d-save").disabled = false; if (ok) { $("card-dlg").close(); toast("Saved."); } });
+  });
+
+  ["inbox","board","done"].forEach(function(t){ $("tab-" + t).addEventListener("click", function(){ state.tab = t; render(); }); });
+  window.matchMedia("(max-width: 820px)").addEventListener("change", render);
+
+  // ---- fixture mode: only a local preview with no artifact runtime at all (or #fixture).
+  function fixtureDb(){
+    var cards = {}, subs = [], writes = [];
+    var at = now();
+    [
+      {id:"f1", title:"FIXTURE: Pick the database for v1", column:"inbox", lane:LANES[0].id, kind:"decision", due:"2026-10-02",
+       ask:{question:"FIXTURE: Use SQLite for v1 instead of Postgres?", default:"Yes, SQLite for v1; revisit at 10k rows", why:"One user, no concurrent writers, zero ops.", evidence_link:"https://example.com/fixture-evidence", ask_rev:1}},
+      {id:"f2", title:"FIXTURE: Merge the scaffold branch", column:"inbox", lane:LANES[0].id, kind:"merge",
+       ask:{question:"FIXTURE: Merge feature/scaffold to main after CI?", default:"Merge after CI is green", why:"Reviewer gave a green verdict.", evidence_link:"", ask_rev:2},
+       answer:{choice:"accept", text:"", at:at, ask_rev:1}},
+      {id:"f3", title:"FIXTURE: Build the importer", column:"ready", lane:LANES[0].id, kind:"build", due:"2026-10-05", done_when:"DONE.md#importer"},
+      {id:"f4", title:"FIXTURE: Nightly backup run", column:"doing", lane:LANES[LANES.length - 1].id, kind:"run", blocked_by:["f3"]},
+      {id:"f5", title:"FIXTURE: Importer review, no verdict yet", column:"review", lane:LANES[0].id, kind:"build", evidence:"pytest -q: 12 passed"},
+      {id:"f6", title:"FIXTURE: Reviewed and ready for done", column:"review", lane:LANES[0].id, kind:"build", evidence:"pytest -q: 20 passed",
+       review:{verdict:"green", builder_model:"Opus", reviewer_model:"Fable 5.1", agent_id:"fixture", at:at}},
+      {id:"f7", title:"FIXTURE: Scaffold milestone", column:"done", lane:LANES[0].id, kind:"milestone", evidence:"scaffold.sh publish --dry-run exit 0",
+       review:{verdict:"green", builder_model:"Opus", reviewer_model:"Fable 5.1", agent_id:"fixture", at:at}, updated_at:at}
+    ].forEach(function(c){ cards[c.id] = c; });
+    function emit(){ var docs = Object.keys(cards).map(function(k){ var d = cards[k]; return {id:k, data:function(){ return JSON.parse(JSON.stringify(d)); }}; }); subs.forEach(function(f){ f({docs:docs}); }); }
+    var api = {
+      collection: function(){ return {onSnapshot: function(cb){ subs.push(cb); setTimeout(emit, 0); return function(){}; }}; },
+      doc: function(path){ var id = path.split("/").pop(); return {update: function(patch){
+        writes.push({id:id, patch:JSON.parse(JSON.stringify(patch))});
+        Object.keys(patch).forEach(function(k){ cards[id][k] = patch[k]; });
+        setTimeout(emit, 0); return Promise.resolve();
+      }}; }
+    };
+    window.boardFixture = {writes: writes, cards: function(){ return JSON.parse(JSON.stringify(cards)); }};
+    return api;
+  }
+
+  function attach(db){
+    state.db = db;
+    db.collection(COLLECTION).onSnapshot(function(snap){
+      state.cards = snap.docs.map(function(d){ var o = Object.assign({}, d.data()); o.id = d.id; return o; });
+      state.loaded = true;
+      render();
+    }, function(){ state.db = false; state.loaded = false; render(); });
+  }
+
+  // ---- Tell Claude: post a comment on this board and send it to a watching Claude session
+  // (comments capability, sendToClaude). The page never reads threads; the shell shows them.
+  var comments = null, tellBusy = false;
+  var TELL_STATE = {
+    available: "",
+    no_session: "No Claude session is watching this board right now, so this can't be sent. Your answers are saved on the cards, and the next session reads them when it starts.",
+    writers_only: "Only editors of this board can send to Claude.",
+    off: "Sending to Claude isn't available in this view."
+  };
+  var TELL_ERR = {
+    consent_required: "Not sent: this board needs your OK to comment as you. Reload the page, send again, and allow it when asked. Your message is kept.",
+    forbidden: "Not sent: commenting from this board is off for you here. It can be turned back on from the comment panel in claude.ai.",
+    claude_unavailable: "Not sent: no Claude session could take it just now. Nothing was posted, and your message is kept.",
+    rate_limited: "Not sent: too many sends in a short time. Wait a minute, then send again.",
+    invalid: "Not sent: the message was rejected (over 4 KB, or an odd character). Shorten it and send again."
+  };
+  var TELL_OFF = {forbidden:1, not_granted:1, capability_disabled:1, capability_removed:1};
+  function tellDraft(){
+    var answered = state.cards.filter(function(c){ return c.column === "inbox" && answerCurrent(c); }).sort(sortCards);
+    var lines = ["Board update: " + (CONFIG.project || "this board") + "."];
+    if (answered.length) {
+      lines.push("Answered in Needs you, ready to act on:");
+      answered.forEach(function(c){ lines.push("- " + c.id + ": " + (c.title || "") + " (" + c.answer.choice + ")"); });
+    } else lines.push("No new answers in Needs you.");
+    lines.push("Please read the board and pick up.");
+    return lines.join("\n");
+  }
+  function checkTell(){
+    if (!comments) return Promise.resolve("off");
+    return Promise.resolve().then(function(){ return comments.canSendToClaude(); }).then(null, function(){ return "off"; });
+  }
+  function showTellState(s){
+    var k = Object.prototype.hasOwnProperty.call(TELL_STATE, s) ? s : "off";
+    $("t-state").textContent = TELL_STATE[k]; $("t-state").hidden = k === "available";
+    $("t-send").disabled = k !== "available" || tellBusy;
+  }
+  $("tell").addEventListener("click", function(){
+    showErr("t-err", "");
+    if (!$("t-text").value.trim()) $("t-text").value = tellDraft();
+    $("t-send").disabled = true; $("t-state").hidden = false;
+    $("t-state").textContent = "Checking whether a Claude session is watching...";
+    try { $("tell-dlg").showModal(); } catch (e) { $("tell-dlg").setAttribute("open", ""); }
+    checkTell().then(showTellState);
+  });
+  $("t-close").addEventListener("click", function(){ $("tell-dlg").close(); });
+  $("t-send").addEventListener("click", function(){
+    var text = $("t-text").value.trim();
+    if (!text) { showErr("t-err", "Write a message first."); return; }
+    if (!comments || tellBusy) return;
+    tellBusy = true; $("t-send").disabled = true; showErr("t-err", "");
+    comments.anchorFor($("tell")).then(function(anchor){
+      return comments.sendToClaude({anchor: anchor, text: text});
+    }).then(function(){
+      tellBusy = false; $("t-text").value = ""; $("tell-dlg").close();
+      toast("Sent to Claude. The reply appears in this board's comments.");
+    }, function(err){
+      tellBusy = false;
+      var code = (err && err.code) || "upstream_error";
+      showErr("t-err", TELL_ERR[code] || "Not sent (" + code + "). A failed send can still have posted, so check this board's comments before sending again. Your message is kept.");
+      if (TELL_OFF[code]) { comments = null; $("tell").hidden = true; $("t-send").disabled = true; return; }
+      checkTell().then(showTellState);
+    });
+  });
+  function fixtureComments(){
+    var m = /[#&]claude=([a-z_]+)/.exec(location.hash), sends = [];
+    var can = m ? m[1] : "available";
+    window.boardFixture.sends = sends;
+    return {
+      canSendToClaude: function(){ return Promise.resolve(can); },
+      anchorFor: function(){ return Promise.resolve({path: "fixture", x: 0, y: 0}); },
+      sendToClaude: function(t){
+        if (can !== "available") return Promise.reject({code: "claude_unavailable", message: "fixture"});
+        sends.push(JSON.parse(JSON.stringify(t))); return Promise.resolve({threadId: "fixture-thread", commentId: "fixture-comment"});
+      }
+    };
+  }
+
+  render();
+  var runtime = window.claude && typeof window.claude.use === "function";
+  if (!runtime || /^#fixture/.test(location.hash)) {
+    state.fixture = true; $("fixture").hidden = false; attach(fixtureDb());
+    comments = fixtureComments(); $("tell").hidden = false; return;
+  }
+  window.claude.use("db").then(function(db){
+    if (!db) { state.db = false; render(); return; }
+    attach(db);
+  }, function(){ state.db = false; render(); });
+  window.claude.use("comments").then(function(c){
+    if (c) { comments = c; $("tell").hidden = false; }
+  }, function(){});
+})();
+</script>
+</body>
+</html>

@@ -2,6 +2,40 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-27 - turn-reduction 1.3.0 and project-starters 0.2.0: work boards
+
+- **New skill `work-board` (incubator, turn-reduction).** Stands up a project's work board:
+  a private claude.ai page with the `db` and `comments` capabilities, generated from
+  `skills/work-board/templates/work-board.html`, with fixed columns (Needs you, Ready, In
+  progress, In review, Done), per-project lanes, and a Needs you inbox whose cards answer
+  with Accept, Amend or Discuss into `answer {choice, text, at, ask_rev}`. The page refuses
+  a move to Done without evidence and a green review, refuses an Amend whose text equals
+  the default, and editing a question bumps `ask_rev` and clears the answer. A Tell Claude
+  button posts a board comment through `sendToClaude` to wake a watching session, checks
+  `canSendToClaude` first and says so when no session is watching; the session protocol
+  adds watching the board at pickup. `scripts/work_board.py` renders the page, writes
+  `.claude/board.json` from the published URL (`init` for new projects, `adopt` for
+  existing ones, both refuse to overwrite), writes a starter `authorization.json` with the
+  autonomy tiers and the push procedure (`pushes_per_session` ceiling), and validates
+  board.json plus page drift. `scripts/push_check.sh` checks a push without making it:
+  gh account GFMCloud, origin under `github.com/GFMCloud/`, gitleaks clean, outgoing
+  commits exactly the recorded SHAs. Page look follows Graham's AI visual mood board.
+- **New Stop hook `hooks/board_gate.py` (turn-reduction).** The pack's first hook. A no-op
+  unless the project has `.claude/board.json`. With a board it blocks a turn, once, that
+  changed state (commit, merge, push, PR merge, deploy, mutating aws, or a board.json
+  `triggers[]` regex) with no board write after it, unless `BOARD: no card affected:
+  <reason>`; and, while `authorization.json` exists, a turn that ends on a should-I ask
+  with no inbox card written this turn, unless `INBOX: none needed: <reason>`. Intent
+  questions pass. Generalized from SCL's `scripts/hooks/board-gate.py`. Proven by
+  `tests/prove-board-gate.sh` (34 cases; triggers match at the command position, so quoted text, grep patterns and heredoc bodies do not count) and shown able to fail against a stub that never
+  blocks.
+- **`new-project` gains the board step (project-starters).** Between writing the docs and
+  publishing, the skill stands up the work board. `scaffold.sh publish` (scaffold 1.1.0)
+  now refuses while `.claude/board.json` is missing and when the active gh account is not
+  GFMCloud, before `gh repo create`; a dry run prints both checks. Proven by
+  `plugins/project-starters/tests/prove-publish-gates.sh` with a stubbed gh, and shown
+  able to fail against the previous scaffold.sh.
+
 ## 2026-09-27 - agent-tooling 0.2.0: jev added (incubator)
 
 - **New skill `jev`.** Finds where TypeSafe's Jev model fits in the current project and

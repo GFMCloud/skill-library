@@ -3,8 +3,9 @@
 #
 # Two phases, deliberately separated:
 #   init     lays down directories, ignore rules, hooks, licence and DOC STUBS, then `git init`.
-#   publish  refuses to run while stubs are unfilled, scans for secrets, makes the first
-#            commit and creates + pushes the GitHub repo.
+#   publish  refuses to run while stubs are unfilled, while .claude/board.json (the work
+#            board) is missing, or unless the active gh account is GFMCloud; scans for
+#            secrets, makes the first commit and creates + pushes the GitHub repo.
 #
 # The gap between them is where Claude conducts the interview and writes README.md,
 # CLAUDE.md, SPEC.md and KICKOFF.md. That ordering is the whole point: a repo whose
@@ -12,7 +13,7 @@
 # to ignore it.
 set -euo pipefail
 
-VERSION="1.0.0"
+VERSION="1.1.0"
 MARKER="<!-- SCAFFOLD-TODO -->"
 DEFAULT_ROOT="${GFM_PROJECT_ROOT:-$HOME/work/GitHub}"
 DOCS=(README.md CLAUDE.md SPEC.md KICKOFF.md)
@@ -37,6 +38,7 @@ scaffold.sh — repo bones for a new project
       --public            create the repo public (default: private)
       --no-scan           proceed without gitleaks (records why in the commit trailer)
       --dry-run           print the git/gh commands instead of running them
+      (publish refuses without .claude/board.json, and unless the gh account is GFMCloud)
 
   scaffold.sh doctor      check prerequisites
   scaffold.sh version
@@ -718,6 +720,7 @@ EOF
 
   hdr "next"
   info "Docs are stubs. Claude fills README.md, CLAUDE.md, SPEC.md and KICKOFF.md next."
+  info "Then: stand up the work board (turn-reduction:work-board init), which writes .claude/board.json."
   info "Then: scaffold.sh publish --path $root"
   echo "$root"
 }
@@ -765,6 +768,14 @@ cmd_publish() {
   fi
   ok "all four docs filled in"
 
+  # 1b. The work board is stood up like the README and git: no board, no publish.
+  #     turn-reduction:work-board init writes .claude/board.json from the published
+  #     page's URL (SKILL.md step 4).
+  if [[ ! -f "$path/.claude/board.json" ]]; then
+    die "no work board: $path/.claude/board.json is missing. Stand the board up first (new-project step 4, turn-reduction:work-board init), then re-run"
+  fi
+  ok "work board: .claude/board.json present"
+
   # 2. Nothing that looks like a live secret.
   if [[ -f "$path/.env" ]]; then
     git -C "$path" check-ignore -q .env || die ".env exists and is NOT gitignored — stop"
@@ -793,6 +804,18 @@ cmd_publish() {
   else
     need gh || die "gh not installed (brew install gh)"
     die "gh not authenticated — run: gh auth login"
+  fi
+
+  # 3b. The repo is created under the account that is active in gh, so it must be
+  #     GFMCloud (PROPOSAL V1). There is no origin yet to check, so the account is the gate.
+  local login=""
+  if need gh; then login="$(gh api user --jq .login 2>/dev/null || true)"; fi
+  if [[ "$login" == "GFMCloud" ]]; then
+    ok "gh account: GFMCloud"
+  elif [[ -z "$login" ]] && (( dry )); then
+    warn "gh account unknown (gh missing or unauthenticated): a real publish refuses unless it is GFMCloud"
+  else
+    die "active gh account is '${login:-unknown}', not GFMCloud. Run: gh auth switch --user GFMCloud"
   fi
 
   git -C "$path" remote get-url origin >/dev/null 2>&1 && \

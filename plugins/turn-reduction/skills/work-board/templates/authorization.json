@@ -1,0 +1,144 @@
+{
+  "project": "__PROJECT__",
+  "generated_by": "turn-reduction:work-board init/adopt from templates/authorization.json. Trim the granted list to what is true for this project; tighten freely, loosen only on Graham's per-project ruling (G4).",
+  "tiers": {
+    "just_do_it": "commit; push the session's own commits through the push procedure; move cards. Logged, never asked.",
+    "reviewer_agent": "merges, staging deploys, runbooks before they run: done after a higher-tier reviewer agent gives a green verdict, recorded on the card. A project whose spec or ADR requires Graham's review for merges keeps that until its own doc is amended.",
+    "graham_via_inbox": "prod deploys, prod or cloud writes outside staging, credentials, deletes, anything that changes project intent, anything on the global never-pre-authorizable list other than the push carve-out. Asked as an inbox card on the work board, never in chat."
+  },
+  "push_procedure": {
+    "applies_to": "a session's own commits, to a repo whose origin is under github.com/GFMCloud/. Other sessions' commits, force pushes and anything under gmorris1221 stay stop-listed.",
+    "steps": [
+      "Record the SHA of every commit this session creates.",
+      "Run push_check.sh --repo <repo> --branch <branch> --sha <each recorded SHA>. It checks: the active gh account is GFMCloud; origin is under github.com/GFMCloud/; gitleaks finds nothing; git log --oneline origin/<branch>..HEAD lists exactly the recorded SHAs. Any mismatch is a hard stop.",
+      "Push as a separate command, never chained to the check.",
+      "Code: push a branch first and wait for CI green where the repo has CI. Docs-only commits may go direct with no CI, stated on the card.",
+      "Stay inside the pushes_per_session ceiling."
+    ],
+    "check_script": "turn-reduction skills/work-board/scripts/push_check.sh"
+  },
+  "ceilings": {
+    "pushes_per_session": {
+      "value": 5,
+      "unit": "pushes of the session's own commits in one session",
+      "note": "the only place this number exists; on the next push past it, file an inbox card instead"
+    },
+    "fix_attempts": {
+      "value": 3,
+      "unit": "attempts at one failing check",
+      "note": "on the fourth failure, stop and report what was tried"
+    },
+    "command_runtime": {
+      "value": 600,
+      "unit": "seconds for a single command",
+      "note": "longer than this, file an inbox card before starting it"
+    }
+  },
+  "granted": [
+    {
+      "tier": "just_do_it",
+      "action": "read anything in the project and run any read-only command",
+      "match": ["can i read", "may i read", "should i look at", "ok to inspect", "ok to check"],
+      "log_to": "nothing, reads are not logged"
+    },
+    {
+      "tier": "just_do_it",
+      "action": "create and edit files inside the project working tree",
+      "match": ["should i create", "shall i write", "want me to add a file", "ok to edit"],
+      "log_to": "the card the work belongs to"
+    },
+    {
+      "tier": "just_do_it",
+      "action": "commit the session's own work",
+      "match": ["should i commit", "shall i commit", "want me to commit", "ok to commit"],
+      "log_to": "git history plus the card's evidence line"
+    },
+    {
+      "tier": "just_do_it",
+      "action": "push the session's own commits to a GFMCloud repo after push_check.sh passes, up to the push ceiling",
+      "match": ["should i push", "shall i push", "want me to push", "ok to push"],
+      "ceiling": "pushes_per_session",
+      "log_to": "the card's evidence line, with the pushed SHAs and the push_check.sh result"
+    },
+    {
+      "tier": "just_do_it",
+      "action": "open, move and update cards on the work board, and take the next Ready card",
+      "match": ["should i move the card", "should i update the board", "want me to update the card", "should i start the next", "should i take the next card", "should i continue"],
+      "log_to": "the card's updated_at and updated_by"
+    },
+    {
+      "tier": "just_do_it",
+      "action": "run tests, linters, formatters and builds, and fix what they report within the attempt ceiling",
+      "match": ["should i run the tests", "shall i run the linter", "want me to fix the failing", "ok to rerun"],
+      "ceiling": ["fix_attempts", "command_runtime"],
+      "log_to": "the card, with the failing output that prompted the fix"
+    },
+    {
+      "tier": "just_do_it",
+      "action": "choose between implementations that are equivalent on the stated requirements, and name files, functions and branches",
+      "match": ["which approach do you prefer", "which of these two", "do you have a preference", "what should i call", "how should i name"],
+      "log_to": "the card's notes, naming the choice and what made it equivalent"
+    },
+    {
+      "tier": "just_do_it",
+      "action": "write and update the project's own documentation",
+      "match": ["should i update the readme", "want me to document", "shall i write this up"],
+      "log_to": "the document itself"
+    },
+    {
+      "tier": "reviewer_agent",
+      "action": "merge a branch after a higher-tier reviewer agent gives a green verdict on it",
+      "match": ["should i merge", "shall i merge", "want me to merge", "ok to merge"],
+      "log_to": "the card's review record (verdict, builder_model, reviewer_model, agent_id) and evidence line"
+    },
+    {
+      "tier": "reviewer_agent",
+      "action": "deploy to staging after a higher-tier reviewer agent gives a green verdict",
+      "match": ["deploy to staging", "staging deploy", "push to staging"],
+      "log_to": "the card's review record and evidence line, with the deploy output"
+    },
+    {
+      "tier": "reviewer_agent",
+      "action": "run a runbook after a higher-tier reviewer agent gives a green verdict on it",
+      "match": ["should i run the runbook", "want me to run the runbook"],
+      "log_to": "the card's review record and evidence line"
+    }
+  ],
+  "stop": [
+    {
+      "tier": "graham_via_inbox",
+      "action": "rewrite history, or push anything but this session's own commits: force push, another session's commits, anything under gmorris1221",
+      "match": ["force-push", "force push", "--force", "rewrite history", "reset --hard", "gmorris1221", "another session's commits", "delete the branch"]
+    },
+    {
+      "tier": "graham_via_inbox",
+      "action": "deploy to production, or write to production or to the cloud outside staging",
+      "match": ["production", "re:\\bprod\\b", "live environment", "customer data", "cloud write"]
+    },
+    {
+      "tier": "graham_via_inbox",
+      "action": "handle a raw credential, or write a secret anywhere",
+      "match": ["api key", "access token", "password", "credential", "private key", "paste the secret", "store the secret"]
+    },
+    {
+      "tier": "graham_via_inbox",
+      "action": "delete anything: files, data, resources, branches",
+      "match": ["should i delete", "ok to delete", "want me to delete", "rm -rf", "drop the table", "delete the folder"]
+    },
+    {
+      "tier": "graham_via_inbox",
+      "action": "anything that spends money or starts a billable resource",
+      "match": ["spend", "billing", "paid plan", "upgrade the account", "provision an instance"]
+    },
+    {
+      "tier": "graham_via_inbox",
+      "action": "make a private thing public, or publish a package or a release",
+      "match": ["make it public", "share externally", "open source it", "publish to npm", "publish to pypi", "publish a release", "post it publicly"]
+    },
+    {
+      "tier": "graham_via_inbox",
+      "action": "change what the work is for: scope, goal, or definition of done",
+      "match": ["change the scope", "instead of what you asked", "drop the requirement", "redefine done"]
+    }
+  ]
+}

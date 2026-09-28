@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "project": "red fixture",
+  "url": "https://example.com/not-a-board",
+  "collection": "cards",
+  "lanes": [{"id": "now", "name": "This week"}, {"id": "now", "name": "Again"}],
+  "page": ".claude/work-board.html",
+  "triggers": ["(unclosed"]
+}

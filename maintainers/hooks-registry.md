@@ -33,6 +33,18 @@ names a read-only agent, and decides nothing otherwise. Proof:
 `plugins/verification-kit/hooks/prove-guard.sh`. `prove-hooks.sh` does not cover plugin
 hooks; that gap is a residue, stated here rather than hidden.
 
+One Stop hook is also plugin-shipped and outside the parsed table: `board_gate.py`,
+shipped by the `turn-reduction` plugin in its `hooks/hooks.json` (its one editable home is
+the repo; it installs with the plugin). Event `Stop`, no matcher, **blocks** (exit 2, once
+per stop; `stop_hook_active` lets the next stop through). It does nothing unless the
+project has `.claude/board.json`; with one, it blocks a turn that changed state (commit,
+merge, push, deploy, mutating aws, board.json `triggers[]`) with no work-board write after
+it, and, while `authorization.json` exists, a turn that ends on a should-I ask in chat with
+no inbox card written. Fails open on any error. Proof:
+`plugins/turn-reduction/tests/prove-board-gate.sh`, plus the same prover run against
+`tests/fixtures/board-gate/stub-never-blocks.py`, which must fail. SCL V2 still wires its
+own `scripts/hooks/board-gate.py` in its project settings until its conversion retires it.
+
 Two hooks answer PreToolUse:Bash in `settings.json` (three with the plugin hook) and two answer PreToolUse:Read. How Claude Code
 arbitrates two answers to one event is not recorded here: the arbitration warning from
 plan H2 item 3 was left out of this change.

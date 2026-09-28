@@ -62,7 +62,7 @@ A website for storing and sharing projects kept in git. This repository is on Gi
 The folder on your computer holding your own files and settings. It is written as `~` in a path, so `~/security-audit-skill/` means a folder of that name inside it.
 
 **Hook**
-A small program that Claude Code runs by itself at a set moment, without being asked. The `verification-kit` pack installs one. Its page says what it does and what it misses.
+A small program that Claude Code runs by itself at a set moment, without being asked. Two packs install one each: `verification-kit` and `turn-reduction`. Each pack page says what its hook does and what it misses.
 
 **Incubator and stable**
 Two labels used in [inventory.md](inventory.md). `incubator` means a skill is newer and less proven. `stable` means it has settled.
