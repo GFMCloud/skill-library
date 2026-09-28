@@ -17,7 +17,9 @@ cases:
     turn wrote no inbox card. Satisfied by an ArtifactData write to the board that puts a
     card in the `inbox` column or writes an `ask`, or an assistant line
     `INBOX: none needed: <reason>`. Intent questions ("What is this change for?") do not
-    match the should-I patterns and pass.
+    match the should-I patterns and pass. The last message is the Stop input's
+    `last_assistant_message` when present, since the transcript file can lag it; the
+    transcript's final text is the fallback.
 
 Kill switches (PROPOSAL V8): with no `.claude/board.json` both checks are off. With no
 `authorization.json` at the project root check (b) is off; (a) still runs. Renaming either
@@ -462,6 +464,17 @@ def evaluate(data, project_dir):
                 joined = "\n\n".join(texts)
                 last_text = (last_text + "\n\n" + joined) if prev_text else joined
                 prev_text = True
+
+    # The final message can reach the Stop input before it reaches the transcript file (c11,
+    # 2026-09-28: the hook read the transcript 12 ms after the message and missed it), so the
+    # input's copy is the final text, and its markers count.
+    final = data.get("last_assistant_message")
+    if isinstance(final, str):
+        last_text = final
+        if BOARD_MARKER.search(final):
+            pending = []
+        if INBOX_MARKER.search(final):
+            turn_inbox = True
 
     url = board.get("url") or "(board.json has no url)"
     lines = []

@@ -2,6 +2,20 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-28 - turn-reduction 1.3.5, long-projects 0.19.2: final message from the Stop input; release watches at handoff
+
+- **`board_gate.py` reads the final message from the Stop input.** Check (b) took the
+  turn's last text from the transcript file only; in the first clean live try (rollout card
+  c11) the hook ran about 12 ms after the final message was stamped, printed nothing, and
+  let a labelled should-I line through, while an offline replay of the same transcript
+  blocked. The hook now takes `last_assistant_message` from the Stop input when present
+  (transcript as fallback), and a `BOARD:` or `INBOX:` line in it counts. Proven by
+  `tests/prove-board-gate.sh` (56 cases, 5 new; 2 red against 1.3.4).
+- **work-board: release the watch when you hand off.** With two sessions watching one
+  board, Graham's Tell Claude on an Accept for the resuming session woke the session that
+  wrote the handoff instead. A session that writes a handoff now stops its board watches
+  before its final message; the handoff skill (0.6.2) points to the rule at Step 4.
+
 ## 2026-09-28 - turn-reduction 1.3.4: watch every board you write to
 
 - **work-board: the watch step names every board and comes before the first write.** A

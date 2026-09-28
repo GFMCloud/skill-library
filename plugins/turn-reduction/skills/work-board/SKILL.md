@@ -110,6 +110,13 @@ In a project with `.claude/board.json`:
   teammate or print session cannot receive a Tell Claude. A Tell Claude comment that wakes the session is
   read with ArtifactComments `read`, handled like a pickup, answered in its thread with
   what was done, and resolved.
+- **Release the watch when you hand off.** With two sessions watching one board, a Tell
+  Claude wakes only one of them, and not necessarily the one doing the work (2026-09-28:
+  an Accept for the resuming session went to the session that wrote the handoff, which
+  still held its watch). A session that writes a handoff, or hears that another session
+  is taking over, stops its watch on every board before its final message: ArtifactComments
+  `watch` with the board URL and `on: false`, then `watch` with no URL to confirm no board
+  row is left. The session that picks up arms its own watch at pickup, as above.
 - **Asks go to the inbox, not chat.** Anything that needs Graham becomes an inbox card
   with a recommended default, and the session keeps working on what it can. Check
   `authorization.json` first (`authz.py check`): an ask it already grants is not asked.
