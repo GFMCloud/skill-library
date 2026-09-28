@@ -87,7 +87,7 @@
     },
     {
       "tier": "reviewer_agent",
-      "action": "merge a branch after a higher-tier reviewer agent gives a green verdict on it",
+      "action": "merge a branch through a pull request (gh pr create, CI green, then gh pr merge; never a local merge into the default branch) after a higher-tier reviewer agent gives a green verdict on it",
       "match": ["should i merge", "shall i merge", "want me to merge", "ok to merge"],
       "log_to": "the card's review record (verdict, builder_model, reviewer_model, agent_id) and evidence line"
     },

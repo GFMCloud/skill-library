@@ -11,7 +11,8 @@ Behavior changes only — not wording tweaks. Newest first.
   accepted action: merges go through a pull request (`gh pr merge`, which the autoMode
   allow entry names); Graham-tier actions put the exact read-backed command on the inbox
   card, so the Accept means Graham runs it; hook, settings and permission edits are named
-  as pastes up front. Proven by this release's own PR merge.
+  as pastes up front. The route was first exercised by PR #32 (merged with `gh pr merge`
+  under the autoMode entry, 2026-09-28); this release's own PR is the second instance.
 - **work-board: two more review exemptions, named.** A decision card closed by recording
   Graham's answer, and an action Graham ran himself closed on the session's read-back, join
   docs-only commits as exempt from the reviewer (`references/cards.md`). Anything a session
