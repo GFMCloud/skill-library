@@ -2,6 +2,22 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-28 - turn-reduction 1.3.2: route accepted actions so the auto-mode classifier can pass them
+
+- **work-board: an Accept on the board does not reach the auto-mode classifier.** Found on
+  the SCL conversion: Graham accepted nine inbox cards, and the classifier still refused a
+  local `git merge` into main, two CloudFront deletes, an ADR edit and a hook removal until
+  he said so in chat or ran the commands himself. The session protocol now shapes each
+  accepted action: merges go through a pull request (`gh pr merge`, which the autoMode
+  allow entry names); Graham-tier actions put the exact read-backed command on the inbox
+  card, so the Accept means Graham runs it; hook, settings and permission edits are named
+  as pastes up front. The route was first exercised by PR #32 (merged with `gh pr merge`
+  under the autoMode entry, 2026-09-28); this release's own PR is the second instance.
+- **work-board: two more review exemptions, named.** A decision card closed by recording
+  Graham's answer, and an action Graham ran himself closed on the session's read-back, join
+  docs-only commits as exempt from the reviewer (`references/cards.md`). Anything a session
+  built, merged or deployed is not exempt.
+
 ## 2026-09-27 - turn-reduction 1.3.1: push check on a first push, board hook hardening, replay mode
 
 - **`push_check.sh` works on a branch's first push.** New `--base <ref>`. With no

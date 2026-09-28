@@ -109,6 +109,18 @@ In a project with `.claude/board.json`:
   with a recommended default, and the session keeps working on what it can. Check
   `authorization.json` first (`authz.py check`): an ask it already grants is not asked.
   Intent questions ("what is this for?") are exempt and still go in chat.
+- **An Accept does not reach the auto-mode classifier.** The classifier reads chat and
+  commands, never the board, so shape each accepted action so it can pass:
+  - **Merges go through a pull request**: `gh pr create`, CI green, the reviewer's green
+    verdict on the card, then `gh pr merge`. Never a local `git merge` into the default
+    branch: the autoMode allow entry names pull-request merges on GFMCloud repos, and a local
+    merge is refused (SCL, 2026-09-28).
+  - **Graham-tier actions** (deletes, prod or cloud writes outside staging, billing) carry
+    the exact command on the inbox card, built from a read-only lookup made first, with what
+    it prints on success. Accept means Graham runs it; the session then reads each result
+    back and closes the card. Do not attempt these yourself after an Accept.
+  - **Hook, settings and permission-text edits** are named on the card as a paste from the
+    start, with the paste in the card's notes; do not attempt them.
 - **Continue by default.** When a card is done, take the next Ready card in lane then
   due-date order. Skip cards with an unfinished `blocked_by` and anything on the run's
   "Not this time" list. Stop only when Ready is empty or everything left waits on Graham.
@@ -116,7 +128,10 @@ In a project with `.claude/board.json`:
   higher tier (Fable 5.1 > Opus > Sonnet > Haiku; top-tier work gets a fresh same-tier
   session; nobody reviews their own work) checks it against `done_when` and writes the
   `review` record. Only then does the card move to `done`, with an `evidence` line.
-  Docs-only commits that deploy nothing are exempt and say so.
+  Three exemptions, each said in the review record: docs-only commits that deploy nothing;
+  a decision card closed by recording Graham's answer, with nothing built; and an action
+  Graham ran himself, closed on the session's read-back of the result
+  ([references/cards.md](references/cards.md)).
 - **Every state change is logged on the board** before the turn ends: commit, merge,
   push, deploy, cloud write. If no card is affected, end with a line
   `BOARD: no card affected: <reason>`.

@@ -19,7 +19,7 @@ same documents live.
 | `notes` | string | free text |
 | `links` | list of `{label, url}` | https only; the page ignores anything else |
 | `evidence` | string | what was run or checked and what it showed; required for done |
-| `review` | object | `{verdict, builder_model, reviewer_model, agent_id, at}`; written by the reviewer session, never the builder |
+| `review` | object | `{verdict, builder_model, reviewer_model, agent_id, at}`; written by the reviewer session, never the builder; for an exempt card (see Rules), by the session that verified it |
 | `ask` | object | `{question, default, why, evidence_link, ask_rev}`; only on inbox cards |
 | `answer` | object | `{choice: accept or amend or discuss, text, at, ask_rev}`; written by the page when Graham answers |
 | `updated_at` | ISO time, UTC | every write sets it |
@@ -32,9 +32,17 @@ line of why" on the inbox card, and it needs a field to live in.
 
 - **Done needs evidence and a green review.** `review.verdict` is green when it is `green`,
   `pass`, `passed` or `approved` (any case); write `green`. The page refuses the move; a session must not write
-  `column: done` without both either. Docs-only commits that deploy nothing are exempt from
-  the review (PROPOSAL V8) and say so in `evidence`, and are then written with
-  `review: {verdict: "green", reviewer_model: "exempt: docs-only", ...}`.
+  `column: done` without both either. Three kinds of card are exempt from the reviewer and
+  say so in `evidence`; the session that verified the result writes the record:
+  - docs-only commits that deploy nothing (PROPOSAL V8): `reviewer_model: "exempt: docs-only"`;
+  - a decision card closed by recording Graham's answer, nothing built:
+    `reviewer_model: "exempt: decision recorded"`;
+  - an action Graham ran himself (a delete, a console or billing change), closed on the
+    session's read-back of every result: `reviewer_model: "exempt: Graham-run, read back"`.
+  Anything a session built, merged or deployed is not exempt. A card that mixes an exempt
+  item with anything the session built goes to review. The Graham-run exemption covers the
+  command Graham ran and its read-back; a script, template, scheduled task or config the
+  session wrote is built work and is reviewed (before Graham runs it, where he runs it).
 - **Editing an ask bumps `ask_rev` and clears `answer`.** Write both in one update:
   `{"ask": {..., "ask_rev": <old + 1>}, "answer": null}`.
 - **Act on an answer only when `answer.ask_rev == ask.ask_rev`.** A mismatch means Graham
