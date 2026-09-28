@@ -469,7 +469,7 @@ def evaluate(data, project_dir):
     # 2026-09-28: the hook read the transcript 12 ms after the message and missed it), so the
     # input's copy is the final text, and its markers count.
     final = data.get("last_assistant_message")
-    if isinstance(final, str):
+    if isinstance(final, str) and final.strip():
         last_text = final
         if BOARD_MARKER.search(final):
             pending = []

@@ -9,8 +9,8 @@ Behavior changes only — not wording tweaks. Newest first.
   c11) the hook ran about 12 ms after the final message was stamped, printed nothing, and
   let a labelled should-I line through, while an offline replay of the same transcript
   blocked. The hook now takes `last_assistant_message` from the Stop input when present
-  (transcript as fallback), and a `BOARD:` or `INBOX:` line in it counts. Proven by
-  `tests/prove-board-gate.sh` (56 cases, 5 new; 2 red against 1.3.4).
+  (transcript as fallback, also when it is empty), and a `BOARD:` or `INBOX:` line in it
+  counts. Proven by `tests/prove-board-gate.sh` (57 cases, 6 new; 3 red against 1.3.4).
 - **work-board: release the watch when you hand off.** With two sessions watching one
   board, Graham's Tell Claude on an Accept for the resuming session woke the session that
   wrote the handoff instead. A session that writes a handoff now stops its board watches
