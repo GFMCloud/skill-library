@@ -44,6 +44,9 @@ are Board (columns by lane) and Done (collapsed). An inbox card shows the questi
 recommended default (labelled), one line of why and the evidence link, then Accept,
 Amend (the default as editable text), Discuss and one comment box; one save writes
 `answer {choice, text, at, ask_rev}`; an Amend whose text equals the default is refused.
+A command card (`ask.command`) is marked "You run this", shows the command in a monospace
+block with a Copy button and what to expect, and answers **I ran it** (`choice: "ran"`) or
+Discuss.
 The page refuses a move to Done without evidence and a green review. A **Tell Claude**
 button in the header posts a comment on the board and sends it to Claude (the `comments`
 capability's `sendToClaude`), pre-filled with the inbox cards Graham has answered. When no
@@ -98,7 +101,8 @@ In a project with `.claude/board.json`:
 - **Pickup:** query the board (ArtifactData `query`, collection from board.json) for
   `inbox`, `doing` and `review`. Act on every inbox card whose `answer.ask_rev` equals
   `ask.ask_rev`: Accept means do the default, Amend means do the amended text, Discuss
-  means raise it first thing. Ignore an answer whose rev does not match.
+  means raise it first thing, and I ran it (`ran`) means Graham ran the card's command:
+  read the result back and close. Ignore an answer whose rev does not match.
 - **Watch every board you write to**, at pickup and before your first write to it, so
   Graham's Tell Claude reaches this session and not a chat Claude: ArtifactComments `watch`
   with the board URL, then `watch` with no URL to confirm its row says "auto-replies armed".
@@ -127,10 +131,14 @@ In a project with `.claude/board.json`:
     verdict on the card, then `gh pr merge`. Never a local `git merge` into the default
     branch: the autoMode allow entry names pull-request merges on GFMCloud repos, and a local
     merge is refused (SCL, 2026-09-28).
-  - **Graham-tier actions** (deletes, prod or cloud writes outside staging, billing) carry
-    the exact command on the inbox card, built from a read-only lookup made first, with what
-    it prints on success. Accept means Graham runs it; the session then reads each result
-    back and closes the card. Do not attempt these yourself after an Accept.
+  - **Graham-tier actions** (deletes, prod or cloud writes outside staging, billing) are a
+    command card: the exact command in `ask.command`, built from a read-only lookup made
+    first, and what it prints on success in `ask.expect` (shape in
+    [references/cards.md](references/cards.md)). Never put the command in the question's
+    prose. His `ran` answer means he ran it; the session then reads each result back and
+    closes the card. Do not run these yourself after any answer (2026-09-28: an Accept on a
+    command written into the question was read as permission, and the classifier blocked
+    the session's run).
   - **Hook, settings and permission-text edits** are named on the card as a paste from the
     start, with the paste in the card's notes; do not attempt them.
 - **Continue by default.** When a card is done, take the next Ready card in lane then

@@ -2,6 +2,18 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-28 - turn-reduction 1.3.6: command cards on the work board
+
+- **work-board: a command for Graham to run is a command card.** An inbox ask that needs
+  Graham to run something carries it in `ask.command` (and what he should see in
+  `ask.expect`), never in the question's prose. The page marks the card "You run this",
+  shows the command in a monospace block with a Copy button on the Needs you list and in
+  the card, and answers **I ran it** (new `answer.choice: "ran"`, with any pasted output) or
+  Discuss; Accept and Amend are not offered. Sessions act on `ran` by reading the result
+  back and closing the card. Trigger: on the rollout board a command sat in the question
+  text, an Accept was read as permission to run it, and the auto-mode classifier blocked the
+  session's run. The fixture board's writes now merge nested objects like the real board.
+
 ## 2026-09-28 - turn-reduction 1.3.5, long-projects 0.19.2: final message from the Stop input; release watches at handoff
 
 - **`board_gate.py` reads the final message from the Stop input.** Check (b) took the
