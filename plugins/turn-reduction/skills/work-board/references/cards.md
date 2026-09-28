@@ -19,7 +19,7 @@ same documents live.
 | `notes` | string | free text |
 | `links` | list of `{label, url}` | https only; the page ignores anything else |
 | `evidence` | string | what was run or checked and what it showed; required for done |
-| `review` | object | `{verdict, builder_model, reviewer_model, agent_id, at}`; written by the reviewer session, never the builder; for an exempt card (see Rules), by the session that verified it |
+| `review` | object | `{verdict, builder_model, reviewer_model, agent_id, at}`; written by the reviewer session, never the builder; a read-only reviewer that cannot write the board has the builder transcribe its verdict, naming the reviewer and "transcribed" in `agent_id`; for an exempt card (see Rules), by the session that verified it |
 | `ask` | object | `{question, default, why, evidence_link, ask_rev}`; only on inbox cards |
 | `answer` | object | `{choice: accept or amend or discuss, text, at, ask_rev}`; written by the page when Graham answers |
 | `updated_at` | ISO time, UTC | every write sets it |

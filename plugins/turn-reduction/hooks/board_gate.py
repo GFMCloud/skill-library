@@ -7,8 +7,12 @@ cases:
 
 (a) The session changed state (a git commit, merge or push, a PR merge, a deploy, a
     mutating `aws` call, or a project trigger from board.json `triggers[]`) and there is
-    no write to the board after the last such command. Satisfied by an ArtifactData write
-    whose url names the board, or an assistant line `BOARD: no card affected: <reason>`.
+    no write to the board it is owed to after the last such command. A change is owed to
+    the nearest `.claude/board.json` at or above the repo the command ran in (`git -C
+    <dir>`, else the transcript entry's cwd), so a commit in another repo with its own
+    board is logged there; a repo with no board of its own stays owed to the project's
+    board. Satisfied by an ArtifactData write whose url names that board, or an assistant
+    line `BOARD: no card affected: <reason>`.
 (b) The turn's last assistant message asks Graham a should-I question in chat and the
     turn wrote no inbox card. Satisfied by an ArtifactData write to the board that puts a
     card in the `inbox` column or writes an `ask`, or an assistant line
@@ -31,6 +35,9 @@ Known weaknesses, stated beside the rule:
   script not named in triggers[] is not seen, nor one inside `$(...)` or backticks within
   double quotes. Project triggers[] regexes are matched against the segment from its
   command position, so they need no anchor, but a loose one can still match an argument.
+- The board a change is owed to comes from `git -C <dir>` (with `~` expanded) or the
+  transcript entry's cwd. `cd <dir> && git commit` and `$HOME/...` paths are charged to
+  the entry's cwd board, not `<dir>`'s; sessions here use `git -C`, so this is rare.
 - The should-I check reads the first and last paragraph of the final message and matches
   a phrase list. An ask phrased another way ("Thoughts?") passes; a rhetorical
   "should I" in prose that ends in a question mark blocks.
@@ -252,27 +259,65 @@ def project_triggers(board):
     return out
 
 
-def trigger_hits(command, extra):
-    """(trigger name, cleaned segment text) for each segment of the command that changes
-    state. tests/replay-board-gate.py prints the segment so a person can judge the hit."""
-    found = []
+def _hits(command, extra):
+    """(trigger name, cleaned segment text, words) for each segment that changes state."""
     for text, toks in segments(command):
         for name, rx in TRIGGERS + extra:
             if rx.search(text):
-                found.append((name, text))
+                yield name, text, toks
                 break
         else:
             if aws_writes(toks):
-                found.append(("aws write", text))
-    return found
+                yield "aws write", text, toks
+
+
+def trigger_hits(command, extra):
+    """(trigger name, cleaned segment text) for each segment of the command that changes
+    state. tests/replay-board-gate.py prints the segment so a person can judge the hit."""
+    return [(name, text) for name, text, _ in _hits(command, extra)]
 
 
 def triggers_in(command, extra):
     return [name for name, _ in trigger_hits(command, extra)]
 
 
+def git_c_dir(toks):
+    """The directory a `git -C <dir> ...` segment runs in (repeated -C joined, as git
+    does), else None."""
+    if not toks or os.path.basename(toks[0]) != "git":
+        return None
+    path, k = None, 1
+    while k < len(toks) and toks[k].startswith("-"):
+        if toks[k] == "-C" and k + 1 < len(toks):
+            path = os.path.join(path, toks[k + 1]) if path else toks[k + 1]
+            k += 1
+        elif toks[k] in ("-c", "--git-dir", "--work-tree", "--namespace") and k + 1 < len(toks):
+            k += 1
+        k += 1
+    return path
+
+
+def trigger_dirs(command, extra):
+    """(trigger name, git -C directory or None) for each segment that changes state."""
+    return [(name, git_c_dir(toks)) for name, _, toks in _hits(command, extra)]
+
+
+def board_for(start, fallback):
+    """The nearest .claude/board.json at or above start; fallback when there is none, so
+    a state change in a repo without a board stays owed to the session project's board."""
+    d = os.path.realpath(start)
+    while True:
+        p = os.path.join(d, ".claude", "board.json")
+        if os.path.isfile(p):
+            return p
+        parent = os.path.dirname(d)
+        if parent == d:
+            return fallback
+        d = parent
+
+
 def board_id(url):
-    m = re.search(r"/artifact/([A-Za-z0-9_-]+)", url or "")
+    m = re.search(r"/artifact/([A-Za-z0-9_-]+)", str(url or ""))
     return m.group(1) if m else ""
 
 
@@ -343,7 +388,29 @@ def evaluate(data, project_dir):
     if not path or not os.path.exists(path):
         return []
 
-    pending = []          # state changes since the last board write or BOARD marker
+    # Boards a state change can be owed to, by board id: the project's, plus the nearest
+    # board above a command's repo (`git -C <dir>`, else the entry's cwd) when that repo
+    # has its own .claude/board.json.
+    boards = {bid: board}
+    owed_cache = {}  # board.json path -> board id it resolves to
+
+    def owed_to(start):
+        found = board_for(start, board_path)
+        if found not in owed_cache:
+            owed_cache[found] = bid
+            try:
+                if os.path.getsize(found) <= 1 << 20:  # a board.json is small; skip anything odd
+                    with open(found, encoding="utf-8") as fh:
+                        other = json.load(fh)
+                    obid = board_id(other.get("url"))
+                    if obid:
+                        boards.setdefault(obid, other)
+                        owed_cache[found] = obid
+            except (OSError, ValueError, AttributeError, TypeError):
+                pass
+        return owed_cache[found]
+
+    pending = []          # (kind, command, board id) since that board's last write or a BOARD marker
     turn_inbox = False    # an inbox write or INBOX marker in the current turn
     last_text = ""        # the final assistant message's text
     prev_text = False     # the previous assistant entry was text only
@@ -373,14 +440,19 @@ def evaluate(data, project_dir):
                         turn_inbox = True
                 elif block.get("type") == "tool_use":
                     inp = block.get("input") or {}
-                    if is_board_write(block, bid):
-                        pending = []
-                        if is_inbox_write(block):
+                    tool = block.get("name") or ""
+                    if (tool == "ArtifactData" or tool.endswith("__ArtifactData")) and \
+                            inp.get("action") in WRITE_ACTIONS:
+                        url = str(inp.get("url") or "")
+                        pending = [p for p in pending if not (p[2] and p[2] in url)]
+                        if is_board_write(block, bid) and is_inbox_write(block):
                             turn_inbox = True
-                    elif (block.get("name") or "") in SHELL_TOOLS:
+                    elif tool in SHELL_TOOLS:
                         cmd = str(inp.get("command") or "")
-                        for kind in triggers_in(cmd, extra):
-                            pending.append((kind, cmd))
+                        base = entry.get("cwd") or project_dir
+                        for kind, cdir in trigger_dirs(cmd, extra):
+                            start = os.path.join(base, os.path.expanduser(cdir)) if cdir else base
+                            pending.append((kind, cmd, owed_to(start)))
             used_tool = any(isinstance(b, dict) and b.get("type") == "tool_use"
                             for b in (entry.get("message") or {}).get("content") or [])
             if used_tool:
@@ -392,17 +464,21 @@ def evaluate(data, project_dir):
                 prev_text = True
 
     url = board.get("url") or "(board.json has no url)"
-    coll = board.get("collection") or "cards"
     lines = []
     if pending:
         lines.append("board-gate (a): this session changed state since its last work-board write:")
-        for kind, cmd in pending[:8]:
-            lines.append("  - %s: %s" % (kind, " ".join(cmd.split())[:160]))
-        if len(pending) > 8:
-            lines.append("  - ... and %d more" % (len(pending) - 8))
-        lines.append("Update the affected card(s) with ArtifactData (url %s, collection %s; a move "
-                     "to done needs evidence and a green review), or, if no card is affected, write "
-                     "the line `BOARD: no card affected: <reason>` with a real reason." % (url, coll))
+        for owed in dict.fromkeys(p[2] for p in pending):
+            mine = [p for p in pending if p[2] == owed]
+            ob = boards.get(owed) or board
+            for kind, cmd, _ in mine[:8]:
+                lines.append("  - %s: %s" % (kind, " ".join(cmd.split())[:160]))
+            if len(mine) > 8:
+                lines.append("  - ... and %d more" % (len(mine) - 8))
+            lines.append("Update the affected card(s) with ArtifactData (url %s, collection %s; a "
+                         "move to done needs evidence and a green review)."
+                         % (ob.get("url") or "(board.json has no url)", ob.get("collection") or "cards"))
+        lines.append("If no card is affected, write the line `BOARD: no card affected: <reason>` "
+                     "with a real reason.")
     if ask_check and not turn_inbox and asks_should_i(last_text):
         lines.append("board-gate (b): this turn ends by asking a should-I question in chat. In a "
                      "project with a board, asks go to the inbox: write a card to column `inbox` "

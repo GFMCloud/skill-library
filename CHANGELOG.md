@@ -2,6 +2,25 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-28 - turn-reduction 1.3.3: board hook charges a change to its own repo's board
+
+- **`board_gate.py` (a) is per board.** A state change is owed to the nearest
+  `.claude/board.json` at or above the repo the command ran in (`git -C <dir>`, else the
+  transcript entry's cwd); a repo without a board stays owed to the project's board, as
+  before. A board write clears only what is owed to that board. Found in the SCL session of
+  2026-09-28, where skill-library commits made from an SCL session were charged to the SCL
+  board. Scope: commits in the rollout worktree now route to the rollout board (the nearest
+  board above it); commits in `~/skill-library` itself still fall back to the session
+  project's board, because that repo has no board of its own. `~` in `-C` is expanded; a
+  board.json whose `url` is not a string now falls back instead of silently turning the
+  hook off. Proven by `tests/prove-board-gate.sh` (51 cases, 9 new; 5 are red against the
+  1.3.2 hook and 2 against the first cut of this change, the tilde case against both; the
+  other 4 pass on 1.3.2 and guard the unchanged fallback). The prover gains a second fixture repo with its own board, per-step cwd,
+  `HOME` at the fixture root, and a `stderr_has` check that the block names the right board.
+- **work-board: two clarifications from the rollout's final review.** `references/cards.md`
+  lets a builder transcribe a read-only reviewer's verdict, named in `agent_id`; SKILL.md
+  names the page's one external call (Google Fonts, falling back offline).
+
 ## 2026-09-28 - turn-reduction 1.3.2: route accepted actions so the auto-mode classifier can pass them
 
 - **work-board: an Accept on the board does not reach the auto-mode classifier.** Found on

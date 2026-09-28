@@ -14,6 +14,11 @@
 #   noauthz     .claude/board.json only (authorization.json renamed .superseded)
 #   superseded  .claude/board.json renamed .superseded + authorization.json
 #   none        no .claude/board.json at all
+# Three more repos for cross-repo cases, never a case's project: other (its own board,
+# OtherBoard456, with a sub/ dir), plain (no board, with a sub/ dir) and badurl (a
+# board.json whose url is not a string). Case strings may name them as @other@, @plain@
+# and @badurl@, and the full project as @full@. A case may set a
+# step's "cwd" and a "stderr_has" string the block must carry.
 set -u -o pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 HOOK="${1:-$HERE/../hooks/board_gate.py}"
@@ -40,6 +45,19 @@ proj("notriggers", board, "board.json", "authorization.json")
 proj("noauthz", board, "board.json", "authorization.json.superseded")
 proj("superseded", board, "board.json.superseded", "authorization.json")
 proj("none", None, "", "authorization.json")
+# A second repo with its own board, and a repo with none, for cross-repo cases. Case strings
+# may name them as @other@ and @plain@ (and the project as @full@).
+proj("other", dict(board, url="https://claude.ai/artifact/OtherBoard456"), "board.json", None)
+os.makedirs(os.path.join(tmp, "proj-other", "sub"), exist_ok=True)
+os.makedirs(os.path.join(tmp, "plain", "sub"), exist_ok=True)
+proj("badurl", dict(board, url=123), "board.json", None)  # a malformed board.json: url not a string
+places = {"@other@": os.path.join(tmp, "proj-other"), "@plain@": os.path.join(tmp, "plain"),
+          "@badurl@": os.path.join(tmp, "proj-badurl"),
+          "@full@": os.path.join(tmp, "proj-full")}
+def sub(s):
+    for k, v in places.items():
+        s = s.replace(k, v)
+    return s
 for i, case in enumerate(json.load(open(cases))):
     lines = []
     for step in case["transcript"]:
@@ -47,13 +65,16 @@ for i, case in enumerate(json.load(open(cases))):
             lines.append({"type": "user", "isSidechain": False, "message": {"role": "user", "content": step["user"]}})
             continue
         if "bash" in step:
-            block = {"type": "tool_use", "name": "Bash", "input": {"command": step["bash"]}}
+            block = {"type": "tool_use", "name": "Bash", "input": {"command": sub(step["bash"])}}
         elif "artifact" in step:
             block = {"type": "tool_use", "name": "ArtifactData", "input": step["artifact"]}
         else:
             block = {"type": "text", "text": step["text"]}
-        lines.append({"type": "assistant", "isSidechain": bool(step.get("sidechain")),
-                      "message": {"role": "assistant", "content": [block]}})
+        entry = {"type": "assistant", "isSidechain": bool(step.get("sidechain")),
+                 "message": {"role": "assistant", "content": [block]}}
+        if "cwd" in step:
+            entry["cwd"] = sub(step["cwd"])
+        lines.append(entry)
         if block["type"] == "tool_use":
             lines.append({"type": "user", "isSidechain": bool(step.get("sidechain")),
                           "message": {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "t", "content": "ok"}]}})
@@ -66,7 +87,8 @@ for i, case in enumerate(json.load(open(cases))):
     inp.update(case.get("input") or {})
     json.dump(inp, open(os.path.join(tmp, "in%d.json" % i), "w"))
     with open(os.path.join(tmp, "meta%d" % i), "w") as fh:
-        fh.write("%s\t%s\t%s\n" % (case["expect"], os.path.join(tmp, "proj-" + case["project"]), case["name"]))
+        fh.write("%s\t%s\t%s\t%s\n" % (case["expect"], os.path.join(tmp, "proj-" + case["project"]),
+                                       case["name"], case.get("stderr_has", "")))
 PY
 [ $? -eq 0 ] || { echo "BOARD-GATE PROOF: could not build fixtures"; exit 1; }
 
@@ -74,8 +96,9 @@ N=$(ls "$TMP" | /usr/bin/grep -c '^meta')
 FAIL=0
 i=0
 while [ "$i" -lt "$N" ]; do
-  IFS=$'\t' read -r EXPECT PROJ NAME < "$TMP/meta$i"
-  CLAUDE_PROJECT_DIR="$PROJ" python3 "$HOOK" < "$TMP/in$i.json" > /dev/null 2> "$TMP/err$i.txt"
+  IFS=$'\t' read -r EXPECT PROJ NAME HAS < "$TMP/meta$i"
+  # HOME is the fixture root, so a case can use ~/proj-other for the tilde form of -C
+  HOME="$TMP" CLAUDE_PROJECT_DIR="$PROJ" python3 "$HOOK" < "$TMP/in$i.json" > /dev/null 2> "$TMP/err$i.txt"
   GOT=$?
   # a blocked case must block for the reason its name gives, (a) or (b), and only that one
   WHY=""
@@ -88,7 +111,12 @@ while [ "$i" -lt "$N" ]; do
   if [ "$EXPECT" = 2 ]; then
     case "$NAME" in *"(a)"*) WANT="(a)" ;; *"(b)"*) WANT="(b)" ;; esac
   fi
-  if [ "$GOT" = "$EXPECT" ] && [ "$WHY" = "$WANT" ]; then
+  # a case may also name text the block must carry (which board it is owed to)
+  if [ -n "$HAS" ] && ! /usr/bin/grep -qF "$HAS" "$TMP/err$i.txt"; then
+    echo "FAIL  exit $GOT but stderr lacks '$HAS'  $NAME"
+    sed 's/^/        | /' "$TMP/err$i.txt"
+    FAIL=1
+  elif [ "$GOT" = "$EXPECT" ] && [ "$WHY" = "$WANT" ]; then
     echo "PASS  exit $GOT ${WHY:+$WHY }  $NAME"
   elif [ "$GOT" = "$EXPECT" ]; then
     echo "FAIL  exit $GOT but fired '$WHY', expected '$WANT'  $NAME"
