@@ -50,8 +50,7 @@ capability's `sendToClaude`), pre-filled with the inbox cards Graham has answere
 Claude Code session is watching the board, claude.ai may answer the send with its own chat
 Claude, which cannot reach this machine, rather than the page saying no session is watching
 (seen 2026-09-28); his answers are on the cards either way, and a session's pickup reads
-them. It
-is one self-contained file, light and dark, usable at phone width. Its one external call
+them. It is one self-contained file, light and dark, usable at phone width. Its one external call
 is Google Fonts, for the mood board's type pairing; offline it falls back to system fonts.
 
 ## Stand one up: `init` (new project) or `adopt` (existing project)
