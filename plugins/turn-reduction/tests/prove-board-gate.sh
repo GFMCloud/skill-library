@@ -14,9 +14,10 @@
 #   noauthz     .claude/board.json only (authorization.json renamed .superseded)
 #   superseded  .claude/board.json renamed .superseded + authorization.json
 #   none        no .claude/board.json at all
-# Two more repos for cross-repo cases, never a case's project: other (its own board,
-# OtherBoard456, with a sub/ dir) and plain (no board, with a sub/ dir). Case strings may
-# name them as @other@ and @plain@, and the full project as @full@. A case may set a
+# Three more repos for cross-repo cases, never a case's project: other (its own board,
+# OtherBoard456, with a sub/ dir), plain (no board, with a sub/ dir) and badurl (a
+# board.json whose url is not a string). Case strings may name them as @other@, @plain@
+# and @badurl@, and the full project as @full@. A case may set a
 # step's "cwd" and a "stderr_has" string the block must carry.
 set -u -o pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"

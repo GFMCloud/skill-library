@@ -13,9 +13,9 @@ Behavior changes only — not wording tweaks. Newest first.
   board above it); commits in `~/skill-library` itself still fall back to the session
   project's board, because that repo has no board of its own. `~` in `-C` is expanded; a
   board.json whose `url` is not a string now falls back instead of silently turning the
-  hook off. Proven by `tests/prove-board-gate.sh` (51 cases, 9 new; 4 are red against the
-  1.3.2 hook and 2 against the first cut of this change, the rest guard the unchanged
-  fallback). The prover gains a second fixture repo with its own board, per-step cwd,
+  hook off. Proven by `tests/prove-board-gate.sh` (51 cases, 9 new; 5 are red against the
+  1.3.2 hook and 2 against the first cut of this change, the tilde case against both; the
+  other 4 pass on 1.3.2 and guard the unchanged fallback). The prover gains a second fixture repo with its own board, per-step cwd,
   `HOME` at the fixture root, and a `stderr_has` check that the block names the right board.
 - **work-board: two clarifications from the rollout's final review.** `references/cards.md`
   lets a builder transcribe a read-only reviewer's verdict, named in `agent_id`; SKILL.md
