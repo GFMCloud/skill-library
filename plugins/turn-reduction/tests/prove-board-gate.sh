@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Prove hooks/board_gate.py against fixtures/board-gate/cases.json. Exit 0 only when every
 # case gets its expected exit code (2 = the stop is blocked, 0 = it is allowed), and every
-# blocked case blocks for the reason its name gives, (a) or (b), and no other.
+# blocked case blocks for the reason its name gives, (a) to (d), and no other.
 #
 #   bash plugins/turn-reduction/tests/prove-board-gate.sh [hook_path]
 #
@@ -18,7 +18,8 @@
 # OtherBoard456, with a sub/ dir), plain (no board, with a sub/ dir) and badurl (a
 # board.json whose url is not a string). Case strings may name them as @other@, @plain@
 # and @badurl@, and the full project as @full@. A case may set a
-# step's "cwd" and a "stderr_has" string the block must carry.
+# step's "cwd" and a "stderr_has" string the block must carry. A "tool" step is any other
+# tool call, with the text its result carries (a watch listing, a publish result).
 set -u -o pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 HOOK="${1:-$HERE/../hooks/board_gate.py}"
@@ -64,12 +65,18 @@ for i, case in enumerate(json.load(open(cases))):
         if "user" in step:
             lines.append({"type": "user", "isSidechain": False, "message": {"role": "user", "content": step["user"]}})
             continue
+        result = "ok"
         if "bash" in step:
             block = {"type": "tool_use", "name": "Bash", "input": {"command": sub(step["bash"])}}
         elif "artifact" in step:
             block = {"type": "tool_use", "name": "ArtifactData", "input": step["artifact"]}
+        elif "tool" in step:
+            block = {"type": "tool_use", "name": step["tool"]["name"], "input": step["tool"]["input"]}
+            result = step["tool"]["result"]
         else:
             block = {"type": "text", "text": step["text"]}
+        if block["type"] == "tool_use":
+            block["id"] = "t%d" % len(lines)
         entry = {"type": "assistant", "isSidechain": bool(step.get("sidechain")),
                  "message": {"role": "assistant", "content": [block]}}
         if "cwd" in step:
@@ -77,7 +84,7 @@ for i, case in enumerate(json.load(open(cases))):
         lines.append(entry)
         if block["type"] == "tool_use":
             lines.append({"type": "user", "isSidechain": bool(step.get("sidechain")),
-                          "message": {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "t", "content": "ok"}]}})
+                          "message": {"role": "user", "content": [{"type": "tool_result", "tool_use_id": block["id"], "content": result}]}})
     t = os.path.join(tmp, "t%d.jsonl" % i)
     with open(t, "w") as fh:
         for l in lines:
@@ -100,16 +107,16 @@ while [ "$i" -lt "$N" ]; do
   # HOME is the fixture root, so a case can use ~/proj-other for the tilde form of -C
   HOME="$TMP" CLAUDE_PROJECT_DIR="$PROJ" python3 "$HOOK" < "$TMP/in$i.json" > /dev/null 2> "$TMP/err$i.txt"
   GOT=$?
-  # a blocked case must block for the reason its name gives, (a) or (b), and only that one
+  # a blocked case must block for the reason its name gives, (a) to (d), and only that one
   WHY=""
   if [ "$GOT" = 2 ]; then
-    for tag in "(a)" "(b)"; do
+    for tag in "(a)" "(b)" "(c)" "(d)"; do
       if /usr/bin/grep -qF "board-gate $tag" "$TMP/err$i.txt"; then WHY="$WHY$tag"; fi
     done
   fi
   WANT=""
   if [ "$EXPECT" = 2 ]; then
-    case "$NAME" in *"(a)"*) WANT="(a)" ;; *"(b)"*) WANT="(b)" ;; esac
+    case "$NAME" in *"(a)"*) WANT="(a)" ;; *"(b)"*) WANT="(b)" ;; *"(c)"*) WANT="(c)" ;; *"(d)"*) WANT="(d)" ;; esac
   fi
   # a case may also name text the block must carry (which board it is owed to)
   if [ -n "$HAS" ] && ! /usr/bin/grep -qF "$HAS" "$TMP/err$i.txt"; then

@@ -16,12 +16,13 @@ not read) and, for the main session only (sidechain entries skipped, as the hook
       printed with the shell segment that fired it, as the hook matched it (from the
       command position, quoted words with spaces shown as Q, heredoc bodies removed).
   (b) the final assistant message of each turn (the text the turn ended on, as the hook
-      builds it) is passed to board_gate.asks_should_i; each hit is printed with the
-      sentence that matched.
+      builds it) is passed to board_gate.ask_sentence, then offer_sentence; each hit is
+      printed with the sentence that matched, as a should-I ask or an offer.
 
 A hit is what the hook would count, not a verdict that the hook would block: (a) is
-cleared by a later board write and (b) by an inbox card, and a transcript from a project
-without a board never blocks at all. Transcripts are opened read-only and never written.
+cleared by a later board write and (b) by an inbox card (an offer only by the INBOX
+marker), and a transcript from a project without a board never blocks at all. Checks (c)
+and (d) read tool results and board writes across a session, so this does not replay them. Transcripts are opened read-only and never written.
 Output carries short excerpts (--excerpt characters, default 160, whitespace collapsed),
 never whole messages or tool output. Exit 0 after a completed replay, whatever it found;
 exit 2 when no transcript was found.
@@ -31,7 +32,6 @@ import glob
 import importlib.util
 import json
 import os
-import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -50,27 +50,21 @@ def excerpt(text, width):
     return one if len(one) <= width else one[: width - 3] + "..."
 
 
-def matching_sentence(bg, text):
-    """The sentence asks_should_i matched, for the report."""
-    paras = [p.strip() for p in re.split(r"\n\s*\n", text or "") if p.strip()]
-    for para in [paras[0], paras[-1]] if paras else []:
-        m = bg.LET_ME_KNOW.search(para)
-        if m:
-            start = max(para.rfind(".", 0, m.start()), para.rfind("\n", 0, m.start())) + 1
-            return para[start:]
-        for sentence in re.findall(r"[^.?!\n]*\?", para):
-            if bg.ASK.search(sentence):
-                return sentence
-    return text
-
-
 def replay(bg, path, width, hits, counts):
     label = "%s/%s" % (os.path.basename(os.path.dirname(path))[-40:], os.path.basename(path)[:8])
     last_text, prev_text, turn_line = "", False, 0
 
     def close_turn():
-        if last_text and bg.asks_should_i(last_text):
-            hits.append(("(b)", "should-I ask", label, turn_line, excerpt(matching_sentence(bg, last_text), width)))
+        # A --hook from before 1.3.7 has asks_should_i only, and no offer check.
+        if hasattr(bg, "ask_sentence"):
+            ask = bg.ask_sentence(last_text) if last_text else ""
+        else:
+            ask = last_text if last_text and bg.asks_should_i(last_text) else ""
+        offer = bg.offer_sentence(last_text) if last_text and not ask and hasattr(bg, "offer_sentence") else ""
+        if ask:
+            hits.append(("(b)", "should-I ask", label, turn_line, excerpt(ask, width)))
+        elif offer:
+            hits.append(("(b)", "offer", label, turn_line, excerpt(offer, width)))
         if last_text:
             counts["final messages"] += 1
 

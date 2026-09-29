@@ -2,6 +2,28 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-09-28 - turn-reduction 1.3.7: board_gate catches offers, unarmed watches and commands in ask prose
+
+Trigger: an SCL session on 2026-09-28 broke three rules the installed 1.3.6 skill already
+stated, and the hook caught none of them (retro reviewed in rollout card c17).
+
+- **Check (b) catches offers and reads past a trailing link.** A closing such as "I'll start
+  it when you say go" or "which I can start when you want" blocks, with or without a
+  question mark, and only the `INBOX: none needed` line excuses it (an inbox card for some
+  other question does not). A last paragraph that is only a link (`Board: <url>`) is
+  skipped, so the paragraph above it is read.
+- **New check (c): the comment watch.** A session that filed an inbox card must hold an
+  ArtifactComments watch result showing the board with auto-replies armed, or write
+  `WATCH: not armed: <reason>`. Without it Graham's Tell Claude woke a chat Claude with no
+  repo access, twice in one evening.
+- **New check (d): commands go in `ask.command`.** An inbox ask whose question carries a
+  script path or a known CLI with a flag, and has no `ask.command`, blocks unless the turn
+  writes `ASK: not a command card: <reason>`.
+- Replay mode reports offer hits as `(b) offer`. Replayed over a week of SCL transcripts
+  (15 transcripts, 188 turn ends), the new hook adds 25 turn-end blocks and drops none:
+  6 offers, 1 command in prose, and 18 unarmed-watch turns across 2 sessions, where the
+  first block's fix (listing the watch) clears the rest.
+
 ## 2026-09-28 - turn-reduction 1.3.6: command cards on the work board
 
 - **work-board: a command for Graham to run is a command card.** An inbox ask that needs

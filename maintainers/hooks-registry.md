@@ -40,8 +40,11 @@ per stop; `stop_hook_active` lets the next stop through). It does nothing unless
 project has `.claude/board.json`; with one, it blocks a turn that changed state (commit,
 merge, push, deploy, mutating aws, board.json `triggers[]`) with no write after it to the
 board it is owed to (the nearest `.claude/board.json` above the repo the command ran in,
-else the project's), and, while `authorization.json` exists, a turn that ends on a
-should-I ask in chat with no inbox card written. Fails open on any error. Proof:
+else the project's), and, while `authorization.json` exists: a turn that ends on a
+should-I ask in chat with no inbox card written, or on an offer to start work when Graham
+says so (b); a session that filed an inbox card with no watch result showing the board's
+auto-replies armed (c); and a turn that wrote an inbox ask with a command in its question
+and no `ask.command` (d). Fails open on any error. Proof:
 `plugins/turn-reduction/tests/prove-board-gate.sh`, plus the same prover run against
 `tests/fixtures/board-gate/stub-never-blocks.py`, which must fail. SCL V2 retired its own
 `scripts/hooks/board-gate.py` registration on 2026-09-28; this hook now covers it.
@@ -51,7 +54,8 @@ ran: `python3 plugins/turn-reduction/tests/replay-board-gate.py --n 60` feeds th
 commands and turn-ending assistant messages of the 60 most recent main-session
 transcripts (`~/.claude/projects/*/*.jsonl`) through the hook's matching functions and
 prints every (a) and (b) hit with the firing shell segment or the matching sentence, then
-the counts. A person judges each hit; a false one becomes a fixture and a fix. It opens
+the counts. Checks (c) and (d) read tool results and board writes across a session, so
+replay mode does not cover them. A person judges each hit; a false one becomes a fixture and a fix. It opens
 transcripts read-only and prints short excerpts only. It is opt-in and never runs in CI,
 because transcripts exist only on this machine; `run-tests.sh` proves the tool itself on a
 synthetic, read-only transcript. Run it after any change to the trigger list or the lexer.

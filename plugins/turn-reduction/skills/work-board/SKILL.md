@@ -158,7 +158,8 @@ In a project with `.claude/board.json`:
   line `BOARD: no card affected: <reason>`.
 - **Close-out:** re-read the inbox; the closing message says only "N new items in your
   inbox" plus the board link. If the turn would otherwise end on a should-I question with
-  no inbox card, either write the card or add a line `INBOX: none needed: <reason>`.
+  no inbox card, either write the card or add a line `INBOX: none needed: <reason>`. Never
+  close by offering to start the next card ("I'll start it when you say go"): take it.
 - **Pushes** of the session's own commits follow `authorization.json`'s `push_procedure`:
   record each SHA you create, run
   `bash <skill>/scripts/push_check.sh --repo <repo> --branch <branch> --sha <sha>...`,
@@ -170,8 +171,13 @@ In a project with `.claude/board.json`:
   branch>`. `--base` accepts only a ref under `refs/remotes/origin/`; a SHA, `HEAD~N` or a
   local branch stops, because it could hide a foreign commit from the range.
 
-The Stop hook `turn-reduction/hooks/board_gate.py` enforces the logging rule and the
-inbox rule. It blocks once per stop and lets the next stop through.
+The Stop hook `turn-reduction/hooks/board_gate.py` enforces four of these: (a) the logging
+rule; (b) the inbox rule, including a closing offer to start work when Graham says so;
+(c) the watch rule, once the session has filed an inbox card (a watch result must show
+the board with auto-replies armed, else `WATCH: not armed: <reason>`); and (d) command
+cards, when an inbox ask carries a command in its question and no `ask.command` (else
+`ASK: not a command card: <reason>`). It blocks once per stop and lets the next stop
+through.
 
 ## Regenerate after a template change
 

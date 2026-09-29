@@ -2,7 +2,7 @@
 """board_gate: the work-board Stop hook shipped by the turn-reduction plugin.
 
 It does nothing unless the project has `.claude/board.json` (written by the work-board
-skill's `init` or `adopt`). When the board exists it refuses to let a turn end in two
+skill's `init` or `adopt`). When the board exists it refuses to let a turn end in four
 cases:
 
 (a) The session changed state (a git commit, merge or push, a PR merge, a deploy, a
@@ -19,11 +19,25 @@ cases:
     `INBOX: none needed: <reason>`. Intent questions ("What is this change for?") do not
     match the should-I patterns and pass. The last message is the Stop input's
     `last_assistant_message` when present, since the transcript file can lag it; the
-    transcript's final text is the fallback.
+    transcript's final text is the fallback. A trailing paragraph that is only a link
+    (`Board: <url>`) is skipped, so the paragraph above it counts as the last.
+    (b) also catches an offer to start work when Graham says so ("I'll start it when you
+    say go", "which I can start when you want"), with or without a question mark. That
+    breaks "continue by default", and an inbox card for some other question does not
+    excuse it; only the INBOX marker does.
+(c) The session wrote an inbox card to the board and holds no comment watch on the board
+    that says `auto-replies armed`, so Graham's Tell Claude would wake a chat Claude, not
+    this session. Proven by an ArtifactComments `watch` result: the listing row for the
+    board, or a `watch` on it that says a comment reaches this session. A publish result
+    alone does not count, and a later "Stopped watching" undoes it. Satisfied by that
+    result, or an assistant line `WATCH: not armed: <reason>` anywhere in the session.
+(d) An inbox `ask` written this turn has no `command` and its question carries a command
+    (a script path or a known CLI, with a flag). Satisfied by rewriting it as a command
+    card, or an assistant line `ASK: not a command card: <reason>` in the turn.
 
-Kill switches (PROPOSAL V8): with no `.claude/board.json` both checks are off. With no
-`authorization.json` at the project root check (b) is off; (a) still runs. Renaming either
-file to `.superseded` is how a project turns them off.
+Kill switches (PROPOSAL V8): with no `.claude/board.json` every check is off. With no
+`authorization.json` at the project root checks (b), (c) and (d) are off; (a) still runs.
+Renaming either file to `.superseded` is how a project turns them off.
 
 Generalized from SCL `scripts/hooks/board-gate.py`: the SCL-only scripts moved out of the
 built-in trigger list and into that project's board.json `triggers[]`.
@@ -42,7 +56,18 @@ Known weaknesses, stated beside the rule:
   the entry's cwd board, not `<dir>`'s; sessions here use `git -C`, so this is rare.
 - The should-I check reads the first and last paragraph of the final message and matches
   a phrase list. An ask phrased another way ("Thoughts?") passes; a rhetorical
-  "should I" in prose that ends in a question mark blocks.
+  "should I" in prose that ends in a question mark blocks. The offer check reads the last
+  paragraph only and needs a first-person action verb and a gate on Graham in one
+  sentence; "I'll leave it for you to run when you want" passes, "I can kick it off
+  whenever" does not match either.
+- The watch check trusts the text of the watch result: a listing row must read
+  "connected, ... auto-replies armed". A row still "connecting", or one the tool words
+  another way (after a resume, say), reads as not armed and blocks once; list again, or
+  use the WATCH marker. If the tool rewords "auto-replies armed", every board session
+  blocks at the first stop after an inbox card, which is loud, not silent.
+- The command-in-prose check matches a script path or a known CLI followed by a flag; a
+  command with no flag ("gh pr merge 12?") passes, and a policy question that names one
+  ("Keep git log --oneline as the range display?") blocks until the ASK marker.
 - A board write is recognized from the tool input. An ArtifactData write that loads its
   rows from a file (`file_path`) counts as an inbox write only if that file is still
   readable and holds an inbox card.
@@ -62,6 +87,8 @@ SHELL_TOOLS = {"Bash", "mcp__terminal__run_in_terminal"}
 # placeholder), so prose that quotes the marker format never counts.
 BOARD_MARKER = re.compile(r"(?m)^[ \t]*BOARD: no card affected:[ \t]*(?!<)(\S.{7,})$")
 INBOX_MARKER = re.compile(r"(?m)^[ \t]*INBOX: none needed:[ \t]*(?!<)(\S.{7,})$")
+WATCH_MARKER = re.compile(r"(?m)^[ \t]*WATCH: not armed:[ \t]*(?!<)(\S.{7,})$")
+ASK_MARKER = re.compile(r"(?m)^[ \t]*ASK: not a command card:[ \t]*(?!<)(\S.{7,})$")
 
 # Command text that changes state. Each regex is matched against one shell segment
 # rewritten from its command position (after VAR=val, sudo, time, env, nohup, command,
@@ -103,6 +130,23 @@ ASK = re.compile(
     r"can i go ahead|may i|good to (?:go|proceed|push|merge|commit|deploy)|"
     r"proceed with|ready (?:for me )?to (?:push|merge|deploy|commit))\b")
 LET_ME_KNOW = re.compile(r"(?i)\b(let me know|tell me) (if|whether) (you('d)? (want|like) me to|i should|to)\b")
+# An offer to start work once Graham says so: a first-person action and a gate on him, in
+# one sentence of the last paragraph (SCL 2026-09-28: "I'll start it when you say go",
+# "which I can start when you want"). Continue by default says take the card instead.
+OFFER_ACT = re.compile(
+    r"(?i)\b(?:i['’]ll|i will|i can|i could|i['’]d|(?:i['’]m )?happy to|ready to)\s+(?:\w+\s+){0,2}?"
+    r"(?:start|begin|pick|take|do|run|deploy|merge|push|continue|go|build|kick|move|work|get)\b")
+OFFER_GATE = re.compile(
+    r"(?i)\b(?:when(?:ever)? you(?:['’]re| are) ready|when(?:ever)? you (?:say (?:go|so|the word)|give the word|want|like|decide)|"
+    r"if you(?:['’]d)? (?:want|like)|say the word|(?:on|with) your (?:go|word|say-so|ok|okay)|"
+    r"once you (?:say|give|confirm|approve)|(?:awaiting|waiting (?:for|on)) your (?:go|word|say-so|ok|okay))\b")
+# A paragraph that is only a link, optionally labelled ("Board: <url>"); skipped at the end.
+LINK_ONLY = re.compile(r"^(?:[*_]*[\w ]{1,40}(?:[*_]*:|:[*_]*)\s*)?(?:<?https?://\S+>?|\[[^\]]*\]\(https?://[^)\s]+\))$")
+# A command in an ask's question: a script path or a known CLI, then a flag.
+CMD_IN_PROSE = re.compile(
+    r"(?:[\w./-]+\.(?:py|sh|js|ts|rb)|\b(?:aws|gh|git|sam|terraform|kubectl|npx?|uv|python3?|bash|curl|cdk|docker|gcloud|az|psql)"
+    r"\s+[\w.:/-]+)(?:\s+[^\s?]+){0,8}?\s--?[A-Za-z][\w-]*")
+WATCH_TOOLS = {"ArtifactComments"}
 
 
 def strip_heredocs(command):
@@ -360,18 +404,89 @@ def is_prompt(entry):
     return False
 
 
-def asks_should_i(text):
-    """True when the first or last paragraph of the message holds a should-I ask."""
+def paragraphs(text):
+    """The message's paragraphs, with trailing link-only ones (`Board: <url>`) dropped
+    unless nothing else is left."""
     paras = [p.strip() for p in re.split(r"\n\s*\n", text or "") if p.strip()]
-    if not paras:
-        return False
-    for para in {paras[0], paras[-1]}:
-        if LET_ME_KNOW.search(para):
-            return True
+    while len(paras) > 1 and LINK_ONLY.match(paras[-1]):
+        paras.pop()
+    return paras
+
+
+def ask_sentence(text):
+    """The should-I sentence in the first or last paragraph of the message, else ""."""
+    paras = paragraphs(text)
+    for para in dict.fromkeys(paras[:1] + paras[-1:]):
+        m = LET_ME_KNOW.search(para)
+        if m:
+            start = max(para.rfind(".", 0, m.start()), para.rfind("\n", 0, m.start())) + 1
+            return para[start:].strip()
         for sentence in re.findall(r"[^.?!\n]*\?", para):
             if ASK.search(sentence):
-                return True
-    return False
+                return sentence.strip()
+    return ""
+
+
+def asks_should_i(text):
+    """True when the first or last paragraph of the message holds a should-I ask."""
+    return bool(ask_sentence(text))
+
+
+def offer_sentence(text):
+    """The sentence in the last paragraph that offers to start work once Graham says so,
+    else ""."""
+    paras = paragraphs(text)
+    if not paras:
+        return ""
+    for sentence in re.split(r"(?<=[.!?])\s+|\n", paras[-1]):
+        if OFFER_ACT.search(sentence) and OFFER_GATE.search(sentence):
+            return sentence.strip()
+    return ""
+
+
+def asks_in(block):
+    """Every `ask` object an ArtifactData write sets, from inline data, batch entries, or
+    a data file that is still readable."""
+    inp = block.get("input") or {}
+    datas = [inp.get("data")] + [w.get("data") for w in inp.get("writes") or [] if isinstance(w, dict)]
+    paths = [inp.get("file_path")] + [w.get("file_path") for w in inp.get("writes") or [] if isinstance(w, dict)]
+    for p in paths:
+        if p and os.path.isfile(p):
+            try:
+                with open(p, encoding="utf-8", errors="replace") as fh:
+                    datas.append(json.loads(fh.read(1_000_000)))
+            except (OSError, ValueError):
+                pass
+    return [d["ask"] for d in datas if isinstance(d, dict) and isinstance(d.get("ask"), dict)]
+
+
+def prose_command(ask):
+    """The question of an ask that carries a command in its prose and no `command`, else ""."""
+    if str(ask.get("command") or "").strip():
+        return ""
+    q = str(ask.get("question") or "")
+    return q if CMD_IN_PROSE.search(q) else ""
+
+
+def result_text(block):
+    c = block.get("content")
+    if isinstance(c, list):
+        return "\n".join(str(x.get("text") or "") for x in c if isinstance(x, dict))
+    return str(c or "")
+
+
+def watch_state(text, bid, armed):
+    """This session's armed state for board bid after an ArtifactComments watch result."""
+    url = r"https://claude\.ai/artifact/" + re.escape(bid) + r"\b"
+    if re.search(r"Stopped watching " + url, text):
+        return False
+    if re.search(r"(?m)^\s*-\s*" + url + r"\s+(?:—|--|-)\s+connected,[^\n]*\bauto-replies armed\b", text):
+        return True
+    if re.search(r"^Watching " + url + r"[^\n]*reaches this session \(its status row says auto-replies armed\)", text):
+        return True
+    if re.search(r"\d+ artifact watch(?:es)? in this session|^No artifact watches in this session", text):
+        return False  # a listing without an armed row for the board: not armed now
+    return armed
 
 
 def evaluate(data, project_dir):
@@ -414,6 +529,13 @@ def evaluate(data, project_dir):
 
     pending = []          # (kind, command, board id) since that board's last write or a BOARD marker
     turn_inbox = False    # an inbox write or INBOX marker in the current turn
+    turn_marker = False   # an INBOX marker in the current turn (the only excuse for an offer)
+    session_inbox = False # an inbox card written to the project board this session
+    armed = False         # the last watch result says the project board's auto-replies are armed
+    watch_marker = False  # a WATCH marker this session
+    watch_ids = set()     # tool_use ids of ArtifactComments watch calls
+    prose_asks = []       # questions written this turn with a command in the prose
+    ask_marker = False    # an ASK marker in the current turn
     last_text = ""        # the final assistant message's text
     prev_text = False     # the previous assistant entry was text only
     with open(path, encoding="utf-8", errors="replace") as fh:
@@ -423,9 +545,17 @@ def evaluate(data, project_dir):
             except ValueError:
                 continue
             if is_prompt(entry):
-                turn_inbox = False
+                turn_inbox = turn_marker = ask_marker = False
+                prose_asks = []
                 last_text = ""
                 prev_text = False
+                continue
+            if entry.get("type") == "user" and not entry.get("isSidechain") and watch_ids:
+                content = (entry.get("message") or {}).get("content")
+                for block in content if isinstance(content, list) else []:
+                    if isinstance(block, dict) and block.get("type") == "tool_result" and \
+                            block.get("tool_use_id") in watch_ids:
+                        armed = watch_state(result_text(block), bid, armed)
                 continue
             if entry.get("type") != "assistant" or entry.get("isSidechain"):
                 continue
@@ -439,16 +569,24 @@ def evaluate(data, project_dir):
                     if BOARD_MARKER.search(t):
                         pending = []
                     if INBOX_MARKER.search(t):
-                        turn_inbox = True
+                        turn_inbox = turn_marker = True
+                    if WATCH_MARKER.search(t):
+                        watch_marker = True
+                    if ASK_MARKER.search(t):
+                        ask_marker = True
                 elif block.get("type") == "tool_use":
                     inp = block.get("input") or {}
                     tool = block.get("name") or ""
-                    if (tool == "ArtifactData" or tool.endswith("__ArtifactData")) and \
+                    if (tool in WATCH_TOOLS or tool.endswith("__ArtifactComments")) and inp.get("action") == "watch":
+                        watch_ids.add(block.get("id"))
+                    elif (tool == "ArtifactData" or tool.endswith("__ArtifactData")) and \
                             inp.get("action") in WRITE_ACTIONS:
                         url = str(inp.get("url") or "")
                         pending = [p for p in pending if not (p[2] and p[2] in url)]
                         if is_board_write(block, bid) and is_inbox_write(block):
-                            turn_inbox = True
+                            turn_inbox = session_inbox = True
+                        if is_board_write(block, bid):
+                            prose_asks += [q for q in map(prose_command, asks_in(block)) if q]
                     elif tool in SHELL_TOOLS:
                         cmd = str(inp.get("command") or "")
                         base = entry.get("cwd") or project_dir
@@ -474,7 +612,11 @@ def evaluate(data, project_dir):
         if BOARD_MARKER.search(final):
             pending = []
         if INBOX_MARKER.search(final):
-            turn_inbox = True
+            turn_inbox = turn_marker = True
+        if WATCH_MARKER.search(final):
+            watch_marker = True
+        if ASK_MARKER.search(final):
+            ask_marker = True
 
     url = board.get("url") or "(board.json has no url)"
     lines = []
@@ -492,13 +634,40 @@ def evaluate(data, project_dir):
                          % (ob.get("url") or "(board.json has no url)", ob.get("collection") or "cards"))
         lines.append("If no card is affected, write the line `BOARD: no card affected: <reason>` "
                      "with a real reason.")
-    if ask_check and not turn_inbox and asks_should_i(last_text):
+    if not ask_check:
+        return lines
+    offer = offer_sentence(last_text)
+    if not turn_inbox and asks_should_i(last_text):
         lines.append("board-gate (b): this turn ends by asking a should-I question in chat. In a "
                      "project with a board, asks go to the inbox: write a card to column `inbox` "
                      "with an `ask` {question, default, why, evidence_link, ask_rev} via ArtifactData "
                      "(url %s), keep working, and close with the inbox count. If no ask is really "
                      "needed (check authorization.json first), write the line "
                      "`INBOX: none needed: <reason>`. Intent questions are exempt." % url)
+    elif offer and not turn_marker:
+        lines.append("board-gate (b): this turn ends by offering to start work when Graham says "
+                     "so: \"%s\". Continue by default: take the next Ready card now, in lane then "
+                     "due-date order, skipping blocked_by cards and the run's \"Not this time\" "
+                     "list. A push ceiling stops pushes, not work that needs none. If everything "
+                     "left really waits on Graham, it is already an inbox card; say so in the line "
+                     "`INBOX: none needed: <reason>`." % " ".join(offer.split())[:200])
+    if session_inbox and not armed and not watch_marker:
+        lines.append("board-gate (c): this session filed an inbox card, but no ArtifactComments "
+                     "watch result shows the board (%s) with auto-replies armed, so Graham's Tell "
+                     "Claude would wake a chat Claude, not this session. Run ArtifactComments "
+                     "`watch` with no URL; if the board's row does not say auto-replies armed, "
+                     "republish %s to that URL with the Artifact tool (no re-render) and list "
+                     "again. If replies cannot be armed here (stopped by Graham, or a subagent), "
+                     "write the line `WATCH: not armed: <reason>`."
+                     % (url, board.get("page") or ".claude/work-board.html"))
+    if prose_asks and not ask_marker:
+        lines.append("board-gate (d): an inbox ask written this turn puts a command in the "
+                     "question's prose and has no `ask.command`: \"%s\". A Graham-tier action is a "
+                     "command card: the exact command in `ask.command`, what it prints in "
+                     "`ask.expect`, ask_rev + 1, and the session never runs it (work-board "
+                     "SKILL.md, \"An Accept does not reach the auto-mode classifier\"). If the "
+                     "question names a command but asks for no action, write the line "
+                     "`ASK: not a command card: <reason>`." % " ".join(prose_asks[0].split())[:200])
     return lines
 
 
