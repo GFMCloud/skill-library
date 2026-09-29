@@ -189,6 +189,8 @@ mkdir -p "$RP/-fixture-project" "$scratch/replay-empty"
   printf '%s\n' '{"type":"user","message":{"role":"user","content":"find it"}}'
   printf '%s\n' '{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","name":"Bash","input":{"command":"grep -n \"git push\" notes.md"}}]}}'
   printf '%s\n' '{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Found it."}]}}'
+  printf '%s\n' '{"type":"user","message":{"role":"user","content":"status"}}'
+  printf '%s\n' '{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"c1 is done.\n\nNext in Ready is c2, and I will start it when you say go.\n\nBoard: https://claude.ai/artifact/TestBoard123"}]}}'
 } > "$RP/-fixture-project/fixture-session.jsonl"
 chmod -R a-w "$RP"
 run 0 "replay mode reports each hit from local transcripts and writes nothing" -- \
@@ -196,8 +198,10 @@ run 0 "replay mode reports each hit from local transcripts and writes nothing" -
 because "(a) git push"
 because "(b) should-I ask"
 because "Should I merge it to main?"
-because "REPLAY: 1 transcripts, 2 shell commands, 3 final messages"
-because "REPLAY: (a) 1 hits (git push 1); (b) 1 hits"
+because "(b) offer"
+because "I will start it when you say go."
+because "REPLAY: 1 transcripts, 2 shell commands, 4 final messages"
+because "REPLAY: (a) 1 hits (git push 1); (b) 2 hits"
 chmod -R u+w "$RP"
 run 2 "replay mode with no transcripts says so" -- \
   python3 "$PLUGIN_ROOT/tests/replay-board-gate.py" --projects-dir "$scratch/replay-empty"

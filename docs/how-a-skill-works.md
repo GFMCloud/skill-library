@@ -59,7 +59,7 @@ The `verification-kit` hook runs before every command Claude Code is about to ru
 
 It does not catch every way of writing a file. A write hidden inside another script gets past it. The [verification-kit page](../plugins/verification-kit/README.md) says what it misses.
 
-The `turn-reduction` hook runs each time Claude Code finishes a turn, in every session. It does nothing in a project without a work board (a `.claude/board.json` file). In a project with one, it reads that session's conversation record and can stop the turn from ending, once, when the session changed something without updating the board, or ended by asking you a should-I question in the chat instead of adding it to the board's inbox. The [turn-reduction page](../plugins/turn-reduction/README.md) says how to turn it off for one project.
+The `turn-reduction` hook runs each time Claude Code finishes a turn, in every session. It does nothing in a project without a work board (a `.claude/board.json` file). In a project with one, it reads that session's conversation record and can stop the turn from ending, once, when the session changed something without updating the board, ended by asking you a should-I question in the chat (or offering to start work when you say so) instead of adding it to the board's inbox, filed an inbox question without a watch that lets your Tell Claude reach it, or put a command in an inbox question's text instead of on a command card. The [turn-reduction page](../plugins/turn-reduction/README.md) says how to turn it off for one project.
 
 ## Why a skill sometimes does not start
 
