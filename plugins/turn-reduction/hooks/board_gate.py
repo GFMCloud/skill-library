@@ -60,10 +60,14 @@ Known weaknesses, stated beside the rule:
   paragraph only and needs a first-person action verb and a gate on Graham in one
   sentence; "I'll leave it for you to run when you want" passes, "I can kick it off
   whenever" does not match either.
-- The watch check trusts the text of the watch result. If the tool rewords "auto-replies
-  armed", every board session blocks at the first stop after an inbox card, which is loud,
-  not silent. The command-in-prose check matches a script path or a known CLI followed by
-  a flag; a command with no flag ("gh pr merge 12?") passes.
+- The watch check trusts the text of the watch result: a listing row must read
+  "connected, ... auto-replies armed". A row still "connecting", or one the tool words
+  another way (after a resume, say), reads as not armed and blocks once; list again, or
+  use the WATCH marker. If the tool rewords "auto-replies armed", every board session
+  blocks at the first stop after an inbox card, which is loud, not silent.
+- The command-in-prose check matches a script path or a known CLI followed by a flag; a
+  command with no flag ("gh pr merge 12?") passes, and a policy question that names one
+  ("Keep git log --oneline as the range display?") blocks until the ASK marker.
 - A board write is recognized from the tool input. An ArtifactData write that loads its
   rows from a file (`file_path`) counts as an inbox write only if that file is still
   readable and holds an inbox card.
@@ -137,7 +141,7 @@ OFFER_GATE = re.compile(
     r"if you(?:['’]d)? (?:want|like)|say the word|(?:on|with) your (?:go|word|say-so|ok|okay)|"
     r"once you (?:say|give|confirm|approve)|(?:awaiting|waiting (?:for|on)) your (?:go|word|say-so|ok|okay))\b")
 # A paragraph that is only a link, optionally labelled ("Board: <url>"); skipped at the end.
-LINK_ONLY = re.compile(r"^(?:[*_]*[\w ]{1,40}[*_]*:\s*)?(?:<?https?://\S+>?|\[[^\]]*\]\(https?://[^)\s]+\))$")
+LINK_ONLY = re.compile(r"^(?:[*_]*[\w ]{1,40}(?:[*_]*:|:[*_]*)\s*)?(?:<?https?://\S+>?|\[[^\]]*\]\(https?://[^)\s]+\))$")
 # A command in an ask's question: a script path or a known CLI, then a flag.
 CMD_IN_PROSE = re.compile(
     r"(?:[\w./-]+\.(?:py|sh|js|ts|rb)|\b(?:aws|gh|git|sam|terraform|kubectl|npx?|uv|python3?|bash|curl|cdk|docker|gcloud|az|psql)"
