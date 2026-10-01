@@ -3,8 +3,8 @@ name: "proof-of-work"
 description: "Produce executed evidence that a piece of work actually works before presenting it as done, run the code against representative data, inspect the render, print the validation output. Use before declaring any artifact complete, and whenever a tool reports its own success."
 metadata:
   maturity: stable
-  version: 1.4.0
-  reviewed: 2026-09-18
+  version: 1.5.0
+  reviewed: 2026-10-01
 ---
 
 # proof-of-work
@@ -94,6 +94,10 @@ dangerous than no check at all: it converts an unknown into a false known.
   reports success having silently dropped 12% is the standard failure.
 - **Config and manifests**: installed or loaded somewhere real, and a
   component invoked. Validation is necessary, not sufficient.
+- **A page or UI**: rendered at the widths that matter, light and dark, and
+  looked at at full resolution. The browser pane scales its screenshots down;
+  `verification-kit:site-review` ships a screenshot script that captures the
+  real pixels of the full page with Node and installed Chrome.
 
 ## When the evidence is a run's output
 

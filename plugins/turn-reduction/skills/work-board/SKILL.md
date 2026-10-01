@@ -98,11 +98,15 @@ directory; read `installPath` for `turn-reduction` out of
 
 In a project with `.claude/board.json`:
 
-- **Pickup:** query the board (ArtifactData `query`, collection from board.json) for
-  `inbox`, `doing` and `review`. Act on every inbox card whose `answer.ask_rev` equals
-  `ask.ask_rev`: Accept means do the default, Amend means do the amended text, Discuss
-  means raise it first thing, and I ran it (`ran`) means Graham ran the card's command:
-  read the result back and close. Ignore an answer whose rev does not match.
+- **Pickup:** first arm the watch on the board (next bullet) and confirm its row says
+  "auto-replies armed"; if it does not, republish the page to the board's URL once, before
+  any card is filed, not after the Stop hook complains. Then query the board (ArtifactData
+  `query`, collection from board.json) for `inbox`, `doing` and `review`. Act on every
+  inbox card whose `answer.ask_rev` equals `ask.ask_rev`, re-reading the card first and
+  pinning each write with `if_version` ([references/cards.md](references/cards.md)):
+  Accept means do the default, Amend means do the amended text, Discuss means raise it
+  first thing, and I ran it (`ran`) means Graham ran the card's command: read the result
+  back and close. Ignore an answer whose rev does not match.
 - **Watch every board you write to**, at pickup and before your first write to it, so
   Graham's Tell Claude reaches this session and not a chat Claude: ArtifactComments `watch`
   with the board URL, then `watch` with no URL to confirm its row says "auto-replies armed".
@@ -144,6 +148,8 @@ In a project with `.claude/board.json`:
 - **Continue by default.** When a card is done, take the next Ready card in lane then
   due-date order. Skip cards with an unfinished `blocked_by` and anything on the run's
   "Not this time" list. Stop only when Ready is empty or everything left waits on Graham.
+  To work several Ready cards at once with builder and reviewer subagents, follow
+  [references/ready-queue-run.md](references/ready-queue-run.md).
 - **Higher-tier review before done.** Builder work goes to `review`; a reviewer of a
   higher tier (Fable 5.1 > Opus > Sonnet > Haiku; top-tier work gets a fresh same-tier
   session; nobody reviews their own work) checks it against `done_when` and writes the

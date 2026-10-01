@@ -28,6 +28,58 @@ Behavior changes only — not wording tweaks. Newest first.
 - `brag` depends on the `hyperframes` plugin from `claude-plugins-official`, whose
   install needs `git-lfs`.
 
+## 2026-10-01 - voice-and-editing 1.3.0: support-chat (incubator)
+
+- **New skill `support-chat`.** Three sessions in the week of 2026-09-28 drove a
+  company's customer-support live chat for Graham in the browser pane with the same
+  protocol, rebuilt by hand each time (Quince, Astound, Spruce). The skill fixes it: check
+  the live state and write a context file first, Graham signs in himself, the opener
+  drafted with `graham-voice` and sent on his go, routine back-and-forth answered alone,
+  every agent message relayed with its time, a stop list (charges, appointments, account
+  details, resets, offers, choices between options, ending) with an exception for facts he
+  already approved, polling every one to two minutes, and the outcome saved at the end.
+- Replayed against the Quince transcript before commit; the replay confirmed the missed
+  relay the rule targets and added four rules (bot-first queues, already-approved facts,
+  Graham answering from the pane himself, self-written wake prompts are never his go).
+- Applied by the weekly maintainer at ratify (`Q-2026-10-01-4`).
+
+## 2026-10-01 - verification-kit 0.5.8, foundry-core 0.6.7: full-resolution screenshot script
+
+- **site-review: new `scripts/screenshot.mjs`.** Four sessions in the week of 2026-09-28
+  wrote a headless-Chrome screenshot or contact-sheet script from scratch because the
+  browser pane scales screenshots and no image tools are installed. The script drives
+  installed Chrome over the DevTools protocol (Node 22+, no packages): one full-page PNG per
+  width and color scheme (`prefers-color-scheme` emulated), an `index.html` contact sheet,
+  exit 1 on any failed capture including a failed navigation, exit 2 on bad input. Chrome's
+  own `--screenshot` and `--force-dark-mode` flags were tried first and rejected: on Chrome
+  153 they captured black frames, ignored the dark flag and never exited.
+- **proof-of-work 1.5.0: a page or UI is an artifact class.** Rendered at the widths that
+  matter, light and dark, looked at at full resolution, with a pointer to the site-review
+  script.
+- Applied by the weekly maintainer at ratify (`Q-2026-10-01-6`).
+
+## 2026-10-01 - turn-reduction 1.3.8: card writes pinned with if_version, watch armed at pickup, ready-queue lane
+
+- **work-board: every write to an existing card carries `if_version`.** ArtifactData refuses
+  an unpinned write to an existing document, and sessions in the week of 2026-09-28 hit
+  both that refusal and stale pins. `references/cards.md` now says to pin every set, update,
+  delete and batch entry to the last-read `version`, to re-read and redo on
+  `version_mismatch` (never retry the old version or drop the pin), and to `get` the card
+  again before acting on an answer. The update and review examples carry `if_version`.
+- **work-board: pickup arms the watch first.** The pickup step now arms and confirms the
+  board watch (republishing once if the row is not armed) before any card is filed, instead
+  of after the Stop hook's check (c) complains; one session spent six turns and two refused
+  publishes on it.
+- **work-board: new `references/ready-queue-run.md`.** The builder-reviewer lane four
+  sessions rebuilt by hand: pick Ready cards and state each builder's model, an advisor on
+  the plan for larger runs, builders in per-card worktrees and branches in waves, a fresh
+  higher-tier reviewer per card with a fix loop capped at two rounds, the orchestrator
+  re-running the suite before landing, then card updates. Linked from "Continue by
+  default".
+- The third gap the maintainer queued (a prod or Graham-tier ask is a command card) was
+  already covered by 1.3.6 and needed no change.
+- Applied by the weekly maintainer at ratify (`Q-2026-10-01-3`, `Q-2026-10-01-5`).
+
 ## 2026-10-01 - long-projects 0.19.3: handoff 0.6.3 checks staleness outside git and lets merge-base run
 
 - **`check-claims.py` checks staleness for a project folder that is not a git repo.** It

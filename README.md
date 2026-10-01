@@ -18,7 +18,7 @@ A **repository** is a project folder published on GitHub, a website for sharing 
 An **agent** is a helper that Claude Code hands a whole job to. It works on its own, with its own instructions, and reports back. Some packs include one or two.
 
 <!-- generated:counts by maintainers/scripts/generate-inventory.sh from the plugins/ tree; edit the source, never this block -->
-This repository has 12 packs, holding 70 skills and 9 agents.
+This repository has 12 packs, holding 71 skills and 9 agents.
 <!-- /generated:counts -->
 
 ![Overview of the toolkit in eight groups, in priority order. 1, delivery discipline: foundry-core. 2, fewer wasted turns: turn-reduction. 3, continuity across sessions: long-projects. 4, checks and review: verification-kit. 5, model and effort: agent-tooling. 6, writing and personal tools: voice-and-editing. 7, domain packs: decks, frontend-design, project-starters, deploy-ops. 8, single-skill packs: consistency-checker and data-wrangler. Below the groups, the nine specialist agents are listed with the pack each one lives in.](docs/images/toolkit-overview.webp)
@@ -186,7 +186,7 @@ The map is drawn from the same files as the table below. If it does not show, th
 | [long-projects](plugins/long-projects/README.md) | Keep work that spans many sessions on track: step-by-step project plans that pause for your approval, handoff notes between sessions, a review routine for everyday changes, and second opinions on hard decisions. | 11, and 2 agents | `/plugin install long-projects@skill-library` |
 | [project-starters](plugins/project-starters/README.md) | Start a new project properly: a project folder set up with a check for leaked passwords, a repeatable set of development tools, a project knowledge base, and pipeline and systems design before any code. | 6 | `/plugin install project-starters@skill-library` |
 | [agent-tooling](plugins/agent-tooling/README.md) | Choose the right model and effort level for a task, send bulk mechanical text work to a local model, fold cheap typed Jev judgments into a project where they fit, and mine past session transcripts for facts. | 4, and 1 agent | `/plugin install agent-tooling@skill-library` |
-| [voice-and-editing](plugins/voice-and-editing/README.md) | One person's writing voice and editing tools, plus skills tied to the author's own computer and habits. Most useful as an example to copy and change: swap in your own voice, schedule and sources. | 12 | `/plugin install voice-and-editing@skill-library` |
+| [voice-and-editing](plugins/voice-and-editing/README.md) | One person's writing voice and editing tools, plus skills tied to the author's own computer and habits. Most useful as an example to copy and change: swap in your own voice, schedule and sources. | 13 | `/plugin install voice-and-editing@skill-library` |
 <!-- /generated:catalog -->
 
 Each pack's own page lists its skills, what you say to trigger each one, what you get back, and what it does on your computer. Read that page before you install. The install screen may not list what a pack contains.
@@ -218,7 +218,7 @@ Read this before installing anything, here or anywhere else.
 This library is maintained by one person and used daily. It changes often. There is no support commitment. Skills marked `incubator` in the [inventory](docs/inventory.md) are newer and less proven than those marked `stable`.
 
 <!-- generated:eval-status by maintainers/scripts/generate-inventory.sh from the plugins/*/evals/ tree; edit the source, never this block -->
-19 of the 70 skills have at least three evaluation cases, which are written tests of whether a skill does its job. The other 51 have fewer than three, or none.
+19 of the 71 skills have at least three evaluation cases, which are written tests of whether a skill does its job. The other 52 have fewer than three, or none.
 <!-- /generated:eval-status -->
 
 The cases for the seven skills this page sends a first-time reader to were all run on 2026-09-19. Not every case passed, four cases were corrected afterwards and have not been run again, and the results are kept with the maintainer's records, not in this repository. The one case added to each of the other twelve suites that day has not been run yet.

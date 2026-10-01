@@ -51,6 +51,18 @@ commands: one self-contained paste from any directory, printing its own result.
   item with anything the session built goes to review. The Graham-run exemption covers the
   command Graham ran and its read-back; a script, template, scheduled task or config the
   session wrote is built work and is reviewed (before Graham runs it, where he runs it).
+- **Pin every write to an existing card with `if_version`.** ArtifactData refuses a set,
+  update or delete on a document that exists unless it carries `if_version`, the
+  `version` from your last read of that card (a get, list or query shows it, and so does
+  every set or update result). Only a `set` that creates a new card omits it. In a `batch`, pin
+  each entry. If the write fails because the card changed (`version_mismatch`), nothing was
+  written: re-read the card, check whether the change was Graham's answer or another
+  session's move, and redo the write against the new version. Never retry with the old
+  version or drop the pin. (Sessions in the week of 2026-09-28 hit both refusals: a write
+  with no pin, and a pin one version stale.)
+- **Re-read the card before acting on an answer.** The query at pickup can be minutes
+  old; `get` the card, check `answer.ask_rev == ask.ask_rev` on that read, act, and pin
+  the closing write to the version you just read.
 - **Editing an ask bumps `ask_rev` and clears `answer`.** Write both in one update:
   `{"ask": {..., "ask_rev": <old + 1>}, "answer": null}`.
 - **Act on an answer only when `answer.ask_rev == ask.ask_rev`.** A mismatch means Graham
@@ -69,10 +81,12 @@ Open an inbox card (a question for Graham):
           "answer": null, "updated_at": "2026-09-28T14:00:00Z", "updated_by": "session: backup design"}}
 ```
 
-Act on an Accept or Amend (revs match): do the work, then move the card on:
+Act on an Accept or Amend (revs match on a fresh `get`): do the work, then move the card
+on, pinned to the version that `get` returned:
 
 ```json
 {"action": "update", "url": "<board url>", "collection": "cards", "doc_id": "c14",
+ "if_version": 3,
  "data": {"column": "ready", "notes": "Graham amended: B2. Acting on ask_rev 1.",
           "updated_at": "...", "updated_by": "session: acted on answer"}}
 ```
@@ -100,10 +114,13 @@ Record a review (the reviewer session writes this, then the builder may move to 
 
 ```json
 {"action": "update", "url": "<board url>", "collection": "cards", "doc_id": "c9",
+ "if_version": 5,
  "data": {"review": {"verdict": "green", "builder_model": "Opus", "reviewer_model": "Fable 5.1",
                      "agent_id": "a1b2c3", "at": "2026-09-28T15:10:00Z"}}}
 ```
 
-Several cards at once: `"action": "batch"` with `writes: [{op, collection, doc_id, data}]`.
+Several cards at once: `"action": "batch"` with `writes: [{op, collection, doc_id, data,
+if_version}]`, `if_version` on every entry whose card already exists. A pinned batch is all
+or nothing: one stale entry writes none of them.
 The Stop hook recognizes an inbox write by `"column": "inbox"` or an `ask` object anywhere
 in the call.

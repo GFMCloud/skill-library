@@ -67,6 +67,6 @@
   <text class="count" x="714.0" y="369" text-anchor="middle">4 skills, 1 agent</text>
   <rect class="box" x="798.0" y="322" width="144.0" height="64" rx="6"/>
   <text class="name" x="870.0" y="349" text-anchor="middle">voice-and-editing</text>
-  <text class="count" x="870.0" y="369" text-anchor="middle">12 skills</text>
-  <text class="note" x="18" y="416">12 packs, 70 skills, 9 agents. An arrow points from a pack to the pack it needs.</text>
+  <text class="count" x="870.0" y="369" text-anchor="middle">13 skills</text>
+  <text class="note" x="18" y="416">12 packs, 71 skills, 9 agents. An arrow points from a pack to the pack it needs.</text>
 </svg>

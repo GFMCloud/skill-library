@@ -78,6 +78,22 @@ this run's screenshot (not its category scores) as the actual dark-theme
 evidence; the scores from this pass are informational, not part of the
 `/goal` condition, which is scored from the default-viewport run only.
 
+For the screenshots themselves, use `scripts/screenshot.mjs` rather than the
+browser pane, which scales its screenshots down. It drives installed Chrome over
+the DevTools protocol (Node 22+, no packages) and writes a full-page PNG per width
+and color scheme plus an `index.html` contact sheet:
+
+```bash
+node scripts/screenshot.mjs <url-or-file> <out-dir> 375,1440
+```
+
+Dark is emulated as `prefers-color-scheme: dark`, so a site that themes by a class
+or a stored toggle looks the same in both; say so rather than report a dark-theme
+pass. It exits 1 when any capture fails (a failed navigation included) and 2 on
+bad input. Proven 2026-10-01 on a fixture page that prints its own width and
+`prefers-color-scheme` match: both read back correctly in the PNGs, and the full
+page down to its last heading was captured.
+
 Run [references/rubric.md](references/rubric.md)'s content checklist against
 the rendered site at both viewports, scoring each row independently.
 
