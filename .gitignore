@@ -3,3 +3,6 @@
 
 # `claude plugin eval` default results path; never committed (interface spec section 9).
 plugins/*/evals/**/results/
+
+# Python bytecode caches (scripts/skill_meta.py is imported by the validator and the reconcile script)
+__pycache__/
