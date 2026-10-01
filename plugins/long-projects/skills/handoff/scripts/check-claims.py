@@ -3,16 +3,17 @@
 check-claims.py - the resume-side gate for the handoff skill's Typed claim v1 block.
 
 Usage:
-    python3 check-claims.py <path-to-handoff-markdown-file> [--project <repo dir>]
+    python3 check-claims.py <path-to-handoff-markdown-file> [--project <project dir>]
 
 Reads the first ```yaml fenced block whose content starts with "claims: v1" out of the
 given markdown file, runs every `checkable[].check` command against the live artifact it
 names, compares the fresh output to `expected`, and prints a staleness section, then a
 discrepancy table, then the "unverified by design" list. The staleness section lists
-files in the project's git repo (--project, default the current directory) whose mtime
-is after the block's `written_at`; it warns and never changes the exit code, because a
-project that moved on is a fact for the status, not a failed claim. It sees files that
-exist now: a deletion or a commit that left mtimes alone does not show.
+files under the project (--project, default the current directory) whose mtime is after
+the block's `written_at`: the git listing inside a repo, a plain directory walk outside
+one (labelled "not a git repo, mtime walk"); it warns and never changes the exit code,
+because a project that moved on is a fact for the status, not a failed claim. It sees
+files that exist now: a deletion or a commit that left mtimes alone does not show.
 Every check is printed before any runs, and a write-shaped check (rm, mv, cp, chmod,
 sudo, a redirect into a file, a pipe into a shell, git push and its cousins) is refused
 with status "refused" and never run. Exits 1 if any check is refused or any checkable
@@ -43,8 +44,11 @@ WRITE_SHAPES = [
     re.compile(r"(?<![\w-])(rm|mv|cp|chmod|chown|sudo|tee|truncate|dd|mkfs|ln)\b"),
     # git: the verb must be the subcommand itself (after -C <dir> or --flags), so
     # `git log --grep merge` and `git stash list` stay read-only.
+    # `merge(?!-)`: `git merge-base --is-ancestor` is read-only and was refused by the
+    # plain `merge\b` form in two sessions (2026-09-27 and 09-28); a word boundary sits
+    # between "merge" and "-".
     re.compile(r"\bgit\b(?:\s+-C\s+\S+|\s+--?[\w-]+(?:=\S+)?)*\s+(push|reset|checkout|rebase|"
-               r"merge|commit|clean|stash\s+(?:push|pop|drop|apply|clear)|branch\s+-[dD]\b|"
+               r"merge(?!-)|commit|clean|stash\s+(?:push|pop|drop|apply|clear)|branch\s+-[dD]\b|"
                r"worktree\s+(?:remove|prune)|tag\s+-[dfa]\b)\b"),
     re.compile(r"\|\s*(sh|bash|zsh|python3?|perl|ruby|node)\b"),
     re.compile(r"(?<![<>0-9])>{1,2}\s*(?!/dev/null)[^\s|&;]"),   # redirect into a file
@@ -93,39 +97,53 @@ def written_timestamp(doc, handoff_path):
     return mtime, f"the handoff file's mtime {stamp}; the block has no usable written_at"
 
 
+WALK_SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", "venv", ".claude"}
+
+
 def files_changed_since(project, since, handoff_path):
-    """Tracked and untracked-unignored files under the git repo at `project` whose mtime
-    is after `since`, newest first, or None when `project` is not inside a git repo."""
+    """Files under `project` whose mtime is after `since`, newest first, as
+    (changed, source). Inside a git repo the listing is tracked plus untracked-unignored
+    files (`git ls-files`); outside one it is a plain directory walk that skips
+    `.git`, `node_modules`, `__pycache__`, virtualenvs and `.claude`, so a research or
+    rollout folder that is not a repo still gets a staleness result (three sessions on
+    2026-09-27 and 09-28 checked mtimes by hand because this returned None)."""
     listing = subprocess.run(
         ["git", "-C", project, "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
         capture_output=True,
         text=True,
     )
-    if listing.returncode != 0:
-        return None
+    if listing.returncode == 0:
+        rels = sorted(set(filter(None, listing.stdout.split("\0"))))
+        source = "git listing"
+    else:
+        rels = []
+        for root, dirs, files in os.walk(project):
+            dirs[:] = sorted(d for d in dirs if d not in WALK_SKIP_DIRS)
+            for name in files:
+                rels.append(os.path.relpath(os.path.join(root, name), project))
+        rels.sort()
+        source = "not a git repo, mtime walk"
     handoff_real = os.path.realpath(handoff_path)
     changed = []
-    for rel in sorted(set(filter(None, listing.stdout.split("\0")))):
+    for rel in rels:
         full = os.path.join(project, rel)
         if os.path.realpath(full) == handoff_real or not os.path.isfile(full):
             continue
         mtime = os.path.getmtime(full)
         if mtime > since:
             changed.append((mtime, rel))
-    return sorted(changed, reverse=True)
+    return sorted(changed, reverse=True), source
 
 
 def print_staleness(project, doc, handoff_path):
     since, label = written_timestamp(doc, handoff_path)
-    changed = files_changed_since(project, since, handoff_path)
+    changed, source = files_changed_since(project, since, handoff_path)
     print("Staleness")
     print("=========")
-    if changed is None:
-        print(f"not checked: {project} is not inside a git repo. Pass --project <repo dir>.")
-    elif not changed:
-        print(f"fresh: no file in {project} changed after {label}.")
+    if not changed:
+        print(f"fresh: no file in {project} changed after {label} ({source}).")
     else:
-        print(f"STALE: {len(changed)} file(s) in {project} changed after {label}. Newest first:")
+        print(f"STALE: {len(changed)} file(s) in {project} changed after {label} ({source}). Newest first:")
         for mtime, rel in changed[:10]:
             stamp = datetime.datetime.fromtimestamp(mtime).isoformat(timespec="seconds")
             print(f"  {stamp}  {rel}")

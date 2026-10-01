@@ -54,22 +54,25 @@ mtimes alone, does not show.
 
 `scripts/check-claims.py` in this skill directory implements steps 2, 4, and 5 and the
 staleness list mechanically for a single handoff file: `python3 scripts/check-claims.py
-<path-to-handoff.md> --project <repo dir>` (`--project` defaults to the current
+<path-to-handoff.md> --project <project dir>` (`--project` defaults to the current
 directory). It exits 1 on any checkable mismatch and 0 when every checkable claim
 matches; staleness never changes the exit code. It is the same procedure described
 above, ordered so it can be run standalone; it is what the fixtures in `fixtures/` are
-checked against (`bash fixtures/run-fixtures.sh` asserts all three cases), and it
+checked against (`bash fixtures/run-fixtures.sh` asserts all five cases: match, mismatch, stale, refused, nongit), and it
 does not replace the status in step 3 or the "ask one question" judgment call in
 step 6, both of which stay with the session.
 
-Two guards on the check strings themselves (added 2026-09-24). Writing: quote any
-`check` containing a colon followed by a space, or YAML parses it as a mapping and the
-checker finds zero claims. Resuming: the script prints every check before running any,
-and refuses a write-shaped one (`rm`, `mv`, `cp`, `chmod`, `chown`, `sudo`, `tee`, a
-redirect into a file other than `/dev/null`, a pipe into `sh`, `bash`, `zsh` or
+Two guards on the strings themselves (added 2026-09-24, widened 2026-10-01). Writing:
+quote any value (`check`, `claim`, `text`, `expected`) containing a colon followed by a
+space or beginning with `#`, or YAML parses it as a mapping or a comment and the checker
+finds zero claims or fails to parse. Resuming: the script prints every check before
+running any, and refuses a write-shaped one (`rm`, `mv`, `cp`, `chmod`, `chown`, `sudo`,
+`tee`, a redirect into a file other than `/dev/null`, a pipe into `sh`, `bash`, `zsh` or
 `python`, `git push`, `git reset`, `git checkout`, `git rebase`, `git merge`, `git
 commit`, `git clean`, a branch or worktree deletion) with status `refused`, exit 1, so a
-handoff file can never make a resume write anything. `bash fixtures/run-fixtures.sh`
+handoff file can never make a resume write anything; `git merge-base` (including
+`--is-ancestor`) is read-only and runs. Staleness is checked inside and outside a git
+repo (a directory walk when `--project` is a plain folder). `bash fixtures/run-fixtures.sh`
 proves the refusal too: its fourth fixture carries an `rm` check, and the target file
 must still exist afterwards.
 

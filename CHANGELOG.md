@@ -28,6 +28,26 @@ Behavior changes only — not wording tweaks. Newest first.
 - `brag` depends on the `hyperframes` plugin from `claude-plugins-official`, whose
   install needs `git-lfs`.
 
+## 2026-10-01 - long-projects 0.19.3: handoff 0.6.3 checks staleness outside git and lets merge-base run
+
+- **`check-claims.py` checks staleness for a project folder that is not a git repo.** It
+  printed "not checked: ... is not inside a git repo" for `~/work/jev-lab` and
+  `~/work/work-board-rollout`, and three sessions on 2026-09-27 and 09-28 checked mtimes by
+  hand. Outside a repo it now walks the folder (skipping `.git`, `node_modules`,
+  `__pycache__`, virtualenvs and `.claude`) and labels the result "not a git repo, mtime
+  walk"; inside a repo nothing changes. New fixture `FIXTURE-nongit-handoff.md`, seven
+  assertions in `run-fixtures.sh`.
+- **`git merge-base --is-ancestor` is no longer refused as write-shaped.** The git verb
+  pattern matched `merge` at the start of `merge-base` (a hyphen is a word boundary); two
+  sessions had to rewrite a read-only claim. The pattern is now `merge(?!-)`; the nongit
+  fixture's second claim is a merge-base check that must run and match.
+- **Quoting guidance covers every scalar, not only `check`.** A `text` with `: ` and a
+  `claim` with `#32` broke two handoffs' claim blocks on 2026-09-28 after the 0.6.0 rule
+  quoted checks only. SKILL.md and `references/claims.md` now say to quote any value that
+  contains a colon-space or begins with `#`.
+- Applied by the weekly maintainer (cycle 10, `[weekly 2026-10-01] F-8`); fresh-context
+  verifier PASS recorded in that project's run log.
+
 ## 2026-09-28 - turn-reduction 1.3.7: board_gate catches offers, unarmed watches and commands in ask prose
 
 Trigger: an SCL session on 2026-09-28 broke three rules the installed 1.3.6 skill already
