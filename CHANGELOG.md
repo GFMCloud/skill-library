@@ -10,8 +10,8 @@ Behavior changes only — not wording tweaks. Newest first.
 - Upstream's `brag/slim.md`, read only by that handoff, is removed; the brag-slim
   description drops its "hands off here on Opus 5.5" clause.
 - Checked with a headless dispatch probe on each model. On 0.4.0 it printed
-  `WORKFLOW=slim` for Opus 5.5 and `WORKFLOW=full` for Fable 5.1; the 0.4.1 result is
-  recorded on the PR.
+  `WORKFLOW=slim` for Opus 5.5 and `WORKFLOW=full` for Fable 5.1. The same probe runs
+  again after the 0.4.1 plugin update, and its result goes on PR 40.
 
 ## 2026-10-02 - decks 0.4.0: brag and brag-slim (incubator, vendored)
 
