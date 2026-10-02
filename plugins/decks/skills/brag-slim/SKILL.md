@@ -112,7 +112,7 @@ Before the full render, look at stills from every scene *and* from mid-transitio
 ## Inputs
 
 - A project directory (no input given) or a website URL, plus any tone, format and duration direction.
-- Node, FFmpeg and a headless-capable Chrome on the machine.
+- Tools on the machine that can draw frames, mix audio and encode MP4. Upstream leaves the choice open; on this library's machines that is Node, FFmpeg and a headless Chrome.
 
 ## Verify
 
@@ -127,4 +127,4 @@ Before the full render, look at stills from every scene *and* from mid-transitio
 
 - The input matches neither a project nor a URL: ask what to brag about.
 - A website input returns nothing usable even after a headless-browser load: report what came back and stop.
-- Node, FFmpeg or Chrome is missing: name the missing tool and do not render.
+- No available tool can encode the video (no FFmpeg or equivalent): name what is missing and do not render.

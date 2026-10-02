@@ -7,7 +7,7 @@ Behavior changes only — not wording tweaks. Newest first.
 - **New skills `brag` and `brag-slim`**, vendored from `latent-spaces/brag` 0.4.0 at
   `cb89b9f` (MIT) on Graham's request. Both turn the current project into a 15 to 25
   second launch video with music, motion and share copy. `brag` builds it with HeyGen's
-  Hyperframes CLI and ships about 13 MB of music and sound effects; on Opus 5.5 it hands
+  Hyperframes CLI and ships about 16 MB of music and sound effects; on Opus 5.5 it hands
   off to `brag-slim`, which builds the video from local tools alone and also takes a
   website URL.
 - Media licences checked against each source page before vendoring: ende.app music

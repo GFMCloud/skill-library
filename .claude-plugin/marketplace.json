@@ -49,7 +49,7 @@
       "name": "decks",
       "source": "./plugins/decks",
       "category": "presentations",
-      "description": "Plan, build and critique slide decks: outlines, charts, clickable diagrams, PowerPoint export, and reviews of layout and sales message."
+      "description": "Plan, build and critique slide decks: outlines, charts, clickable diagrams, PowerPoint export, and reviews of layout and sales message. Also makes short launch videos of a finished project."
     },
     {
       "name": "frontend-design",
