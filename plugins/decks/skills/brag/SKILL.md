@@ -2,7 +2,7 @@
 name: brag
 description: >-
   Turn the current project website into a short, polished, shareable launch video using Hyperframes. Use when someone says "/brag", "let's brag about this", "make a launch video", "turn this into a video", or wants to share what they built. Reads the project code directly — no live URL or screenshots needed.
-  On Opus 5.5 it hands off to brag-slim unless the run asks for --full or --voice.
+  Runs this full workflow on every model; the lighter build is the separate /brag-slim.
   Not for slide decks, charts or system diagrams (deck-scaffolding-builder,
   chart-discipline, html-diagram). Costs a multi-minute render and needs Node 22+,
   FFmpeg, Chrome, the Hyperframes CLI (fetched by npx, sends anonymous usage data
@@ -19,8 +19,6 @@ metadata:
 You built it. Now let's brag about it.
 
 ## Invocation dispatch (must happen first)
-
-**Model check.** If you are Claude Opus 5.5 and the invocation doesn't ask for the full workflow (`--full`, "use the full brag") or for voiceover (`--voice`, which brag-slim doesn't do), switch to brag-slim: read `<skill-dir>/slim.md` (the /brag-slim skill, bundled here) and follow it for the rest of this run instead of this file. Pass along the user's input, and pass any other options (`--no-music`, `--title`, …) as plain-language direction. Tell the user in one line first, e.g. "You're on Opus 5.5, so I'm using /brag-slim: I build the whole video myself. Say 'use the full brag' to switch back." If you are any other model, or can't tell which model you are, skip this check.
 
 Before inspecting the project, parse the complete `/brag` invocation. If the
 invocation contains `--voice`, set `voice.enabled = true`. Enable narration

@@ -5,17 +5,19 @@ Copyright (c) 2026 Shunit Haviv Hakimi; the licence text is `LICENSE` in this di
 
 Every other file here is the upstream `skills/brag/` directory unchanged (`LICENSE` is
 copied from the upstream repo root, and this file was written for this library), with
-two local changes to `SKILL.md`:
+three local changes to `SKILL.md` and one removed file:
 
 - The frontmatter gained `license`, the `metadata` block, and a description tail with
   its negative scope and cost.
 - The four contract sections (`Inputs`, `Verify`, `Done when`, `Stop when`) were added
   at the end. They restate upstream's gates, except the three-attempt limit on
   `npx hyperframes check` fixes, which is this library's own bound.
-
-`slim.md` is upstream's bundled copy of `brag-slim`. It is unchanged, so it does not
-carry the local additions made to `../brag-slim/SKILL.md`. On Opus 5.5, `/brag` reads
-`slim.md` and follows it.
+- The "Model check" paragraph under "Invocation dispatch" was removed (Graham,
+  2026-10-02). Upstream switches Opus 5.5 to brag-slim unless the run says `--full`;
+  here `/brag` runs the full workflow on every model, and the lighter build is the
+  separate `/brag-slim` skill.
+- Upstream's `slim.md`, a bundled copy of brag-slim that only the model check read,
+  was removed with it.
 
 ## Bundled media licences
 
@@ -41,5 +43,5 @@ before redistribution. The table above is that verification.
 
 Review record: none yet (incubator).
 
-To update: compare against a newer upstream commit, carry the two local changes across,
+To update: compare against a newer upstream commit, carry the local changes listed above across,
 and change the commit above and the `metadata.upstream` line in `SKILL.md`.

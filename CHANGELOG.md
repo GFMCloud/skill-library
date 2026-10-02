@@ -2,6 +2,17 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-02 - decks 0.4.1: /brag runs the full workflow on every model
+
+- **brag: Opus 5.5 handoff removed.** Upstream's `/brag` switches Opus 5.5 to brag-slim
+  unless the run says `--full`; on Graham's ruling, `/brag` now runs the full Hyperframes
+  workflow on Opus and Fable alike. `/brag-slim` stays available as its own command.
+- Upstream's `brag/slim.md`, read only by that handoff, is removed; the brag-slim
+  description drops its "hands off here on Opus 5.5" clause.
+- Checked with a headless dispatch probe on each model. On 0.4.0 it printed
+  `WORKFLOW=slim` for Opus 5.5 and `WORKFLOW=full` for Fable 5.1; the 0.4.1 result is
+  recorded on the PR.
+
 ## 2026-10-02 - decks 0.4.0: brag and brag-slim (incubator, vendored)
 
 - **New skills `brag` and `brag-slim`**, vendored from `latent-spaces/brag` 0.4.0 at
