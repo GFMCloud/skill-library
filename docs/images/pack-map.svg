@@ -52,7 +52,7 @@
   <text class="count" x="854.4" y="237" text-anchor="middle">2 skills, 1 agent</text>
   <rect class="box" x="18.0" y="322" width="144.0" height="64" rx="6"/>
   <text class="name" x="90.0" y="349" text-anchor="middle">decks</text>
-  <text class="count" x="90.0" y="369" text-anchor="middle">6 skills</text>
+  <text class="count" x="90.0" y="369" text-anchor="middle">8 skills</text>
   <rect class="box" x="174.0" y="322" width="144.0" height="64" rx="6"/>
   <text class="name" x="246.0" y="349" text-anchor="middle">frontend-design</text>
   <text class="count" x="246.0" y="369" text-anchor="middle">7 skills, 1 agent</text>
@@ -68,5 +68,5 @@
   <rect class="box" x="798.0" y="322" width="144.0" height="64" rx="6"/>
   <text class="name" x="870.0" y="349" text-anchor="middle">voice-and-editing</text>
   <text class="count" x="870.0" y="369" text-anchor="middle">12 skills</text>
-  <text class="note" x="18" y="416">12 packs, 68 skills, 9 agents. An arrow points from a pack to the pack it needs.</text>
+  <text class="note" x="18" y="416">12 packs, 70 skills, 9 agents. An arrow points from a pack to the pack it needs.</text>
 </svg>

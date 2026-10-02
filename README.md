@@ -18,7 +18,7 @@ A **repository** is a project folder published on GitHub, a website for sharing 
 An **agent** is a helper that Claude Code hands a whole job to. It works on its own, with its own instructions, and reports back. Some packs include one or two.
 
 <!-- generated:counts by maintainers/scripts/generate-inventory.sh from the plugins/ tree; edit the source, never this block -->
-This repository has 12 packs, holding 68 skills and 9 agents.
+This repository has 12 packs, holding 70 skills and 9 agents.
 <!-- /generated:counts -->
 
 ![Overview of the toolkit in eight groups, in priority order. 1, delivery discipline: foundry-core. 2, fewer wasted turns: turn-reduction. 3, continuity across sessions: long-projects. 4, checks and review: verification-kit. 5, model and effort: agent-tooling. 6, writing and personal tools: voice-and-editing. 7, domain packs: decks, frontend-design, project-starters, deploy-ops. 8, single-skill packs: consistency-checker and data-wrangler. Below the groups, the nine specialist agents are listed with the pack each one lives in.](docs/images/toolkit-overview.webp)
@@ -181,7 +181,7 @@ The map is drawn from the same files as the table below. If it does not show, th
 | [verification-kit](plugins/verification-kit/README.md) | Check before trusting: whether a claim is still true, whether a change is safe to ship, whether a deploy is really up, whether a website is fast and unbroken, and what code could be deleted. | 7, and 2 agents | `/plugin install verification-kit@skill-library` |
 | [consistency-checker](plugins/consistency-checker/README.md) | Check documents against the files they describe, and against each other, one claim at a time. | 1, and 1 agent | `/plugin install consistency-checker@skill-library` |
 | [deploy-ops](plugins/deploy-ops/README.md) | Deploy, check the result the way a visitor would, fix, and repeat until it works. Includes a step-by-step move of a website to Cloudflare Pages. | 2, and 1 agent | `/plugin install deploy-ops@skill-library` |
-| [decks](plugins/decks/README.md) | Plan, build and critique slide decks: outlines, charts, clickable diagrams, PowerPoint export, and reviews of layout and sales message. | 6 | `/plugin install decks@skill-library` |
+| [decks](plugins/decks/README.md) | Plan, build and critique slide decks: outlines, charts, clickable diagrams, PowerPoint export, and reviews of layout and sales message. Also makes short launch videos of a finished project. | 8 | `/plugin install decks@skill-library` |
 | [frontend-design](plugins/frontend-design/README.md) | Design judgment for websites and apps: a distinctive look for new builds, mobile screens, minimal interfaces, polish, and upgrades to a site that already exists. | 7, and 1 agent | `/plugin install frontend-design@skill-library` |
 | [long-projects](plugins/long-projects/README.md) | Keep work that spans many sessions on track: step-by-step project plans that pause for your approval, handoff notes between sessions, a review routine for everyday changes, and second opinions on hard decisions. | 11, and 2 agents | `/plugin install long-projects@skill-library` |
 | [project-starters](plugins/project-starters/README.md) | Start a new project properly: a project folder set up with a check for leaked passwords, a repeatable set of development tools, a project knowledge base, and pipeline and systems design before any code. | 6 | `/plugin install project-starters@skill-library` |
@@ -218,7 +218,7 @@ Read this before installing anything, here or anywhere else.
 This library is maintained by one person and used daily. It changes often. There is no support commitment. Skills marked `incubator` in the [inventory](docs/inventory.md) are newer and less proven than those marked `stable`.
 
 <!-- generated:eval-status by maintainers/scripts/generate-inventory.sh from the plugins/*/evals/ tree; edit the source, never this block -->
-19 of the 68 skills have at least three evaluation cases, which are written tests of whether a skill does its job. The other 49 have fewer than three, or none.
+19 of the 70 skills have at least three evaluation cases, which are written tests of whether a skill does its job. The other 51 have fewer than three, or none.
 <!-- /generated:eval-status -->
 
 The cases for the seven skills this page sends a first-time reader to were all run on 2026-09-19. Not every case passed, four cases were corrected afterwards and have not been run again, and the results are kept with the maintainer's records, not in this repository. The one case added to each of the other twelve suites that day has not been run yet.
