@@ -2,6 +2,21 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-02 - decks 0.4.0: brag and brag-slim (incubator, vendored)
+
+- **New skills `brag` and `brag-slim`**, vendored from `latent-spaces/brag` 0.4.0 at
+  `cb89b9f` (MIT) on Graham's request. Both turn the current project into a 15 to 25
+  second launch video with music, motion and share copy. `brag` builds it with HeyGen's
+  Hyperframes CLI and ships about 13 MB of music and sound effects; on Opus 5.5 it hands
+  off to `brag-slim`, which builds the video from local tools alone and also takes a
+  website URL.
+- Media licences checked against each source page before vendoring: ende.app music
+  CC BY 4.0, Kenney and opengameart sounds CC0. Recorded in `brag/SOURCE.md`.
+- Local changes to upstream: frontmatter governance fields, a description tail with
+  negative scope and cost, and the four contract sections. Nothing else edited.
+- `brag` depends on the `hyperframes` plugin from `claude-plugins-official`, whose
+  install needs `git-lfs`.
+
 ## 2026-09-28 - turn-reduction 1.3.7: board_gate catches offers, unarmed watches and commands in ask prose
 
 Trigger: an SCL session on 2026-09-28 broke three rules the installed 1.3.6 skill already
