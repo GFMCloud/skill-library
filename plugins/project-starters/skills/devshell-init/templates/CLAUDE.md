@@ -5,7 +5,8 @@ General working agreements live in ~/.claude/CLAUDE.md. This file adds only what
 <!--
 Per-project CLAUDE.md template. Lives at the repo root.
 
-Keep this file within the "CLAUDE.md economy" rule in ~/.claude/CLAUDE.md.
+Keep this file short and project-specific, per the opening paragraph of
+~/.claude/CLAUDE.md: add a fact only once it has cost two corrections.
 -->
 
 ## What this is

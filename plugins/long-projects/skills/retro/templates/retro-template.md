@@ -27,7 +27,7 @@ real to put in it, the lesson probably isn't real either; drop it.>
   hook/CI | retro-only
 - **Status:** proposed | acted-on | rejected
   <If acted-on: what changed and where, e.g. "added to ~/.claude/CLAUDE.md
-  under Working agreements" or "filed decisions/0007-<slug>.md".>
+  under Evidence over assertion" or "filed decisions/0007-<slug>.md".>
 
 ### Lesson 2: <one-line statement>
 
