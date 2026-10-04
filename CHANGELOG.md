@@ -2,6 +2,30 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-03 - verification-kit 0.6.0: design-jury (incubator)
+
+- **New skill `design-jury`.** Scores a design the way an award jury does and gates it:
+  `scripts/capture.mjs` renders the page (desktop 1440 and mobile 390, layout tiles plus
+  real-wheel scroll frames, an entry-gate press, a motion and text probe); three blind
+  non-fork judge subagents score each category 1 to 10 with cited evidence;
+  `scripts/aggregate.py` takes medians, marks a category UNSTABLE when passes differ by
+  more than 2, and returns APPROVED only when every category meets its floor, as a Verdict
+  object v1. Web is the only medium module (`references/web.md`, the Awwwards categories
+  and weights, 40/30/20/10); the core is written so slides, PDFs and diagrams can follow
+  as modules.
+- **Calibrated against real jury data.** Floors (showcase Design 7, Usability 6, Creativity 7,
+  Content 7; product 6/7/5/6) were approved by Graham on 2026-10-03, Usability lowered to
+  6 to offset the judge's measured bias, after a calibration on 27 sampled live sites, 26 judged
+  (one Honorable Mention failed to capture): 15 Sites of the Day with published
+  per-category jury means, plus 5 Honorable Mentions and 6 unawarded nominees as ordinal
+  tiers. `scripts/calibrate.py` reports error against the jury, an
+  always-7 baseline, and cross-tier ordering; the measured numbers are in
+  `references/calibration-web.md`.
+- **Re-run on a gap-free capture (2026-10-04).** An independent review found the capture
+  skipped 300 to 356 px of every scroll step; fixed (60 px ticks, 80% steps, per-frame
+  `gap_before_px`) and the whole calibration, fixture proof and spread check re-run.
+  Also ships a worked positive example (`references/example-web-pass.md`).
+
 ## 2026-10-02 - decks 0.4.1: /brag runs the full workflow on every model
 
 - **brag: Opus 5.5 handoff removed.** Upstream's `/brag` switches Opus 5.5 to brag-slim

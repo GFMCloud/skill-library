@@ -1,0 +1,159 @@
+# Calibration: web module
+
+The measured ceiling of the web judge. Read this before trusting a score. Re-run it after
+any change to `web.md`, `judge-prompt.md` or `capture.mjs`: capture each site with
+`scripts/capture.mjs`, judge it with the prompt, then run `scripts/calibrate.py`.
+
+## Contents
+
+- [Bottom line](#bottom-line)
+- [Method](#method)
+- [Error against the jury](#error-against-the-jury)
+- [Tier ordering and gate pass rates](#tier-ordering-and-gate-pass-rates)
+- [Deliberate-failure proof and spread](#deliberate-failure-proof-and-spread)
+- [Limits of this run](#limits-of-this-run)
+- [The sites](#the-sites)
+
+## Bottom line
+
+- **It reliably fails weak work.** Both labelled fixtures were NOT APPROVED on every
+  category, with three blind passes agreeing to within one point.
+- **It cannot rank award-grade sites against each other.** On Sites of the Day its error
+  against the jury is no better than always answering 7, and rank correlation within that
+  tier is noise. Jury means sit in a 7.0 to 8.2 band that an integer judge cannot resolve.
+- **It barely separates award tiers.** Mean judge overall: Site of the Day 7.12, Honorable
+  Mention 6.90, unawarded nominee 6.82. Cross-tier pairs ordered correctly: 58% (chance
+  50%).
+- **So APPROVED means "not obviously weak", not "would win".** With the approved floors,
+  13 of 15 Sites of the Day pass, but so do 4 of 5 Honorable Mentions and 3 of 6
+  unawarded nominees.
+- **It runs a little low on Usability for sites it was not tuned on** (held-out bias
+  −0.43), which is why the showcase Usability floor is 6.
+
+## Method
+
+- **Ground truth.** Awwwards publishes per-category jury means and a per-juror table only
+  for Sites of the Day; Honorable Mention and nominee pages show no scores (checked on 10
+  HM pages, awwwards.com/sites/palmo and awwwards.com/sites/filmbot). So 15 Sites of the
+  Day (2026-07-03 to 2026-10-03, spread across the score range, 5 held out) give numeric
+  truth, and 6 Honorable Mentions and 6 nominees still unawarded three weeks after
+  nomination give ordinal truth: Site of the Day above Honorable Mention (jury 6.5 or
+  more) above nominee (below 6.5).
+- **Judge.** Opus, one blind non-fork pass per site (k=1) with purpose `showcase`, except
+  two Sites of the Day judged three times for spread. Production runs use three passes,
+  so these single-pass numbers are the conservative case.
+- **Rubric and held-out sites.** Rubric v1 scored Usability 1.24 and Content 1.40 below
+  the jury on Sites of the Day, because it penalised entry gates and sparse copy that the
+  jury rewards. Graham ruled the hybrid fix (2026-10-03): showcase follows the jury,
+  product stays strict. Every number below is the current rubric. Two of the five
+  held-out sites were judged under rubric v1 before the hold-out rule was in place, and
+  their v1 scores were seen during tuning: produx-design (7/6/7/6) and hiroto-sato
+  (7/6/7/4, on a capture cut short to its intro). The other three were never seen before
+  the rubric was frozen.
+- **Capture.** Live sites, headless Chrome, 2026-10-04, on the capture script with
+  overlapping scroll frames (earlier runs left 300 to 356 px of each scroll step unseen;
+  every number here was re-measured after that fix). Judged 26 of 27. Not judged: tbwa-hakuhodo-corporate-site.
+  Capture failures, excluded: tbwa-hakuhodo-corporate-site (no frames in 480 s, retried once alone).
+  Partial captures, judged because both widths had frames (SKILL.md step 2): hiroto-sato, illoca.
+
+## Error against the jury
+
+### Tuning set: 10 sites
+| Category | MAE | MAE of always-7 | Bias | Spearman | Mean juror SD |
+|---|---|---|---|---|---|
+| design | 0.48 | 0.38 | -0.18 | -0.52 | 0.76 |
+| usability | 0.31 | 0.21 | -0.31 | -0.17 | 0.67 |
+| creativity | 0.55 | 0.54 | -0.24 | -0.11 | 0.77 |
+| content | 0.53 | 0.35 | -0.35 | 0.17 | 0.81 |
+| overall | 0.33 | 0.36 | -0.25 | -0.56 | n/a |
+
+### Held-out set: 5 sites
+| Category | MAE | MAE of always-7 | Bias | Spearman | Mean juror SD |
+|---|---|---|---|---|---|
+| design | 0.48 | 0.31 | +0.09 | 0.00 | 0.70 |
+| usability | 0.43 | 0.23 | -0.43 | 0.71 | 0.69 |
+| creativity | 0.59 | 0.58 | -0.38 | -0.35 | 0.77 |
+| content | 0.41 | 0.41 | -0.41 | n/a | 0.77 |
+| overall | 0.36 | 0.35 | -0.21 | 0.36 | n/a |
+
+MAE is mean absolute error of the judge's integer score against the jury mean. "MAE of
+always-7" is a judge that answers 7 for everything; on a set where every jury mean is near
+7.3, that is the number to beat. Bias is judge minus jury. Mean juror SD is how much the
+human jurors disagree with each other.
+
+## Tier ordering and gate pass rates
+
+### Ordinal tiers (A > B > C): judge weighted overall
+| Tier | Sites | Mean | Min | Max |
+|---|---|---|---|---|
+| A | 15 | 7.12 | 6.70 | 7.60 |
+| B | 5 | 6.90 | 6.70 | 7.10 |
+| C | 6 | 6.82 | 5.50 | 7.70 |
+
+Cross-tier pairs ordered correctly: 113 of 195 (58%); tied: 21; chance level: 50%.
+
+Showcase gate with the approved floors (Design 7, Usability 6, Creativity 7, Content 7),
+each site's judge median:
+
+- Tier A: 13 of 15 pass showcase; fails: united-carriers (content); why-zero (content)
+- Tier B: 4 of 5 pass showcase; fails: signal-a-studio (creativity, content)
+- Tier C: 3 of 6 pass showcase; fails: brand-packaging-portfolio (content); studio-nikita (design, creativity, content); creativeans (design, creativity)
+
+## Deliberate-failure proof and spread
+
+Fable judges (Opus built the fixtures), three blind passes each on neutral-named copies:
+
+| Fixture | Design | Usability | Creativity | Content | Verdict |
+|---|---|---|---|---|---|
+| `generic-template.FIXTURE.html` | 4, 4, 4 | 5, 5, 4 | 3, 3, 3 | 3, 3, 3 | NOT APPROVED |
+| `unusable-polish.FIXTURE.html` | 5, 5, 6 | 4, 4, 4 | 5, 4, 5 | 4, 4, 4 | NOT APPROVED |
+
+Spread on two Sites of the Day, Opus, three passes (D/U/C/Ct per pass):
+- sstr-friction-reduction: 8/7/7/8, 7/7/7/7, 8/7/7/7
+- sharplink: 7/6/7/7, 7/6/7/7, 7/5/7/7
+
+## Limits of this run
+
+- One run, one day. Sites change after their award; scores here are against the site as
+  captured on 2026-10-04.
+- Nothing below 6.5 overall has public jury scores, so the low end is proven only by the
+  two fixtures, not calibrated against humans.
+- Single-pass judging for most sites; three-pass medians may move a borderline score.
+- The judge sees screenshots, a text extract and a probe. Motion quality, hover, sound
+  and smoothness were never observed, for any site.
+- Product floors were never calibrated: no jury scores exist for tools and dashboards.
+
+## The sites
+
+| Site | Tier | Awarded | Jury means D / U / C / Ct | Juror SD | Judge D/U/C/Ct |
+|---|---|---|---|---|---|
+| [sstr-friction-reduction](https://sstr.tech/en/) | Site of the Day | 2026-08-16 | 7.17 / 7.16 / 7.28 / 6.98 | 0.71 / 0.59 / 0.72 / 0.88 | 8/7/7/7 (k=3) |
+| [produx-design (held out)](https://www.produx.design) | Site of the Day | 2026-08-09 | 7.10 / 7.10 / 7.52 / 7.10 | 0.85 / 0.50 / 0.96 / 0.60 | 7/6/7/7 |
+| [vero-new-york](https://verostudio.com/) | Site of the Day | 2026-08-08 | 7.38 / 7.09 / 7.13 / 7.06 | 0.77 / 0.56 / 0.75 / 0.71 | 7/7/8/7 |
+| [milledollars](https://milledollars.fr/) | Site of the Day | 2026-10-02 | 7.25 / 7.15 / 7.23 / 7.39 | 0.73 / 0.52 / 0.80 / 0.84 | 7/7/7/8 |
+| [hiroto-sato (held out)](https://www.hirotos.com) | Site of the Day | 2026-07-17 | 7.08 / 7.25 / 7.48 / 7.33 | 0.48 / 0.81 / 0.89 / 0.96 | 8/7/8/7 |
+| [united-carriers](https://unitedcarriers.com/) | Site of the Day | 2026-09-06 | 7.35 / 7.00 / 7.61 / 7.16 | 0.62 / 0.46 / 0.75 / 0.68 | 7/7/8/6 |
+| [white-desert](https://white-desert.com/) | Site of the Day | 2026-09-11 | 7.28 / 7.27 / 7.21 / 7.74 | 0.65 / 0.62 / 0.65 / 0.75 | 7/7/7/8 |
+| [likova (held out)](https://likova.space) | Site of the Day | 2026-08-19 | 7.49 / 7.13 / 7.28 / 7.44 | 0.89 / 0.69 / 0.73 / 0.77 | 7/7/7/7 |
+| [haoqi-design](https://haoqi.design) | Site of the Day | 2026-08-14 | 7.44 / 7.10 / 7.69 / 7.17 | 0.67 / 0.50 / 0.68 / 0.54 | 7/7/7/7 |
+| [sharplink](https://www.sharplink.com/) | Site of the Day | 2026-08-27 | 7.44 / 7.25 / 7.50 / 7.25 | 0.69 / 0.73 / 0.70 / 0.87 | 7/6/7/7 (k=3) |
+| [zeroz-brand-site (held out)](https://otsuka-air.jp/) | Site of the Day | 2026-08-24 | 7.38 / 7.19 / 7.90 / 7.29 | 0.67 / 0.71 / 0.72 / 0.70 | 7/7/7/7 |
+| [illoca](https://illoca.unseen.co/) | Site of the Day | 2026-09-04 | 7.33 / 7.43 / 7.70 / 7.36 | 0.84 / 0.75 / 0.77 / 0.81 | 8/7/8/7 |
+| [l-i-s-a](https://lisa.locomotive.ca/en) | Site of the Day | 2026-09-16 | 7.45 / 7.22 / 7.89 / 7.61 | 0.84 / 0.92 / 0.68 / 0.88 | 7/7/7/7 |
+| [the-watch (held out)](https://thewatch.60fps.fr/) | Site of the Day | 2026-08-17 | 7.51 / 7.48 / 7.74 / 7.90 | 0.63 / 0.74 / 0.55 / 0.82 | 8/7/7/7 |
+| [why-zero](https://why.zero.university/) | Site of the Day | 2026-09-07 | 7.70 / 7.46 / 8.16 / 7.75 | 1.09 / 1.05 / 1.16 / 1.16 | 7/7/7/6 |
+| [filmbot](https://filmbot.com/) | Honorable Mention | 2026-09-09 | not published |  | 7/7/7/8 |
+| [base-power-company-base-core](https://www.basepowercompany.com/core) | Honorable Mention | 2026-09-07 | not published |  | 7/7/7/7 |
+| [beige-force](https://beigeforce.com/) | Honorable Mention | 2026-09-04 | not published |  | 7/6/7/7 |
+| [signal-a-studio](https://signal-a.studio) | Honorable Mention | 2026-09-01 | not published |  | 7/7/6/6 |
+| [tbwa-hakuhodo-corporate-site](https://www.tbwahakuhodo.co.jp/) | Honorable Mention | 2026-08-29 | not published |  | capture failed |
+| [vakantiehuis-coquelicots](https://coquelicots.nl) | Honorable Mention | 2026-08-26 | not published |  | 7/7/7/7 |
+| [studio-loop](https://studioloop.com.br) | Nominee, no award | 2026-09-11 | not published |  | 8/7/7/7 |
+| [brand-packaging-portfolio](https://marina-zakharova.netlify.app/) | Nominee, no award | 2026-09-11 | not published |  | 7/7/7/6 |
+| [charmling](https://charmling.app) | Nominee, no award | 2026-09-11 | not published |  | 8/7/8/8 |
+| [kavieng-creative](https://www.kaviengcreative.com/) | Nominee, no award | 2026-09-10 | not published |  | 7/7/7/7 |
+| [studio-nikita](https://www.studio-nikita.com/) | Nominee, no award | 2026-09-10 | not published |  | 5/6/6/5 |
+| [creativeans](https://www.creativeans.com/) | Nominee, no award | 2026-09-09 | not published |  | 6/7/6/7 |
+
+Ground truth fetched from each site's Awwwards page (https://www.awwwards.com/sites/<slug>)
+on 2026-10-03; only URLs, dates and the numbers are kept.

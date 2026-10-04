@@ -1,0 +1,100 @@
+{
+  "judge": "design-jury-judge/v1",
+  "target": "file:///private/tmp/claude-501/-Users-gfm-work/89532684-8f67-4465-9dad-01ac2a9a5cbf/scratchpad/sites/nexora.html",
+  "scores": { "design": 4, "usability": 5, "creativity": 3, "content": 3 },
+  "evidence": {
+    "design": [
+      { "where": "desktop/frame-00.png (hero, y 62-532)",
+        "observed": "centered H1 at roughly 56 px bold Arial with a lavender-to-white gradient fill, over a full-bleed diagonal violet-to-blue gradient, white pill button with a violet glow shadow: three of the ai-tells template defaults (centered hero on purple-blue gradient, gradient headline text) in one frame",
+        "effect": "-" },
+      { "where": "manifest.json probe.fonts",
+        "observed": "h1, body and p all 'Arial, Helvetica, sans-serif', loaded fonts empty; the only type differentiation is weight and size, no display or label role",
+        "effect": "-" },
+      { "where": "desktop/frame-01.png and desktop/frame-02.png (card rows)",
+        "observed": "the same three-equal-card row (about 344 px wide, 24 px gutters, 24 px radius, large soft shadow, centered 36 px emoji, 18 px H3, 15 px grey body) repeated for Why Choose Us, Our Features and Trusted by Thousands; the only variation is a #f5f5fa band behind the middle row",
+        "effect": "-" },
+      { "where": "desktop/frame-02.png (Trusted by Thousands, y 190-500)",
+        "observed": "this section drops the one-line subtitle the two sections above carry, and the gradient CTA band below repeats the hero gradient at the same angle with no new element; no imagery anywhere (manifest images: 0), emoji stand in for icons",
+        "effect": "-" },
+      { "where": "mobile/frame-01.png and mobile/frame-02.png",
+        "observed": "vertical rhythm is held at phone width: cards stack single-column at about 40 px side margins and 24 px between, section padding of roughly 100 px matches desktop, card heights equal within a row",
+        "effect": "+" }
+    ],
+    "usability": [
+      { "where": "mobile/frame-00.png (header, y 0-62)",
+        "observed": "the desktop nav row is kept at 390 px: logo plus 'Features Solutions Pricing' fit, 'About' is clipped to 'Abo' at the right edge and 'Contact' is off-screen; no menu button or overflow affordance is visible",
+        "effect": "-" },
+      { "where": "desktop/frame-00.png (hero) and mobile/frame-00.png",
+        "observed": "a labelled call to action ('Get Started Today', about 200 x 48 px pill) sits under the headline within the first viewport at both widths, and a five-link text nav is visible on desktop; the way in is obvious",
+        "effect": "+" },
+      { "where": "mobile/frame-01.png through mobile/frame-05.png",
+        "observed": "below the header mobile is its own composition: cards stack full-width, body text about 15-16 px, headings wrap to two or three lines without overflow, the CTA band and footer render complete",
+        "effect": "+" },
+      { "where": "desktop/frame-00.png (hero H1)",
+        "observed": "the gradient-filled headline lightens to near-lavender on the violet side of the background, lowering contrast on 'Welcome to the'; still legible at 56 px but weaker than the plain white subhead beneath it",
+        "effect": "-" },
+      { "where": "manifest.json probe",
+        "observed": "images: 0 and images_missing_alt: 0, so the alt-text floor is vacuous rather than met; page_errors empty, load 11 ms, zero requests",
+        "effect": "0" }
+    ],
+    "creativity": [
+      { "where": "desktop/frame-00.png, desktop/frame-01.png, desktop/frame-02.png",
+        "observed": "the page is the generic hero / three icon cards / three icon cards / three testimonial cards / gradient CTA band / footer sequence with nothing specific to the product; the composition could be swapped onto any SaaS name unchanged",
+        "effect": "-" },
+      { "where": "manifest.json motion and ambient_motion",
+        "observed": "ambient_motion false, running_animations 0, canvases 0, videos 0, custom_cursor false, libraries empty: no motion or interaction idea exists to carry a concept",
+        "effect": "-" },
+      { "where": "desktop/frame-01.png (Why Choose Us and Our Features icons)",
+        "observed": "rocket, padlock, lightning, bar-chart, handshake and target emoji as the only graphic elements; the testimonial cards use the same star emoji three times",
+        "effect": "-" }
+    ],
+    "content": [
+      { "where": "text.md body text and desktop/frame-01.png (Why Choose Us cards)",
+        "observed": "all three 'Why Choose Us' card bodies are the same 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.' string, rendered in the live frame",
+        "effect": "-" },
+      { "where": "desktop/frame-02.png (Trusted by Thousands)",
+        "observed": "three placeholder testimonials headed '\"Amazing!\"', '\"Love it!\"', '\"Wow!\"' with one-sentence quotes attributed to 'John D.', 'Sarah K.', 'Mike R.', no company, role or outcome",
+        "effect": "-" },
+      { "where": "text.md hero and section subtitles; manifest.json images: 0",
+        "observed": "hero copy is 'Unlock your potential with our innovative, cutting-edge platform that empowers teams to achieve more, faster' and section leads are 'We provide seamless solutions for modern businesses' and 'Everything you need to succeed in one place'; 170 words total, no photography, 3D, illustration or video, emoji in the image role",
+        "effect": "-" },
+      { "where": "text.md Our Features cards",
+        "observed": "Analytics, Collaboration and Goals cards carry one real sentence each (e.g. 'Set and track goals to drive success across the organization'), the only non-placeholder body copy on the page",
+        "effect": "0" }
+    ]
+  },
+  "improvements": {
+    "design": [
+      "Hero (desktop/frame-00.png): replace the lavender-to-white gradient fill on the H1 with solid white, and replace the violet-to-blue diagonal gradient with one flat brand colour or a single photograph so the first frame has a point of view.",
+      "Type: load one display family and one text family (manifest shows Arial only) and set a scale with distinct display (H1), heading (H2), label (card H3) and body sizes held at both widths.",
+      "Card rows (desktop/frame-01.png, frame-02.png): vary the module between sections, e.g. a two-column feature list with a product image for Our Features and a single wide quote for testimonials, instead of the same three-card row three times.",
+      "Replace the six emoji icons and three star emoji with a drawn icon set at one stroke weight, and give Trusted by Thousands the same subtitle line the other two sections have."
+    ],
+    "usability": [
+      "Mobile header (mobile/frame-00.png): collapse the five links behind a labelled menu button below about 768 px, or wrap them to a second row; 'About' is clipped and 'Contact' is unreachable at 390 px.",
+      "Hero H1: use a solid white fill so contrast on the violet side of the gradient matches the subhead.",
+      "Give the nav links and both CTAs visible destinations (anchors to the matching sections, a real sign-up route) so the labelled controls lead somewhere."
+    ],
+    "creativity": [
+      "Choose one concept tied to 'the future of work' and carry it through copy, layout and one authored motion idea (for example a pinned scroll sequence showing the product), rather than the stock hero-cards-cards-testimonials-CTA sequence.",
+      "Add one signature moment in the first viewport (a considered reveal, a distinctive menu or hover) so there is an interaction a visitor would remember; the manifest records no motion at all.",
+      "Replace the three-emoji-card module with an element that is specific to the product (a live screenshot, a diagram of the workflow) so the layout could not be re-skinned onto another brand."
+    ],
+    "content": [
+      "Why Choose Us cards: replace the three identical lorem ipsum bodies with one specific sentence each (what is fast, what is secured, what the power is measured by).",
+      "Testimonials: replace '\"Amazing!\"', '\"Love it!\"', '\"Wow!\"' with named customers (company, role) and one concrete outcome each, or remove the section until real quotes exist.",
+      "Hero and section leads: replace 'Unlock your potential', 'seamless solutions' and 'Everything you need to succeed' with a one-line statement of what Nexora does and for whom.",
+      "Add real imagery: at least one product screenshot or art-directed image in the hero and one per feature; the page currently has zero images and emoji in the image role."
+    ]
+  },
+  "not_observed": [
+    "hover and cursor-follow effects, including nav link and button hover states",
+    "click interactions and page transitions between routes; where 'Get Started Today', 'Sign Up Now' and the five nav links lead",
+    "whether the clipped mobile nav row is horizontally scrollable or hard-clipped (mobile/frame-00.png shows it cut at the viewport edge either way)",
+    "sound",
+    "real-device performance and scroll smoothness (headless, software GL)",
+    "prefers-reduced-motion behaviour and keyboard focus states",
+    "mobile-tiles/tile-05.png: a 9 px white strip at y 4220 of a 4229 px page, flagged suspect_blank; it is the end-of-page remainder, not content, and was not judged"
+  ],
+  "confidence": { "design": "high", "usability": "medium", "creativity": "low", "content": "high" }
+}
