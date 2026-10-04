@@ -97,7 +97,12 @@ Stated beside the rule they qualify, per the library's authoring standard.
   check, motion libraries, canvases), not whether it is good. Creativity on a
   motion-led site is the least reliable score this skill gives.
 - **Headless rendering.** Scroll-driven sites can render later scroll frames blank; the
-  layout tiles cover the content but show it before scroll reveals run.
+  layout tiles cover the content but show it before scroll reveals run. Frames overlap on
+  ordinary pages; where smooth-scroll momentum leaves a band unseen (up to about 20 px),
+  the manifest records it as `gap_before_px`. Until 2026-10-04 the capture left 300 to
+  356 px unseen per scroll step; the calibration was re-run after that fix.
+- **Requirements.** Node 22 or later, Python 3, and Chrome at
+  `/Applications/Google Chrome.app`, `/usr/bin/google-chrome` or `/usr/bin/chromium`.
 - **The judge is a model.** It can be gamed by a builder that writes to the rubric's
   words. The bands are written as observables, the judge never sees the builder's
   reasoning, and five calibration sites are held out from rubric tuning; none of that

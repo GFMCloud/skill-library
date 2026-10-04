@@ -45,6 +45,8 @@ Method:
    flaw; list it in not_observed. If it shows sparse but real content, judge it.
    Layout tiles show the page before scroll-triggered reveals run, so dimmed or
    hidden text in a tile is not a contrast defect unless a scroll frame shows it too.
+   A frame whose gap_before_px is above 0 follows a band of the page no frame shows;
+   list that band in not_observed.
 6. Improvements are concrete and actionable for the weakest observations: what to
    change, where, and to what. Two to four per category.
 7. Write the file as JSON in exactly this shape, with every category the module names

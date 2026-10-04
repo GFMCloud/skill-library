@@ -19,14 +19,15 @@ the only module so far; slides is next. A judge reads this whole file before sco
 
 ## The scale is compressed: read this first
 
-These are Awwwards numbers, not school grades. Across 288 juror category scores on four
-recent Sites of the Day, 7 was given 53% of the time, 8 36%, 9 5%, and 10 never. Site of
+These are Awwwards numbers, not school grades. Across 7,068 juror category scores on the 93
+Sites of the Day from 2026-07-03 to 2026-10-03, 7 was given 53% of the time, 8 30%, 6 8%,
+9 6%, 10 1%, and 5 or below 1%. Site of
 the Day winners average 7.1 to 8.0 per category. The Honorable Mention line is 6.5
 overall. So:
 
 | Score | Awwwards voting label | Means on this scale |
 |---|---|---|
-| 10 | "Perfect" | Almost never given by real jurors. Do not give it. |
+| 10 | "Perfect" | About 1% of real juror scores. Give it only with a cited mark a peer would call the best of the year. |
 | 9 | "Excellent" | Rare. Among the best on the web this year in this category; you can name the specific feature a peer would single out. |
 | 8 | "Great" | Among the best of an award batch. Distinctive, controlled, nothing obviously weak. |
 | 7 | "Very Good" | Award-grade craft. Site of the Day sites live here. |
@@ -111,7 +112,7 @@ the task is a 5.
 
 **Marks of 8-9:** clear orientation on the first view; mobile is first-class; motion aids
 navigation (states, feedback, what happens next); content readable with motion off. The
-real jury almost never gives 9 here (1 of 72 scores): require observed evidence for each
+real jury rarely gives 9 or 10 here (5% of Usability scores, the lowest of the four): require observed evidence for each
 claim, and put what a headless capture cannot show (frame rate, keyboard focus, reduced
 motion) in `not_observed` rather than crediting it.
 
@@ -189,8 +190,10 @@ max-frames tiles, so a very long page is cut off) and scroll frames
 (real wheel scrolling, one frame per step), plus `text.md` and `manifest.json`. It presses
 a lone entry-gate control ("Start", "Enter") once, as a visitor would, and records it.
 
-What the capture cannot show is listed in every manifest's `not_observed`. Known capture
-behaviour, from runs on 2026-10-03:
+What the capture cannot show is listed in every manifest's `not_observed`. Each scroll step
+moves about 80% of a viewport so frames overlap; any page band no frame shows is recorded
+per frame as `gap_before_px` (0 on ordinary pages; up to about 20 px where smooth-scroll
+momentum carries past the step, measured 2026-10-04). Known capture behaviour:
 
 - Scroll-driven sites can render later scroll frames blank in headless Chrome while the
   layout tiles show the content. Tiles are then the evidence; blank frames are not

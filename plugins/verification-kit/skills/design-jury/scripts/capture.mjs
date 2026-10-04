@@ -307,27 +307,38 @@ for (const vp of VIEWPORTS) {
         break;
       }
       const scrollY = y;
-      record.frames.push({ file: path.relative(outDir, file), scrollY, bytes: f.bytes,
-        suspect_blank: f.suspectBlank });
+      // Page pixels between the bottom of the previous frame and the top of this one that
+      // no frame shows. 0 when frames overlap or touch; recorded so a gap is never silent.
+      const last = record.frames.at(-1);
+      const gap = last ? Math.max(0, scrollY - last.scrollY - vp.height) : 0;
+      record.frames.push({ file: path.relative(outDir, file), scrollY, gap_before_px: gap,
+        bytes: f.bytes, suspect_blank: f.suspectBlank });
       console.log(`wrote ${file}${f.suspectBlank ? " (suspect blank)" : ""}`);
       prev = f.data;
       // Smooth-scroll libraries (Lenis and kin) damp one large wheel event to a few
-      // dozen pixels, so scroll the way a trackpad does: small ticks until the page has
-      // moved about one viewport, or 40 ticks.
-      // On a virtual-scroll scene scrollY never moves; stop after ten ticks, which has
-      // advanced the scene, instead of spending all forty.
-      const goal = scrollY + Math.round(vp.height * 0.85);
-      for (let t = 0; t < 40; t++) {
+      // dozen pixels, so scroll the way a trackpad does: small ticks, checking after each
+      // one, until the page has moved about 80% of a viewport. Checking only every fifth
+      // 120 px tick overshot to 1,200 px and left 300 to 356 px of every step unseen
+      // (found by an independent review, 2026-10-04).
+      // On a virtual-scroll scene scrollY never moves; stop after twenty ticks, which has
+      // advanced the scene, instead of spending all eighty.
+      const step = Math.round(vp.height * 0.8);
+      const goal = scrollY + step;
+      for (let t = 0; t < 80; t++) {
         await send("Input.dispatchMouseEvent", {
-          type: "mouseWheel", x: vp.width / 2, y: vp.height / 2, deltaX: 0, deltaY: 120,
+          type: "mouseWheel", x: vp.width / 2, y: vp.height / 2, deltaX: 0, deltaY: 60,
         });
-        await sleep(40);
-        if (t % 5 === 4) {
-          const now = await evaluate("Math.round(window.scrollY)");
-          if (now >= goal || (t >= 9 && now === scrollY)) break;
-        }
+        await sleep(30);
+        const now = await evaluate("Math.round(window.scrollY)");
+        if (now >= goal || (t >= 19 && now === scrollY)) break;
       }
       await sleep(STEP_MS);
+      // Smooth scrolling keeps coasting after the last tick. If it carried the page past
+      // a full viewport, pull it back to the step so the next frame overlaps this one.
+      if (await evaluate("Math.round(window.scrollY)") > scrollY + vp.height - 40) {
+        await evaluate(`window.scrollTo(0, ${goal})`);
+        await sleep(800);
+      }
       // If the wheel did not move the document, try scrollBy too. Never stop on scroll
       // position alone: WebGL and virtual-scroll sites move a scene on wheel input while
       // scrollY stays 0 (two Sites of the Day were cut to their intro that way,
