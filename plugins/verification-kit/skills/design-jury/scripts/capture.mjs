@@ -352,7 +352,7 @@ try { await Promise.race([send("Browser.close"), sleep(2000)]); } catch {}
 ws.close();
 clearTimeout(deadline);
 cleanup();
-if (failed) {
-  console.error("FAIL: a viewport produced no frames; see manifest.json failures");
-  process.exit(1);
-}
+if (failed) console.error("FAIL: a viewport produced no frames; see manifest.json failures");
+// Exit explicitly: Chrome's helper processes can hold the stderr pipe open after the main
+// process is killed, which keeps Node alive indefinitely (seen 2026-10-03 and 10-04).
+process.exit(failed ? 1 : 0);
