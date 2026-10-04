@@ -14,9 +14,10 @@ Behavior changes only — not wording tweaks. Newest first.
   and weights, 40/30/20/10); the core is written so slides, PDFs and diagrams can follow
   as modules.
 - **Calibrated against real jury data.** Floors (showcase 7/7/7/7, product 6/7/5/6) were
-  approved by Graham on 2026-10-03 after a calibration on 27 live sites: 15 Sites of the
-  Day with published per-category jury means, plus Honorable Mentions and unawarded
-  nominees as ordinal tiers. `scripts/calibrate.py` reports error against the jury, an
+  approved by Graham on 2026-10-03 after a calibration on 27 sampled live sites, 26 judged
+  (one Honorable Mention failed to capture): 15 Sites of the Day with published
+  per-category jury means, plus 5 Honorable Mentions and 6 unawarded nominees as ordinal
+  tiers. `scripts/calibrate.py` reports error against the jury, an
   always-7 baseline, and cross-tier ordering; the measured numbers are in
   `references/calibration-web.md`.
 

@@ -42,7 +42,9 @@ render recipe, the floors, and what it defers to. Only the web module exists:
    ```
 
    Exit 1 means a viewport produced no frames: stop and report the manifest's
-   `failures`; never judge a partial render as if it were complete. Open one desktop
+   `failures`. Exit 0 with "capture is partial" in `failures` means the 480 s deadline
+   cut the capture short but both widths have frames: judge it, and say in the report
+   that the render was partial; never present it as complete. Open one desktop
    tile and one mobile frame yourself to confirm the render shows the design, not a
    cookie wall, an error page or a login screen.
 3. **Judge, three blind passes in parallel.** Spawn three non-fork subagents in one
@@ -126,15 +128,18 @@ Stated beside the rule they qualify, per the library's authoring standard.
 Proof the gate works, re-runnable from the skill directory:
 
 ```bash
-node scripts/capture.mjs fixtures/generic-template.FIXTURE.html <out>/generic
-node scripts/capture.mjs fixtures/unusable-polish.FIXTURE.html <out>/unusable
+sed '/^<!--$/,/^-->$/d' fixtures/generic-template.FIXTURE.html > <out>/nexora.html
+sed '/^<!--$/,/^-->$/d' fixtures/unusable-polish.FIXTURE.html > <out>/ostra.html
+node scripts/capture.mjs <out>/nexora.html <out>/generic
+node scripts/capture.mjs <out>/ostra.html <out>/unusable
 ```
 
-then three judge passes on each and `aggregate.py` with purpose `showcase`. Pass means
-exit 1 (NOT APPROVED) on both fixtures, with Design, Creativity and Content below floor
-on the generic page and Usability below floor on the unusable one. The recorded runs are
-in [references/calibration-web.md](references/calibration-web.md), including two real
-Sites of the Day that pass.
+The copies drop the FIXTURE comment and name, so the judge sees no label. Then three
+judge passes on each and `aggregate.py` with purpose `showcase`. Pass means exit 1 (NOT
+APPROVED) on both, with every category below floor on the generic page and Usability the
+lowest on the unusable one. The recorded runs are in
+[references/calibration-web.md](references/calibration-web.md), with 10 of 15 real Sites
+of the Day passing at one judge pass each.
 
 ## Done when
 

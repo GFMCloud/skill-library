@@ -49,7 +49,8 @@ Method:
    change, where, and to what. Two to four per category.
 7. Write the file as JSON in exactly this shape, with every category the module names
    as a key under scores, evidence, improvements and confidence. No other top-level
-   fields. "target" is the Artifact line above, copied exactly.
+   fields. "target" is the Artifact line above, copied exactly. "effect" is "+" (raises
+   the score), "-" (lowers it) or "0" (neutral context).
 
    {
      "judge": "design-jury-judge/v1",
@@ -79,7 +80,9 @@ only the prompt. One JSON file per pass, read by `scripts/aggregate.py`. Categor
 come from the medium module (the web module uses `design`, `usability`, `creativity`,
 `content`).
 
-Rules: `scores` values are integers 1 to 10; `evidence.<category>` is non-empty for every
-category; `effect` is `+` or `-`. `aggregate.py` rejects a file that breaks any of these
+Rules: `scores` values are integers 1 to 10 (not booleans or floats); `evidence.<category>`
+is a non-empty list for every category; each entry has string `where` and `observed`;
+`effect` is `+`, `-` or `0` (`0` added before first release, 2026-10-03, after real judges
+wrote neutral observations 8 times in 699). `aggregate.py` rejects a file that breaks any of these
 (exit 2) rather than scoring around it. This shape is an API: a field rename or a change
 of allowed values is a breaking change and bumps the `/v1` suffix.

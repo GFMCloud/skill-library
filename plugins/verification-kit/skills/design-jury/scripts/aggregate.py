@@ -42,10 +42,16 @@ def load_judge(path, categories):
         fail_input(f"{path}: judge field is {data.get('judge')!r}, expected 'design-jury-judge/v1'")
     for cat in categories:
         score = data.get("scores", {}).get(cat)
-        if not isinstance(score, int) or not 1 <= score <= 10:
+        if isinstance(score, bool) or not isinstance(score, int) or not 1 <= score <= 10:
             fail_input(f"{path}: scores.{cat} is {score!r}, expected an integer 1-10")
-        if not data.get("evidence", {}).get(cat):
-            fail_input(f"{path}: evidence.{cat} is empty; a score without evidence is not accepted")
+        evidence = data.get("evidence", {}).get(cat)
+        if not evidence or not isinstance(evidence, list):
+            fail_input(f"{path}: evidence.{cat} is empty or not a list; a score without evidence is not accepted")
+        for i, e in enumerate(evidence):
+            if not isinstance(e, dict) or not isinstance(e.get("where"), str) or not isinstance(e.get("observed"), str):
+                fail_input(f"{path}: evidence.{cat}[{i}] needs string fields where and observed")
+            if e.get("effect") not in ("+", "-", "0"):
+                fail_input(f"{path}: evidence.{cat}[{i}].effect is {e.get('effect')!r}, expected +, - or 0")
     return data
 
 

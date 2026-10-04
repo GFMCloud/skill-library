@@ -184,7 +184,8 @@ node scripts/capture.mjs <url-or-file> <out-dir> [max-frames]
 ```
 
 Produces desktop (1440 x 900) and mobile (390 x 844) render sets. Each has layout tiles
-(the full page cut into viewport-height tiles before any scrolling) and scroll frames
+(the page from the top cut into viewport-height tiles before any scrolling, up to
+max-frames tiles, so a very long page is cut off) and scroll frames
 (real wheel scrolling, one frame per step), plus `text.md` and `manifest.json`. It presses
 a lone entry-gate control ("Start", "Enter") once, as a visitor would, and records it.
 

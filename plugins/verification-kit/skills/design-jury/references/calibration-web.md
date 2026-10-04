@@ -35,7 +35,7 @@ capture with `scripts/capture.mjs`, judge each site with the prompt, then
   for Sites of the Day; Honorable Mention and nominee pages show no scores (checked on 10
   HM pages and awwwards.com/sites/palmo). So 15 Sites of the Day (2026-07-03 to
   2026-10-03, spread across the score range, 5 held out) give numeric truth, and 6
-  Honorable Mentions and 6 nominees still unawarded three weeks after nomination give
+  Honorable Mentions (5 judged; see Capture) and 6 nominees still unawarded three weeks after nomination give
   ordinal truth: Site of the Day above Honorable Mention (jury 6.5 or more) above nominee
   (below 6.5).
 - **Judge.** Opus, one blind non-fork pass per site (k=1) with purpose `showcase`, except
@@ -47,8 +47,11 @@ capture with `scripts/capture.mjs`, judge each site with the prompt, then
   stays strict. Every number below is rubric v2. Held-out sites were judged once, after
   v2 was frozen; produx-design had also been judged under v1 before that rule was in
   place, and its v1 score was seen during tuning.
-- **Capture.** Live sites, headless Chrome, 2026-10-03. tbwa-hakuhodo-corporate-site
-  produced no frames in 480 s and is excluded as a capture failure.
+- **Capture.** Live sites, headless Chrome, 2026-10-03, 27 sampled and 26 judged.
+  tbwa-hakuhodo-corporate-site produced no frames in 480 s and is excluded as a capture
+  failure. illoca reached the 480 s deadline after all 8 frames at both widths; its
+  manifest is marked partial and it was judged, which `SKILL.md` step 2 allows when both
+  widths have frames.
 
 ## Error against the jury
 
