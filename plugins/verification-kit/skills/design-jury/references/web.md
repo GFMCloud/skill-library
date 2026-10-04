@@ -21,7 +21,8 @@ the only module so far; slides is next. A judge reads this whole file before sco
 
 These are Awwwards numbers, not school grades. Across 7,068 juror category scores on the 93
 Sites of the Day from 2026-07-03 to 2026-10-03, 7 was given 53% of the time, 8 30%, 6 8%,
-9 6%, 10 1%, and 5 or below 1%. Site of
+9 6%, 10 1%, and 5 or below 1% (the 4% of juror scores given as decimals are rounded to
+the nearest whole number). Site of
 the Day winners average 7.1 to 8.0 per category. The Honorable Mention line is 6.5
 overall. So:
 

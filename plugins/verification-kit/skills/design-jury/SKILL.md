@@ -105,7 +105,9 @@ Stated beside the rule they qualify, per the library's authoring standard.
   the capture left 300 to 356 px unseen per scroll step; the calibration was re-run after
   that fix. Eight frames at 80% steps reach about 5,800 px on desktop; below that, and
   wherever a layout tile comes back as a flat fill, the judge knows a section only from
-  `text.md` and lists it under `not_observed`.
+  `text.md` and lists it under `not_observed`. On a virtual-scroll site (a WebGL scene
+  that moves on wheel input while the page never scrolls), every frame records a gap of
+  0 yet shows no page structure; the gap metric cannot detect that case.
 - **Requirements.** Node 22 or later, Python 3, and Chrome at
   `/Applications/Google Chrome.app`, `/usr/bin/google-chrome` or `/usr/bin/chromium`.
 - **The judge is a model.** It can be gamed by a builder that writes to the rubric's
