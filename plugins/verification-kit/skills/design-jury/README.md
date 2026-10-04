@@ -45,7 +45,7 @@ To improve:
 ## Good to know
 
 - **The scale is the Awwwards scale, which is tight.** Real jurors almost always give 7 or 8, and a Site of the Day averages about 7.3. A typical well-made business site scores 5 or 6 here. That is a correct score, not a harsh one.
-- **The minimums are 7 in every category for a showcase page,** the score a typical juror gives a Site of the Day. For a product page the minimums are design 6, usability 7, creativity 5 and content 6.
+- **The minimums for a showcase page are 7 for design, creativity and content, and 6 for usability,** where the reviewers measured about half a point harsher than the real jury. 7 is the score a typical juror gives a Site of the Day. For a product page the minimums are design 6, usability 7, creativity 5 and content 6.
 - **It cannot see everything.** It works from screenshots and the page's text, so hover effects, sound, page transitions and how smooth the scrolling feels are listed as "not observed" and never scored. On a site that leans on motion, the creativity score is the least reliable number it gives.
 - **Its accuracy is measured, and the numbers are in the skill.** It was tested against the published jury scores of real Sites of the Day, and against sites that won lesser awards or none. See [calibration-web.md](references/calibration-web.md).
 - **It starts three extra Claude reviewers for every review,** each reading 15 to 30 screenshots, which costs model usage and takes several minutes.

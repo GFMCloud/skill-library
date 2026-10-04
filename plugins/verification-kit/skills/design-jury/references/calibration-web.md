@@ -25,9 +25,9 @@ capture with `scripts/capture.mjs`, judge each site with the prompt, then
 - **It separates award tiers weakly.** Mean judge overall: Site of the Day 7.11, Honorable
   Mention 6.78, unawarded nominee 6.72. Cross-tier pairs ordered correctly: 59% (chance
   50%).
-- **It is harsh on Usability for sites it was not tuned on** (held-out bias −0.63), which
-  is why a third of real Sites of the Day fail the showcase gate, most of them by one point
-  on Usability.
+- **It is harsh on Usability for sites it was not tuned on** (held-out bias −0.63). The
+  showcase Usability floor is 6, not 7, to offset that; with it, 13 of 15 real Sites of
+  the Day pass, and so do 4 of 6 unawarded nominees.
 
 ## Method
 
@@ -89,11 +89,16 @@ jury. Mean juror SD is how much the human jurors disagree with each other.
 
 Cross-tier pairs ordered correctly: 116 of 195 (59%); tied: 29; chance level: 50%.
 
-Showcase gate (floors 7/7/7/7) with each site's judge median:
+Showcase gate with the approved floors (Design 7, Usability 6, Creativity 7, Content 7),
+each site's judge median:
 
-- Tier A: 10 of 15 pass showcase; fails: produx-design ['usability']; likova ['creativity']; haoqi-design ['content']; sharplink ['usability']; the-watch ['usability']
+- Tier A: 13 of 15 pass showcase; fails: likova ['creativity']; haoqi-design ['content']
 - Tier B: 2 of 5 pass showcase; fails: beige-force ['usability']; signal-a-studio ['creativity', 'content']; vakantiehuis-coquelicots ['creativity']
-- Tier C: 3 of 6 pass showcase; fails: charmling ['usability']; studio-nikita ['design', 'usability', 'creativity', 'content']; creativeans ['creativity']
+- Tier C: 4 of 6 pass showcase; fails: studio-nikita ['design', 'creativity', 'content']; creativeans ['creativity']
+
+At the first proposal (Usability 7) the rates were 10 of 15, 2 of 5 and 3 of 6. Graham
+lowered showcase Usability to 6 to offset the measured bias: three more Sites of the Day
+pass, and one more nominee.
 
 ## Deliberate-failure proof and spread
 
@@ -105,8 +110,8 @@ Fable judges (Opus built the fixtures), three blind passes each, final capture s
 | `unusable-polish.FIXTURE.html` | 6, 6, 6 | 4, 4, 4 | 5, 5, 5 | 4, 4, 4 | NOT APPROVED (exit 1) |
 
 Spread on two Sites of the Day, Opus, three passes: sstr-friction-reduction 8/7/8/8,
-8/7/8/8, 7/7/8/8 (passes); sharplink 7/6/7/7, 7/6/7/7, 7/7/7/7 (fails on a Usability
-median of 6; jury 7.25). Largest spread seen in any category: 1.
+8/7/8/8, 7/7/8/8 (passes); sharplink 7/6/7/7, 7/6/7/7, 7/7/7/7 (Usability median 6
+against a jury 7.25; passes at the approved floor of 6). Largest spread seen in any category: 1.
 
 ## Limits of this run
 

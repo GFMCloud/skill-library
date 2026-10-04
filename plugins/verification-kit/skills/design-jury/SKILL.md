@@ -109,10 +109,11 @@ Stated beside the rule they qualify, per the library's authoring standard.
   the same fix can appear two or three times in different words. Read them as votes:
   a fix all three passes name is the strongest.
 - **Measured ceiling (web, 2026-10-03, 26 live sites):** both labelled fixtures fail on
-  every category; real Sites of the Day pass the showcase gate 10 times in 15, Honorable
-  Mentions 2 in 5, unawarded nominees 3 in 6. Cross-tier ordering is 59% correct (chance
+  every category; real Sites of the Day pass the showcase gate 13 times in 15, Honorable
+  Mentions 2 in 5, unawarded nominees 4 in 6. Cross-tier ordering is 59% correct (chance
   50%). Within Sites of the Day the judge does no better than always answering 7, and on
-  held-out sites it runs 0.63 low on Usability, which causes most false fails. It catches
+  held-out sites it runs 0.63 low on Usability, which is why the showcase Usability floor
+  is 6. It catches
   weak work; it does not rank good work. Full numbers:
   [references/calibration-web.md](references/calibration-web.md).
 
@@ -138,7 +139,7 @@ The copies drop the FIXTURE comment and name, so the judge sees no label. Then t
 judge passes on each and `aggregate.py` with purpose `showcase`. Pass means exit 1 (NOT
 APPROVED) on both, with every category below floor on the generic page and Usability the
 lowest on the unusable one. The recorded runs are in
-[references/calibration-web.md](references/calibration-web.md), with 10 of 15 real Sites
+[references/calibration-web.md](references/calibration-web.md), with 13 of 15 real Sites
 of the Day passing at one judge pass each.
 
 ## Done when
