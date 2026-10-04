@@ -1,0 +1,98 @@
+{
+  "judge": "design-jury-judge/v1",
+  "target": "file:///private/tmp/claude-501/-Users-gfm-work/89532684-8f67-4465-9dad-01ac2a9a5cbf/scratchpad/sites/nexora.html",
+  "scores": { "design": 4, "usability": 4, "creativity": 3, "content": 3 },
+  "evidence": {
+    "design": [
+      { "where": "desktop-tiles/tile-00.png (hero)",
+        "observed": "centered hero on a purple-to-blue diagonal gradient, H1 at roughly 56 px Arial Bold with a white-to-lavender gradient text fill, a white pill CTA with a purple glow shadow; the exact centered-hero-on-purple-blue-gradient and gradient-headline-text defaults named as template evidence",
+        "effect": "-" },
+      { "where": "manifest.json probe.fonts",
+        "observed": "h1, body and p all resolve to Arial, Helvetica, sans-serif with no loaded font; the only scale is bold weight and size (56 / 36 / 20 / 16 px), no display or label role",
+        "effect": "-" },
+      { "where": "desktop-tiles/tile-01.png and desktop/frame-01.png",
+        "observed": "the same three-equal-card row (emoji centered, bold title, grey paragraph, 16 px radius, 24 px gutter, wide diffuse shadow) repeated three times for Why Choose Us, Features and Testimonials, alternating white and #f5f5fa section backgrounds",
+        "effect": "-" },
+      { "where": "mobile-tiles/tile-01.png to tile-04.png",
+        "observed": "cards stack to one column at 390 px with consistent 40 px side margins and radius; the card system itself is held across both viewports",
+        "effect": "+" },
+      { "where": "desktop-tiles/tile-00.png (H1, 'Work')",
+        "observed": "gradient text fill fades the last word to pale lavender (#d8d0f8-ish) over the blue end of the hero, so hierarchy weakens across the headline for no reason",
+        "effect": "-" }
+    ],
+    "usability": [
+      { "where": "mobile/frame-00.png and mobile-tiles/tile-00.png (top bar)",
+        "observed": "desktop nav row kept on the phone: 'Features Solutions Pricing Abo' runs off the right edge at 390 px, 'About' is clipped and 'Contact' is not visible; no hamburger or wrap",
+        "effect": "-" },
+      { "where": "desktop/frame-00.png",
+        "observed": "first view has a labelled five-link nav, a one-line H1, a subhead and a single 'Get Started Today' CTA; the next action is obvious",
+        "effect": "+" },
+      { "where": "mobile/frame-01.png, mobile/frame-03.png",
+        "observed": "body copy around 16 px dark grey on white and white on the gradient; readable at both viewports; CTA pill roughly 200 x 48 px on mobile",
+        "effect": "+" },
+      { "where": "manifest.json probe",
+        "observed": "images 0, so alt text is moot; emoji glyphs carry the icon meaning with no text alternative; load_ms 17 and 0 requests",
+        "effect": "0" }
+    ],
+    "creativity": [
+      { "where": "desktop-tiles/tile-00.png through tile-02.png",
+        "observed": "hero, three icon cards, three icon cards, three testimonial cards, gradient CTA band, footer; the sequence and every component could be re-skinned to any SaaS brand unchanged",
+        "effect": "-" },
+      { "where": "manifest.json probe.motion and ambient_motion",
+        "observed": "running_animations 0, canvases 0, videos 0, custom_cursor false, libraries empty, ambient_motion false; nothing in the capture shows a motion or interaction idea",
+        "effect": "-" },
+      { "where": "desktop/frame-01.png (card icons)",
+        "observed": "emoji (rocket, lock, lightning, bar chart, handshake, target, star) stand in for icons, in the default OS emoji style, no drawn or branded mark",
+        "effect": "-" }
+    ],
+    "content": [
+      { "where": "text.md body and desktop-tiles/tile-00.png (Why Choose Us cards)",
+        "observed": "all three 'Why Choose Us' cards read 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'",
+        "effect": "-" },
+      { "where": "desktop/frame-02.png (Trusted by Thousands)",
+        "observed": "testimonials are 'Amazing!', 'Love it!', 'Wow!' attributed to John D., Sarah K., Mike R., each with one sentence and a star emoji; no company, role or outcome",
+        "effect": "-" },
+      { "where": "text.md H1 and subhead",
+        "observed": "'Welcome to the Future of Work' and 'Unlock your potential with our innovative, cutting-edge platform that empowers teams to achieve more, faster.' carry the page; 170 words total, 0 images",
+        "effect": "-" },
+      { "where": "desktop/frame-01.png (Our Features cards)",
+        "observed": "Analytics, Collaboration and Goals each get one real sentence ('Set and track goals to drive success across the organization.'); specific enough to not be placeholder, still generic",
+        "effect": "0" }
+    ]
+  },
+  "improvements": {
+    "design": [
+      "Replace the Arial stack with a deliberate pairing (one display face for H1/H2, one text face for body) and set a scale with distinct display, body and label sizes; keep it identical at 1440 and 390.",
+      "Drop the gradient text fill on the hero H1 (desktop-tiles/tile-00.png) and set it in solid white; the fade on 'Work' lowers contrast on the blue end for no gain.",
+      "Break the three-identical-card pattern: give Why Choose Us a different layout (a two-column feature with an image or figure), keep cards for one section only.",
+      "Replace emoji with a single drawn icon set at one stroke weight and one size so the cards read as one system."
+    ],
+    "usability": [
+      "On mobile the nav overflows at 390 px (mobile/frame-00.png): collapse the five links into a menu button below about 768 px, or wrap them; today 'About' is clipped and 'Contact' is unreachable.",
+      "Add aria-label or visually hidden text on each card's icon glyph (or make the emoji aria-hidden) so the card title alone carries meaning for screen readers.",
+      "Give the nav links and both CTAs real targets (the probe shows no routes); a 'Pricing' link with nowhere to go is a dead end on the first screen."
+    ],
+    "creativity": [
+      "Pick one idea native to 'the future of work' and carry it through: for example a single product screenshot or illustration of the actual tool, used in the hero and echoed in each feature card.",
+      "Replace the repeated card grid in at least one section with a different composition (a pinned feature walkthrough, a before/after, a numbered list) so the page has a shape of its own.",
+      "If motion is added, make it one authored move (a reveal tied to the product idea), not card fade-ins."
+    ],
+    "content": [
+      "Replace the three lorem ipsum paragraphs in Why Choose Us (desktop-tiles/tile-00.png) with one specific sentence each: what is fast, measured how; what is secured, by what.",
+      "Replace the 'Amazing!' / 'Love it!' / 'Wow!' testimonials with named people at named companies stating a concrete outcome, or remove the section.",
+      "Rewrite the H1 and subhead to say what Nexora is and who it is for; 'Welcome to the Future of Work' and 'Unlock your potential' do not identify the product.",
+      "Add at least one real image or product view; the probe counts 0 images, so the page has no imagery to judge."
+    ]
+  },
+  "not_observed": [
+    "hover and cursor-follow effects on cards, nav links and the two CTAs",
+    "click interactions and page transitions between routes",
+    "sound",
+    "real-device performance and scroll smoothness (headless, software GL)",
+    "prefers-reduced-motion behaviour",
+    "keyboard focus states",
+    "mobile-tiles/tile-05.png: a 9 px strip past the page end (y 4220 of 4229), blank by capture geometry, not a page defect",
+    "whether the mobile nav overflow causes horizontal page scroll or is clipped by overflow hidden"
+  ],
+  "confidence": { "design": "high", "usability": "high", "creativity": "low", "content": "high" }
+}

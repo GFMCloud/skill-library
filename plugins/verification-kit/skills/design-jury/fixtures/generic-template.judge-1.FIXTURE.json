@@ -1,0 +1,98 @@
+{
+  "judge": "design-jury-judge/v1",
+  "target": "file:///private/tmp/claude-501/-Users-gfm-work/89532684-8f67-4465-9dad-01ac2a9a5cbf/scratchpad/sites/nexora.html",
+  "scores": { "design": 4, "usability": 5, "creativity": 3, "content": 3 },
+  "evidence": {
+    "design": [
+      { "where": "desktop/frame-00.png (hero, y 62-530)",
+        "observed": "centered H1 at roughly 56 px with a pale lavender gradient text fill over a full-bleed purple-to-blue diagonal gradient, white pill CTA with a purple glow: the centered-hero-on-purple-blue-gradient and gradient-headline-text template defaults",
+        "effect": "-" },
+      { "where": "manifest.json probe.fonts",
+        "observed": "h1, body and p all Arial, Helvetica, sans-serif; loaded fonts list is empty, so one system family with weight as the only scale lever",
+        "effect": "-" },
+      { "where": "desktop-tiles/tile-01.png and desktop/frame-01.png",
+        "observed": "the same three-equal-card row (centered emoji, bold label, two-line grey text, ~24 px radius, soft shadow) is repeated for Why Choose Us, Our Features and Trusted by Thousands, with 📊 🤝 🎯 and ⭐ as the only imagery",
+        "effect": "-" },
+      { "where": "desktop/frame-00.png (H1, left half)",
+        "observed": "the gradient-filled 'Welcome to the' reads as pale lavender on mid purple, visibly lower contrast than the white subheading beneath it",
+        "effect": "-" },
+      { "where": "desktop/frame-02.png and mobile/frame-03.png",
+        "observed": "section rhythm is consistent (about 80 px top and bottom padding per section, alternating white and #f5f5fa bands) and the CTA band reuses the hero gradient and pill button",
+        "effect": "+" }
+    ],
+    "usability": [
+      { "where": "mobile/frame-00.png and mobile-tiles/tile-00.png (nav, y 0-62)",
+        "observed": "the five desktop nav links run off the right edge at 390 px ('Features Solutions Pricing Abo' with 'About' clipped and 'Contact' not visible); no hamburger or collapsed menu",
+        "effect": "-" },
+      { "where": "desktop/frame-00.png (first screen)",
+        "observed": "labelled five-item nav top right, one headline, one subheading and one labelled CTA ('Get Started Today') above the fold; the next action is obvious",
+        "effect": "+" },
+      { "where": "mobile-tiles/tile-01.png and mobile-tiles/tile-02.png",
+        "observed": "cards restack to a single column with an even side gutter, body text about 16 px grey on white, headings about 36 px; below the nav the mobile page is its own composition, not a shrunk desktop",
+        "effect": "+" },
+      { "where": "manifest.json probe.weight and probe.images",
+        "observed": "0 requests, 0 KB transfer, 17 ms load; 0 images so no alt-text floor can be observed either way",
+        "effect": "+" }
+    ],
+    "creativity": [
+      { "where": "desktop/frame-00.png, desktop-tiles/tile-01.png, desktop/frame-02.png",
+        "observed": "gradient hero, three icon-card rows, testimonial cards, gradient CTA band, one-line footer: the stock SaaS landing-page sequence with no concept tying copy, layout or imagery together",
+        "effect": "-" },
+      { "where": "manifest.json ambient_motion and probe.motion",
+        "observed": "ambient_motion false, running_animations 0, canvases 0, videos 0, custom_cursor false, libraries empty: no motion idea exists to be captured",
+        "effect": "-" },
+      { "where": "text.md body text and desktop-tiles/tile-01.png",
+        "observed": "emoji (🚀 🔒 ⚡ 📊 🤝 🎯 ⭐) stand in for icons and imagery, the same device in every section",
+        "effect": "-" }
+    ],
+    "content": [
+      { "where": "text.md body text; desktop/frame-00.png (Why Choose Us cards, y 745-900)",
+        "observed": "the three Why Choose Us cards each carry 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.' as their body copy",
+        "effect": "-" },
+      { "where": "desktop/frame-01.png (Trusted by Thousands, y 420-740)",
+        "observed": "testimonials are one-line placeholders ('Amazing!', 'Love it!', 'Wow!') attributed to 'John D.', 'Sarah K.', 'Mike R.' with no company, role or number behind 'Thousands'",
+        "effect": "-" },
+      { "where": "text.md hero and section intros; manifest.json probe.images",
+        "observed": "'Unlock your potential with our innovative, cutting-edge platform', 'seamless solutions for modern businesses', 'Everything you need to succeed in one place'; 0 images, no product screenshot, no named customer",
+        "effect": "-" },
+      { "where": "text.md Our Features",
+        "observed": "the three feature cards have real one-sentence descriptions (analytics and reporting, team collaboration from anywhere, goal tracking), the only copy that says what the product does",
+        "effect": "+" }
+    ]
+  },
+  "improvements": {
+    "design": [
+      "Hero (desktop/frame-00.png): drop the gradient text fill on the H1 and set it solid white, or move the headline onto a dark solid panel; the lavender-on-purple left half of the headline is the lowest-contrast element on the page.",
+      "Type: load one display family (a condensed or geometric sans) for H1 and H2 and keep Arial for body only, with a declared scale (e.g. 72 / 40 / 24 / 16 / 13); today every level is Arial bold at a size that drifts between sections.",
+      "Replace the emoji in all nine cards with one drawn icon set (single stroke weight, single colour from the palette) or with product screenshots; the three identical card rows should also differ in layout (e.g. the testimonials as a single wide quote, the features as an image-left list).",
+      "Give the purple a role: use it for the CTA and link states only, and drop the duplicate gradient band before the footer (desktop/frame-02.png) so the hero is the one gradient on the page."
+    ],
+    "usability": [
+      "Nav on mobile (mobile/frame-00.png): collapse the five links into a menu button below 768 px, or wrap them to a second row; 'About' is clipped and 'Contact' is not reachable without horizontal scrolling.",
+      "Add a secondary action or an in-page anchor on the hero CTA ('Get Started Today' goes nowhere visible) so a visitor can reach Features or Pricing without the nav.",
+      "Make the nav links match the page sections or remove the ones with no target: Solutions, Pricing, About and Contact have no corresponding section in the outline.",
+      "Mark the footer text (about 13 px #999 on white, desktop/frame-02.png) up to 14 px and a darker grey so it clears the body contrast floor."
+    ],
+    "creativity": [
+      "Pick one idea native to 'the future of work' and carry it through: for instance a live, editable task board as the hero image that the three feature sections zoom into on scroll.",
+      "Replace the three-equal-cards pattern with at least one section that is not a card grid (a full-width product frame, a numbered list, a single large quote).",
+      "If motion is added, add one considered reveal (a pinned hero or a staggered card entrance) rather than ambient effects; nothing in the render set shows any motion at all."
+    ],
+    "content": [
+      "Replace the three Lorem ipsum paragraphs in Why Choose Us with one specific claim each (a latency number, a compliance standard, an integration count).",
+      "Rewrite the testimonials as two or three sentences from a named person at a named company with a role and an outcome, or remove the section until real quotes exist; 'Trusted by Thousands' needs a number or a logo row.",
+      "Add at least one real product image or screenshot per feature; the page has 0 images and the emoji carry all the imagery.",
+      "Rewrite the hero subheading to say what Nexora is (what kind of platform, for whom); 'unlock your potential' and 'cutting-edge' say nothing a competitor could not."
+    ]
+  },
+  "not_observed": [
+    "hover and focus states on nav links, cards and the two CTA buttons",
+    "click behaviour of 'Get Started Today' and 'Sign Up Now' and any page transitions",
+    "sound",
+    "real-device scroll performance (headless capture)",
+    "prefers-reduced-motion behaviour",
+    "mobile-tiles/tile-05.png is a 9 px sliver at y 4220 of a 4229 px page (flagged suspect_blank): a capture remainder, not judged",
+    "alt text (0 images on the page, so the alt-text floor cannot be assessed)"
+  ],
+  "confidence": { "design": "high", "usability": "medium", "creativity": "medium", "content": "high" }
+}

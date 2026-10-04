@@ -43,7 +43,7 @@
   <text class="count" x="292.8" y="237" text-anchor="middle">1 skill, 1 agent</text>
   <rect class="box" x="392.4" y="190" width="175.2" height="64" rx="6"/>
   <text class="name" x="480.0" y="217" text-anchor="middle">verification-kit</text>
-  <text class="count" x="480.0" y="237" text-anchor="middle">7 skills, 2 agents</text>
+  <text class="count" x="480.0" y="237" text-anchor="middle">8 skills, 2 agents</text>
   <rect class="box" x="579.6" y="190" width="175.2" height="64" rx="6"/>
   <text class="name" x="667.2" y="217" text-anchor="middle">consistency-checker</text>
   <text class="count" x="667.2" y="237" text-anchor="middle">1 skill, 1 agent</text>
@@ -68,5 +68,5 @@
   <rect class="box" x="798.0" y="322" width="144.0" height="64" rx="6"/>
   <text class="name" x="870.0" y="349" text-anchor="middle">voice-and-editing</text>
   <text class="count" x="870.0" y="369" text-anchor="middle">13 skills</text>
-  <text class="note" x="18" y="416">12 packs, 71 skills, 9 agents. An arrow points from a pack to the pack it needs.</text>
+  <text class="note" x="18" y="416">12 packs, 72 skills, 9 agents. An arrow points from a pack to the pack it needs.</text>
 </svg>

@@ -31,7 +31,7 @@
       "name": "verification-kit",
       "source": "./plugins/verification-kit",
       "category": "quality",
-      "description": "Check before trusting: whether a claim is still true, whether a change is safe to ship, whether a deploy is really up, whether a website is fast and unbroken, and what code could be deleted."
+      "description": "Check before trusting: whether a claim is still true, whether a change is safe to ship, whether a deploy is really up, whether a website is fast and unbroken, whether its design would hold up in front of an award jury, and what code could be deleted."
     },
     {
       "name": "consistency-checker",

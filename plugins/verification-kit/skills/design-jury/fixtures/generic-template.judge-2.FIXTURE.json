@@ -1,0 +1,100 @@
+{
+  "judge": "design-jury-judge/v1",
+  "target": "file:///private/tmp/claude-501/-Users-gfm-work/89532684-8f67-4465-9dad-01ac2a9a5cbf/scratchpad/sites/nexora.html",
+  "scores": { "design": 4, "usability": 5, "creativity": 3, "content": 3 },
+  "evidence": {
+    "design": [
+      { "where": "desktop-tiles/tile-00.png (hero)",
+        "observed": "centered hero on a diagonal purple-to-blue gradient, H1 at roughly 56 px with a pale lavender gradient fill, white pill button with a lavender glow: three of the ai-tells template defaults in one frame",
+        "effect": "-" },
+      { "where": "desktop-tiles/tile-01.png and desktop/frame-01.png (Why Choose Us, Our Features, Trusted by Thousands)",
+        "observed": "the same three-equal-card row repeated three times at the same 24 px radius and the same soft shadow, with a colour emoji (rocket, lock, bolt, chart, handshake, star) where an icon or image would sit",
+        "effect": "-" },
+      { "where": "manifest.json probe.fonts",
+        "observed": "h1, body and p all resolve to Arial, Helvetica, sans-serif and no webfont is loaded; the only scale is H1 ~56 px, H2 ~36 px, H3 ~18 px, body ~16 px",
+        "effect": "-" },
+      { "where": "desktop-tiles/tile-01.png",
+        "observed": "sections alternate white and a #f5f5fa lavender band with roughly 80 px of padding top and bottom, held consistently through the page and on mobile",
+        "effect": "+" },
+      { "where": "mobile-tiles/tile-00.png (header)",
+        "observed": "the brand word and five nav links run past the 390 px edge; the fourth link reads as 'Abo' and the fifth is off-canvas",
+        "effect": "-" }
+    ],
+    "usability": [
+      { "where": "desktop/frame-00.png (first screen)",
+        "observed": "five labelled nav links top right, a one-line value statement, and a 'Get Started Today' pill button at roughly 200 x 48 px inside the first 900 px",
+        "effect": "+" },
+      { "where": "mobile/frame-00.png and mobile-tiles/tile-00.png (header)",
+        "observed": "nav does not wrap or collapse at 390 px: 'About' is clipped to 'Abo' at the right edge and 'Contact' is not visible, which implies horizontal overflow at the header",
+        "effect": "-" },
+      { "where": "mobile-tiles/tile-01.png through tile-04.png",
+        "observed": "cards stack one per row at roughly 310 px wide with 16 px side gutters and 16 px body text at #777 on white; the H2s break onto two lines without clipping",
+        "effect": "+" },
+      { "where": "desktop/frame-02.png (closing CTA)",
+        "observed": "a second call to action 'Sign Up Now' on the gradient band followed by a one-line footer; the path forward is visible at the end of the page as well as the top",
+        "effect": "+" },
+      { "where": "manifest.json probe.images",
+        "observed": "images: 0, so there is no alt text to count either way; the only non-text marks are emoji in heading-adjacent spans",
+        "effect": "0" }
+    ],
+    "creativity": [
+      { "where": "desktop-tiles/tile-00.png and desktop/frame-02.png",
+        "observed": "the hero and closing band are the same gradient, pill button and centred headline; no concept links copy, layout or imagery beyond the gradient itself",
+        "effect": "-" },
+      { "where": "manifest.json probe.motion",
+        "observed": "running_animations 0, canvases 0, videos 0, custom_cursor false, libraries empty, ambient_motion false: no motion or interaction idea exists to carry the page",
+        "effect": "-" },
+      { "where": "desktop/frame-01.png (feature and testimonial rows)",
+        "observed": "the feature and testimonial sections share one card component and differ only in the emoji and the heading; the layout could be swapped onto any brand unchanged",
+        "effect": "-" }
+    ],
+    "content": [
+      { "where": "text.md (Why Choose Us) and desktop-tiles/tile-01.png",
+        "observed": "the three Why Choose Us cards each carry the identical lorem ipsum sentence under Fast, Secure and Powerful",
+        "effect": "-" },
+      { "where": "text.md (Trusted by Thousands) and desktop/frame-02.png",
+        "observed": "testimonials are three one-word headings ('Amazing!', 'Love it!', 'Wow!') with one-sentence quotes attributed to John D., Sarah K. and Mike R.; no company, role or outcome",
+        "effect": "-" },
+      { "where": "text.md (hero) and manifest.json probe.word_count",
+        "observed": "170 words total; the hero copy is 'Unlock your potential with our innovative, cutting-edge platform that empowers teams to achieve more, faster' and the page never says what the product does",
+        "effect": "-" },
+      { "where": "manifest.json probe.images and desktop/frame-01.png",
+        "observed": "zero images on the page; every card uses a colour emoji where imagery would sit",
+        "effect": "-" }
+    ]
+  },
+  "improvements": {
+    "design": [
+      "Hero (desktop-tiles/tile-00.png): replace the purple-blue gradient and lavender gradient-filled H1 with a flat background and a single solid display colour, and load one display face (a grotesk or serif) for H1 and H2 so the page is not entirely Arial.",
+      "Cards (desktop-tiles/tile-01.png, desktop/frame-01.png): the Why Choose Us, Our Features and Trusted rows use the same card; give each section its own layout (a two-column feature list, a single wide quote) so the page is not three identical rows.",
+      "Icons (all card tiles): replace the six emoji with a consistent line-icon set or product screenshots at one size and one stroke weight.",
+      "Mobile header (mobile-tiles/tile-00.png): collapse the five links into a menu button at 390 px, or wrap them to a second row, so no label is clipped."
+    ],
+    "usability": [
+      "Header at 390 px (mobile/frame-00.png): the nav overflows and 'About' clips to 'Abo'; collapse to a menu control or allow the links to wrap so no control is off-canvas.",
+      "Nav links (desktop/frame-00.png): the five labels are 15 px text with no hover or active state visible; increase their hit area to at least 44 px tall on mobile and give the current section a visible marker.",
+      "First screen (desktop/frame-00.png): 'Get Started Today' is the only action and it names no destination; say what happens next (free trial, demo, pricing) in or under the button."
+    ],
+    "creativity": [
+      "Pick one idea native to the product (what 'future of work' means for this tool) and carry it through the hero imagery, the section layout and the copy; today nothing beyond the gradient repeats.",
+      "Replace the repeated three-card row with at least one section that shows the product itself (a screenshot, a short demo video or a diagram) so the page has a signature element.",
+      "If motion is added, limit it to one considered reveal or one pinned sequence rather than ambient effects; manifest.json shows none at present, so the static frame has to carry the idea."
+    ],
+    "content": [
+      "Why Choose Us cards (text.md): replace the three identical lorem ipsum sentences with one specific claim each (a latency number, a compliance standard, an integration count).",
+      "Testimonials (desktop/frame-02.png): give each quote a full name, company and role, and a sentence about the outcome; drop the one-word 'Amazing!' style headings.",
+      "Hero and section intros (text.md): 'Unlock your potential' and 'seamless solutions for modern businesses' say nothing about the product; state what Nexora is and who it is for in the first line.",
+      "Imagery (manifest.json images: 0): add at least one real product image or illustration; emoji should not be the only visual content."
+    ]
+  },
+  "not_observed": [
+    "hover and cursor-follow effects on nav links, buttons and cards",
+    "click interactions and page transitions between routes; whether the nav links and the two CTAs lead anywhere",
+    "sound",
+    "real-device performance and scroll smoothness (headless, software GL)",
+    "prefers-reduced-motion behaviour",
+    "mobile-tiles/tile-05.png is flagged suspect_blank and shows a 9 px white strip below the footer (page_height 4229, tile y 4220): a capture tail, not a design flaw",
+    "whether the mobile header can be scrolled horizontally to reach 'About' and 'Contact' or whether they are clipped outright"
+  ],
+  "confidence": { "design": "high", "usability": "medium", "creativity": "medium", "content": "high" }
+}

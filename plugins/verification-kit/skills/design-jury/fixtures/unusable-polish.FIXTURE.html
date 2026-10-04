@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  FIXTURE for design-jury's deliberate-failure proof. Not a real site and not a finding
+  about any real design. A deliberately composed, editorial-looking page that fails a
+  visitor: grey-on-grey body text far below readable contrast, 11 px body copy, a fixed
+  1280 px layout with no viewport meta (horizontal overflow on a phone), unlabeled icon-only
+  navigation, and no visible way to reach the work or make contact. Expected: NOT
+  APPROVED, with Usability below its floor even if Design scores respectably.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ATELIER OSTRA</title>
+<style>
+  body { margin: 0; width: 1280px; background: #1d1d1f; color: #3a3a3d;
+         font: 11px/1.35 Georgia, "Times New Roman", serif; }
+  .rail { position: fixed; left: 0; top: 0; bottom: 0; width: 64px; display: flex; flex-direction: column;
+          align-items: center; gap: 28px; padding-top: 40px; border-right: 1px solid #2a2a2d; }
+  .rail span { width: 14px; height: 14px; border: 1px solid #444; border-radius: 50%; }
+  main { margin-left: 140px; padding-top: 120px; }
+  h1 { font: 400 148px/0.9 Georgia, serif; letter-spacing: -6px; color: #e8e2d6; margin: 0; }
+  h1 em { color: #b5523b; }
+  .grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; margin-top: 140px; width: 1060px; }
+  .grid p { color: #3f3f43; }
+  .plate { height: 420px; background: linear-gradient(160deg, #2b2b2e, #141416); position: relative; }
+  .plate::after { content: "01"; position: absolute; bottom: 12px; right: 14px; color: #4a4a4e; }
+  .tall { height: 620px; }
+  .caption { margin-top: 10px; color: #333336; letter-spacing: 3px; text-transform: uppercase; font-size: 9px; }
+  .wide { margin-top: 160px; width: 1060px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  footer { margin: 200px 0 80px 140px; color: #2f2f32; font-size: 9px; letter-spacing: 4px; }
+</style>
+</head>
+<body>
+<div class="rail"><span></span><span></span><span></span><span></span></div>
+<main>
+  <h1>Quiet <em>objects</em><br>for loud rooms</h1>
+  <div class="grid">
+    <div><div class="plate tall"></div><div class="caption">Vessel series, ash and bronze</div></div>
+    <div><p>Atelier Ostra works between furniture and sculpture. Each piece begins as a drawing
+      made on site, in the room it will live in, and is finished by hand over a season. We take
+      four commissions a year. The archive below covers twelve years of work for private
+      collectors, two museums and one cathedral.</p></div>
+    <div><p>Materials are sourced within two hundred kilometres of the workshop. Bronze is cast
+      at a foundry that has poured for the same family since 1871. Timber is air dried for a
+      minimum of three years before it is cut.</p></div>
+  </div>
+  <div class="wide">
+    <div><div class="plate"></div><div class="caption">Bench for a reading room</div></div>
+    <div><div class="plate"></div><div class="caption">Lamp, patinated brass</div></div>
+  </div>
+  <div class="wide">
+    <div><div class="plate"></div><div class="caption">Altar rail, oak</div></div>
+    <div><div class="plate"></div><div class="caption">Table, ash</div></div>
+  </div>
+</main>
+<footer>ATELIER OSTRA &nbsp; MMXXVI</footer>
+</body>
+</html>
