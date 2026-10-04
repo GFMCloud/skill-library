@@ -186,14 +186,15 @@ node scripts/capture.mjs <url-or-file> <out-dir> [max-frames]
 
 Produces desktop (1440 x 900) and mobile (390 x 844) render sets. Each has layout tiles
 (the page from the top cut into viewport-height tiles before any scrolling, up to
-max-frames tiles, so a very long page is cut off) and scroll frames
+max-frames tiles, so a very long page is cut off; scroll frames at 80% steps reach about
+5,800 px on desktop with the default 8) and scroll frames
 (real wheel scrolling, one frame per step), plus `text.md` and `manifest.json`. It presses
 a lone entry-gate control ("Start", "Enter") once, as a visitor would, and records it.
 
 What the capture cannot show is listed in every manifest's `not_observed`. Each scroll step
 moves about 80% of a viewport so frames overlap; any page band no frame shows is recorded
-per frame as `gap_before_px` (0 on ordinary pages; up to about 20 px where smooth-scroll
-momentum carries past the step, measured 2026-10-04). Known capture behaviour:
+per frame as `gap_before_px` (0 on ordinary pages; up to 72 px where smooth-scroll
+momentum carries past the step, measured across the 2026-10-04 calibration). Known capture behaviour:
 
 - Scroll-driven sites can render later scroll frames blank in headless Chrome while the
   layout tiles show the content. Tiles are then the evidence; blank frames are not

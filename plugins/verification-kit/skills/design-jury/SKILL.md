@@ -28,7 +28,9 @@ The skill is a shared core (this file) plus one module per medium in `references
 core owns the method: render, blind passes, evidence rules, medians, floors, the verdict.
 A module owns what is medium-specific: the categories and weights, the score bands, the
 render recipe, the floors, and what it defers to. Only the web module exists:
-[references/web.md](references/web.md).
+[references/web.md](references/web.md). A real Site of the Day scored and annotated, to
+show what cited evidence for a 7 or 8 looks like:
+[references/example-web-pass.md](references/example-web-pass.md).
 
 ## Method
 
@@ -98,9 +100,12 @@ Stated beside the rule they qualify, per the library's authoring standard.
   motion-led site is the least reliable score this skill gives.
 - **Headless rendering.** Scroll-driven sites can render later scroll frames blank; the
   layout tiles cover the content but show it before scroll reveals run. Frames overlap on
-  ordinary pages; where smooth-scroll momentum leaves a band unseen (up to about 20 px),
-  the manifest records it as `gap_before_px`. Until 2026-10-04 the capture left 300 to
-  356 px unseen per scroll step; the calibration was re-run after that fix.
+  ordinary pages; where smooth-scroll momentum leaves a band unseen (up to 72 px in the
+  2026-10-04 calibration), the manifest records it as `gap_before_px`. Until 2026-10-04
+  the capture left 300 to 356 px unseen per scroll step; the calibration was re-run after
+  that fix. Eight frames at 80% steps reach about 5,800 px on desktop; below that, and
+  wherever a layout tile comes back as a flat fill, the judge knows a section only from
+  `text.md` and lists it under `not_observed`.
 - **Requirements.** Node 22 or later, Python 3, and Chrome at
   `/Applications/Google Chrome.app`, `/usr/bin/google-chrome` or `/usr/bin/chromium`.
 - **The judge is a model.** It can be gamed by a builder that writes to the rubric's
@@ -113,13 +118,13 @@ Stated beside the rule they qualify, per the library's authoring standard.
 - **Fixes overlap.** `report.md` merges the three passes' fixes by exact text only, so
   the same fix can appear two or three times in different words. Read them as votes:
   a fix all three passes name is the strongest.
-- **Measured ceiling (web, 2026-10-03, 26 live sites):** both labelled fixtures fail on
-  every category; real Sites of the Day pass the showcase gate 13 times in 15, Honorable
-  Mentions 2 in 5, unawarded nominees 4 in 6. Cross-tier ordering is 59% correct (chance
-  50%). Within Sites of the Day the judge does no better than always answering 7, and on
-  held-out sites it runs 0.63 low on Usability, which is why the showcase Usability floor
-  is 6. It catches
-  weak work; it does not rank good work. Full numbers:
+- **Measured ceiling (web, 2026-10-04, 26 live sites, re-run on the gap-free capture):**
+  both labelled fixtures fail on every category; the showcase gate passes 13 of 15 Sites
+  of the Day, 4 of 5 Honorable Mentions and 3 of 6 unawarded nominees. Cross-tier ordering
+  is 58% correct (chance 50%). Within Sites of the Day the judge does no better than always
+  answering 7, and on held-out sites it runs 0.43 low on Usability, which is why the
+  showcase Usability floor is 6. APPROVED means "not obviously weak", not "would win": it
+  catches weak work; it does not rank good work. Full numbers:
   [references/calibration-web.md](references/calibration-web.md).
 
 ## Inputs

@@ -1,8 +1,8 @@
 {
   "medium": "web",
   "status": "APPROVED",
-  "approved": "2026-10-03, Graham: 'Approve as proposed' (7/7/7/7), then 'Lower Usability to 6' to offset the judge's measured held-out Usability bias (-0.63). Final calibration with these floors: see references/calibration-web.md",
-  "basis": "Integer floors on integer judge medians. showcase: 7 is the score a typical juror gives a Site of the Day in every category; Usability is 6 because the judge runs 0.63 low there on held-out sites (93 SOTDs, 2026-07-03 to 2026-10-03: per-category jury means 6.81 to 8.16, median 7.16 to 7.46). product: no jury data exists; set by judgment, Usability held at 7, Creativity lowered.",
+  "approved": "2026-10-03, Graham: 'Approve as proposed' (7/7/7/7), then 'Lower Usability to 6' to offset the judge's measured held-out Usability bias (-0.63 at the ruling; -0.43 on the 2026-10-04 re-run). Final calibration with these floors: see references/calibration-web.md",
+  "basis": "Integer floors on integer judge medians. showcase: 7 is the score a typical juror gives a Site of the Day in every category; Usability is 6 because the judge runs low there on held-out sites (-0.43 on the 2026-10-04 re-run) (93 SOTDs, 2026-07-03 to 2026-10-03: per-category jury means 6.81 to 8.16, median 7.16 to 7.46). product: no jury data exists; set by judgment, Usability held at 7, Creativity lowered.",
   "weights": {
     "design": 0.4,
     "usability": 0.3,

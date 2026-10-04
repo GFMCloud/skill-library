@@ -21,6 +21,10 @@ Behavior changes only — not wording tweaks. Newest first.
   tiers. `scripts/calibrate.py` reports error against the jury, an
   always-7 baseline, and cross-tier ordering; the measured numbers are in
   `references/calibration-web.md`.
+- **Re-run on a gap-free capture (2026-10-04).** An independent review found the capture
+  skipped 300 to 356 px of every scroll step; fixed (60 px ticks, 80% steps, per-frame
+  `gap_before_px`) and the whole calibration, fixture proof and spread check re-run.
+  Also ships a worked positive example (`references/example-web-pass.md`).
 
 ## 2026-10-02 - decks 0.4.1: /brag runs the full workflow on every model
 
