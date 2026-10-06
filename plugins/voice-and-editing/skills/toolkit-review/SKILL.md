@@ -61,7 +61,13 @@ first, no model called, and do not proceed on a FAIL.
 3. **Intake and pin** each source with `source-intake` Step 1 (shallow clone into
    `<run>/candidates/<id>`, `rev-parse HEAD` into `run.json`, prior-review check in the
    library's `maintainers/reviews/`). Untrusted-content rule as written there.
-4. **Slot map and items.** Fill `slot-map.tsv` (slot, purpose, evidence) and `items.tsv`
+4. **Slot map and items.** First run the description collision scan over the installed
+   set, `python3 maintainers/scripts/collision-scan.py` from the library root (TF-IDF cosine
+   over each skill's name plus description, pairs at or above 0.35 printed; stdlib only, no
+   install; `--self-test` proves it on a known pair). A pair it prints is a routing
+   collision to record in the slot map before any candidate is compared, because the
+   inventory sits in the range where arXiv 2608.14036 measured routing precision falling
+   as the pool grows. Then fill `slot-map.tsv` (slot, purpose, evidence) and `items.tsv`
    (id `-`, side `installed` or a source id, source, slot, type, path). Then
    `scripts/bin-slots.py` (copies, ids as `item-<hash8>`, X/Y letters into
    `private/map.json`, never printed) and `scripts/make-facts.py` (counted facts per

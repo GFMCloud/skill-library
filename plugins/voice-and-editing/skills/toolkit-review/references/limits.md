@@ -15,7 +15,11 @@ the CLI ones with `verification-kit:fact-currency-check` on a new CLI version.
   slot verdict and name different items; the ledger prints per-item agreement and "named
   to take" counts beside every verdict.
 - **Skill calls are invisible in `--output-format json`.** "Did the current setup trigger
-  a review skill" cannot be answered from a fixture run's JSON result.
+  a review skill" cannot be answered from a fixture run's JSON result. It can be answered
+  from `--output-format stream-json`, whose `tool_use` events name the skill a `Skill` call
+  loaded; that is how placebo (reviewed 2026-09-28, pin da03cc2) measures activation and
+  reports NOT_ACTIVATED instead of scoring a skill that never fired. A fixture arm that
+  needs the answer runs with `stream-json` and reads those events.
 - **The bare arm is not skill-free.** With `Skill` in the tool list a `--setting-sources
   ""` run still sees Claude Code's bundled skills.
 - **A hook bench with one container per event sees only first use.** A hook with

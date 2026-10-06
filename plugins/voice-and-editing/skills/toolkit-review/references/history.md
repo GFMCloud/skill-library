@@ -45,6 +45,21 @@ landing of nine skills and agents plus four fragments on a worktree branch. Spen
   headless runs held every time. This skill uses headless runs for every read of
   candidate material.
 
+## Judgment-primary against execution-primary grading
+
+Two installed skills disagree about what a judge's verdict is worth, and the disagreement
+is recorded here so neither is quietly changed to match the other. `eval-harness` ranks a
+model grader below a code grader and calls it "a second opinion, not a measurement"; this
+skill computes the slot verdict from two judges' per-item rows, with the fixture arm as the
+only executed layer, and `references/limits.md` says the judges see neutral extraction
+reports and never the files. The placebo review (2026-09-28, pin da03cc2) sided with
+eval-harness: its verdicts come from executed trials with a sham arm, and its tool reports
+NOT_ACTIVATED rather than scoring a skill that never fired. Both positions stand as written.
+This skill's judged verdicts are the right tool when the question is "which of these two
+prose treatments is better", and the fixture arm is where an enforcement claim gets executed;
+when the question is "does this skill change behavior", the answer comes from
+`eval-harness`, not from a judge.
+
 ## Sizes, and why `spot` exists
 
 The independent reviewer of the ECC plan predicted "mostly SKIP plus a few harvested

@@ -101,6 +101,15 @@ pin worked, and a reviewer asked to list its tools named no `mcp__` tool. `claud
 buffers its answer until the end, so an empty output file mid-run is normal.
 Check the exit code and that the file is non-empty before proceeding.
 
+The Agent-tool form of the same isolation is a subagent whose definition sets
+`omitClaudeMd: true` (Claude Code 2.1.271 and later): it starts without the user, project
+and local CLAUDE.md files and keeps only managed policy. The comparison subagent (Step 3)
+and any verifier keep the working agreements on purpose and do not set it. No claude.ai
+connector attaches to the headless line above (probe on 2.1.289, 2026-10-06: 23 tools
+listed, no `mcp__` name, no connector notice), though the Artifact and messaging tool
+family does appear in the reviewer's tool list; `--bare` is not a substitute, since it
+refuses to run under a claude.ai login.
+
 **Large sources (over roughly 40k words) do not fit one context.** Split into
 natural units (chapters, or one SKILL.md per unit for a collection), run one
 clean-room `claude -p` per unit with the same rubric at `--model sonnet`, up to
