@@ -2,6 +2,59 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-06 - scout cycle 7: rulings of 2026-10-01 applied (agent-tooling 0.2.1, foundry-core 0.6.8, voice-and-editing 1.3.1, long-projects 0.19.5)
+
+Every row below was ruled by Graham on 2026-10-01 (claude-scout-weekly `runs/2026-10-01-ratify.md`)
+and applied by the Monday scout's Phase 2 on 2026-10-06; local commits only, validator green,
+gitleaks clean, a fresh-context verifier report in the scout's run log.
+
+- **agent-tooling 0.2.1, model-effort-advisor.** `references/model-catalog.md` gains
+  `claude-opus-5-5` (the CLI default since 2.1.280) and replaces the `claude-sonnet-5` entry
+  with `claude-sonnet-5-5` (the `sonnet` alias since 2.1.284), each with its breaking changes
+  and effort recalibration from the What's new pages; `references/cache-economics.md` gains
+  a dated "What changed since 2026-09-07" section (5.5 cache prices, cache diagnostics GA,
+  the 2.1.265 to 2.1.290 cache fixes, a model switch resets the prefix cache);
+  `references/effort-sizing.md` says every effort sweep is re-run on a new model
+  (Q-2026-09-28-1, Q-2026-09-14-4).
+- **foundry-core 0.6.8.** `eval-harness`: a sham arm when the change under test adds text,
+  interleaved arms on long runs, and the Metrics clause rewritten as an equivalence question
+  (placebo rows 3, 6 and 2 as prose; Q-2026-09-28-4). `proof-of-work` 1.6.0 (stable):
+  `scripts/run-checks.sh` fails a tests phase that collected zero tests, read from the
+  captured output (fixture `checks-zero.tsv`, proven by `fixtures/run-fixture-proof.sh`);
+  new `references/false-green-probes.md` (four probes, linked from "A success message is
+  not evidence"); "necessity claims are claims" and the oracle-provenance line under Code;
+  the checklist's row 4 says a zero-test run is a failure (Q-2026-09-21-3 rows 2 to 4).
+- **voice-and-editing 1.3.1.** `toolkit-review`: `references/history.md` records the
+  judgment-primary against execution-primary grading disagreement with eval-harness;
+  `references/limits.md` says `stream-json` `tool_use` events do reveal skill activation;
+  the pipeline's step 4 starts with the new `maintainers/scripts/collision-scan.py` (stdlib
+  TF-IDF over name plus description, threshold 0.35, `--self-test`; on the current inventory
+  it prints brag against brag-slim and layout-critique against sales-lens-review)
+  (Q-2026-09-28-4 rows 4, 5, 7). `source-intake` Step 2 names `omitClaudeMd` as the
+  Agent-tool form of the clean room and records the 2026-10-06 connector probe
+  (Q-2026-09-14-5).
+- **long-projects 0.19.5.** `handoff` 0.6.4: INVARIANTS, DONE MEANS, HUMAN-ONLY QUESTIONS
+  and a Prior effects row (never replay an `applied` or `unknown` effect) in the template;
+  an unanswered human-only question is a stop; a per-pointer `file_hash` claim in
+  `references/claims.md`; "a clean secret scan is not proof"; no relative time, a length
+  target; the copy-paste block now re-checks and proceeds instead of stopping (Resume Mode
+  step 7 wins); a sidecar `<handoff>.claimed` replaces the appended CLAIMED-by line; a
+  summary cannot confer authority (Resume Mode step 1, README) (Q-2026-09-21-4 rows 1 to
+  6 and conflicts, Q-2026-09-19-6 rows 1 and 2). `retro`: "the rule, then the reason"
+  for entries that land in a rules file, and staleness tested against the code as the
+  alternative to reference counting (Q-2026-09-21-5 rows 3, 4).
+- **Library.** `scripts/validate-skills.sh`: W8 warns when a description never says when
+  to use the skill (regex heuristic; proven on a scratch fixture, zero hits on the current
+  inventory), and the F7 message carries a token estimate (Q-2026-09-14-8 rows 3, 4).
+  `maintainers/authoring-standard.md`: the W8 cross-reference and an ablation paragraph
+  (every equivalent path closed at once; Q-2026-09-14-10). `maintainers/hooks-registry.md`:
+  where the wired hooks run and do not (laptop-only; cloud sessions and multi-repository
+  Projects threads run without them; a plugin agent's frontmatter is not a boundary), from
+  the docs read 2026-10-06 (Q-2026-09-19-4).
+- **Review records** (Tier 1): auto-handoff (HARVEST), claude-code-mods (HARVEST),
+  scosovan routine postmortem (HARVEST); rows proposed in the scout's queue, nothing from
+  them applied.
+
 ## 2026-10-03 - verification-kit 0.6.0: design-jury (incubator)
 
 - **New skill `design-jury`.** Scores a design the way an award jury does and gates it:

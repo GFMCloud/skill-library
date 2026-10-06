@@ -4,6 +4,8 @@ Reasoning effort is a separate dial from model choice, a strong model at low eff
 
 Measure cost per completed task rather than per model call: a cheaper model that needs more turns, or fails more often, is not cheaper (Anthropic commerce-agents review, 2026-09-03). Cache behavior changes the per-task figure more than the tier does on long sessions; see `cache-economics.md`.
 
+Every effort sweep is re-run on a new model. Opus 5.5 moved its default from `high` to `medium` and thinks more per level; Sonnet 5.5 recalibrated every level (see `model-catalog.md`). A setting carried over from the previous model is a guess until the sweep says otherwise.
+
 ## Effort Levels
 
 **Low**: quick, direct answer. Use when the task is well-defined, low-reasoning, and there's no ambiguity to resolve. Matches Haiku most of the time, but a low-effort Sonnet call is also common (fast Sonnet answer to something simple, without wanting Haiku's ceiling).
