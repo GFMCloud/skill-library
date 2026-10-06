@@ -60,6 +60,23 @@ transcripts read-only and prints short excerpts only. It is opt-in and never run
 because transcripts exist only on this machine; `run-tests.sh` proves the tool itself on a
 synthetic, read-only transcript. Run it after any change to the trigger list or the lexer.
 
+Where these hooks run, and where they do not (checked against the Claude Code docs on
+2026-10-06, pages `settings`, `claude-projects` and `sub-agents`): every hook in the table
+is wired in this laptop's `~/.claude/settings.json`, which reaches "nothing ... in the cloud
+session", so cloud sessions, routines and Projects threads run without them. A cloud
+session or project thread with one repository reads that repository's committed
+`.claude/settings.json`, hooks included; a session or thread with several repositories
+reads no repository's permission rules, hooks or `env`. Inside this laptop's sessions the
+hooks do run in subagents ("Hooks from settings files, managed policy settings, and plugins
+all apply inside subagents"), while a plugin-defined subagent's own `hooks`,
+`mcpServers` and `permissionMode` frontmatter fields are ignored, and any subagent's
+`permissionMode` is ignored when the main conversation is in auto, `acceptEdits` or
+`bypassPermissions` mode. So the boundary these hooks enforce is laptop-only, and a
+plugin agent's frontmatter is not a boundary at all; a repo that cloud sessions touch gets
+the boundary only by committing a `.claude/settings.json` of its own, and only for
+single-repository sessions (ruled Q-2026-09-19-4, 2026-10-01; revisit if Projects becomes
+a regular surface).
+
 Two hooks answer PreToolUse:Bash in `settings.json` (three with the plugin hook) and two answer PreToolUse:Read. How Claude Code
 arbitrates two answers to one event is not recorded here: the arbitration warning from
 plan H2 item 3 was left out of this change.

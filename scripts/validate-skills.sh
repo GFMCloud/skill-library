@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # validate-skills.sh — the rules are documented in maintainers/authoring-standard.md and this
 #   header. The original spec, maintainers/migration/harness/docs/validator-spec.md, covers
-#   F1 to F12 only and is kept as history; rules added since (F13 to F20, W4 to W7)
+#   F1 to F12 only and is kept as history; rules added since (F13 to F20, W4 to W8)
 #   are described where they were introduced, in CHANGELOG.md.
 # Usage: bash scripts/validate-skills.sh [plugins/<name>]
 #   STRICT=1        warnings also cause exit 1
@@ -71,6 +71,15 @@ for d in skill_dirs:
         fails.append(f"F3 {rel}: missing name")
     if len(desc) < 40:
         fails.append(f"F4 {rel}: description missing or <40 chars ({len(desc)})")
+    # W8: the description is the router; one that never says when to use the skill routes
+    # by accident. A regex heuristic (skilltest review 2026-09-14, row 3): it can
+    # false-positive on a validly worded description, so it warns and never fails.
+    elif not re.search(r"\b(use (this skill |this |it )?(when|whenever|on|for|before|after|at|in|any time)"
+                       r"|whenever|trigger|if the user|when (the user|a user|graham|you|someone|asked|working"
+                       r"|starting|about to|presenting|reviewing|joining)|read (this|it) (skill )?before"
+                       r"|load (this|it|before)|run (this|it) (when|before|after|on))\b", desc, re.I):
+        warns.append(f"W8 {rel}: description never says when to use it (no 'use when', "
+                     f"'whenever', 'trigger', 'if the user' or a close variant)")
     if name and name != dirname:
         fails.append(f"F5 {rel}: name '{name}' != directory '{dirname}'")
     if name:
@@ -80,7 +89,11 @@ for d in skill_dirs:
             names[name] = rel
     nlines = len(body.splitlines())
     if nlines > 500:
-        fails.append(f"F7 {rel}: body {nlines} lines (>500)")
+        # The standard's rationale is token cost, and a line count can be gamed by long
+        # lines, so the message carries a token estimate too (characters over 4, approximate;
+        # skilltest review 2026-09-14, row 4). The threshold stays on lines until a few real
+        # skills have been measured.
+        fails.append(f"F7 {rel}: body {nlines} lines (>500), about {len(body) // 4} tokens")
     for link in re.findall(r"\]\(([^)#][^)]*)\)", text):
         if re.match(r"^[a-z]+:", link):
             continue

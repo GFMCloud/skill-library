@@ -49,7 +49,10 @@ phrasing is not routed, it is lucky.
 
 Say what the skill is not for and what it costs (a subagent spawn, a long read, a
 network fetch) alongside what it does; a description with no negative scope routes
-neighbouring requests to it. When a skill keeps firing wrongly or not at all, fix the
+neighbouring requests to it. The validator warns (W8) when a description never says when
+to use the skill (no "use when", "whenever", "trigger", "if the user" or a close variant);
+it is a regex heuristic and can miss a validly worded description, so a W8 is read, not
+obeyed blindly. When a skill keeps firing wrongly or not at all, fix the
 description before reaching for a stronger model: most misroutes trace back to an
 inaccurate description, not to the model.
 
@@ -179,3 +182,10 @@ Three states, not four:
   case or cases that prompted the change) must improve, and the retention set (every
   case that already passed) must not regress. Showing only the second is how a change
   that fixed nothing gets merged.
+- An ablation closes every equivalent path at once. Removing one component (a skill, a
+  rule, a hook) and seeing a near-zero delta can mean the component does not matter, or
+  that another uncontrolled path already does its job; only closing all the equivalent
+  paths together tells the two apart. The aistack and imec benchmarking report
+  (2026-09-14) found this the hard way: closing one leak to the answer key rerouted the
+  model to the next one, and each single ablation looked harmless on its own (review
+  record `maintainers/reviews/2026-09-14-aistackimec-answer-key.md`, row 2).
