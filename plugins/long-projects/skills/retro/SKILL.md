@@ -87,6 +87,10 @@ this routing table:
 | Behavioral regression (the agent did the wrong thing and no script can catch it deterministically) | An eval case in the owning skill, kept as a regression test |
 | One-off (true once, unlikely to recur, not worth a standing rule) | The retro only, this is where it correctly dies |
 
+An entry that lands in a CLAUDE.md or a rules file is written as the rule, then the
+reason. The reason is what stops a future reader from deleting a rule they do not
+understand (learning-plugin review, 2026-09-21).
+
 **Recurrence check before routing:** read the earlier files in
 `.claude/retros/` for the same failure class. On its third occurrence, the
 destination is none of the rows above: stop and state that the mechanism
@@ -160,5 +164,10 @@ this version and note the migration in this file.
   original design depended on this for a demotion pass in the (unbuilt)
   weekly review. No mechanism for it exists yet, this skill does not attempt
   one. A future `/retro-review` will need to solve this before it can do
-  demotion, not just promotion.
+  demotion, not just promotion. For rules that state a fact about the code,
+  reference counting is not the only route: test each entry against the current
+  code at review time (the fact is gone: delete the rule; it changed: rewrite it;
+  unsure: list it as could-not-verify), because a stale rule is worse than no
+  rule, it is confidently wrong. That route does not work for process preferences
+  (learning-plugin review, 2026-09-21). Delete this note once the check exists.
 - No scheduled task. Nothing in this skill or plugin creates one.

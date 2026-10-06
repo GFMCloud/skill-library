@@ -22,7 +22,15 @@ explains how to fill it in and how to check it; it does not redefine any field.
    not force a soft claim into `checkable` by inventing a command that technically runs
    but does not test the claim (a `check` that always matches is a claim wearing a
    checkmark, not a check).
-4. Put the whole block in the handoff file under its own `## Typed Claims` heading, as
+4. For each durable artifact the narrative points at instead of copying (Point, Don't
+   Copy), add one `checkable` entry of type `file_hash` whose `check` is
+   `shasum -a 256 <absolute path>` and whose `expected` is the digest it printed now. A
+   pointer without a digest tells the next session where to look; the digest tells it
+   whether what it finds there is what you saw. This uses the v1 shape as it is and
+   closes the staleness limit below: a deletion, or a commit that left mtimes alone,
+   shows as a digest mismatch. Whole-project mtime stays a warning; a digest mismatch is
+   a mismatch (relayready review, 2026-09-21).
+5. Put the whole block in the handoff file under its own `## Typed Claims` heading, as
    a fenced ` ```yaml ` code block starting with `claims: v1`.
 
 ## Read side (resume)
@@ -50,7 +58,7 @@ status. Matching claims prove the claimed values only; they say nothing about wo
 after the handoff was written. A stale project is not a mismatch. It becomes the one
 question in step 6 only when a changed file is one the first move or a claim depends on.
 Limits: the list covers files that exist now, so a deletion, or a commit that left
-mtimes alone, does not show.
+mtimes alone, does not show; a per-pointer `file_hash` claim (write side, step 4) does.
 
 `scripts/check-claims.py` in this skill directory implements steps 2, 4, and 5 and the
 staleness list mechanically for a single handoff file: `python3 scripts/check-claims.py

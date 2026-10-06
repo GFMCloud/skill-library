@@ -83,7 +83,8 @@ def run_check(command: str) -> str:
 
 def written_timestamp(doc, handoff_path):
     """(epoch seconds, label) for when the handoff was written: the block's written_at,
-    else the handoff file's mtime (weaker: claiming a handoff appends a line to it)."""
+    else the handoff file's mtime (weaker; since 0.6.4 a claim is a sidecar file, so the
+    handoff's own mtime is no longer disturbed by claiming it)."""
     written_at = doc.get("written_at")
     if isinstance(written_at, str):
         try:
