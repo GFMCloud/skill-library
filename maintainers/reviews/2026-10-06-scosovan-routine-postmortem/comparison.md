@@ -47,7 +47,7 @@ Landing note: `CLAUDE.md` says "Nothing that changes this harness itself is auto
 
 ### T2. A verification step that can fail → REDUNDANT
 
-- Article: "Make that step able to *fail* the run — a verification section that always passes is decoration."
+- Article: "Make that step able to *fail* the run, a verification section that always passes is decoration."
 - Incumbent, `evidence-report/SKILL.md`: "A verdict that does not say what failure mode it eliminates is decoration." Its `## Stop when` reads: "never substitute reasoning about why it probably works."
 
 The incumbent also has a mechanical checker (`scripts/check-report.py`, with a fixture that passes and one that fails). Spec §3 requires an independent reviewer: "The reviewer runs on a model that differs from the builder's, with no parent history." The article's version is a self-check by the same session, which is weaker.
@@ -80,7 +80,7 @@ Two things in the article are more concrete:
 | Fragment | Target | Adds |
 |---|---|---|
 | "If it is hours late, say so in the first line of the output" | `schedule-harness/SKILL.md` "Overlap skip and the time guard" | A required visible disclosure. The incumbent's list of options (skip, act on what changed, cutoff) does not require telling the reader. |
-| "report on the window the slot intended — not the last 24 hours from now" | same section | Names the wrong default window explicitly. |
+| "report on the window the slot intended, not the last 24 hours from now" | same section | Names the wrong default window explicitly. |
 
 Both need the §3 correction below.
 

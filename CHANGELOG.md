@@ -16,6 +16,9 @@ gitleaks clean, a fresh-context verifier report in the scout's run log.
   the 2.1.265 to 2.1.290 cache fixes, a model switch resets the prefix cache);
   `references/effort-sizing.md` says every effort sweep is re-run on a new model
   (Q-2026-09-28-1, Q-2026-09-14-4).
+  0.2.2 (same day, after the fresh-context verifier): the Opus 5.5 thinking-block sentence
+  names the two models a move keeps its reasoning for, and the Sonnet 5.5 entry carries the
+  API default effort (`high`).
 - **foundry-core 0.6.8.** `eval-harness`: a sham arm when the change under test adds text,
   interleaved arms on long runs, and the Metrics clause rewritten as an equivalence question
   (placebo rows 3, 6 and 2 as prose; Q-2026-09-28-4). `proof-of-work` 1.6.0 (stable):

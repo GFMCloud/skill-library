@@ -57,8 +57,8 @@ Nothing is strictly **evidenced**: there are no quotes, screenshots, logs or rep
    section it feeds says "unavailable: <reason>". An empty section and
    an unreadable section must never look the same.
    ```
-2. **A verification step that can fail:** "Add a step where the routine re-opens its own output and checks it against what it read… Make that step able to *fail* the run — a verification section that always passes is decoration."
-3. **An explicit status per run, plus a log:** "Give every run an explicit status — OK or PARTIAL — and make PARTIAL the result whenever a source was unavailable or a verification check failed. Append one line per run to a log file."
+2. **A verification step that can fail:** "Add a step where the routine re-opens its own output and checks it against what it read… Make that step able to *fail* the run, a verification section that always passes is decoration."
+3. **An explicit status per run, plus a log:** "Give every run an explicit status, OK or PARTIAL, and make PARTIAL the result whenever a source was unavailable or a verification check failed. Append one line per run to a log file."
 4. **Idempotency key:** "Key your state on something stable (the head commit SHA, not the PR number) so a repeat run writes nothing instead of writing a duplicate."
 5. **Time-awareness:** "Have the prompt read the clock first and compare it to the slot it was meant to run in. If it is hours late, say so in the first line of the output and report on the window the slot intended."
 6. **Off-the-hour scheduling:** "pick 9:07 rather than 9:00."

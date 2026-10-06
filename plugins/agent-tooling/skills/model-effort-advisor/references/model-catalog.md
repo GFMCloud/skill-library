@@ -20,7 +20,8 @@ behavior changes to design around (What's new page, read 2026-10-06):
   outputs.
 - Thinking blocks are tied to the model and the conversation: Opus 5.5 reads blocks from
   Opus 5, Sonnet 5.5 and earlier models, and only Fable 5.1 and Mythos 5.1 read its blocks.
-  Moving a conversation from Opus 5.5 to any other model drops its reasoning. The prefix
+  Moving a conversation from Opus 5.5 to any model other than those two drops its
+  reasoning; moving it up to Fable 5.1 on the Claude API keeps it. The prefix
   check that Fable 5.1 enforces applies here too: keep the history append-only.
 - Text between tool calls arrives as progress-update `thinking` blocks, empty at the
   default `display`; a harness that reads narration between tool calls goes quiet.
@@ -48,7 +49,8 @@ USD 0.20), 1M context, same tokenizer. Constraints and behavior changes (What's 
 read 2026-10-06):
 
 - Effort levels are recalibrated: a level does not produce the same thinking as on
-  Sonnet 5. Re-run the sweep. For agentic coding and multistep tool use start at `medium`
+  Sonnet 5, and the API default is `high`. Re-run the sweep. Start at `high` unless the
+  workload is agentic or latency-sensitive; for agentic coding and multistep tool use start at `medium`
   for well-specified tasks and move to `high` for harder or longer ones; for chat and
   latency-sensitive work start at `medium` or `low`.
 - Up-front thinking is turned off with `thinking: {"type": "between_tools"}` (at `high`
