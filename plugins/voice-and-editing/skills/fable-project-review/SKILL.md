@@ -1,13 +1,13 @@
 ---
 name: fable-project-review
-description: Run a deep Fable 5 review of an existing project and produce a self-contained improvement plan that a cheaper model (Opus 4.8 or Sonnet 4.6) executes in a fresh session. Use whenever the user wants a full review, audit, or feedback loop on something already built - "review this project", "what would you improve", "run a Fable review", "audit what I've built", "tear this apart", "write an improvement plan" - or wants to hand execution of improvements to another model. Also covers verify mode, re-reviewing a project against a prior improvement plan after execution. Trigger even if the user doesn't say "skill" or "Fable", as long as the goal is a comprehensive review of an existing project with actionable follow-up. Works in Claude Code repos and Claude.ai/Cowork projects.
+description: Run a deep Fable 5 review of an existing project and produce a self-contained improvement plan that a cheaper model (Opus 5.5 or Sonnet 5.5) executes in a fresh session. Use whenever the user wants a full review, audit, or feedback loop on something already built - "review this project", "what would you improve", "run a Fable review", "audit what I've built", "tear this apart", "write an improvement plan" - or wants to hand execution of improvements to another model. Also covers verify mode, re-reviewing a project against a prior improvement plan after execution. Trigger even if the user doesn't say "skill" or "Fable", as long as the goal is a comprehensive review of an existing project with actionable follow-up. Works in Claude Code repos and Claude.ai/Cowork projects.
 metadata:
   maturity: incubator
 ---
 
 # Fable Project Review
 
-This skill splits judgment from labor. Fable 5 does the expensive thinking - a deep review of an existing project - and writes a self-contained improvement plan. A cheaper, faster model (Opus 4.8 or Sonnet 4.6) then executes that plan in a fresh session with clean context. The plan file is the only bridge between the two sessions, so it has to stand completely on its own. Everything below serves that constraint.
+This skill splits judgment from labor. Fable 5 does the expensive thinking - a deep review of an existing project - and writes a self-contained improvement plan. A cheaper, faster model (Opus 5.5 or Sonnet 5.5; `agent-tooling:model-effort-advisor` keeps the current lineup in its model catalog) then executes that plan in a fresh session with clean context. The plan file is the only bridge between the two sessions, so it has to stand completely on its own. Everything below serves that constraint.
 
 The full loop: review -> plan -> execute -> verify. This skill handles review, plan, handoff, and verify. Execution happens elsewhere, on purpose.
 
@@ -72,8 +72,8 @@ Present the plan to the user before generating the handoff, and stop. This pause
 
 Generate an executor kickoff matched to the user's surface, and recommend a model with a stated lean (the user can override):
 
-- **Opus 4.8** (`claude-opus-4-8`) - multi-file refactors, work items with residual ambiguity, judgment calls likely during execution
-- **Sonnet 4.6** (`claude-sonnet-4-6`) - well-specified mechanical execution where the plan leaves little to interpret
+- **Opus 5.5** (`claude-opus-5-5`) - multi-file refactors, work items with residual ambiguity, judgment calls likely during execution
+- **Sonnet 5.5** (`claude-sonnet-5-5`) - well-specified mechanical execution where the plan leaves little to interpret
 
 **Claude Code:**
 

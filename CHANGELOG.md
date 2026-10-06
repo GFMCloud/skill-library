@@ -2,6 +2,14 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-06 - weekly maintainer cycle 11 (voice-and-editing 1.3.2)
+
+- **voice-and-editing 1.3.2, fable-project-review.** The executor models the plan hands
+  off to are Opus 5.5 (`claude-opus-5-5`) and Sonnet 5.5 (`claude-sonnet-5-5`), replacing
+  the retired "Opus 4.8" and "Sonnet 4.6" in the description, the overview and the Phase 5
+  model table; the overview points at model-effort-advisor's catalog for the current
+  lineup. Found stale by an intake session on 2026-10-04 and left unfixed there.
+
 ## 2026-10-06 - scout cycle 7: rulings of 2026-10-01 applied (agent-tooling 0.2.1, foundry-core 0.6.8, voice-and-editing 1.3.1, long-projects 0.19.5)
 
 Every row below was ruled by Graham on 2026-10-01 (claude-scout-weekly `runs/2026-10-01-ratify.md`)
