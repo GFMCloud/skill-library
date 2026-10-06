@@ -72,9 +72,17 @@ retention set is how a change that fixed nothing gets merged.
 A flaky grader (one that disagrees with itself on identical input) is removed from the
 gate until fixed. Prove each code grader by making it fail once on purpose.
 
+When the change under test adds text (a skill, a rule, a prompt line), run a third, sham
+arm: the same length of inert text in the same place. A gain over the baseline that the
+sham arm also shows came from having more context, not from the content, and is not
+credited to the change (placebo review, 2026-09-28, `maintainers/reviews/2026-09-28-placebo.md`).
+
 ## Metrics
 
-Run every case `k` independent times and record every trial, including failures.
+Run every case `k` independent times and record every trial, including failures. When
+the trials span hours, interleave the arms (shuffled case-and-arm pairs with the seed
+recorded) rather than running every baseline trial first, so that drift in the model,
+the cache or the machine lands on both arms alike.
 
 - **pass@k**: at least one of k trials passed. Reliability with retries. Target for
   capability evals: pass@3 at or above 0.90 across the cases.
@@ -82,9 +90,15 @@ Run every case `k` independent times and record every trial, including failures.
   paths: pass^3 of 1.00.
 - Report cost and wall time per trial beside the rates. A pass rate bought with a
   tripled cost is a finding, not a success.
-- Read a before/after difference against noise. It counts only when it exceeds the
-  baseline's own run-to-run spread, measured by running the unchanged baseline more
-  than once. At k=3 one flipped trial moves a case's pass fraction by a third.
+- Read a before/after difference as an equivalence question, not a glance. Before the
+  trials, state the smallest difference you would call an effect (at k=3 one flipped
+  trial moves a case's pass fraction by a third, so it cannot be smaller than that), and
+  measure the baseline's own run-to-run spread by running the unchanged baseline more
+  than once. A difference counts only when it exceeds that spread; "no effect" is a
+  positive finding only when the observed difference and its spread both sit inside the
+  stated margin, which at k=3 usually means more trials or a sham arm, not a verdict. A
+  prose rule cannot compute a bootstrap interval; when a real interval is needed, run a
+  script and record it, do not estimate it by eye.
 
 ## Traps
 

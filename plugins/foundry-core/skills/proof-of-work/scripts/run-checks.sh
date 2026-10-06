@@ -67,8 +67,13 @@ while IFS="$(printf '\t')" read -r phase cmd stop; do
   rc=$?
   echo "$rc" > "$out.exit"
   status=ran; [ "$rc" -ne 0 ] && { status=failed; failed=$((failed + 1)); }
+  # A test run that collected nothing exits 0 and proves nothing. Read it from the captured
+  # output file (never a pipe) and fail the phase: a total of 0 tests is a failure.
+  if [ "$phase" = tests ] && [ "$rc" -eq 0 ] && /usr/bin/grep -q -E 'Ran 0 tests|collected 0 items|no tests ran|No tests found|NO TESTS RAN|Tests: +0 total|^0 passing' "$out"; then
+    status=failed; failed=$((failed + 1)); rc="0(zero-tests)"; echo "run-checks: tests phase collected 0 tests; a run of nothing is not a pass" >> "$out"
+  fi
   printf '%s\t%s\t%s\t%s\t%s\n' "$phase" "$cmd" "$status" "$rc" "$out" >> "$log/summary.tsv"
-  if [ "$rc" -ne 0 ] && [ "$stop" = "yes" ]; then stopped=1; fi
+  if [ "$rc" != 0 ] && [ "$stop" = "yes" ]; then stopped=1; fi
 done <<< "$plan"
 
 # The table is read back from the files, so a phase with no recorded exit code cannot show as ran.

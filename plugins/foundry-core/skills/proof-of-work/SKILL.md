@@ -3,8 +3,8 @@ name: "proof-of-work"
 description: "Produce executed evidence that a piece of work actually works before presenting it as done, run the code against representative data, inspect the render, print the validation output. Use before declaring any artifact complete, and whenever a tool reports its own success."
 metadata:
   maturity: stable
-  version: 1.5.0
-  reviewed: 2026-10-01
+  version: 1.6.0
+  reviewed: 2026-10-06
 ---
 
 # proof-of-work
@@ -77,6 +77,12 @@ Instance 3 is the one worth internalising. The check passed *because* it was
 run at the wrong level, and a passing check at the wrong level is more
 dangerous than no check at all: it converts an unknown into a false known.
 
+Before a green result is reported, run it through the four questions in
+[references/false-green-probes.md](references/false-green-probes.md): how many output
+states the check has, whether the evidence could be true while the claim is false,
+whether the metric counts exposure rather than usage, and where the expected answer
+came from.
+
 ## What counts, by artifact class
 
 - **Code**: executed against representative input, output inspected. Not a
@@ -85,6 +91,10 @@ dangerous than no check at all: it converts an unknown into a false known.
   [references/code-checklist.md](references/code-checklist.md) (build, types,
   lint, tests, secrets, diff, with two stop conditions), run through
   `scripts/run-checks.sh` so the exit codes are recorded and not recalled.
+  Necessity claims are claims: a comment or a commit message that says "without
+  this it breaks" is proven the same way, by removing it and running the check,
+  not by reading it. Beyond a passing test, show a plausible broken implementation
+  the test rejects and say where the expected answer came from.
 - **Document**: the claims extracted and checked against the artifact they
   describe (`consistency-checker:spec-artifact-diff`). Reading it again is not
   a check.

@@ -18,7 +18,7 @@ through `head`, `tail` or `grep`, because the exit code reported is then the pip
 | 1 | Build | `npm run build` | the package's build or import check | **Stop** on failure: nothing after this means anything |
 | 2 | Types | `npx --no-install tsc --noEmit` | `pyright .` | report every error with its count |
 | 3 | Lint | `npm run lint` | `ruff check .` | warnings reported, not silently fixed |
-| 4 | Tests | `npm test -- --coverage` | `python3 -m pytest` or `python3 -m unittest discover` | **Stop** on failure; report total, passed, failed, and coverage if the repo measures it |
+| 4 | Tests | `npm test -- --coverage` | `python3 -m pytest` or `python3 -m unittest discover` | **Stop** on failure; report total, passed, failed, and coverage if the repo measures it. A run that collected zero tests is a failure, not a pass: `run-checks.sh` reads the total from the captured output and fails the phase on 0 |
 | 5 | Secrets and leftovers | the project's secret scanner; failing that `grep -rn` for key-shaped strings and stray debug logging in the changed files | same | a secret hit is a hard stop, not a warning |
 | 6 | Diff | `git diff --stat`, then read each changed file | same | look for unintended changes, missing error handling, unhandled edge cases |
 
