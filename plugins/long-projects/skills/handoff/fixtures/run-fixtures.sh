@@ -10,8 +10,11 @@
 #             file still exists afterwards (the command never ran)
 #   nongit    --project is a folder with no .git: staleness comes from an mtime walk and
 #             names the touched file; a read-only `git merge-base` check runs, not refused
+#   offset    written_at's UTC offset has no colon (-0500): staleness is still judged from
+#             written_at, never from the handoff file's mtime
 # Exits 0 only when every assertion holds. Pass an older check-claims.py as the argument
-# to see the stale case fail without the staleness check.
+# to see the stale case fail without the staleness check, or the offset case fail before
+# 0.6.5.
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CHECK="${1:-$HERE/../scripts/check-claims.py}"
@@ -65,6 +68,18 @@ grep -q "sub/after\.txt" <<<"$out"; assert "nongit: notice names sub/after.txt" 
 ! grep -q "^not checked" <<<"$out"; assert "nongit: no 'not checked' line (the 0.6.2 behavior)" $?
 ! grep -q "^status:  refused" <<<"$out"; assert "nongit: the merge-base row was not refused" $?
 [ "$(grep -c "^status:  match" <<<"$out")" -eq 2 ]; assert "nongit: both rows ran and matched" $?
+
+# offset: written_at carries its UTC offset without a colon (-0500, what `date +%z`
+# prints). YAML leaves that a string and Python 3.9's fromisoformat rejects it, so until
+# 0.6.5 the checker silently fell back to the handoff file's mtime. The staleness label
+# must name the parsed written_at; the repo's files are backdated by the setup script, so
+# the verdict is "fresh", as in the match case.
+bash "$HERE/setup-fixture-repo.sh" >/dev/null
+out="$(python3 "$CHECK" "$HERE/FIXTURE-offset-handoff.md" --project "$REPO" 2>&1)"; code=$?
+[ "$code" -eq 0 ]; assert "offset: exit 0 (got $code)" $?
+grep -q "after written_at 2026-09-11T00:00:00-05:00" <<<"$out"; assert "offset: staleness is judged from the parsed written_at" $?
+! grep -q "no usable written_at" <<<"$out"; assert "offset: no fallback to the handoff file's mtime" $?
+grep -q "^fresh: no file" <<<"$out"; assert "offset: verdict is fresh, as in the match case" $?
 
 echo
 if [ "$fails" -eq 0 ]; then echo "RESULT: all fixture assertions pass."; else echo "RESULT: $fails assertion(s) failed."; fi

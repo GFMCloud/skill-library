@@ -87,8 +87,17 @@ def written_timestamp(doc, handoff_path):
     handoff's own mtime is no longer disturbed by claiming it)."""
     written_at = doc.get("written_at")
     if isinstance(written_at, str):
+        # YAML hands a datetime for `2026-09-11T00:00:00-05:00` and for a trailing `Z`,
+        # but a plain string for an offset written without a colon (`-0500`, what
+        # `date +%z` prints), and a quoted value stays a string in every form. This Mac's
+        # /usr/bin/python3 is 3.9, whose fromisoformat rejects `-0500` and `Z`, so until
+        # 0.6.5 such a handoff silently fell back to the file's mtime. Normalize.
+        text = written_at.strip()
+        text = re.sub(r"([+-]\d{2})(\d{2})$", r"\1:\2", text)
+        if text.endswith("Z"):
+            text = text[:-1] + "+00:00"
         try:
-            written_at = datetime.datetime.fromisoformat(written_at)
+            written_at = datetime.datetime.fromisoformat(text)
         except ValueError:
             written_at = None
     if isinstance(written_at, datetime.datetime):

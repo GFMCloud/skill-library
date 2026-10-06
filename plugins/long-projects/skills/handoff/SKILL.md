@@ -4,7 +4,7 @@ description: >-
   Summarizes the current conversation and prepares a structured handoff package for a fresh Claude session, and verifies a handoff's claims when a new session resumes from one. Use when the user says "handoff", "/handoff", "fresh session", "new session", "context is getting long", or "wrap this up" to generate a handoff; also use whenever a session opens from an uploaded, pasted, or referenced handoff file, to re-check its claims before acting on it. Also proactively suggest a handoff when the conversation is clearly getting very long, context has been compacted, or the user is wrapping up a major work block. Generates a work-type-aware markdown summary file with a typed, re-checkable claims block and a copy-paste prompt block, then on resume verifies each claim against the live artifact rather than trusting the document. This is Graham's customized version and supersedes Claude's stock handoff skill, which triggers on the same words: when both are installed, always use this one.
 metadata:
   maturity: incubator
-  version: 0.6.4
+  version: 0.6.5
   reviewed: 2026-10-06
 ---
 
@@ -254,7 +254,7 @@ Typical checkable claims for this skill's own work: which branch the work landed
 
 ## Step 6: Output the Copy-Paste Prompt Block
 
-After presenting the file, output this block clearly labeled for copy-paste. Customize the bracketed fields based on the actual session content, and put the handoff file's absolute path in the first line so the block works without an upload.
+After presenting the file, output this block clearly labeled for copy-paste. Customize the bracketed fields based on the actual session content, put the handoff file's absolute path in the first line so the block works without an upload, and fill the second line with the directory and the machine to run in (the project's absolute path; this Mac or a cloud session), because a block without it leaves the person asking where to start.
 
 **Every message that delivers or updates the handoff carries this block in full.** That includes a follow-up after the file was edited, re-checked, committed or pushed. Never write "the prompt from earlier still works": the user copies from the last message, not from scrollback. Graham asked for this on 2026-09-26, after a final handoff message pointed back to a block two turns up.
 
@@ -264,6 +264,7 @@ After presenting the file, output this block clearly labeled for copy-paste. Cus
 
 ```
 I'm uploading a handoff file from a previous Claude session. Please read it carefully before responding: [absolute path of the handoff file]
+Run this in [absolute path of the project directory] on [this Mac / a cloud session]; the handoff's INVARIANTS say if that must change.
 
 Once you've read it:
 1. Before anything else, write the sidecar claim file beside the handoff, `<handoff path>.claimed`, containing one line: `CLAIMED-by: <session identifier> <ISO timestamp>`. Never edit the handoff file itself. If the sidecar already exists and is not yours, stop and tell me: another session is or was on this. Do not continue on the assumption it went stale.

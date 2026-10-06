@@ -2,8 +2,16 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
-## 2026-10-06 - weekly maintainer cycle 11 (voice-and-editing 1.3.2)
+## 2026-10-06 - weekly maintainer cycle 11 (voice-and-editing 1.3.2, long-projects 0.19.6)
 
+- **long-projects 0.19.6, handoff 0.6.5.** `check-claims.py` normalizes a `written_at`
+  whose UTC offset has no colon (`-0500`, what `date +%z` prints), or a quoted value
+  ending in `Z`, before parsing it; on this Mac's Python 3.9 both raised `Invalid isoformat string` and the
+  staleness check silently fell back to the handoff file's mtime (two resumes on
+  2026-10-02 reported "fresh" that way). Sixth fixture `FIXTURE-offset-handoff.md` and
+  four runner assertions; the 0.6.4 checker fails two of them. The copy-paste prompt block
+  gains a second line naming the directory and the machine to run in, after a block
+  without one left Graham asking "so run it in the cloud from the repo?" on 2026-10-04.
 - **voice-and-editing 1.3.2, fable-project-review.** The executor models the plan hands
   off to are Opus 5.5 (`claude-opus-5-5`) and Sonnet 5.5 (`claude-sonnet-5-5`), replacing
   the retired "Opus 4.8" and "Sonnet 4.6" in the description, the overview and the Phase 5

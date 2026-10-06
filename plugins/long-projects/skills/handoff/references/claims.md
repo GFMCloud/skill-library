@@ -52,7 +52,7 @@ explains how to fill it in and how to check it; it does not redefine any field.
    satisfy it, stop and ask exactly one question naming the row. Zero typed claims are
    accepted from the document alone.
 
-Staleness: `written_at` dates the claims. Before the table, list the files in the
+Staleness: `written_at` dates the claims (write it as `date -Iseconds` prints, with a colon in the offset; the checker also accepts `-0500` and a trailing `Z`, since 0.6.5). Before the table, list the files in the
 project's git repo whose mtime is after `written_at`, and name them in the step 3
 status. Matching claims prove the claimed values only; they say nothing about work done
 after the handoff was written. A stale project is not a mismatch. It becomes the one
