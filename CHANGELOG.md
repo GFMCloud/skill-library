@@ -2,6 +2,21 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-10 - voice-and-editing 1.4.0: vault-ready-ingest and intake-review-compare (incubator)
+
+- **New skill `vault-ready-ingest`.** Takes up to five readwise-links `vault-ready/` drafts into
+  `~/knowledge-center` under one project. `scripts/ingest.py` calls a tool-less model to rewrite each
+  draft so every key point carries a verbatim quote, checks each quote against the cited section of
+  the original article, drops what cannot be quoted, runs the vault's retrieval test the same way, and
+  writes only after every check passes, in one vault commit. Unchanged items are skipped without a
+  model call. Fixtures: `fixtures/run-fixtures.sh` (15 cases, stand-in model); live eval:
+  `fixtures/live_eval.py` (a planted unsupported point is dropped; passed 2026-10-10 on Sonnet 5.5).
+- **New skill `intake-review-compare`.** Runs source-intake's comparison and decisions table over the
+  readwise-links job's intake reviews, without a second clean room, and writes one decisions file
+  (contract v1 per source) into `~/work/readwise-links/decisions/`. Applies nothing. Each comparison
+  is a `claude -p` call limited with `--tools "Read Glob Grep"`; a probe showed `--allowedTools`
+  alone does not stop writes or Bash.
+
 ## 2026-10-06 - weekly maintainer cycle 11 (voice-and-editing 1.3.2, long-projects 0.19.6)
 
 - **long-projects 0.19.6, handoff 0.6.5.** `check-claims.py` normalizes a `written_at`
