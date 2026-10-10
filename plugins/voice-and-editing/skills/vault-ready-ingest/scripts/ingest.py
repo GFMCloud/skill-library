@@ -118,7 +118,7 @@ def add_under(text: str, heading: str, line: str) -> str:
     """Add `line` as the last line of the `heading` section, once."""
     if line in text:
         return text
-    m = re.search(rf"^{re.escape(heading)}\s*$\n(.*?)(?=^## |\Z)", text, flags=re.M | re.S)
+    m = re.search(rf"^{re.escape(heading)}[ \t]*\n(.*?)(?=^## |\Z)", text, flags=re.M | re.S)
     if not m:
         return text.rstrip("\n") + f"\n\n{heading}\n\n{line}\n"
     body = m.group(1).rstrip("\n")

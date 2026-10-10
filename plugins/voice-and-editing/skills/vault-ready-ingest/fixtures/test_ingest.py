@@ -74,6 +74,7 @@ def test_a_new_item_is_written_linked_and_committed(env):
     assert "`linked page 2`" not in rec.read_text()  # not captured, so not citable
     proj = (v / "Projects" / f"{PROJECT}.md").read_text()
     assert f"- [[Knowledge/{Path(KNOWLEDGE).stem}]]" in proj and f"- [[Sources/{rec.stem}]]" in proj
+    assert f"## Knowledge notes\n\n- [[Knowledge/" in proj and "\n\n\n" not in proj  # one blank line, not two
     assert "No note answers yet: When is Opus worth its cost?" in proj
     assert f"- [[Projects/{PROJECT}]]" in (v / "Home.md").read_text()
     rt = (v / "Retrieval test.md").read_text()
