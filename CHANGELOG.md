@@ -2,7 +2,7 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
-## 2026-10-10 - voice-and-editing 1.4.0: vault-ready-ingest and intake-review-compare (incubator)
+## 2026-10-10 - voice-and-editing 1.4.0: vault-ready-ingest and intake-review-compare (incubator); source-intake read-only reviewers
 
 - **New skill `vault-ready-ingest`.** Takes up to five readwise-links `vault-ready/` drafts into
   `~/knowledge-center` under one project. `scripts/ingest.py` calls a tool-less model to rewrite each
@@ -16,6 +16,16 @@ Behavior changes only — not wording tweaks. Newest first.
   (contract v1 per source) into `~/work/readwise-links/decisions/`. Applies nothing. Each comparison
   is a `claude -p` call limited with `--tools "Read Glob Grep"`; a probe showed `--allowedTools`
   alone does not stop writes or Bash.
+- **source-intake: headless reviewers limited to read tools.** The Step 2 clean-room line
+  and both `large-sources.md` lines (per-unit loop, synthesis) set the tool list with
+  `--tools "Read Glob Grep"`; `--allowedTools` only pre-approves and left Write, Edit,
+  Agent, Artifact and SendMessage loaded. Probes on Claude Code 2.1.296 (2026-10-10): the
+  old Step 2 line let a SendMessage call past the permission check to the agent lookup;
+  the old large-sources line ran `echo` through Bash, read `/etc/hosts`, and loaded a
+  claude.ai Docs connector. The large-sources lines also gain `--permission-prompts none`
+  and `--disallowedTools "mcp__*"`, and keep `--allowedTools` so Read still reaches
+  `<scratch>` from a loop that does not `cd`. With the new flags each reviewer listed only
+  Glob, Grep and Read; no write landed on disk under the old or the new flags.
 
 ## 2026-10-06 - weekly maintainer cycle 11 (voice-and-editing 1.3.2, long-projects 0.19.6)
 

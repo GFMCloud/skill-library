@@ -78,7 +78,7 @@ remove a context asymmetry; an empty context does. Run:
 ```bash
 cd <pinned source path> && claude -p "$(cat <rubric-file>) ... path: <pinned source path>" \
   --setting-sources "" --restricted --permission-prompts none \
-  --allowedTools "Read Glob Grep" --disallowedTools "mcp__*" > <scratch>/cleanroom-review.md
+  --tools "Read Glob Grep" --disallowedTools "mcp__*" > <scratch>/cleanroom-review.md
 ```
 
 Rubric by source type, each already phrased as a complete prompt that takes a
@@ -93,7 +93,14 @@ extraction. Say so when you run it (global model-routing rule). `--restricted`
 (Claude Code 2.1.248+) removes every tool that runs commands or code and confines
 file tools to the working directory, which is why the command starts with `cd` into
 the pin; `--permission-prompts none` (2.1.259+) denies anything that would have
-prompted. `--restricted` leaves MCP servers visible, so `--disallowedTools "mcp__*"`
+prompted. `--tools "Read Glob Grep"` sets which tools exist; `--allowedTools` only
+pre-approves and leaves Write, Edit, Agent, Artifact, SendMessage and the rest loaded.
+Probe on 2.1.296, 2026-10-10: with `--allowedTools` in this line the reviewer listed 27
+tools and a SendMessage call got past the permission check to the agent lookup ("No
+agent named ... is reachable", not a denial), so injected text could have messaged a
+live session; with `--tools` it listed only Glob, Grep and Read, and Write, Bash and
+SendMessage did not exist. Writes and Bash were denied on disk under both.
+`--restricted` leaves MCP servers visible, so `--disallowedTools "mcp__*"`
 removes them from the reviewer's context as well (three reviewers on 2026-09-07 could
 see the GitHub MCP and were stopped only by the denied prompt). Proven 2026-09-07: a
 reviewer asked to run `echo` with Bash answered `NO-BASH` while Read of a file in the
@@ -106,8 +113,10 @@ The Agent-tool form of the same isolation is a subagent whose definition sets
 and local CLAUDE.md files and keeps only managed policy. The comparison subagent (Step 3)
 and any verifier keep the working agreements on purpose and do not set it. No claude.ai
 connector attaches to the headless line above (probe on 2.1.289, 2026-10-06: 23 tools
-listed, no `mcp__` name, no connector notice), though the Artifact and messaging tool
-family does appear in the reviewer's tool list; `--bare` is not a substitute, since it
+listed, no `mcp__` name, no connector notice). The Artifact and messaging tools that
+probe listed were loaded because `--allowedTools` does not limit the tool set; `--tools`
+removes them (above). `--bare` is not
+a substitute, since it
 refuses to run under a claude.ai login.
 
 **Large sources (over roughly 40k words) do not fit one context.** Split into
