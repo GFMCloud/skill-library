@@ -31,20 +31,29 @@ manifest for the exit-code check below.
 
 ## 2. One clean-room review per unit
 
-Same rubric as the single-context case, same flags, one process per unit, up to
-six in parallel. Each took 2 to 4 minutes on the worked example.
+Same rubric as the single-context case; the flags differ, as explained below the
+command. One process per unit, up to six in parallel. Each took 2 to 4 minutes on the worked example.
 
 ```bash
 mkdir -p <scratch>/units
 for u in <unit paths>; do
   n=$(basename "$u" .md)
   claude -p "$(cat <rubric-file>) ... path: $u" \
-    --setting-sources "" --allowedTools "Read Glob Grep" --model sonnet \
+    --setting-sources "" --permission-prompts none --tools "Read Glob Grep" \
+    --allowedTools "Read Glob Grep" --disallowedTools "mcp__*" --model sonnet \
     > <scratch>/units/$n.md 2> <scratch>/units/$n.err &
   # cap at six concurrent: wait -n when six are running
 done
 wait
 ```
+
+`--tools` is what keeps the run read-only: it sets which tools exist. `--allowedTools`
+stays only to pre-approve Read outside the working directory, since this loop does not
+`cd` and the units live under `<scratch>`. Probe on 2.1.296, 2026-10-10: with
+`--allowedTools` alone a unit reviewer ran `echo` through Bash, read `/etc/hosts`, saw
+Write, Agent and a claude.ai Docs connector, and could load SendMessage through
+ToolSearch; with both flags it listed
+only Glob, Grep and Read and still read outside its directory.
 
 Check every exit code and that every output is non-empty before synthesis. One
 empty unit review silently drops a chapter from the consolidated view, and the
@@ -61,7 +70,8 @@ consumes in place of the single-context one.
 
 ```bash
 claude -p "$(cat <synthesis-prompt-file>) directory: <scratch>/units" \
-  --setting-sources "" --allowedTools "Read Glob Grep" \
+  --setting-sources "" --permission-prompts none --tools "Read Glob Grep" \
+  --allowedTools "Read Glob Grep" --disallowedTools "mcp__*" \
   > <scratch>/cleanroom-review.md
 ```
 
