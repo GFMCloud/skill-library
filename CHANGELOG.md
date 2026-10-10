@@ -9,7 +9,7 @@ Behavior changes only — not wording tweaks. Newest first.
   draft so every key point carries a verbatim quote, checks each quote against the cited section of
   the original article, drops what cannot be quoted, runs the vault's retrieval test the same way, and
   writes only after every check passes, in one vault commit. Unchanged items are skipped without a
-  model call. Fixtures: `fixtures/run-fixtures.sh` (15 cases, stand-in model); live eval:
+  model call. Fixtures: `fixtures/run-fixtures.sh` (23 cases, stand-in model); live eval:
   `fixtures/live_eval.py` (a planted unsupported point is dropped; passed 2026-10-10 on Sonnet 5.5).
 - **New skill `intake-review-compare`.** Runs source-intake's comparison and decisions table over the
   readwise-links job's intake reviews, without a second clean room, and writes one decisions file

@@ -127,6 +127,12 @@ def test_a_missing_project_map_stops(env):
     (NOTE.replace("No measurements.", "No <img src=x> measurements.").replace("no measurements", "<script>x</script>"),
      "no HTML outside code"),
     (NOTE.replace(' "Run an Opus lead that plans and merges"', ""), "key point 1: must end with"),
+    # Fable build review: links or extra citations inside a claim or the rationale would spoof provenance
+    (NOTE.replace("with Sonnet teammates.", "with Sonnet teammates, per [[Sources/Other|post]]."),
+     "may not carry links or citations"),
+    (NOTE.replace("with Sonnet teammates.", "with Sonnet teammates [linked page 1] too."),
+     "may not carry links or citations"),
+    (NOTE.replace("no measurements.", "no measurements [post]."), "Rationale and limits may not carry links"),
 ])
 def test_a_bad_note_is_refused_and_nothing_is_written(env, bad, expect):
     stub(env, bad, retrieval())
@@ -146,6 +152,50 @@ def test_a_failed_retrieval_test_stops_before_anything_is_written(env, retr, exp
     r = run(env)
     assert r.returncode == 2 and "STOP: the retrieval test failed" in r.stdout and expect in r.stdout, r.stdout
     assert commits(env) == 1 and git(env["vault"], "status", "--porcelain") == ""
+
+
+def test_a_title_that_leaves_no_file_name_fails_the_item(env):
+    stub(env, NOTE.replace(f"# {TITLE}", "# ..."), retrieval())
+    r = run(env)
+    assert r.returncode == 1 and "the title leaves no usable file name" in r.stdout and commits(env) == 1
+
+
+def test_a_lone_matching_note_under_another_project_is_not_moved(env):
+    v = env["vault"]
+    put(v / "Knowledge" / "Elsewhere.md", doc({"type": "knowledge", "project": "other-project",
+                                               "source_path": str(env["art"])}, "# Elsewhere\n"))
+    git(v, "add", "-A"); git(v, "commit", "-q", "-m", "seed")
+    r = run(env)
+    assert "FAILED #30: already in the vault under project other-project" in r.stdout and calls(env) == 0
+    assert (v / "Knowledge" / "Elsewhere.md").read_text().count("other-project") == 1
+
+
+def test_a_project_note_without_a_source_is_left_out_of_the_retrieval_test(env):
+    v = env["vault"]
+    put(v / "Knowledge" / "Hand written.md", doc({"type": "knowledge", "project": "agent-practice"}, "# Hand written\n"))
+    git(v, "add", "-A"); git(v, "commit", "-q", "-m", "seed")
+    r = run(env)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "left out of the retrieval test: Knowledge/Hand written.md has no readable source_path" in r.stdout
+
+
+def test_a_gap_line_goes_once_a_note_answers_the_question(env):
+    v = env["vault"]
+    m = v / "Projects" / f"{PROJECT}.md"
+    m.write_text(m.read_text() + "\n- No note answers yet: How should an agent team split roles?\n")
+    git(v, "add", "-A"); git(v, "commit", "-q", "-m", "old gap")
+    assert run(env).returncode == 0
+    text = m.read_text()
+    assert "No note answers yet: How should an agent team split roles?" not in text
+    assert "No note answers yet: When is Opus worth its cost?" in text
+
+
+def test_a_failed_commit_is_a_stop_with_the_reason(env):
+    hook = env["vault"] / ".git" / "hooks" / "pre-commit"
+    put(hook, "#!/bin/sh\necho blocked by hook >&2\nexit 1\n").chmod(0o755)
+    r = run(env)
+    assert r.returncode == 2 and "STOP: git commit failed" in r.stdout and "blocked by hook" in r.stdout
+    assert "Traceback" not in r.stderr
 
 
 def test_dry_run_plans_without_calling_the_model(env):

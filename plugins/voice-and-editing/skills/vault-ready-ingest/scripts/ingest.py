@@ -33,6 +33,7 @@ RETRIEVAL_PROMPT = HERE.parent / "references" / "retrieval-prompt.md"
 POINT = re.compile(r'^- (?P<claim>.+?)\s*\[(?P<sec>post|linked page \d+)\]\s*["“](?P<quote>[^"“”]+)'
                    r'["”]\s*$')
 LINK = re.compile(r"\[\[Sources/[^|\]]+\|(post|linked page \d+)\]\]")
+CITE = re.compile(r"\[(post|linked page \d+)\]")
 MAX_ITEMS = 5
 
 
@@ -149,7 +150,7 @@ def gate_note(reply: str, secs: dict[str, str], has_html) -> tuple[list[str], di
     heads = [h for h in ("## Key points", "## Rationale and limits", "## Dropped")
              if re.search(rf"^{h}\s*$", text, flags=re.M)]
     if heads != ["## Key points", "## Rationale and limits", "## Dropped"]:
-        errs.append("sections ## Key points, ## Rationale and limits and ## Dropped are required, in that order")
+        errs.append("sections ## Key points, ## Rationale and limits and ## Dropped are required")
     if has_html(text) or re.search(r"(?i)(BEGIN|END)\s+UNTRUSTED\s+ARTICLE\s+CONTENT", text) or "](" in text:
         errs.append("no HTML outside code, no UNTRUSTED marker text, no markdown links")
     points = []
@@ -161,6 +162,9 @@ def gate_note(reply: str, secs: dict[str, str], has_html) -> tuple[list[str], di
         if p["sec"] not in secs:
             errs.append(f"key point {i}: cites {p['sec']}, but the article's sections are {sorted(secs)}")
             continue
+        if "[[" in p["claim"] or CITE.search(p["claim"]):
+            errs.append(f"key point {i}: the claim may not carry links or citations; the script adds the one link")
+            continue
         bad = quote_ok(p["quote"], secs[p["sec"]])
         if bad:
             errs.append(f"key point {i}: {bad} ({p['sec']})")
@@ -171,6 +175,8 @@ def gate_note(reply: str, secs: dict[str, str], has_html) -> tuple[list[str], di
     rationale = section(text, "## Rationale and limits").strip()
     if not rationale:
         errs.append("## Rationale and limits must not be empty")
+    if "[[" in rationale or CITE.search(rationale):
+        errs.append("## Rationale and limits may not carry links or citations")
     dropped = [l[2:].strip() for l in section(text, "## Dropped").splitlines() if l.startswith("- ")]
     return errs, {"title": title, "points": points, "rationale": rationale, "dropped": dropped}
 
@@ -247,14 +253,15 @@ def main() -> int:
         sp = str(it["art"])
         rec, note = by_source.get(("source", sp)), by_source.get(("knowledge", sp))
         it["rec_path"], it["note_path"] = rec, note
-        if rec and note:
+        if note:
             nfront = next(f for p, f, _ in existing if p == note)
-            rfront = next(f for p, f, _ in existing if p == rec)
-            if nfront.get("draft_blob") == it["draft_blob"] and rfront.get("article_blob") == it["sf"]["article_blob"]:
-                print(f"skipped #{it['n']}: already in the vault and unchanged ({note.relative_to(vault)})")
-                continue
             if nfront.get("project") != slug:
                 print(f"FAILED #{it['n']}: already in the vault under project {nfront.get('project')}")
+                continue
+            rfront = next((f for p, f, _ in existing if p == rec), {})
+            if rec and nfront.get("draft_blob") == it["draft_blob"] \
+                    and rfront.get("article_blob") == it["sf"]["article_blob"]:
+                print(f"skipped #{it['n']}: already in the vault and unchanged ({note.relative_to(vault)})")
                 continue
         print(f"{'update' if note else 'new'} #{it['n']}")
         todo.append(it)
@@ -286,13 +293,18 @@ def main() -> int:
             print(f"FAILED #{n}: {'; '.join(errs[:3])}")
             continue
         title = note["title"]
+        if not safe_name(title) or safe_name(title).startswith("."):
+            print(f"FAILED #{n}: the title leaves no usable file name")
+            continue
         note_path = it["note_path"] or vault / "Knowledge" / f"{safe_name(title)}.md"
         rec_path = it["rec_path"] or vault / "Sources" / f"Saved link {n} {safe_name(title)}.md"
-        clash = [p for p, f, _ in existing if p == note_path and f.get("source_path") != str(it["art"])]
-        if clash or note_path in taken_titles:
+        # Case-insensitive, as the Mac's file system is: "Agent Teams.md" would overwrite "agent teams.md".
+        key = str(note_path).lower()
+        clash = [p for p, f, _ in existing if str(p).lower() == key and f.get("source_path") != str(it["art"])]
+        if clash or key in taken_titles:
             print(f"FAILED #{n}: {note_path.relative_to(vault)} already holds a different note")
             continue
-        taken_titles[note_path] = n
+        taken_titles[key] = n
         rec = rec_path.stem
         captured = [l for l in sf.get("linked_pages") or [] if l.get("status") == "captured"]
         sec_lines = ["- `post`: the saved post's own text."] + [
@@ -329,6 +341,9 @@ def main() -> int:
     notes = {}
     for p, f, body in existing:
         if f.get("type") == "knowledge" and f.get("project") == slug and p not in writes:
+            if not f.get("source_path") or not Path(f["source_path"]).is_file():
+                print(f"left out of the retrieval test: {p.relative_to(vault)} has no readable source_path")
+                continue
             notes[p] = (f, body)
     for it, note_path, _, _ in built:
         f_text = writes[note_path]
@@ -387,8 +402,10 @@ def main() -> int:
         map_text = add_under(map_text, "## Knowledge notes", f"- [[Knowledge/{note_path.stem}]]")
         map_text = add_under(map_text, "## Source records", f"- [[Sources/{rec_path.stem}]]")
     gaps = [questions[q - 1] for q, p, _, _ in rows if p is None]
-    for g in gaps:
-        map_text = add_under(map_text, "## Known gaps and next check", f"- No note answers yet: {g}")
+    for q, p, _, _ in rows:
+        line = f"- No note answers yet: {questions[q - 1]}"
+        map_text = add_under(map_text, "## Known gaps and next check", line) if p is None \
+            else map_text.replace(line + "\n", "")
     writes[map_path] = map_text
     home = vault / "Home.md"
     writes[home] = add_under(home.read_text(), "## Start here", f"- [[Projects/{project}]]")
@@ -411,9 +428,12 @@ def main() -> int:
     for p, text in writes.items():
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(text)
-    git(vault, "add", "-A", check=True)
     nums = " ".join(f"#{b[0]['n']}" for b in built)
-    git(vault, "commit", "-q", "-m", f"Ingest saved links {nums} into {project}", check=True)
+    for args in (("add", "-A"), ("commit", "-q", "-m", f"Ingest saved links {nums} into {project}")):
+        r = git(vault, *args)
+        if r.returncode:
+            stop(f"git {args[0]} failed in {vault}, which now holds this batch's files uncommitted: "
+                 f"{(r.stderr or r.stdout).strip()[:200]}")
     sha = git(vault, "rev-parse", "--short", "HEAD").stdout.strip()
     for it, note_path, _, _ in built:
         print(f"{'updated' if it['note_path'] else 'written'} #{it['n']}: {note_path.relative_to(vault)}")

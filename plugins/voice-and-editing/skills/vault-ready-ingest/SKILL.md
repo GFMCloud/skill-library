@@ -11,8 +11,9 @@ description: >-
   only on the Mac that holds ~/work/readwise-links (it imports that repo's
   scripts and uses its venv) and a git-tracked vault. Not for importing other
   documents into the vault (the vault's Import guide covers those by hand), and
-  not for intake reviews (that is intake-review-compare). Costs two to four
-  tool-less Sonnet calls per item plus one or two for the retrieval test.
+  not for intake reviews (that is intake-review-compare). Costs one tool-less
+  Sonnet call per item (two when the first reply fails its check) plus one or
+  two for the retrieval test.
 metadata:
   maturity: incubator
 ---
@@ -36,11 +37,11 @@ The vault's `Home.md` has a hand-written "Pilot scope" paragraph. When a batch a
 
 - **Preconditions** (each a STOP with the reason): the vault is a git work tree with nothing uncommitted; 1 to 5 distinct issues; each item's `note.md` and `source.md` are exactly the committed copies on the repo's `origin/main`, with `schema: vault-note/1` and `vault-source/1` and `status: staged`; the article's git blob still matches `article_blob`; the project map exists with a slug and 3 to 5 questions.
 - **Once per item:** an item whose Source record and Knowledge note already carry the same `article_blob` and `draft_blob` is skipped with no model call. A matching note (same `source_path`) is updated in place under its existing filename, never duplicated; a different note already holding the target filename fails the item.
-- **Knowledge note gate:** title plain, sections `## Key points`, `## Rationale and limits`, `## Dropped` in order, every key point ends `[post]` or `[linked page N]` plus a quote of 5 to 40 words found (whitespace and curly quotes normalized) in that section of the article, no raw HTML (the producer's `has_html`), no UNTRUSTED marker text, no markdown links. One retry with the errors appended. `post` is the article's first UNTRUSTED block; `linked page N` is the block under `## Linked page N`; a page marked not captured cannot be cited. The quotes are removed after the check; each kept point links `[[Sources/<record>|<section>]]`.
+- **Knowledge note gate:** title plain and leaving a usable file name, sections `## Key points`, `## Rationale and limits`, `## Dropped` present, no link or citation inside a claim or the rationale (the script adds each point's one link), every key point ends `[post]` or `[linked page N]` plus a quote of 5 to 40 words found (whitespace and curly quotes normalized) in that section of the article, no raw HTML (the producer's `has_html`), no UNTRUSTED marker text, no markdown links. One retry with the errors appended. `post` is the article's first UNTRUSTED block; `linked page N` is the block under `## Linked page N`; a page marked not captured cannot be cited. The quotes are removed after the check; each kept point links `[[Sources/<record>|<section>]]`.
 - **Retrieval test:** a tool-less call answers the project's questions from the project's notes, and the script checks each answer names a note in the project, a section that note cites, and a quote found in that section of the original article. Any row that fails stops the run before a single file is written. The table goes into `Retrieval test.md` under `## <project> (<date>)`, marked "Pass for recorded content", because the source's own claims are not independently checked.
 - **Writes** happen only after every gate passed: Source records under `Sources/`, notes under `Knowledge/` (`status: draft`; Graham promotes to `verified`), links added to the project map and `Home.md`, gaps under `## Known gaps and next check`, then one commit.
 
-Known weaknesses, stated with the rules: the quote check proves the quoted words are in the article, not that the claim paraphrases them fairly; a model can quote a true sentence and overstate it. The retrieval test checks answers against the original file, not against the live page or the world. `status: draft` says so.
+Known weaknesses, stated with the rules: the quote check proves the quoted words are in the article, not that the claim paraphrases them fairly; a model can quote a true sentence and overstate it. The retrieval test checks answers against the original file, not against the live page or the world. `status: draft` says so. The dropped list is the model's own account: the script refuses every kept point it cannot verify, but it does not diff the draft's points against kept plus dropped, so a draft point the model silently leaves out is listed nowhere. Existing project notes without a readable `source_path` are left out of the retrieval test, with a line saying so. A failed `git commit` after the writes is reported as a STOP and leaves the batch uncommitted in the vault, which the next run's clean-vault check then refuses.
 
 Prompts the script sends: [references/knowledge-note-prompt.md](references/knowledge-note-prompt.md) and [references/retrieval-prompt.md](references/retrieval-prompt.md).
 

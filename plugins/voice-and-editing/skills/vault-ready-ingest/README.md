@@ -36,7 +36,7 @@ The note lists five points, each linked to the saved article's record and the se
 
 - **It only works on one particular setup.** It reads `~/work/readwise-links` (and runs that folder's Python environment and scripts) and writes into `~/knowledge-center`; on another computer you would have to change both paths.
 - **It writes into your vault and commits there.** It adds files under `Sources/` and `Knowledge/`, edits the project page, `Home.md` and `Retrieval test.md`, and makes one git commit in the vault; it refuses to start if the vault has uncommitted changes or is not a git folder.
-- **It runs a program and calls Claude without tools.** The script `scripts/ingest.py` runs `claude -p` with every tool switched off, two to four times per item and once or twice for the retrieval test, using your existing Claude sign-in; nothing else goes online.
+- **It runs a program and calls Claude without tools.** The script `scripts/ingest.py` runs `claude -p` with every tool switched off, once per item (twice when the first reply fails its check) and once or twice for the retrieval test, using your existing Claude sign-in; nothing else goes online.
 - **A quote proves the words are there, not that the point is fair.** A model can quote a true sentence and overstate it, so new notes are marked `draft` until you promote them.
 - **Running it twice on the same items does nothing.** Items already in the vault and unchanged are skipped without calling the model.
 
