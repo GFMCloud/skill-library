@@ -28,7 +28,8 @@ Return only the note, in this exact shape, with no preamble and no code fence:
 ## Rules
 
 - `[post]` means the saved post's own text (the first UNTRUSTED block). `[linked page N]` means the block under `## Linked page N`. Cite only sections the article holds; a page marked "not captured" holds nothing.
-- Every key point ends with exactly one citation and one quote in straight double quotes. The quote is copied verbatim from the cited section, at least five words, at most 40 words, and contains no double quote character. Choose the shortest span that supports the claim.
+- Every key point ends with exactly one citation and one quote in straight double quotes. The quote is copied verbatim from the cited section, at least five words, at most 40 words, and contains no double quote character. Choose the shortest span that supports the claim. Quotes are compared with spaces and line breaks collapsed, so a quote may run across lines or along a table row, as long as every other character is kept.
+- The heading line states only what a key point below supports. A number or comparison in the heading must appear in a key point.
 - A draft point whose support you cannot quote goes under `## Dropped`, in your own words. Write `None.` there when nothing was dropped. Never weaken a claim into something vaguer to keep it.
 - You may add a key point the draft missed if the article supports it with a quote.
 - Write claims as what the source says ("The post claims ..."), not as established fact, when the source gives no evidence.

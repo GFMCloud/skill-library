@@ -1,6 +1,7 @@
 """Fixtures for scripts/ingest.py: a stand-in `claude` on PATH, a throwaway repo and vault (fixture_env.py).
 Run with the readwise-links venv: bash fixtures/run-fixtures.sh"""
 import json
+from datetime import date
 import sys
 from pathlib import Path
 
@@ -79,6 +80,7 @@ def test_a_new_item_is_written_linked_and_committed(env):
     assert f"- [[Projects/{PROJECT}]]" in (v / "Home.md").read_text()
     rt = (v / "Retrieval test.md").read_text()
     assert f"## {PROJECT} (" in rt and "Pass for recorded content" in rt and rt.count("Gap: no note") == 2
+    assert f"checked_on: {date.today().isoformat()}" in rt and "2026-09-23" not in rt  # the test ran today
     assert commits(env) == 2 and git(v, "status", "--porcelain") == ""
     assert "60 percent" in (env["logs"] / "dropped.md").read_text()
     assert "retrieval: 3 question(s), 1 pass, 2 gap" in r.stdout

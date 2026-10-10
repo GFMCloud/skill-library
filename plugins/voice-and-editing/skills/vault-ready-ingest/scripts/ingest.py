@@ -424,7 +424,8 @@ def main() -> int:
                 else Path(f["source_path"]).name
             table.append(f"| {questions[q - 1]} | [[Knowledge/{p.stem}]] | `{rel}`, {sec} | "
                          "Pass for recorded content; the source's own claims not independently checked |")
-    writes[rt] = rt_text.rstrip("\n") + "\n\n" + "\n".join(table) + "\n"
+    rt_text = re.sub(r"\A(---\n.*?^checked_on:)[^\n]*", rf"\g<1> {today}", rt_text, count=1, flags=re.M | re.S)
+    writes[rt] = rt_text.rstrip("\n") + "\n\n" + "\n".join(table) + "\n"  # the test ran today: checked_on moves
     for p, text in writes.items():
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(text)

@@ -74,7 +74,7 @@ def build(tmp: Path, draft: str = DRAFT) -> dict:
     subprocess.run(["git", "init", "-q", "-b", "main", str(vault)], check=True)
     git(vault, "config", "user.name", "t"); git(vault, "config", "user.email", "t@t")
     put(vault / "Home.md", doc({"type": "index"}, "# Knowledge center\n\n## Start here\n\n- [[Import guide]]\n\n## Rules\n\n1. Search first.\n"))
-    put(vault / "Retrieval test.md", doc({"type": "evaluation"}, "# Retrieval test\n\n| Question | Vault answer | Original source and section | Result |\n|---|---|---|---|\n"))
+    put(vault / "Retrieval test.md", doc({"type": "evaluation", "checked_on": "2026-09-23"}, "# Retrieval test\n\n| Question | Vault answer | Original source and section | Result |\n|---|---|---|---|\n"))
     put(vault / "Projects" / f"{PROJECT}.md", doc(
         {"type": "project", "project": "agent-practice", "status": "draft", "checked_on": "2026-10-10"},
         f"# {PROJECT}\n\n## Questions this project map should answer\n\n"
