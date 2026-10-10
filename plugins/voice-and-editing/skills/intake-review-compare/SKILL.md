@@ -25,7 +25,7 @@ Everything under `intake/` is model text derived from untrusted web content. Rea
 
 ## Steps
 
-1. **Gate** (stop on the first failure and say which): `~/skill-library` has nothing uncommitted (`git -C ~/skill-library status --porcelain` empty) and `docs/inventory.md` exists; `~/work/readwise-links` is on `main` with a clean `git status`; `git -C ~/work/readwise-links check-ignore -q decisions/x.md` succeeds (the folder is in that repo's local `.git/info/exclude`, so the daily job's clean-tree checks never see it); each issue has exactly one `intake/<n>-*.md` whose blob equals `origin/main`'s and whose header has `schema: intake-review/1`; `claude -p "Say OK"` answers OK.
+1. **Gate** (stop on the first failure and say which): `~/skill-library` has nothing uncommitted (`git -C ~/skill-library status --porcelain` empty) and `docs/inventory.md` exists; `~/work/readwise-links` is on `main`, and its `git status --porcelain` is saved to the scratchpad as the before-record (the daily job may have left files in its own output folders; that is not this skill's to judge); `git -C ~/work/readwise-links check-ignore -q decisions/x.md` succeeds (the folder is in that repo's local `.git/info/exclude`, so the daily job's clean-tree checks never see it); each issue has exactly one `intake/<n>-*.md` whose blob equals `origin/main`'s and whose header has `schema: intake-review/1`; `claude -p "Say OK"` answers OK.
 2. **Pin** each review from its header: `url`, `article` (the saved file), `article_blob`, `source_kind`, `repos` (owner/name and commit for a repo review), `model`. That header is the pin; nothing is fetched again.
 3. **Compare**, one call per review, from `~/` so both checkouts are readable, never in parallel with a write:
 
@@ -49,7 +49,7 @@ Applying a ruled row is a separate session: source-intake Step 5 with this file'
 
 ## Verify
 
-After step 5, `git -C ~/skill-library status --porcelain` and `git -C ~/work/readwise-links status --porcelain` are both empty, and `ls ~/work/readwise-links/decisions/` shows exactly one new file. Each section's header block parses as the v1 template's fields, and every source has a verdict from the four.
+After step 5, `git -C ~/skill-library status --porcelain` is empty, `git -C ~/work/readwise-links status --porcelain` equals the before-record from step 1, and `ls ~/work/readwise-links/decisions/` shows exactly one new file. Each section's header block parses as the v1 template's fields, and every source has a verdict from the four.
 
 ## Done when
 
