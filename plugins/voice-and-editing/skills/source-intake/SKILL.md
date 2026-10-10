@@ -115,9 +115,8 @@ and any verifier keep the working agreements on purpose and do not set it. No cl
 connector attaches to the headless line above (probe on 2.1.289, 2026-10-06: 23 tools
 listed, no `mcp__` name, no connector notice). The Artifact and messaging tools that
 probe listed were loaded because `--allowedTools` does not limit the tool set; `--tools`
-removes them (above). `--bare` is not
-a substitute, since it
-refuses to run under a claude.ai login.
+removes them (above). `--bare` is not a substitute, since it refuses to run under a
+claude.ai login.
 
 **Large sources (over roughly 40k words) do not fit one context.** Split into
 natural units (chapters, or one SKILL.md per unit for a collection), run one
