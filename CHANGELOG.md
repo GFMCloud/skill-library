@@ -9,15 +9,18 @@ No skill's behavior changed; no pack version bumped.
 - **The daily updater no longer installs a hook change unattended.** Before each
   `claude plugin update`, `scripts/update-installed-plugins.sh` compares the pack's hook
   surface in the installed cache version with the marketplace clone's copy: everything
-  under `hooks/`, the `hooks` value in `plugin.json`, any file a hook command names as
-  `${CLAUDE_PLUGIN_ROOT}/<path>`, and file modes. If anything differs (hooks added,
-  removed or edited), it prints `REFUSED <pack>: hooks changed between <installed> and
+  under `hooks/`, the `hooks` value in `plugin.json`, the top-level `hooks:` block in the
+  frontmatter of any `.md` under `skills/` and `agents/`, any file those definitions name
+  as `${CLAUDE_PLUGIN_ROOT}/<path>` (braced or not, quoted or not), and file modes. If
+  anything differs (hooks added, removed or edited), it prints `REFUSED <pack>: hooks changed between <installed> and
   <incoming>` with a unified diff, skips that pack, still updates the others, and exits
-  non-zero. If either copy cannot be found it refuses too. A hook change is installed by
-  hand with `claude plugin update <pack>`, after reading the diff. Scripts that a hook's
-  script calls in turn are not followed.
+  non-zero. If either copy cannot be found, or anything in the surface (a symlink, a `../`
+  reference) resolves outside the plugin folder, it refuses too. An installed entry with no
+  `Version:` line is skipped, never paired with the next entry's version. A hook change is
+  installed by hand with `claude plugin update <pack>`, after reading the diff. Scripts that
+  a hook's script calls in turn are not followed.
 - **New:** `scripts/plugin-hook-surface.py` (the helper) and
-  `scripts/test-update-installed-plugins.sh` (nine fixture packs against a stub
+  `scripts/test-update-installed-plugins.sh` (17 fixture packs against a stub
   `claude`; the old updater fails every refusal case).
 
 ## 2026-10-10 - voice-and-editing 1.4.0: vault-ready-ingest and intake-review-compare (incubator); source-intake read-only reviewers

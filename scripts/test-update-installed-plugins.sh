@@ -37,13 +37,25 @@ hooks() {
 JSON
   echo "$2" > "$1/hooks/guard.sh"
 }
-# inline <dir> <version> <script text>: hooks declared inline in plugin.json, calling scripts/run.sh.
+# inline <dir> <name> <version> <script text>: hooks declared inline in plugin.json, calling scripts/run.sh.
 inline() {
   mkdir -p "$1/scripts"
   cat > "$1/.claude-plugin/plugin.json" <<JSON
-{"name":"x","version":"$2","hooks":{"Stop":[{"hooks":[{"type":"command","command":"bash \${CLAUDE_PLUGIN_ROOT}/scripts/run.sh"}]}]}}
+{"name":"$2","version":"$3","hooks":{"Stop":[{"hooks":[{"type":"command","command":"bash \${CLAUDE_PLUGIN_ROOT}/scripts/run.sh"}]}]}}
 JSON
-  echo "$3" > "$1/scripts/run.sh"
+  echo "$4" > "$1/scripts/run.sh"
+}
+# refhooks <dir> <command as a JSON string body> <script text>: hooks.json whose command names
+# scripts/x.sh (outside hooks/) in the given spelling.
+refhooks() {
+  mkdir -p "$1/hooks" "$1/scripts"
+  printf '{"hooks":{"Stop":[{"hooks":[{"type":"command","command":"%s"}]}]}}\n' "$2" > "$1/hooks/hooks.json"
+  echo "$3" > "$1/scripts/x.sh"
+}
+# fm <dir> <file under dir> <hooks block or empty> <body>: a skill or agent .md with frontmatter.
+fm() {
+  mkdir -p "$(dirname "$1/$2")"
+  { echo "---"; echo "name: s"; echo "description: d $4"; [[ -n "$3" ]] && printf '%s\n' "$3"; echo "---"; echo "body $4"; } > "$1/$2"
 }
 # pair <name> <old skill> <new skill>: installed copy 1.0.0 in the cache, incoming 1.1.0 in the clone.
 pair() {
@@ -58,12 +70,35 @@ hooks "$CLONE/hookadded" "echo guard v1"
 pair hooksremoved skill skill
 hooks "$CACHE/hooksremoved/1.0.0" "echo guard v1"
 pair inlinechanged skill skill
-inline "$CACHE/inlinechanged/1.0.0" 1.0.0 "echo run v1"; inline "$CLONE/inlinechanged" 1.1.0 "echo run v2"
+inline "$CACHE/inlinechanged/1.0.0" inlinechanged 1.0.0 "echo run v1"; inline "$CLONE/inlinechanged" inlinechanged 1.1.0 "echo run v2"
 pair modechanged skill skill
 hooks "$CACHE/modechanged/1.0.0" "echo guard v1"; hooks "$CLONE/modechanged" "echo guard v1"; chmod +x "$CLONE/modechanged/hooks/guard.sh"
 pair nohooks "skill text old" "skill text new"
 pair samehooks "skill text old" "skill text new"
 hooks "$CACHE/samehooks/1.0.0" "echo guard v1"; hooks "$CLONE/samehooks" "echo guard v1"
+# shellcheck disable=SC2016  # the ${...} must reach hooks.json literally
+QREF='\"${CLAUDE_PLUGIN_ROOT}\"/scripts/x.sh'
+# shellcheck disable=SC2016
+NBREF='bash $CLAUDE_PLUGIN_ROOT/scripts/x.sh'
+pair quotedref skill skill
+refhooks "$CACHE/quotedref/1.0.0" "$QREF" "echo x v1"; refhooks "$CLONE/quotedref" "$QREF" "echo x v2"
+pair nobrace skill skill
+refhooks "$CACHE/nobrace/1.0.0" "$NBREF" "echo x v1"; refhooks "$CLONE/nobrace" "$NBREF" "echo x v2"
+FMHOOKS=$'hooks:\n  Stop:\n    - hooks:\n        - type: command\n          command: "bash ${CLAUDE_PLUGIN_ROOT}/scripts/x.sh"'
+pair fmadded skill skill
+fm "$CACHE/fmadded/1.0.0" skills/s/SKILL.md "" v1; fm "$CLONE/fmadded" skills/s/SKILL.md "$FMHOOKS" v1
+pair fmagent skill skill
+fm "$CACHE/fmagent/1.0.0" agents/a.md "" v1; fm "$CLONE/fmagent" agents/a.md "$FMHOOKS" v1
+pair fmscript skill skill
+fm "$CACHE/fmscript/1.0.0" skills/s/SKILL.md "$FMHOOKS" v1; fm "$CLONE/fmscript" skills/s/SKILL.md "$FMHOOKS" v1
+mkdir -p "$CACHE/fmscript/1.0.0/scripts" "$CLONE/fmscript/scripts"; echo "echo x v1" > "$CACHE/fmscript/1.0.0/scripts/x.sh"; echo "echo x v2" > "$CLONE/fmscript/scripts/x.sh"
+pair fmbody skill skill
+fm "$CACHE/fmbody/1.0.0" skills/s/SKILL.md "$FMHOOKS" v1; fm "$CLONE/fmbody" skills/s/SKILL.md "$FMHOOKS" v2
+pair symout skill skill
+hooks "$CACHE/symout/1.0.0" x; hooks "$CLONE/symout" x
+mkdir -p "$T/outside"; echo "echo outside a" > "$T/outside/a.sh"; echo "echo outside b" > "$T/outside/b.sh"
+ln -sf "$T/outside/a.sh" "$CACHE/symout/1.0.0/hooks/guard.sh"; ln -sf "$T/outside/b.sh" "$CLONE/symout/hooks/guard.sh"
+pair noversion skill skill
 pair nocache skill skill
 rm -rf "$CACHE/nocache"
 pair nomarket skill skill
@@ -94,7 +129,7 @@ check() { # check <label> <command...>
   if "$@"; then echo "PASS $label"; else echo "FAIL $label"; fails=$((fails + 1)); fi
 }
 
-list hookchanged hookadded hooksremoved inlinechanged modechanged nohooks samehooks nocache nomarket > "$STUB_LIST"
+list hookchanged hookadded hooksremoved inlinechanged modechanged quotedref nobrace fmadded fmagent fmscript fmbody symout nohooks samehooks nocache nomarket > "$STUB_LIST"
 run
 echo "--- updater output (all cases)"; echo "$OUT"; echo "--- stub claude calls"; cat "$STUB_LOG"; echo "---"
 check "stub claude was reached" logged "plugin marketplace update skill-library"
@@ -109,6 +144,19 @@ check "inlinechanged (script outside hooks/): REFUSED line" refused inlinechange
 check "inlinechanged: not updated" not updated inlinechanged
 check "modechanged (exec bit only): REFUSED line" refused modechanged "hooks changed"
 check "modechanged: not updated" not updated modechanged
+check "quotedref (\"\${CLAUDE_PLUGIN_ROOT}\"/ form): REFUSED line" refused quotedref "hooks changed"
+check "quotedref: not updated" not updated quotedref
+check "nobrace (\$CLAUDE_PLUGIN_ROOT/ form): REFUSED line" refused nobrace "hooks changed"
+check "nobrace: not updated" not updated nobrace
+check "fmadded (SKILL.md frontmatter hooks added): REFUSED line" refused fmadded "hooks changed"
+check "fmadded: not updated" not updated fmadded
+check "fmagent (agent frontmatter hooks added): REFUSED line" refused fmagent "hooks changed"
+check "fmagent: not updated" not updated fmagent
+check "fmscript (script named by frontmatter hooks changed): REFUSED line" refused fmscript "hooks changed"
+check "fmscript: not updated" not updated fmscript
+check "fmbody (same frontmatter hooks, body differs): updated" updated fmbody
+check "symout (hook symlink resolves outside plugin): REFUSED, fail closed" refused symout "could not read hook definitions"
+check "symout: not updated" not updated symout
 check "nocache: REFUSED, fail closed" refused nocache "installed copy not found"
 check "nocache: not updated" not updated nocache
 check "nomarket: REFUSED, fail closed" refused nomarket "marketplace copy not found"
@@ -124,6 +172,13 @@ check "clean set: nohooks updated" updated nohooks
 check "clean set: samehooks updated" updated samehooks
 check "clean set: no REFUSED line" not grep -q "^REFUSED" <<< "$OUT"
 check "clean set: exit 0" test "$RC" -eq 0
+
+# A @skill-library entry with no Version line must not borrow the Version of the entry after
+# it, even when that entry is another marketplace's (version chosen to match noversion's cache).
+printf 'Installed plugins:\n\n  ❯ noversion@skill-library\n    Scope: user\n    Status: ✔ enabled\n\n  ❯ other@claude-plugins-official\n    Version: 1.0.0\n    Scope: user\n    Status: ✔ enabled\n\n  ❯ nohooks@skill-library\n    Version: 1.0.0\n    Scope: user\n    Status: ✔ enabled\n' > "$STUB_LIST"
+run
+check "version-less entry: not updated with the next entry's version" not updated noversion
+check "version-less entry: next entry still updated" updated nohooks
 
 echo
 if [[ $fails -eq 0 ]]; then echo "ALL PASS"; else echo "$fails FAILED"; exit 1; fi

@@ -48,7 +48,7 @@ fi
 fail=0
 work=$(mktemp -d) || exit 1
 trap 'rm -rf "$work"' EXIT
-for entry in $(claude plugin list | awk '/@skill-library/ {p=$2} p && /Version:/ {print p ":" $2; p=""}'); do
+for entry in $(claude plugin list | awk 'NF == 2 && $2 ~ /@/ && $1 !~ /:$/ {p = ($2 ~ /@skill-library$/) ? $2 : ""} p && /Version:/ {print p ":" $2; p=""}'); do
   plugin=${entry%%:*}
   if hooks_ok "$plugin" "${entry##*:}"; then
     echo "--- updating $plugin"
