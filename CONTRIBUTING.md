@@ -51,7 +51,8 @@ docs/                               pages for readers: glossary, picker, install
 docs/inventory.md                   generated, one line per skill
 maintainers/                        working records: the authoring add-on, review records, maintenance scripts
 scripts/validate-skills.sh          the validator; CI runs the same script
-scripts/update-installed-plugins.sh updates this machine's installed packs from the marketplace, then runs reconcile-installed-plugins.sh to report where each pack stands
+scripts/update-installed-plugins.sh updates this machine's installed packs from the marketplace, except a pack whose hooks changed (it prints the diff and exits non-zero); then runs reconcile-installed-plugins.sh to report where each pack stands
+scripts/test-update-installed-plugins.sh proves that refusal against a fixture and a stub `claude`; plugin-hook-surface.py is the updater's helper
 templates/                          blank templates for a SKILL.md, a pack page and a skill page
 ```
 
