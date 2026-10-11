@@ -2,6 +2,24 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-10 - update-installed-plugins.sh refuses a pack whose hooks changed
+
+No skill's behavior changed; no pack version bumped.
+
+- **The daily updater no longer installs a hook change unattended.** Before each
+  `claude plugin update`, `scripts/update-installed-plugins.sh` compares the pack's hook
+  surface in the installed cache version with the marketplace clone's copy: everything
+  under `hooks/`, the `hooks` value in `plugin.json`, any file a hook command names as
+  `${CLAUDE_PLUGIN_ROOT}/<path>`, and file modes. If anything differs (hooks added,
+  removed or edited), it prints `REFUSED <pack>: hooks changed between <installed> and
+  <incoming>` with a unified diff, skips that pack, still updates the others, and exits
+  non-zero. If either copy cannot be found it refuses too. A hook change is installed by
+  hand with `claude plugin update <pack>`, after reading the diff. Scripts that a hook's
+  script calls in turn are not followed.
+- **New:** `scripts/plugin-hook-surface.py` (the helper) and
+  `scripts/test-update-installed-plugins.sh` (nine fixture packs against a stub
+  `claude`; the old updater fails every refusal case).
+
 ## 2026-10-10 - voice-and-editing 1.4.0: vault-ready-ingest and intake-review-compare (incubator); source-intake read-only reviewers
 
 - **New skill `vault-ready-ingest`.** Takes up to five readwise-links `vault-ready/` drafts into
