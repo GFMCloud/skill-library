@@ -16,6 +16,7 @@ description: >-
   not for cloud-triggered work with no local file access (that is a Routine).
 metadata:
   maturity: incubator
+  reviewed: 2026-10-11
 ---
 
 # schedule-harness
@@ -77,6 +78,9 @@ after registration, not by this script.
   tool, with his approval, has registered the task with: the rendered pointer's body as
   the instructions, the permission mode set explicitly (not left on a default), and one
   attended "Run now" completed so its saved approvals are seeded.
+- Before the first unattended run, the design has passed every item of
+  [references/unattended-run-pressure-test.md](references/unattended-run-pressure-test.md)
+  for every routine, each with its evidence named.
 - Two unattended runs have completed with green run logs, and each run's own summary
   names its actual outcome (what ran, what got queued to Tier 3, any retry) rather than
   reporting a bare green status, see the roadmap's Success line and the FIXTURE run
@@ -100,6 +104,9 @@ after registration, not by this script.
   under `~/.claude/scheduled-tasks/` or anywhere under `~/.claude/` itself: it never
   does this (see "Registration" below); hand the file and the values to Graham instead
   of attempting a workaround.
+- An item of the unattended-run pressure test fails and its fix is outside this skill's
+  inputs (a network allowlist entry, an attached repo, a build order): name the item and
+  hand it back; the first unattended run waits.
 - A run's actual behavior (once registered) does not match its own summary: a green
   status with an unlogged push, an unlogged deletion, or a limit silently exceeded is a
   failure of this skill's contract per the roadmap's Failure line, not a passing run
@@ -133,7 +140,10 @@ Set the task's permission mode explicitly at registration, never leave it on
 whatever the picker defaults to. Seed its saved approvals with one attended "Run now"
 before trusting it to run unattended: watch the first run for permission prompts and
 select "always allow" on each ("Future runs of that task auto-approve the same tools
-without prompting", [references/platform-facts.md](references/platform-facts.md)). For
+without prompting", [references/platform-facts.md](references/platform-facts.md)). Then,
+before the first unattended run, run the checklist in
+[references/unattended-run-pressure-test.md](references/unattended-run-pressure-test.md)
+against the design; one failing item blocks that run. For
 a phase run by a non-Desktop scheduler (cron, launchd, CI) instead of the Desktop
 app's own task runner, use headless `claude -p` with `--permission-prompts none`
 (available from Claude Code 2.1.259, research record R-6); this is the equivalent of

@@ -11,6 +11,7 @@ description: >-
   /code-review. Costs three to five subagent spawns per run; read-only, it fixes nothing.
 metadata:
   maturity: incubator
+  reviewed: 2026-10-11
 ---
 
 # Orchestrated diff review
@@ -46,20 +47,36 @@ integer appears in a command.
    `gh pr diff <N>` and `gh pr view <N> --json files --jq '.files[].path'`. Empty diff:
    stop with "Nothing to review." Drop binary and generated files from the file list.
    Note the dominant language from the file extensions; leave it unset when mixed.
-2. **Fan out**, one read-only subagent per dimension, each given the diff and the file
-   list and nothing from this conversation. State the model before spawning.
+2. **Premises.** Fill the Premises table from
+   [templates/reviewer-brief.md](templates/reviewer-brief.md), per "Premises in the
+   brief" below, and read the running system's own log for every inferred premise about
+   a running system.
+3. **Fan out**, one read-only subagent per dimension, each given the diff, the file
+   list and the Premises table, and nothing else from this conversation. State the model
+   before spawning.
    - correctness and maintainability against the surrounding code;
    - silent failures: `verification-kit:silent-failure-hunter`;
    - security, only when the file list touches a security trigger (authentication or
      authorization, user input, database queries, file-system paths, external API calls,
      cryptography, secrets), using `verification-kit:security-checklist` as the reference.
    Every finding must carry file, line, severity and the quoted code.
-3. **Deduplicate** on the quoted code, normalized for whitespace. Keep the highest
+4. **Deduplicate** on the quoted code, normalized for whitespace. Keep the highest
    severity of each duplicate group.
-4. **Verify.** For every unique critical or high finding, a fresh subagent tries to
+5. **Verify.** For every unique critical or high finding, a fresh subagent tries to
    refute it from the code. Confirmed and could-not-verify findings stay blocking;
    refuted ones move to advisory, marked as refuted.
-5. **Report**, in the shape below.
+6. **Report**, in the shape below.
+
+## Premises in the brief
+
+The brief handed to each reviewer carries a Premises table
+([templates/reviewer-brief.md](templates/reviewer-brief.md)): each fact the change relies
+on, marked observed (the command and the output reference that showed it) or inferred
+(from what). The orchestrator reads the running system's own log for every inferred
+premise about a running system before the brief is sent; a brief with an unchecked
+inferred premise about a running system is not sent. Reason: on 2026-10-11 a reviewer
+accepted "R1's cwd is its first repo" as fact; it was inferred from a different routine's
+proof and never checked against R1's run log, and R1's next scheduled run wrote nothing.
 
 ## Fail-closed contract
 
@@ -77,6 +94,9 @@ The stats line accounts for every raw finding: raw = unique + duplicates, and un
 confirmed + unverified + refuted + medium-and-low. Pass means the arithmetic holds and
 every blocking finding quotes code that exists at the cited line.
 
+Before the brief is sent, every Premises row fills exactly one evidence column, and no
+row about a running system is still Inferred. This is a reading check, not a script.
+
 ## Done when
 
 The report is presented with a verdict, the stats line, every blocking finding with its
@@ -87,6 +107,8 @@ evidence, and the list of dimensions that ran.
 - The argument fails validation.
 - The diff is empty, or the PR is not found, or PR mode is asked for and `gh` is absent
   (suggest local mode on a checked-out branch).
+- A Premises row about a running system is still Inferred and that system's own log
+  cannot be read from this session: the brief is not sent. Say which log is needed.
 - A rate limit arrives mid fan-out: report `incomplete` with what did run.
 
 ## Output contract

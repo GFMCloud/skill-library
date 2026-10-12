@@ -138,7 +138,10 @@ not tell a reviewer who ran a check from one who read a line). `new_information`
 answers, on a second review, "does this verdict cite anything the first did not". A
 second `fail` with `new_information: false` is a repeat fail and holds the target. The
 reviewer runs on a model that differs from the builder's, with no parent history, and
-receives the goal and the change only. Rubric line every reviewer receives verbatim:
+receives the goal, the change and a Premises table (each fact the change relies on, marked
+observed with its command and output reference, or inferred from what; an inferred premise
+about a running system is checked against that system's own log before the brief is sent,
+2026-10-11). Rubric line every reviewer receives verbatim:
 **explanation length is not a quality signal.**
 
 Example:
@@ -449,7 +452,7 @@ Each invariant has a fixture that fails when it is violated: `maintainers/script
 | T1 goal-spec | `/goal` condition syntax | R-1, R-2 | Goal block v1 | nothing |
 | T2 bounded-loop | blocking Stop hook (exit 2, `additionalContext`) | R-3, R-11 | Escalation report v1 | Goal block v1 |
 | T3 smoke-gate | Stop hook (optional); Anthropic `webapp-testing` scripts | R-3, R-12 | smoke script, run log, screenshot | Smoke manifest v1; Escalation report v1 on red (via bounded-loop) |
-| T4 review-pair | read-only subagent (`permissionMode: plan`, `maxTurns`, different `model`) | R-4 | Verdict object v1 | Goal block v1; the change |
+| T4 review-pair | read-only subagent (`permissionMode: plan`, `maxTurns`, different `model`) | R-4 | Verdict object v1 | Goal block v1; the change; Premises table (`templates/reviewer-brief.md`) |
 | T5 handoff resume | none new (existing skill) | secondary T5 | Typed claim v1 (write side); resume status | Typed claim v1 (read side) |
 | T6 site-review | `/goal` template; Lighthouse CLI; linkinator | R-1, R-2 | scored table, fix list | Goal block v1; Verdict object v1 (re-score) |
 | T7 schedule-harness | desktop scheduled task (permission mode, saved approvals, overlap skip, catch-up) | R-6, R-7, R-10 | Scheduled-task pointer v1 | nothing (an existing harness's `/phase`) |
