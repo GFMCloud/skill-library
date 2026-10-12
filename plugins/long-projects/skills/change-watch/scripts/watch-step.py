@@ -3,16 +3,22 @@
 
 Consumes and updates a Seen-index entry v1 file (toolkit interface spec,
 section 6). Applies the transition predicate: report iff
-current_state != last_state. last_seen advances on every call; last_state
-and last_reported advance only on a transition.
+current_state != last_state. last_seen advances on every step call;
+last_state and last_reported advance only when a delivered report is
+confirmed with --confirm. Until then the transition stays unreported, so a
+report whose delivery failed is printed again on the next cycle.
 
 Usage:
     watch-step.py <seen-index.yaml> <source> <current-state>
+    watch-step.py --confirm <seen-index.yaml> <source> <reported-state>
 
-Prints exactly one line:
+The step form prints exactly one line:
     REPORT <source> <old> -> <new>     (a transition happened)
     NO-REPORT                          (same state as last time, or first
                                          observation with no prior state)
+
+The --confirm form prints nothing. Run it only after the REPORT line was
+delivered, with the <new> state from that line.
 
 Exit codes: 0 on success (either outcome), 1 on a usage or file error.
 
@@ -69,9 +75,13 @@ def write_entry(path, entry):
 
 
 def main(argv):
+    confirm = len(argv) == 5 and argv[1] == "--confirm"
+    if confirm:
+        argv = argv[1:]
     if len(argv) != 4:
         sys.stderr.write(
             "usage: watch-step.py <seen-index.yaml> <source> <current-state>\n"
+            "       watch-step.py --confirm <seen-index.yaml> <source> <reported-state>\n"
         )
         return 1
 
@@ -84,6 +94,16 @@ def main(argv):
             f"not '{source}'\n"
         )
         return 1
+
+    if confirm:
+        if entry.get("source") is None:
+            sys.stderr.write(f"error: no seen-index entry at {path} to confirm\n")
+            return 1
+        # The report was delivered: only now is the transition recorded.
+        entry["last_state"] = current_state
+        entry["last_reported"] = now_iso()
+        write_entry(path, entry)
+        return 0
 
     old_state = entry.get("last_state")
     timestamp = now_iso()
@@ -98,9 +118,8 @@ def main(argv):
     if old_state is None:
         entry["last_state"] = current_state
         # first observation: no prior state, so no report, but seed last_state
-    elif is_transition:
-        entry["last_state"] = current_state
-        entry["last_reported"] = timestamp
+    # A transition leaves last_state and last_reported alone: --confirm records
+    # them once the report is delivered, so a failed delivery reports again.
 
     write_entry(path, entry)
 

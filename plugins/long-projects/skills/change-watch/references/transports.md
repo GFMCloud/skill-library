@@ -22,11 +22,12 @@ gate.
 **How it fits.** `schedule-harness` (T7, `voice-and-editing`) produces a Scheduled-task
 pointer v1 (interface spec section 7) that registers the poll. change-watch
 supplies the check the scheduled task runs each cycle: read the source, run
-`scripts/watch-step.py` against the seen-index, and act on `REPORT` lines.
-`schedule-harness`'s SKILL.md did not exist yet at the time this file was
-written (it is a wave-2 sibling built in parallel); this section composes
-against the Scheduled-task pointer v1 shape from the interface spec alone,
-not against that skill's file.
+`scripts/watch-step.py` against the seen-index, act on `REPORT` lines, and
+run `scripts/watch-step.py --confirm` once each report is delivered.
+This section composes against the Scheduled-task pointer v1 shape from the
+interface spec, not against that skill's file. `schedule-harness` now exists
+and renders and checks that shape (re-verified against its SKILL.md,
+2026-10-11).
 
 **Source.** Research record row R-7 (VERIFIED against
 `code.claude.com/docs/en/desktop-scheduled-tasks`): "per-task permission

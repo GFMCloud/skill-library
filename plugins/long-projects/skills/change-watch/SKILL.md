@@ -62,20 +62,26 @@ skill reads and writes.
 Run `scripts/watch-step.py <seen-index> <source> <current-state>` for the
 current cycle's observed state. It prints `REPORT <source> <old> -> <new>` on
 a transition or `NO-REPORT` otherwise, and updates the seen-index in place:
-`last_seen` advances on every call, `last_state` and `last_reported` only on
-a transition. On any `REPORT` line, run
+`last_seen` advances on every call; `last_state` and `last_reported` do not
+move on a `REPORT`. Once the report has been delivered to the report mode,
+run `scripts/watch-step.py --confirm <seen-index> <source> <new>` with the
+new state from the `REPORT` line; only that records the transition. If
+delivery fails, do not confirm: the next cycle prints the same `REPORT`
+again. On any `REPORT` line, run
 `scripts/classify-action.py <rules-file> <action-name>` for each candidate
 action before the diagnostic call: it prints `safe` or `approval-only`, or
 exits 1 with `unclassified` on stderr for an action the rules file does not
 name. An unclassified action is never treated as safe by default.
 
 Replay proof (FIXTURE-labelled, run against the fixtures in
-[fixtures/](fixtures/)): a known
-transition OK to ALARM produces exactly one `REPORT`; the same ALARM state
-replayed three times produces three `NO-REPORT` lines with `last_seen`
-advancing and `last_reported` unchanged; a flapping sequence OK, ALARM, OK,
-ALARM produces three `REPORT` lines, one per transition. An action absent
-from the rules file exits 1 as `unclassified` rather than defaulting to safe.
+[fixtures/](fixtures/) by `bash fixtures/run-fixtures.sh`, exit 0 and `ALL
+PASS` means pass): a known transition OK to ALARM produces a `REPORT`, and
+the same `REPORT` again on the next cycle while it is unconfirmed; after the
+confirm, the same ALARM state replayed three times produces three
+`NO-REPORT` lines with `last_reported` unchanged; a flapping sequence OK,
+ALARM, OK, ALARM, each report confirmed, produces three `REPORT` lines, one
+per transition. An action absent from the rules file exits 1 as
+`unclassified` rather than defaulting to safe.
 
 ## Done when
 
@@ -90,6 +96,9 @@ since its last report.
 - The source cannot be read (the command errors, the API call fails, the
   marker file's parent directory does not exist): report the read failure
   itself as an exception, do not silently skip the cycle.
+- The report cannot be delivered (the channel, file or PR comment write
+  fails): do not run `--confirm`; report the delivery failure where you can
+  and end the cycle. The next cycle reports the same transition again.
 - An action after a transition is not in the classification rules file:
   stop before the diagnostic call and report it as unclassified, per
   `scripts/classify-action.py`'s exit-1 behavior. Do not guess safe.
@@ -115,12 +124,18 @@ since its last report.
 - No flapping suppression beyond "one report per transition": alarm-driven
   agents in the wild document none either (research record, secondary
   findings, T8), so this is a shared gap, not a regression.
-- `schedule-harness` and `smoke-gate` were both incomplete wave-2 siblings at
-  build time (`smoke-gate/SKILL.md` did not exist; `schedule-harness` had no
-  skill directory at all). This skill composes against the Scheduled-task
-  pointer v1 and Smoke manifest v1 shapes from the interface spec directly,
-  not against either sibling's file. Re-verify the composition once both
-  land.
+- This skill composes against the Scheduled-task pointer v1 and Smoke
+  manifest v1 shapes from the interface spec, not against either sibling's
+  file. Both siblings now exist: `schedule-harness` (`voice-and-editing`)
+  renders and checks a Scheduled-task pointer v1 and names change-watch as
+  its consumer, and `smoke-gate` (`verification-kit`) consumes a Smoke
+  manifest v1 (re-verified against both SKILL.md files, 2026-10-11).
+- A report can repeat; it is not delivered exactly once. A delivered report whose
+  `--confirm` never runs (the session dies between the send and the
+  confirm) is sent again next cycle; a caller that skips `--confirm`
+  altogether gets the same `REPORT` every cycle. A transition that reverts
+  before its report is confirmed (OK, ALARM unconfirmed, then OK) is dropped,
+  since the seen-index still records OK.
 - The seen-index parser in `scripts/watch-step.py` is a narrow hand-rolled
   reader for the fixed five-field shape, not a general YAML parser. A
   seen-index file with fields beyond the spec's five, or YAML syntax beyond

@@ -45,12 +45,13 @@ NO-REPORT  cloudwatch:orders-api-5xx  (still ALARM, already reported at 09:15)
 - **It registers something that keeps running after you walk away.** That is the point of the skill: a repeating scheduled task on your computer, or a job in Anthropic's cloud. You register it yourself as part of setting the watch up.
 - **It rewrites its state file on every single check.** There is one file per watched thing, holding what state was last seen and what was last reported. The file is rewritten whether anything changed or not.
 - **It reports once per change, not once per episode.** A thing that flips back and forth produces one report per flip. There is no smoothing, so a genuinely unstable source will report a lot. The skill states this plainly as a known cost.
+- **A change counts as reported only once the report has arrived.** If sending the report fails, the next check reports the same change again rather than losing it. The cost is that a report can occasionally arrive twice.
 - **An action it has not been told about is refused, not guessed.** Follow-up actions are looked up in a rules file you write. An action missing from that file stops the cycle with an error rather than being treated as safe.
-- **It ships two small Python programs and needs Python to run them.** One updates the state file and decides whether to report, the other classifies a follow-up action.
+- **It ships two small Python programs and needs Python to run them.** One updates the state file and decides whether to report, the other classifies a follow-up action. A test script runs both against fixture files.
 - **It goes online only if the thing being watched is online.** Two of its three ways of running use Anthropic's cloud or accept an incoming request from a monitoring service. The local way makes no network calls of its own, beyond whatever your reading command does.
 - **It handles no keys or passwords.** The cloud option relies on a token that belongs to that cloud job and is held outside this skill.
 - **Its state file reader is not a full parser.** It understands five fields written as `name: value` and silently ignores anything else in the file, which the skill says itself.
-- **Parts of it depend on skills in other packs.** The scheduled option uses `schedule-harness` from the `voice-and-editing` pack, which the skill's own text notes did not exist when it was written. The optional staging check uses `smoke-gate` from `verification-kit`. One of its three ways of running needs a Claude Code feature that is still in research preview.
+- **Parts of it depend on skills in other packs.** The scheduled option uses `schedule-harness` from the `voice-and-editing` pack. The optional staging check uses `smoke-gate` from `verification-kit`. One of its three ways of running needs a Claude Code feature that is still in research preview.
 
 ## What next
 

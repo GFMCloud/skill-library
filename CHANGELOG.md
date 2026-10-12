@@ -2,6 +2,26 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-11 - long-projects 0.19.7, frontend-design 0.5.2, decks 0.4.2: four defects found in an intake review
+
+- **change-watch: a report whose delivery fails is no longer lost.** `watch-step.py`
+  used to record `last_state` and `last_reported` before printing `REPORT`, so a
+  report that never arrived was never sent again. A `REPORT` now leaves both fields
+  alone; the caller runs `watch-step.py --confirm <seen-index> <source> <new>` after
+  delivering the report, and only that records the transition. Until then each cycle
+  prints the same `REPORT` again. New `fixtures/run-fixtures.sh` (16 assertions); the
+  old script fails 4 of them. Known weaknesses now name the repeat-report and
+  revert-before-confirm cases, and the stale note that `schedule-harness` did not
+  exist is replaced by a composition re-check against it and `smoke-gate`.
+- **design-taste-frontend no longer advertises dashboards.** Its description said
+  "dashboard or app UI" while its body rules dashboards, dense product UI and admin
+  panels out of scope (section 14). The description now names sites, landing pages,
+  portfolios and marketing pages, and says what it is not for.
+- **html-diagram: the packaging command is corrected.** `python3 -m
+  scripts.package_skill` only resolves from skill-creator's own directory; the
+  section now says so, and says the skill needs no packaging when installed with the
+  decks pack.
+
 ## 2026-10-10 - update-installed-plugins.sh refuses a pack whose hooks changed
 
 No skill's behavior changed; no pack version bumped.
