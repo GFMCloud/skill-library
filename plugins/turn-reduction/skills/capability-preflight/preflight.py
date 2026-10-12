@@ -3,6 +3,7 @@
 
 Reads a manifest of capabilities. For each one it exercises a real read, a real write, and a
 negative control that must fail. Anything unproven comes back in a single batch at the end.
+The negative control runs first; when it does not fail, the write probe is not run.
 
 Exit codes:
   0  every capability proven (non-blocking verified-unreachable entries allowed)
@@ -343,15 +344,9 @@ def assess_capability(cap, cwd):
     record["blocking"] = True
     ok = True
 
-    for role in ("read", "write"):
-        probe = cap[role]
-        result = run_probe(probe, cwd)
-        verdict, why = assess_probe(probe, result)
-        record["probes"].append({"role": role, "result": result, "verdict": verdict, "why": why})
-        if verdict != "PROVEN":
-            ok = False
-            record["reasons"].append("%s %s — %s" % (role, verdict.lower(), why))
-
+    # The negative control runs first. A "deliberately invalid" filter once returned HTTP 200
+    # and created a live, undeletable webhook trigger; a control that does not fail may itself
+    # have written, so the write probe is not run after it.
     nc = cap["negative_control"]
     nc_result = run_probe(nc, cwd)
     discriminating, why = check_expect(nc.get("expect"), nc_result)
@@ -368,6 +363,25 @@ def assess_capability(cap, cwd):
             "negative control did not fail (%s) — the probe would return the same answer with "
             "no access at all, so it proves nothing" % why
         )
+
+    for role in ("read", "write"):
+        probe = cap[role]
+        if role == "write" and not discriminating:
+            skipped = {"cmd": probe["cmd"], "exit": None, "stdout": "", "stderr": "",
+                       "timed_out": False}
+            record["probes"].append({
+                "role": role, "result": skipped, "verdict": "NOT RUN",
+                "why": "the negative control did not fail, so the write probe was not run",
+            })
+            record["reasons"].append("write not run: the negative control ran first and did "
+                                     "not fail")
+            continue
+        result = run_probe(probe, cwd)
+        verdict, why = assess_probe(probe, result)
+        record["probes"].append({"role": role, "result": result, "verdict": verdict, "why": why})
+        if verdict != "PROVEN":
+            ok = False
+            record["reasons"].append("%s %s — %s" % (role, verdict.lower(), why))
 
     record["verdict"] = "PROVEN" if ok else "NOT PROVEN"
     return record

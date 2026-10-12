@@ -1,10 +1,10 @@
 ---
 name: "standing-authorization"
-description: "Read what you are already authorized to do out of a file instead of asking: a granted list, a stop-list, and ceilings that resolve to one value in one place. Use at the start of every session, and again before sending any question that begins should I, shall I, or do you want me to."
+description: "Read what you are already authorized to do out of a file instead of asking: a granted list, a stop-list, and ceilings that resolve to one value in one place. Use at the start of every session, and again before sending any question that begins should I, shall I, or do you want me to. Also checks a whole plan's steps, and the Claude Code allow rules the grants need, before work starts."
 metadata:
   maturity: stable
-  version: 1.1.1
-  reviewed: 2026-09-11
+  version: 1.2.0
+  reviewed: 2026-10-11
 ---
 
 # standing-authorization
@@ -19,26 +19,31 @@ that can look at a question and say the question is a defect.
 ## Inputs
 
 The project's `authorization.json` (granted list, stop list, ceilings), and the question
-the agent is about to send.
+the agent is about to send. For `check-plan`, the plan file. For `permissions`, the
+project's `.claude/settings.local.json` and `~/.claude/settings.json`.
 
 ## Verify
 
 `authz.py validate` exits 0 on the file; `authz.py check` returns exactly one of
 `ALREADY-GRANTED`, `STOP-LISTED`, `NOT-COVERED` with the exit code the table below
-gives it.
+gives it. `bash fixtures/run-fixtures.sh` prints `ALL PASS` and exits 0: it proves
+`permissions` and `check-plan` fail on deliberate bad fixtures and pass on good ones.
 
 ## Done when
 
 `ALREADY-GRANTED`: the action is taken inside its ceiling and logged where `log_to`
 says, and the question is not sent. `NOT-COVERED`: the question is sent, and the answer
-is added to the file so it cannot be asked twice.
+is added to the file so it cannot be asked twice. Before a granted chore starts,
+`permissions` exits 0; before a written plan starts, `check-plan` on it exits 0.
 
 ## Stop when
 
 `STOP-LISTED`: asking is correct and stays correct. `validate` fails: fix the file before
 trusting any `check`. The granted list is empty, which is the state this file exists to
 leave. The question is phrased in words no `match` entry anticipates: that is a miss,
-so ask, then add the phrasing rather than widening the keywords.
+so ask, then add the phrasing rather than widening the keywords. `permissions` exits 1:
+hand Graham its output as one paste and start no chore that needs a missing rule until
+it exits 0.
 
 ## Run it
 
@@ -51,6 +56,13 @@ python3 <this-skill-dir>/authz.py check authorization.json --ask "should I commi
 
 # after editing the file
 python3 <this-skill-dir>/authz.py validate authorization.json
+
+# at adoption, and whenever a grant is added: do the settings allow what is granted?
+python3 <this-skill-dir>/authz.py permissions authorization.json \
+  --settings .claude/settings.local.json --settings ~/.claude/settings.json
+
+# before starting a written plan: would any step turn into a question?
+python3 <this-skill-dir>/authz.py check-plan authorization.json --steps PLAN.md
 ```
 
 Absolute path when you need one: read `installPath` for `turn-reduction@gfm-foundry` out
@@ -88,6 +100,54 @@ for that project. Removing a grant is safe; the reverse is not.
 `ALREADY-GRANTED` failing is deliberate. An approval turn that the file had already
 granted is a defect with a location, not a matter of style.
 
+## Settings that match the grants: `permissions`
+
+Rule: a granted entry whose action needs a command the permission layer would block
+lists the literal allow rules in `permissions`. Run `permissions` at adoption and each
+time a grant is added, before any chore it covers. While it exits 1, hand Graham its
+output as one paste, then rerun it; start the chores only when it exits 0. Never ask for
+the blocked action itself. Reason: Claude Code's permission layer never reads
+`authorization.json`, so a granted chore (a merge, a worktree removal, a branch
+deletion) is still blocked at run time and comes back to Graham one action at a time. On
+2026-10-11 that was four single-action pastes in one session, and a paste covering merge
+and worktree removal but not branch deletion left a merged branch behind.
+
+| output | exit | meaning |
+| --- | --- | --- |
+| `N of M granted rule(s) missing, needed by: ...` then a `{"permissions": {"allow": [...]}}` fragment | 1 | hand Graham the fragment as one paste into the project's settings; no chore that needs it starts yet |
+| `all N granted rules present` | 0 | the settings hold every rule the grants list; start |
+
+A missing settings file, or one with no `permissions.allow`, is read as an empty list
+and the output says so. The agent never edits a settings file itself; that stays
+Graham's paste.
+
+Known weaknesses: matching is exact string equality after whitespace normalisation, with
+no wildcard reasoning. A broader rule that would cover a shape (say `Bash(git -C *
+branch*)`) does not count, so the paste can ask for a rule the settings already cover;
+and the check proves only that the string is present, not that the auto-mode classifier
+will allow the command. It reads only the files named with `--settings`.
+
+## A plan checked before it starts: `check-plan`
+
+Rule: before starting a written plan in a project with this file, run `check-plan` on
+it. Each numbered or bulleted line is one step (every non-empty line, when the file has
+no list). Fix every `STOP-LISTED` or `NOT-COVERED` step before starting: reword the step,
+correct the `match` token, or ask Graham once for what is genuinely uncovered. Reason:
+substring matching silently turns planned steps into questions. On 2026-10-10 four
+planned steps were wrongly stop-listed and four grants came back not-covered, and it
+took two patch rounds to find out.
+
+| output | exit | meaning |
+| --- | --- | --- |
+| one line per step: verdict, matched token (`-` for none), step text | | read every line, not only the summary |
+| any step `STOP-LISTED` or `NOT-COVERED` | 1 | that step would become a question mid-run; fix it before starting |
+| every step `ALREADY-GRANTED` | 0 | the plan runs without a question |
+| no steps found in the file | 1 | nothing was checked |
+
+Known weaknesses: it uses the same substring classifier as `check`, so a step classed
+`ALREADY-GRANTED` by an accidental substring passes; read the matched token on each
+line. A step written across several lines is read as its first line only.
+
 ## The file
 
 ```json
@@ -101,7 +161,8 @@ granted is a defect with a location, not a matter of style.
       "action": "commit to a branch that is not the default branch, up to the commit ceiling",
       "match": ["should i commit", "ok to commit"],
       "ceiling": "commits_before_review",
-      "log_to": "git history plus a PROGRESS.md line"
+      "log_to": "git history plus a PROGRESS.md line",
+      "permissions": ["Bash(git -C /path/to/repo commit *)"]
     }
   ],
   "stop": [
@@ -112,7 +173,8 @@ granted is a defect with a location, not a matter of style.
 
 `match` entries are case-insensitive substrings of the question, or `re:` followed by a
 regex. `ceiling` names one entry in `ceilings`, or lists several. The stop-list is checked
-first and always wins.
+first and always wins. `permissions` is optional: a non-empty array of allow-rule strings
+written exactly as they appear in a Claude Code settings `permissions.allow` list.
 
 ## What `validate` enforces, and why each one
 
@@ -135,6 +197,10 @@ authorization into an unaudited free hand.
 ambiguous rule is the rule that gets ignored: which is how the prose version died.
 
 **An empty granted list is an error.** Empty is the state this file exists to leave.
+
+**`permissions` is a non-empty array of non-empty strings, or absent.** Any other shape
+is an error, and `permissions` refuses to run on an invalid file, because a malformed
+rule list cannot be checked as written.
 
 ## Scope
 

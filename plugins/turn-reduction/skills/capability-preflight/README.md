@@ -4,7 +4,7 @@ Part of the [turn-reduction](../../README.md) pack.
 
 Work stalls when Claude Code turns out not to be able to reach something it needed: a folder, a server, a repository, an account. You usually find out in the middle, and then you finish that step by hand. This skill moves the discovery to the front. You write down every system the job touches, and for each one a command that reads from it and a command that writes to it. It runs them all in one pass and tells you which ones are proven and which are not. Anything that fails comes back in one list, with the fix you wrote next to it, so you deal with all of it once instead of one surprise at a time.
 
-Each system also gets a test that is meant to fail, such as the same request with the sign-in removed. If that one succeeds, the check proved nothing, and the skill says so rather than reporting a pass.
+Each system also gets a test that is meant to fail, such as the same request with the sign-in removed. If that one succeeds, the check proved nothing, and the skill says so rather than reporting a pass. That test runs first, and if it does not fail, the write test is not run at all. For a write to a service, the test meant to fail leaves out a field the service requires, so it is refused before anything is created. A value you expect to be refused is not used, because a service can accept it and create something real.
 
 ## Say this to use it
 

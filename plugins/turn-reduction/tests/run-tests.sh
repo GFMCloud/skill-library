@@ -72,6 +72,12 @@ because "missing 'negative_control'"
 because "'excludes' must be a non-empty string"
 because "needs a 'probe'"
 
+run 1 "a negative control that does not fail stops the write probe" -- \
+  python3 "$PREFLIGHT" "$FIXTURES/preflight/red-order.manifest.json"
+because "NOT RUN"
+because "write not run: the negative control ran first and did not fail"
+run 1 "the skipped write left no marker" -- test -e "$scratch/order-write-marker"
+
 echo
 echo "output-lint"
 run 0 "green message passes" -- python3 "$LINT" "$FIXTURES/output-lint/green.md"

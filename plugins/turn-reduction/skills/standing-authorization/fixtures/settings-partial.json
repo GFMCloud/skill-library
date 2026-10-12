@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh pr merge * -R FIXTURE/repo *)",
+      "Bash(git -C /fixture/repo  worktree remove *)",
+      "Bash(git -C /fixture/repo commit *)"
+    ]
+  }
+}
