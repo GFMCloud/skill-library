@@ -1,6 +1,14 @@
 # Changelog
 
 Behavior changes only — not wording tweaks. Newest first.
+## 2026-10-12 - voice-and-editing 1.4.2: vault-ready-ingest writes repo-relative source_path
+
+- **vault-ready-ingest: new notes carry `source_path` as `articles/<file>`, relative to the Readwise-links
+  repo, instead of an absolute path.** Old notes whose absolute path points inside the repo still match and
+  are updated in place; an absolute path elsewhere is left out of the retrieval test and named. Nothing is
+  rewritten. Needed because the research loop's sweep (R3) runs the ingest in a cloud checkout at
+  /home/user/Readwise-links. One fixture added; the old ingest.py fails it.
+
 
 ## 2026-10-11 - turn-reduction 1.4.0: grants checked against settings and whole plans; plan-gate fires on proposals; preflight runs the negative control first
 
