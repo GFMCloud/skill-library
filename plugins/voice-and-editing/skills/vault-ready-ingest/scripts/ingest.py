@@ -241,16 +241,26 @@ def main() -> int:
         items.append({"n": n, "dir": d, "nf": nf, "sf": sf, "draft": draft, "art": art,
                       "draft_blob": git(repo, "hash-object", f"vault-ready/{d.name}/note.md").stdout.strip()})
 
+    def src_key(sp) -> str:
+        """A note's source_path as the repo-relative form new notes carry; an absolute path under --repo (written
+        before 2026-10-12) maps to the same form, so an old note is still found and updated, never rewritten."""
+        sp = Path(str(sp or ""))
+        return sp.relative_to(repo).as_posix() if sp.is_absolute() and sp.is_relative_to(repo) else sp.as_posix()
+
+    def src_file(sp) -> Path:
+        sp = Path(str(sp or ""))
+        return sp if sp.is_absolute() else repo / sp
+
     existing = vault_notes(vault)
     by_source = {}
     for p, f, _ in existing:
         if f.get("source_path"):
-            by_source.setdefault((f.get("type"), f["source_path"]), p)
+            by_source.setdefault((f.get("type"), src_key(f["source_path"])), p)
 
     # Plan: skip an item whose record and note already carry the same article and draft.
     todo = []
     for it in items:
-        sp = str(it["art"])
+        sp = it["art"].relative_to(repo).as_posix()
         rec, note = by_source.get(("source", sp)), by_source.get(("knowledge", sp))
         it["rec_path"], it["note_path"] = rec, note
         if note:
@@ -300,7 +310,7 @@ def main() -> int:
         rec_path = it["rec_path"] or vault / "Sources" / f"Saved link {n} {safe_name(title)}.md"
         # Case-insensitive, as the Mac's file system is: "Agent Teams.md" would overwrite "agent teams.md".
         key = str(note_path).lower()
-        clash = [p for p, f, _ in existing if str(p).lower() == key and f.get("source_path") != str(it["art"])]
+        clash = [p for p, f, _ in existing if str(p).lower() == key and src_key(f.get("source_path")) != it["art"].relative_to(repo).as_posix()]
         if clash or key in taken_titles:
             print(f"FAILED #{n}: {note_path.relative_to(vault)} already holds a different note")
             continue
@@ -312,7 +322,7 @@ def main() -> int:
             f"({l.get('final_url') or l.get('url')})"
             for i, l in enumerate(sf.get("linked_pages") or [], 1) if l.get("status") == "captured"]
         writes[rec_path] = doc(
-            {"type": "source", "project": slug, "status": "draft", "checked_on": today, "source_path": str(it["art"]),
+            {"type": "source", "project": slug, "status": "draft", "checked_on": today, "source_path": it["art"].relative_to(repo).as_posix(),
              "url": sf.get("url"), "issue_url": sf.get("issue_url"), "article_blob": sf["article_blob"],
              "article_sha256": sf.get("article_sha256")},
             f"# {rec}\n\nSaved web content: saved link #{n}, saved {str(sf.get('saved'))[:10]}, from {sf.get('url')}. "
@@ -322,7 +332,7 @@ def main() -> int:
         points = "\n".join(f"- {c} ([[Sources/{rec}|{s}]])" for c, s in note["points"])
         writes[note_path] = doc(
             {"type": "knowledge", "project": slug, "status": "draft", "checked_on": today,
-             "source_path": str(it["art"]),
+             "source_path": it["art"].relative_to(repo).as_posix(),
              "verification": "each key point was quoted from the cited article section and the quote checked by "
                              "script, then removed",
              "issue": n, "article_blob": sf["article_blob"], "draft_blob": it["draft_blob"]},
@@ -341,7 +351,7 @@ def main() -> int:
     notes = {}
     for p, f, body in existing:
         if f.get("type") == "knowledge" and f.get("project") == slug and p not in writes:
-            if not f.get("source_path") or not Path(f["source_path"]).is_file():
+            if not f.get("source_path") or not src_file(f["source_path"]).is_file():
                 print(f"left out of the retrieval test: {p.relative_to(vault)} has no readable source_path")
                 continue
             notes[p] = (f, body)
@@ -357,7 +367,7 @@ def main() -> int:
         f"{i}. {q}" for i, q in enumerate(questions, 1))
     for t, (p, f, body) in by_title.items():
         prompt += (f"\n\n# Note: {t}\n\n{body.strip()}\n\n## The original article this note was written from\n\n"
-                   + Path(f["source_path"]).read_text())
+                   + src_file(f["source_path"]).read_text())
     rows = None
     for attempt in (1, 2):
         reply = ask(prompt, logs / f"retrieval-{attempt}")
@@ -384,7 +394,7 @@ def main() -> int:
                 if x.get("section") not in set(LINK.findall(body)):
                     errs.append(f"question {q}: the note does not cite {x.get('section')}")
                     continue
-                secs = article_sections(Path(f["source_path"]).read_text(), briefing.split_front)
+                secs = article_sections(src_file(f["source_path"]).read_text(), briefing.split_front)
                 bad = quote_ok(str(x.get("quote") or ""), secs.get(x["section"], ""))
                 if bad:
                     errs.append(f"question {q}: {bad}")
@@ -420,8 +430,7 @@ def main() -> int:
         if p is None:
             table.append(f"| {questions[q - 1]} | none yet | | Gap: no note answers this yet |")
         else:
-            rel = Path(f["source_path"]).relative_to(repo) if Path(f["source_path"]).is_relative_to(repo) \
-                else Path(f["source_path"]).name
+            rel = src_key(f["source_path"])
             table.append(f"| {questions[q - 1]} | [[Knowledge/{p.stem}]] | `{rel}`, {sec} | "
                          "Pass for recorded content; the source's own claims not independently checked |")
     rt_text = re.sub(r"\A(---\n.*?^checked_on:)[^\n]*", rf"\g<1> {today}", rt_text, count=1, flags=re.M | re.S)

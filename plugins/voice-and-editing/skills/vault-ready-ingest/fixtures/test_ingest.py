@@ -71,7 +71,9 @@ def test_a_new_item_is_written_linked_and_committed(env):
     rec = next((v / "Sources").glob("Saved link 30 *.md"))
     assert f"[[Sources/{rec.stem}|post]]" in note and f"[[Sources/{rec.stem}|linked page 1]]" in note
     assert "Run an Opus lead" not in note and "60 percent" not in note  # quotes removed, dropped point gone
-    assert f"source_path: {env['art']}" in note and "draft_blob:" in note and "status: draft" in note
+    rel = env["art"].relative_to(env["repo"]).as_posix()
+    assert f"source_path: {rel}\n" in note and str(env["art"]) not in note  # repo-relative, so any checkout reads it
+    assert "draft_blob:" in note and "status: draft" in note
     assert "`linked page 2`" not in rec.read_text()  # not captured, so not citable
     proj = (v / "Projects" / f"{PROJECT}.md").read_text()
     assert f"- [[Knowledge/{Path(KNOWLEDGE).stem}]]" in proj and f"- [[Sources/{rec.stem}]]" in proj
@@ -171,6 +173,18 @@ def test_a_lone_matching_note_under_another_project_is_not_moved(env):
     r = run(env)
     assert "FAILED #30: already in the vault under project other-project" in r.stdout and calls(env) == 0
     assert (v / "Knowledge" / "Elsewhere.md").read_text().count("other-project") == 1
+
+
+def test_an_absolute_source_path_outside_this_checkout_is_left_out_and_named(env):
+    v = env["vault"]
+    put(v / "Knowledge" / "Other machine.md", doc({"type": "knowledge", "project": "agent-practice",
+                                                   "source_path": "/Users/someone/elsewhere/articles/x.md"},
+                                                  "# Other machine\n"))
+    git(v, "add", "-A"); git(v, "commit", "-q", "-m", "seed")
+    r = run(env)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "left out of the retrieval test: Knowledge/Other machine.md has no readable source_path" in r.stdout
+    assert "/Users/someone" in (v / "Knowledge" / "Other machine.md").read_text()  # flagged, not rewritten
 
 
 def test_a_project_note_without_a_source_is_left_out_of_the_retrieval_test(env):
