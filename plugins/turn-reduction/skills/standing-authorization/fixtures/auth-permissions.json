@@ -1,0 +1,24 @@
+{
+  "project": "FIXTURE for run-fixtures.sh, not a real project",
+  "granted": [
+    {
+      "action": "merge a fixture PR after review; then remove its worktree and merged branch",
+      "match": ["should i merge the fixture pr", "re:remove .*worktree"],
+      "log_to": "fixture log",
+      "permissions": [
+        "Bash(gh pr merge * -R FIXTURE/repo *)",
+        "Bash(git -C /fixture/repo worktree remove *)",
+        "Bash(git -C /fixture/repo branch -d *)"
+      ]
+    },
+    {
+      "action": "commit to a branch that is not the default branch",
+      "match": ["should i commit"],
+      "log_to": "fixture log",
+      "permissions": ["Bash(git -C /fixture/repo commit *)"]
+    }
+  ],
+  "stop": [
+    { "action": "force push or rewrite history", "match": ["force push", "rewrite history"] }
+  ]
+}

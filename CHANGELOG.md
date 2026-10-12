@@ -2,6 +2,44 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-11 - turn-reduction 1.4.0: grants checked against settings and whole plans; plan-gate fires on proposals; preflight runs the negative control first
+
+- **standing-authorization 1.2.0: the allow rules a grant needs are checked before chores
+  start.** A `granted` entry may carry `permissions`, the literal allow rules it needs as
+  they appear in Claude Code settings. `authz.py permissions <file> --settings <file>...`
+  prints every granted rule held by none of the named settings files as one
+  `{"permissions": {"allow": [...]}}` paste, preceded by the grants that need them, and
+  exits 1 until none are missing. Matching is exact after whitespace normalisation; a
+  missing settings file, or one with no `permissions.allow`, counts as empty and is
+  reported. `validate` rejects a `permissions` that is not a non-empty array of
+  non-empty strings. Reason: on 2026-10-11 four single-action pastes in one session,
+  each for a chore the project file already granted, cost Graham four interruptions;
+  one standing rule ended them (retro review `~/work/retro-review-2026-10-11.md`,
+  class A).
+- **standing-authorization: a whole plan is classified at once.** `authz.py check-plan
+  <file> --steps <plan>` classifies each numbered or bulleted line (each non-empty line
+  when there is no list), prints verdict, matched token and step, and exits 1 on any
+  STOP-LISTED or NOT-COVERED step, so an authority file is adopted only after its probe
+  passes. New `fixtures/run-fixtures.sh` (26 assertions); the 1.3.8 `authz.py` fails 24
+  of them. New eval case `settings-gap-is-one-paste-before-chores`.
+- **plan-gate: a brainstorm-then-propose request now loads the gate before the first
+  proposal.** The description also triggers when the user asks to brainstorm or audit
+  and then propose a design, architecture, pipeline or plan for approval, so the live
+  state is investigated before any proposal page is written; before, the gate loaded
+  only once the work reached a plan stage. New eval case
+  `proposal-page-waits-for-live-state`, built from the 2026-10-10 ask that produced a
+  memory-sourced proposal (11 verifier corrections, Fable RETHINK).
+- **capability-preflight 1.2.0: the negative control runs first, and a control that
+  does not fail stops the write.** `preflight.py` runs each capability's negative
+  control before its read and write probes; when the control does not fail, the write
+  probe is not run (`NOT RUN`) and the capability is `NOT PROVEN`. The skill now says
+  the control for a write omits a required field the server validates before creating
+  anything, never an invalid value: on 2026-10-11 a "deliberately invalid" filter
+  returned HTTP 200 and created an undeletable webhook trigger. New fixture
+  `red-order.manifest.json` (the old order passes it, the new order blocks; pack tests
+  93 passed), new eval case `write-control-omits-required-field-first`. Known weakness,
+  now stated: the script cannot tell an omitted field from an invalid value.
+
 ## 2026-10-11 - long-projects 0.19.8, verification-kit 0.6.1, voice-and-editing 1.4.1: reviewer briefs carry checked premises; unattended-run pressure test
 
 - **orch-review and review-pair: a reviewer brief now carries a Premises table, and a

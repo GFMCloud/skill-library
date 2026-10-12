@@ -1,0 +1,24 @@
+{
+  "milestone": "known-bad fixture: a negative control that does not fail must stop the write probe",
+  "capabilities": [
+    {
+      "name": "control that writes instead of failing",
+      "population": "the marker files under $PREFLIGHT_TEST_DIR",
+      "excludes": "everything else in the scratch dir",
+      "remedy": "make the control omit a required field so it is refused before anything is created",
+      "read": {
+        "cmd": "ls -1 \"$PREFLIGHT_TEST_DIR\" | wc -l",
+        "evidence": "count>0"
+      },
+      "write": {
+        "cmd": "printf 'write-ran' > \"$PREFLIGHT_TEST_DIR/order-write-marker\" && cat \"$PREFLIGHT_TEST_DIR/order-write-marker\"",
+        "evidence": "contains:write-ran"
+      },
+      "negative_control": {
+        "cmd": "printf 'control-ran' > \"$PREFLIGHT_TEST_DIR/order-control-marker\" && test ! -e \"$PREFLIGHT_TEST_DIR/order-write-marker\" && cat \"$PREFLIGHT_TEST_DIR/order-control-marker\"",
+        "expect": "nonzero_exit",
+        "why": "stands in for an invalid value the server accepted: it writes and exits 0. It also exits non-zero if the write probe already ran, so a script that runs the write first passes this control and fails the fixture"
+      }
+    }
+  ]
+}

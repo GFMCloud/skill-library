@@ -13,6 +13,9 @@ Any of these will do:
 - "plan this first, don't write any code yet"
 - "what's your approach before you touch it?"
 - "this touches the database, give me a plan"
+- "audit what's out there, then propose a pipeline for me to approve"
+
+A proposal page is a plan too. For that last kind of request the skill runs before the first proposal is written, and every claim the proposal makes about a running system comes from looking at that system, not from memory.
 
 Or, to be certain this skill and no other one runs:
 

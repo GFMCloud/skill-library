@@ -1,0 +1,14 @@
+{
+  "project": "FIXTURE for run-fixtures.sh: 'permissions' is a string, not an array",
+  "granted": [
+    {
+      "action": "commit to a branch that is not the default branch",
+      "match": ["should i commit"],
+      "log_to": "fixture log",
+      "permissions": "Bash(git -C /fixture/repo commit *)"
+    }
+  ],
+  "stop": [
+    { "action": "force push or rewrite history", "match": ["force push", "rewrite history"] }
+  ]
+}

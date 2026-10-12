@@ -1,6 +1,6 @@
 ---
 name: plan-gate
-description: Pre-implementation gate for work with real blast radius. Investigate the repo AND the live state it deploys against, then produce a restated goal, at most three blocking questions (each with a recommended default), numbered falsifiable assumptions, and a file-level plan. Then stop and wait for approval. Use this whenever the user asks to plan before building, wants an approach or proposal before code, says "don't write code yet", "plan this first", "think before you touch it", or names plan-gate directly. Also use it when the user is about to change infrastructure with real consequences (Terraform or other IaC, IAM, networking, database migrations, deletion or retention policies, auth, or anything touching money) even if they didn't ask for a plan. Skip it for typos, renames, and throwaway scripts.
+description: Pre-implementation gate for work with real blast radius. Investigate the repo AND the live state it deploys against, then produce a restated goal, at most three blocking questions (each with a recommended default), numbered falsifiable assumptions, and a file-level plan. Then stop and wait for approval. Use this whenever the user asks to plan before building, wants an approach or proposal before code, says "don't write code yet", "plan this first", "think before you touch it", or names plan-gate directly. Also use it when asked to brainstorm or audit, then propose a design, architecture, pipeline or plan for approval: load it before the first proposal, not at a later plan stage. Also use it when the user is about to change infrastructure with real consequences (Terraform or other IaC, IAM, networking, database migrations, deletion or retention policies, auth, or anything touching money) even if they didn't ask for a plan. Skip it for typos, renames, and throwaway scripts.
 metadata:
   maturity: incubator
 ---
@@ -131,6 +131,8 @@ Treat this list as illustrative rather than exhaustive. The underlying question 
 Line count is a bad proxy on the way up. A one-line diff can be the most dangerous change in the repo: `force_destroy = true`, a wildcard in a policy statement, a dropped `WHERE` clause. When the line count says "small" and the trigger list says "dangerous," believe the trigger list.
 
 When you're genuinely unsure which side of the line something falls on, run the gate. An unnecessary plan costs the user thirty seconds of reading; a skipped one can cost an afternoon or a database.
+
+**Design and pipeline proposals.** When the user asks you to brainstorm, audit what exists, and then propose a design, architecture, pipeline or plan page for approval, the gate starts before the first proposal is written, not when the work later reaches a plan stage. A proposal page is a plan. Every premise it states about a running system comes from the section 1 investigation, and a premise taken from memory, a handoff or an earlier summary is an assumption, labelled as one. Reason: on 2026-10-10 a design proposal was published from premises sourced from memory; the verifiers returned 11 corrections and a Fable review returned RETHINK. This gate had been loaded only at the later plan stage, after the proposal was already out.
 
 ## 4. After approval
 

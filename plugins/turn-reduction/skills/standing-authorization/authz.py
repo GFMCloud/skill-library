@@ -10,12 +10,18 @@ Subcommands:
   validate FILE            structural check of the authorization file
   list FILE                print the granted and stop lists, for reading at session start
   check FILE --ask TEXT    classify a proposed ask
+  check-plan FILE --steps PLAN
+                           classify every planned step in a plan file
+  permissions FILE --settings SETTINGS [--settings ...]
+                           print the granted allow rules no settings file holds
   init FILE                generate a starter file from authorization.example.json
 
 Exit codes:
-  0  fine: file valid, the ask is legitimate, or init succeeded
-  1  defect: file invalid, the ask is already granted, or init would overwrite
-  2  the file could not be read
+  0  fine: file valid, the ask is legitimate, every planned step is granted, every
+     granted rule is present, or init succeeded
+  1  defect: file invalid, the ask is already granted, a planned step is stop-listed
+     or not covered, a granted rule is missing from settings, or init would overwrite
+  2  a file could not be read
 
 Stdlib only. Runs on Python 3.9+.
 """
@@ -132,6 +138,16 @@ def validate(doc):
         if not isinstance(entry.get("log_to"), str) or not entry["log_to"].strip():
             errors.append("%s: 'log_to' must name where the action is logged. Granted "
                           "without logged is not granted." % where)
+        if "permissions" in entry:
+            rules = entry["permissions"]
+            if not isinstance(rules, list) or not rules:
+                errors.append("%s: 'permissions' must be a non-empty array of allow-rule "
+                              "strings, or left out" % where)
+            else:
+                for j, rule in enumerate(rules):
+                    if not isinstance(rule, str) or not rule.strip():
+                        errors.append("%s.permissions[%d]: must be a non-empty string"
+                                      % (where, j))
         ceiling = entry.get("ceiling")
         if ceiling is not None:
             names = [ceiling] if isinstance(ceiling, str) else ceiling
@@ -164,6 +180,9 @@ def validate(doc):
             where = "stop %r" % action
         for key in _match_list(entry, where, errors):
             stop_keys.setdefault(key.lower(), []).append(action)
+        if "permissions" in entry:
+            errors.append("%s: 'permissions' belongs on a granted entry; a stop entry needs "
+                          "no allow rule, because the action is asked, never run" % where)
 
     for key in sorted(set(granted_keys) & set(stop_keys)):
         errors.append(
@@ -285,6 +304,125 @@ def cmd_check(doc, ask, out):
     return 0
 
 
+LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+(.*\S)\s*$")
+
+
+def plan_steps(text):
+    """Each numbered or bulleted list item is one step; with no list items, each
+    non-empty line is one."""
+    lines = [line for line in text.splitlines() if line.strip()]
+    items = [m.group(1) for m in (LIST_ITEM.match(line) for line in lines) if m]
+    return items if items else [line.strip() for line in lines]
+
+
+def cmd_check_plan(doc, steps_path, out):
+    """Substring matching silently turns planned steps into questions. On 2026-10-10 four
+    planned steps were wrongly stop-listed and four grants came back not-covered, and it
+    took two patch rounds to find out. Classifying the whole plan at once finds all of
+    them in one run."""
+    try:
+        with open(steps_path, "r") as handle:
+            steps = plan_steps(handle.read())
+    except (IOError, OSError, ValueError) as exc:
+        # ValueError covers UnicodeDecodeError: a plan in another encoding is unreadable,
+        # which the contract says is exit 2, not a traceback.
+        sys.stderr.write("cannot read steps file: %s\n" % exc)
+        return 2
+    if not steps:
+        out.write("no planned steps found in %s; nothing was checked\n" % steps_path)
+        return 1
+    counts = {"ALREADY-GRANTED": 0, "STOP-LISTED": 0, "NOT-COVERED": 0}
+    for step in steps:
+        verdict, _entry, hit = classify(doc, step)
+        counts[verdict] += 1
+        token = repr(hit) if hit else "-"
+        out.write("%-15s  %s  %s\n" % (verdict, token, " ".join(step.split())))
+    out.write("\n%d step(s): %d ALREADY-GRANTED, %d STOP-LISTED, %d NOT-COVERED\n"
+              % (len(steps), counts["ALREADY-GRANTED"], counts["STOP-LISTED"],
+                 counts["NOT-COVERED"]))
+    if counts["STOP-LISTED"] or counts["NOT-COVERED"]:
+        out.write("\nDEFECT: each STOP-LISTED or NOT-COVERED step above would become a "
+                  "question\nmid-run. Fix the plan's wording or the file's match tokens "
+                  "(with Graham's\nanswer for anything genuinely uncovered) before "
+                  "starting.\n")
+        return 1
+    out.write("every planned step is ALREADY-GRANTED\n")
+    return 0
+
+
+def _norm(rule):
+    return " ".join(rule.split())
+
+
+def cmd_permissions(doc, settings_paths, out):
+    """authorization.json is read by the agent, not by the harness: the permission layer
+    never sees a grant, so a granted chore is blocked at run time and handed back one
+    action at a time. This prints every allow rule the grants need and no settings file
+    holds, as one paste."""
+    errors, _warnings = validate(doc)
+    if errors:
+        for error in errors:
+            out.write("ERROR %s\n" % error)
+        out.write("authorization file is invalid; fix it (see validate) before trusting "
+                  "this check\n")
+        return 1
+
+    needed = []
+    needed_by = {}
+    for entry in doc.get("granted", []):
+        for rule in entry.get("permissions", []):
+            key = _norm(rule)
+            if key not in needed_by:
+                needed.append(key)
+                needed_by[key] = []
+            if entry.get("action") not in needed_by[key]:
+                needed_by[key].append(entry.get("action"))
+
+    present = set()
+    for path in settings_paths:
+        if not os.path.exists(path):
+            out.write("settings: %s not found, read as an empty allow list\n" % path)
+            continue
+        try:
+            with open(path, "r") as handle:
+                settings = json.load(handle)
+        except (IOError, OSError, ValueError) as exc:
+            sys.stderr.write("cannot read settings file %s: %s\n" % (path, exc))
+            return 2
+        perms = settings.get("permissions") if isinstance(settings, dict) else None
+        allow = perms.get("allow") if isinstance(perms, dict) else None
+        if allow is None:
+            out.write("settings: %s has no permissions.allow, read as an empty allow "
+                      "list\n" % path)
+            continue
+        if not isinstance(allow, list):
+            sys.stderr.write("settings file %s: permissions.allow is not an array\n" % path)
+            return 2
+        rules = [_norm(rule) for rule in allow if isinstance(rule, str)]
+        present.update(rules)
+        skipped = len(allow) - len(rules)
+        out.write("settings: %s, %d allow rule(s)%s\n"
+                  % (path, len(rules),
+                     " (%d non-string entr%s ignored)" % (skipped, "y" if skipped == 1 else "ies")
+                     if skipped else ""))
+
+    missing = [rule for rule in needed if rule not in present]
+    if not missing:
+        note = "" if needed else " (no granted entry carries a 'permissions' list)"
+        out.write("all %d granted rules present%s\n" % (len(needed), note))
+        return 0
+
+    grants = []
+    for rule in missing:
+        for action in needed_by[rule]:
+            if action not in grants:
+                grants.append(action)
+    out.write("%d of %d granted rule(s) missing, needed by: %s\n"
+              % (len(missing), len(needed), "; ".join(repr(a) for a in grants)))
+    out.write(json.dumps({"permissions": {"allow": missing}}, indent=2) + "\n")
+    return 1
+
+
 EXAMPLE_BASENAME = "authorization.example.json"
 
 # init's ceilings interview covers exactly the ceilings the example defines.
@@ -391,6 +529,17 @@ def main(argv=None):
     p_check.add_argument("file")
     p_check.add_argument("--ask", required=True, help="the question you are about to send")
 
+    p_plan = sub.add_parser("check-plan", help="classify every planned step in a plan file")
+    p_plan.add_argument("file")
+    p_plan.add_argument("--steps", required=True,
+                        help="plain-text or markdown file; each list item is one step")
+
+    p_perm = sub.add_parser("permissions", help="print the granted allow rules that no "
+                                                "settings file holds")
+    p_perm.add_argument("file")
+    p_perm.add_argument("--settings", action="append", required=True,
+                        help="a Claude Code settings file; repeat for several")
+
     p_init = sub.add_parser("init", help="generate a starter authorization file from the "
                                          "shipped example")
     p_init.add_argument("file")
@@ -427,6 +576,10 @@ def main(argv=None):
         return cmd_validate(doc, args.file, sys.stdout)
     if args.command == "list":
         return cmd_list(doc, sys.stdout)
+    if args.command == "check-plan":
+        return cmd_check_plan(doc, args.steps, sys.stdout)
+    if args.command == "permissions":
+        return cmd_permissions(doc, args.settings, sys.stdout)
     return cmd_check(doc, args.ask, sys.stdout)
 
 

@@ -1,0 +1,18 @@
+{
+  "project": "FIXTURE for run-fixtures.sh: 'permissions' on a stop entry, which validate rejects",
+  "granted": [
+    {
+      "action": "commit to a branch that is not the default branch",
+      "match": ["should i commit"],
+      "log_to": "fixture log",
+      "permissions": ["Bash(git -C /fixture/repo commit *)"]
+    }
+  ],
+  "stop": [
+    {
+      "action": "force push or rewrite history",
+      "match": ["force push", "rewrite history"],
+      "permissions": ["Bash(git push --force *)"]
+    }
+  ]
+}

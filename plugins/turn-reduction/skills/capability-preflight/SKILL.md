@@ -3,8 +3,8 @@ name: "capability-preflight"
 description: "Prove access to every system a milestone must touch before the milestone starts. A real read and a real write per system, each with a negative control that must fail. Use at the top of any milestone, before the first step runs, and whenever a step is about to be handed to a human because something looks unreachable."
 metadata:
   maturity: stable
-  version: 1.1.1
-  reviewed: 2026-09-11
+  version: 1.2.0
+  reviewed: 2026-10-11
 ---
 
 # capability-preflight
@@ -106,9 +106,20 @@ that counted zero files is the same event as a read that could not run.
 right league from a *public* endpoint: the identical response comes back with no
 credential at all. So every capability carries a negative control: the same access,
 deliberately deprived of the thing being proven, which must fail. If it succeeds the
-capability is `NOT PROVEN` no matter how green the read and write were. For an API the
-control is the same request with the credential stripped. For a path it is a sibling
-path that does not exist. For a remote it is a bogus remote.
+capability is `NOT PROVEN` no matter how green the read was, and the write probe is not
+run. For an API the control is the same request with the credential stripped. For a path
+it is a sibling path that does not exist. For a remote it is a bogus remote.
+
+**For a write, the control runs first and fails on validation.** When the write probe
+creates something on a server (a record, a trigger, a webhook, any API object), the
+negative control is the same create request with a required field omitted, so the server
+rejects it at validation before anything exists. `preflight.py` runs every negative
+control before its read and write probes, and when the control does not fail it does not
+run the write. A control that sends an invalid value and relies on the server rejecting
+it is not a control: the server may accept the value and create a live object. Reason:
+on 2026-10-11 a probe carrying a "deliberately invalid" filter returned HTTP 200 and
+created a live webhook trigger that the tool could not delete or edit; the safe form,
+the same request with `hook_type` omitted, was found right after.
 
 **State the population and what it excludes.** A diagnostic once ran only against records
 that had a prior-season slot, when the cases it existed to catch have none. It passed for
@@ -155,6 +166,12 @@ It proves the capabilities the manifest names, at the moment it ran. It does not
 capabilities you forgot to declare, and it does not keep them proven: a credential that
 expires mid-milestone will not be caught by a pre-flight that passed this morning. When
 the milestone's shape changes, the manifest changes and it runs again.
+
+It cannot tell a control that omits a required field from one that sends an invalid
+value: both are a command to the script. Running the control first and skipping the
+write when it does not fail limits the damage to the control's own call, and a control
+that created an object has already created it by the time the report prints. Choosing a
+field the server validates before it creates anything is the manifest author's job.
 
 ## Pairs with
 
