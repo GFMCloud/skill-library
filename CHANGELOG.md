@@ -9,9 +9,11 @@ Behavior changes only — not wording tweaks. Newest first.
   report that never arrived was never sent again. A `REPORT` now leaves both fields
   alone; the caller runs `watch-step.py --confirm <seen-index> <source> <new>` after
   delivering the report, and only that records the transition. Until then each cycle
-  prints the same `REPORT` again. New `fixtures/run-fixtures.sh` (16 assertions); the
-  old script fails 4 of them. Known weaknesses now name the repeat-report and
-  revert-before-confirm cases, and the stale note that `schedule-harness` did not
+  prints the same `REPORT` again. New `fixtures/run-fixtures.sh` (18 assertions); the
+  old script fails 6 of them, and `--confirm` with a missing argument exits 1.
+  Known weaknesses now name the repeat-report and revert-before-confirm cases,
+  the description and toolkit spec section 6 say a re-fire is silent once the
+  report is confirmed, and the stale note that `schedule-harness` did not
   exist is replaced by a composition re-check against it and `smoke-gate`.
 - **design-taste-frontend no longer advertises dashboards.** Its description said
   "dashboard or app UI" while its body rules dashboards, dense product UI and admin

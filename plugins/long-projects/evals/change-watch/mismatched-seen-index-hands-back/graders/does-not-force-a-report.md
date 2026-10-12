@@ -4,7 +4,7 @@ pattern: "REPORT cloudwatch:prod-checkout-latency-fixture"
 match: not_contains
 ---
 
-Tests SKILL.md "Stop when", lines 100 to 102: "The seen-index file is corrupt
+Tests SKILL.md "Stop when", lines 109 to 111: "The seen-index file is corrupt
 or claims a different source than the one being polled (scripts/watch-step.py
 refuses this case and exits 1): hand back to a human rather than overwriting a
 possibly-wrong index." The fixture's recorded source is

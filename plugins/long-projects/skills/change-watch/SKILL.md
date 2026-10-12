@@ -4,8 +4,8 @@ description: >-
   Turn a source that changes on its own timeline (a CloudWatch alarm, a PR's
   state, a metric, a marker file another process writes) into a registered
   check with a seen-index, so a state transition gets diagnosed and queued
-  for action within one cycle and a re-fire in the same state produces zero
-  reports. Use when something should be checked on a cadence or reacted to
+  for action within one cycle and, once its report is confirmed delivered, a
+  re-fire in the same state produces zero reports. Use when something should be checked on a cadence or reacted to
   when it changes: "watch this alarm", "tell me when this PR is ready",
   "poll for X and only bug me on a change", "re-enable the estate map as
   exception-only", "wait for this marker file". Not for one-shot checks with

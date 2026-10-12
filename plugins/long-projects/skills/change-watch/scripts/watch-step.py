@@ -75,7 +75,7 @@ def write_entry(path, entry):
 
 
 def main(argv):
-    confirm = len(argv) == 5 and argv[1] == "--confirm"
+    confirm = len(argv) > 1 and argv[1] == "--confirm"
     if confirm:
         argv = argv[1:]
     if len(argv) != 4:

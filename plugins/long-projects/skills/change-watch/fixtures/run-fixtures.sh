@@ -10,8 +10,8 @@
 #                last_reported unchanged
 #   flap         OK, ALARM, OK, ALARM, each report confirmed: three REPORT lines
 #   refusals     step and --confirm both exit 1 on a mismatched source, --confirm exits 1
-#                on a missing seen-index, and classify-action.py exits 1 on an
-#                unclassified action
+#                on a missing seen-index or a missing argument, and classify-action.py
+#                exits 1 on an unclassified action
 # Exits 0 only when every assertion holds. Pass the pre-0.19.7 watch-step.py as the
 # argument to see the undelivered case fail: it marked the transition reported before
 # the report was delivered.
@@ -69,6 +69,9 @@ cmp -s "$IDX" "$HERE/seen-index-ok.yaml"; assert "refusals: the refused calls le
 python3 "$STEP" --confirm "$TMP/missing.yaml" "$SRC" ALARM 2>/dev/null; code=$?
 [ "$code" -eq 1 ]; assert "refusals: --confirm on a missing seen-index exits 1 (got $code)" $?
 [ ! -e "$TMP/missing.yaml" ]; assert "refusals: --confirm did not create the missing seen-index" $?
+(cd "$TMP" && python3 "$STEP" --confirm "$IDX" "$SRC" >/dev/null 2>&1); code=$?
+[ "$code" -eq 1 ]; assert "refusals: --confirm with a missing argument exits 1 (got $code)" $?
+[ ! -e "$TMP/--confirm" ]; assert "refusals: --confirm with a missing argument wrote no file" $?
 python3 "$CLASSIFY" "$HERE/classify-rules.yaml" page-manager >/dev/null 2>&1; code=$?
 [ "$code" -eq 1 ]; assert "refusals: an unclassified action exits 1, never safe (got $code)" $?
 
