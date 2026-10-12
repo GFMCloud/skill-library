@@ -18,7 +18,7 @@ Or, to be certain this skill and no other one runs:
 /verification-kit:review-pair
 ```
 
-It will ask for two things before it starts. First, a statement of what the change is for: the ask, what done looks like, the check that proves it, and the limits it has to respect. Second, the change itself, not yet applied. If either is missing it stops and asks rather than reviewing against a guess. It will also want a second model, different from the one that wrote the change.
+It will ask for three things before it starts. First, a statement of what the change is for: the ask, what done looks like, the check that proves it, and the limits it has to respect. Second, the change itself, not yet applied. Third, a short table of the facts the change relies on, each marked as something it saw (with the command) or something it inferred. If any is missing it stops and asks rather than reviewing against a guess. It will also want a second model, different from the one that wrote the change.
 
 ## What you'll get
 
