@@ -180,6 +180,9 @@ def validate(doc):
             where = "stop %r" % action
         for key in _match_list(entry, where, errors):
             stop_keys.setdefault(key.lower(), []).append(action)
+        if "permissions" in entry:
+            errors.append("%s: 'permissions' belongs on a granted entry; a stop entry needs "
+                          "no allow rule, because the action is asked, never run" % where)
 
     for key in sorted(set(granted_keys) & set(stop_keys)):
         errors.append(
@@ -320,7 +323,9 @@ def cmd_check_plan(doc, steps_path, out):
     try:
         with open(steps_path, "r") as handle:
             steps = plan_steps(handle.read())
-    except (IOError, OSError) as exc:
+    except (IOError, OSError, ValueError) as exc:
+        # ValueError covers UnicodeDecodeError: a plan in another encoding is unreadable,
+        # which the contract says is exit 2, not a traceback.
         sys.stderr.write("cannot read steps file: %s\n" % exc)
         return 2
     if not steps:
@@ -395,7 +400,11 @@ def cmd_permissions(doc, settings_paths, out):
             return 2
         rules = [_norm(rule) for rule in allow if isinstance(rule, str)]
         present.update(rules)
-        out.write("settings: %s, %d allow rule(s)\n" % (path, len(rules)))
+        skipped = len(allow) - len(rules)
+        out.write("settings: %s, %d allow rule(s)%s\n"
+                  % (path, len(rules),
+                     " (%d non-string entr%s ignored)" % (skipped, "y" if skipped == 1 else "ies")
+                     if skipped else ""))
 
     missing = [rule for rule in needed if rule not in present]
     if not missing:

@@ -118,8 +118,8 @@ and worktree removal but not branch deletion left a merged branch behind.
 | `all N granted rules present` | 0 | the settings hold every rule the grants list; start |
 
 A missing settings file, or one with no `permissions.allow`, is read as an empty list
-and the output says so. The agent never edits a settings file itself; that stays
-Graham's paste.
+and the output says so. The command reads settings files and writes nothing; who edits
+them is the global rule's business, not this skill's.
 
 Known weaknesses: matching is exact string equality after whitespace normalisation, with
 no wildcard reasoning. A broader rule that would cover a shape (say `Bash(git -C *

@@ -75,6 +75,10 @@ ALREADY-GRANTED  'should i commit'  should I commit the fix to the feature branc
 STOP-LISTED      'force push'  force push the branch to clean up its history
 
 2 step(s): 1 ALREADY-GRANTED, 1 STOP-LISTED, 0 NOT-COVERED
+
+DEFECT: each STOP-LISTED or NOT-COVERED step above would become a question
+mid-run. Fix the plan's wording or the file's match tokens (with Graham's
+answer for anything genuinely uncovered) before starting.
 ```
 
 Both end with a failure exit code, so a script can stop on them.
