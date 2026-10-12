@@ -52,7 +52,7 @@ me if any are wrong:
 - **The check does not look at the picture.** It proves the two images were written. Whether the boxes overlap, the arrows cross through other boxes or the labels collide is for you to see. Open the two images.
 - **It writes into your working folder and one outputs folder.** The template is copied to your file, the two screenshots are written beside it, and the finished diagram is copied to an outputs folder at the end.
 - **The light or dark setting is stored in the viewer's browser.** Whoever opens the diagram gets their own choice remembered. Nothing about them is sent anywhere.
-- **The packaging instruction at the end of the skill does not work.** It names a program that is not part of this pack, so that one command fails if you try it. Everything else in the skill runs.
+- **Packaging it as a single file uses another skill.** You do not need this to use the skill, which comes with the decks pack. The skill's last section shows how to build a `.skill` file with the packager from `skill-creator`, which has to be run from inside skill-creator's own folder.
 - **It needs Python, and Playwright with Chromium for the screenshots.** Plus a browser to look at the result.
 
 ## What next

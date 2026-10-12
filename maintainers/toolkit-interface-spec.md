@@ -258,7 +258,9 @@ last_reported: <timestamp of the last report, or never>
 ```
 
 Rules: the report predicate is a transition, `current_state != last_state`. A re-fire in
-the same state updates `last_seen` and produces no report. A flapping sequence A→B→A
+the same state updates `last_seen` and produces no report. A transition counts as reported
+only once its delivery is confirmed (`watch-step.py --confirm`); until then it reports again
+each cycle. A flapping sequence A→B→A
 produces one report per transition, so two, never one per poll. The classification of
 the resulting action as safe or approval-only runs as a separate step before any
 diagnostic call.

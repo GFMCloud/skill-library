@@ -25,6 +25,7 @@ last_reported: 2026-09-11T03:10:00-05:00
   a sibling's `last_state`.
 - `last_seen` advances on every poll, transition or not. It is the last-alive
   signal for the watch itself, not a report timestamp.
-- `last_reported` only advances on a transition (`scripts/watch-step.py`
-  enforces this). It reads `never` before the first transition, exactly as
+- `last_reported` and `last_state` only advance when a delivered report on a
+  transition is confirmed (`scripts/watch-step.py --confirm` enforces this).
+  `last_reported` reads `never` before the first confirmed report, exactly as
   written, so a report-history sweep can grep for the literal word.

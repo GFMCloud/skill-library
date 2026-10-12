@@ -92,10 +92,10 @@ Carried from real builds - the full list is in `references/structure-contract.md
 
 ## Packaging
 
-This skill ships as a folder. To hand the user an installable file, package it with the skill-creator script:
+This skill is installed with the `decks` pack and needs no packaging step to be used. To hand someone a standalone `.skill` file instead, run skill-creator's packager from skill-creator's own skill directory (the folder holding `<skill-creator>/scripts/package_skill.py`); `-m scripts.package_skill` resolves against the current directory, so it fails from anywhere else:
 
 ```bash
-python3 -m scripts.package_skill <path-to-html-diagram>
+cd <skill-creator> && python3 -m scripts.package_skill <path-to-html-diagram> <output-dir>
 ```
 
-That produces a `.skill` file they can install the same way as their other skills.
+That writes `html-diagram.skill` (a zip of this folder) into `<output-dir>`.
