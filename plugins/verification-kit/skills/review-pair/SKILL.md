@@ -11,6 +11,7 @@ description: >-
   proposed change before it lands, against the goal it is supposed to satisfy.
 metadata:
   maturity: incubator
+  reviewed: 2026-10-11
 ---
 
 # review-pair
@@ -35,7 +36,10 @@ the reviewer returns.
 - The change spec or diff to review: a patch, a file list with contents, or a described
   set of edits not yet applied.
 - The target: the path, repo, or resource the change would land on.
-- Nothing else. The reviewer gets exactly the goal block and the change; not the
+- A Premises table from [templates/reviewer-brief.md](templates/reviewer-brief.md), per
+  "Premises in the brief" below.
+- Nothing else. The reviewer gets exactly the goal block, the change and the Premises
+  table; not the
   builder's transcript, prompt, or reasoning. This is the rule the toolkit itself was
   reviewed under: reviewers receive the interface spec and the skill directory only.
 
@@ -58,6 +62,9 @@ is real; that is what the subagent's `permissionMode: plan` (or read-only `tools
 independent model, and lack of parent history are for, not the validator.
 `fixtures/verdict-fail-bare-quote.FIXTURE.yaml` is the proof that a bare quote is rejected.
 
+Before the brief is sent, every Premises row fills exactly one evidence column, and no
+row about a running system is still Inferred. This is a reading check, not a script.
+
 ## Done when
 
 A `pass` verdict exists for the change, the verdict object is written to the run log
@@ -72,6 +79,8 @@ an independent reviewer is sufficient; do not seek a second opinion after a pass
 - The goal block is missing or incomplete: nothing runs until every field except
   `rubric` is filled, per Goal block v1's own rule. Ask for the missing field rather
   than reviewing against a guess.
+- A Premises row about a running system is still Inferred and that system's own log
+  cannot be read from this session: the brief is not sent. Say which log is needed.
 - The reviewer's output cannot be parsed as a Verdict object v1: report the malformed
   output verbatim and stop. A malformed verdict is not a pass by default.
 - A reviewer model cannot be reached, or no model differing from the builder's is
@@ -82,12 +91,14 @@ an independent reviewer is sufficient; do not seek a second opinion after a pass
 ## Procedure
 
 1. Confirm the Goal block v1 and the change spec are both in hand. If either is
-   missing, stop per "Stop when" above.
+   missing, stop per "Stop when" above. Fill the Premises table, and read the running
+   system's own log for every inferred premise about a running system.
 2. Spawn the reviewer using the subagent definition in
    [references/reviewer-agent.md](references/reviewer-agent.md): `permissionMode: plan`
    (or an equivalent read-only `tools` list), `maxTurns` set to a small bound, and
    `model` set to a value that differs from the model that produced the change. Pass it
-   only the goal block and the change; nothing about how the change was produced.
+   only the goal block, the change and the Premises table; nothing about how the change
+   was produced.
    When the change is code, also pass
    [references/finding-discipline.md](references/finding-discipline.md): four questions
    every issue must survive, and the stock findings that are usually false.
@@ -103,6 +114,17 @@ an independent reviewer is sufficient; do not seek a second opinion after a pass
 7. Run `scripts/verdict-check.sh` against both verdict files together (first, second).
    If it prints `HOLD`, stop per "Stop when": hold the target and queue it for Graham.
    Otherwise treat the second verdict the same as step 5 or 6.
+
+## Premises in the brief
+
+The brief handed to the reviewer carries a Premises table
+([templates/reviewer-brief.md](templates/reviewer-brief.md)): each fact the change relies
+on, marked observed (the command and the output reference that showed it) or inferred
+(from what). The orchestrator reads the running system's own log for every inferred
+premise about a running system before the brief is sent; a brief with an unchecked
+inferred premise about a running system is not sent. Reason: on 2026-10-11 a reviewer
+accepted "R1's cwd is its first repo" as fact; it was inferred from a different routine's
+proof and never checked against R1's run log, and R1's next scheduled run wrote nothing.
 
 ## Output contract
 

@@ -1,7 +1,7 @@
 # Finding discipline for the reviewer
 
-Given to the reviewer subagent alongside the goal block and the change when the change is
-code. It cuts the two ways a model reviewer wastes a verdict: findings it cannot stand
+Given to the reviewer subagent alongside the goal block, the change and the Premises table
+when the change is code. It cuts the two ways a model reviewer wastes a verdict: findings it cannot stand
 behind, and stock complaints that are usually wrong.
 
 Adapted from the ECC project's `code-reviewer` agent (MIT, v2.2.1), reviewed 2026-09-17.

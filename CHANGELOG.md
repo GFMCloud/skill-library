@@ -2,6 +2,30 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-11 - long-projects 0.19.8, verification-kit 0.6.1, voice-and-editing 1.4.1: reviewer briefs carry checked premises; unattended-run pressure test
+
+- **orch-review and review-pair: a reviewer brief now carries a Premises table, and a
+  guessed fact about a running system holds the review.** Each fact the change relies on
+  is marked observed (the command and its output reference) or inferred (from what).
+  Before any reviewer is spawned, the orchestrator reads the running system's own log
+  for every inferred premise about a running system; if that log cannot be read, the
+  brief is not sent and the skill says which log it needs. review-pair's reviewer treats
+  an inferred row as unproven. Each skill ships its own short
+  `templates/reviewer-brief.md`, because neither plugin depends on the other; the
+  toolkit interface spec (T4 row and the reviewer paragraph) says the same. New eval
+  case in each suite: a brief that states a cloud routine's working directory as fact,
+  taken from another routine's proof, is not sent. Prompted by R1's empty scheduled run
+  on 2026-10-11 (retro review `~/work/retro-review-2026-10-11.md`, class B).
+- **schedule-harness: a nine-item unattended-run pressure test gates the first
+  unattended run.** `references/unattended-run-pressure-test.md` runs after the attended
+  "Run now": network allowlist per source host, allowed tools, attached repos,
+  dependency build order, one home per prompt, a status on every exit path, idempotent
+  dated outputs, off-the-hour clocks, and no untrusted body in a session that can push.
+  Each item needs its evidence for every routine; one failing item blocks the run, and a
+  failing item whose fix is outside the skill's inputs is a stop. New eval case: a design
+  that fetches from a host missing from its allowlist fails. Prompted by the 2026-10-10
+  design that passed three review rounds with four of these blockers still open.
+
 ## 2026-10-11 - long-projects 0.19.7, frontend-design 0.5.2, decks 0.4.2: four defects found in an intake review
 
 - **change-watch: a report whose delivery fails is no longer lost.** `watch-step.py`

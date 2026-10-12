@@ -2,7 +2,7 @@
 
 Part of the [long-projects](../../README.md) pack.
 
-One reviewer that reports "looks fine" looks exactly the same whether it read every file or quietly skipped half of them. This skill splits the review into separate jobs, correctness, hidden failures, and security where the change touches sign-in or user input, and gives each one to a separate Claude helper that sees the change and nothing else. It then removes findings the helpers both raised, and sends every serious one to a fresh helper whose job is to argue it is wrong. What survives that is reported as blocking. If any part of the review did not run, it says so and refuses to report an approval.
+One reviewer that reports "looks fine" looks exactly the same whether it read every file or quietly skipped half of them. This skill splits the review into separate jobs, correctness, hidden failures, and security where the change touches sign-in or user input, and gives each one to a separate Claude helper that sees the change and a short table of the facts it relies on, and nothing else. It then removes findings the helpers both raised, and sends every serious one to a fresh helper whose job is to argue it is wrong. What survives that is reported as blocking. If any part of the review did not run, it says so and refuses to report an approval.
 
 ## Say this to use it
 
@@ -57,6 +57,7 @@ not checked: the JavaScript in web/upload.js, no reviewer covered it
 - **It starts three to five extra Claude helpers per run**, which costs tokens and takes longer than a single review. There is no way to run it with one.
 - **It refuses an argument it does not recognise.** Only a bare number, or a pull request address ending in one, is accepted, and only the number is ever put into a command. Anything else stops the run.
 - **It will not print an approval when a reviewer failed to run.** A helper that errored, timed out or could not start makes the whole result incomplete, and the missing parts are named.
+- **Each fact in that table says how it is known:** the command that showed it, or what it was guessed from. A guessed fact about something running, such as a scheduled job, is checked against that job's own log before any helper starts. If the log cannot be read, the review does not start.
 - **Findings that need code to be run stay in the blocking list.** Reviewers read, they do not execute, so a suspicion they cannot settle is reported as unverified rather than dropped. This is noisy on purpose.
 - **Two of its review jobs come from another pack.** Install [verification-kit](../../../verification-kit/README.md) as well, or those two jobs will not run and the result will be incomplete.
 

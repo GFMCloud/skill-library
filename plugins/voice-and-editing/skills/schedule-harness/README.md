@@ -53,6 +53,7 @@ Limits written into the file:
 - **It never registers the scheduled task.** That is yours to do in the Claude desktop app, or by approving the scheduling tool when it asks. The skill hands over values, never a password or key.
 - **It never writes anywhere inside your `~/.claude` folder.** That is a fixed rule of the skill, stated in both of its programs.
 - **It goes nowhere online.**
+- **Before the first unattended run, it walks a nine-item checklist.** It covers the things that only break when nobody is watching: which websites a run may reach, which tools it may use, which projects it can see, whether every exit writes a status, and whether a run that reads outside text can also publish changes. One failing item holds the first unattended run.
 - **The check is about the file's shape, not the run's behaviour.** It confirms every limit line is present and filled in with real numbers. Whether a future unattended run actually honours those limits is only visible in that run's own log.
 - **It assumes a project that already has numbered steps and a step-running skill.** If you do not have one, there is nothing for this skill to point at. Build the project first with [phased-harness](../../../long-projects/skills/phased-harness/). The registration side also assumes the Claude desktop app's scheduled tasks; on another scheduler you would run the step from the command line instead.
 

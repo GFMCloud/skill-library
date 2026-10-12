@@ -18,7 +18,7 @@ Or, to be certain this skill and no other one runs:
 /verification-kit:review-pair
 ```
 
-It will ask for two things before it starts. First, a statement of what the change is for: the ask, what done looks like, the check that proves it, and the limits it has to respect. Second, the change itself, not yet applied. If either is missing it stops and asks rather than reviewing against a guess. It will also want a second model, different from the one that wrote the change.
+It will ask for three things before it starts. First, a statement of what the change is for: the ask, what done looks like, the check that proves it, and the limits it has to respect. Second, the change itself, not yet applied. Third, a short table of the facts the change relies on, each marked as something it saw (with the command) or something it inferred. If any is missing it stops and asks rather than reviewing against a guess. It will also want a second model, different from the one that wrote the change.
 
 ## What you'll get
 
@@ -45,7 +45,8 @@ Not applied. Handing the two issues back for one more attempt.
 
 - **On a pass, the change is applied to your files.** This is the one skill in this pack that writes to a real target. It applies only on a pass, and only after the verdict has been written down.
 - **It starts a second Claude helper for each round of review.** That costs model usage. The helper stops when it returns its verdict.
-- **The reviewer is set up to look, not touch,** and it is given only the goal and the change, never the conversation that produced them. It does have a shell, so it can run checks, and whatever access your session has it inherits.
+- **The reviewer is set up to look, not touch,** and it is given only the goal, the change and a short table of the facts the change relies on, never the conversation that produced them.
+- **Each fact in that table says how it is known:** the command that showed it, or what it was guessed from. A guessed fact about something running, such as a scheduled job, is checked against that job's own log before the reviewer is started. If the log cannot be read, the review does not start. It does have a shell, so it can run checks, and whatever access your session has it inherits.
 - **It needs a second model, different from the one that wrote the change.** If one is not configured, it stops. Running the reviewer on the same model undoes the whole point.
 - **A small checking script runs on the reviewer's answer.** It is `scripts/verdict-check.sh`, it reads only the verdict files it is given, and it changes nothing. It checks the shape of the answer: that every field is there, that a fail lists problems, and that each problem cites a check that was actually run rather than a quoted opinion.
 - **That script cannot tell whether a quoted check was really run.** It checks the form of the evidence, not its truth. The reviewer's separation is what the truth rests on.
