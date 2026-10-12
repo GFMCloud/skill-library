@@ -20,7 +20,7 @@ Behavior changes only — not wording tweaks. Newest first.
   <file> --steps <plan>` classifies each numbered or bulleted line (each non-empty line
   when there is no list), prints verdict, matched token and step, and exits 1 on any
   STOP-LISTED or NOT-COVERED step, so an authority file is adopted only after its probe
-  passes. New `fixtures/run-fixtures.sh` (24 assertions); the 1.3.8 `authz.py` fails 22
+  passes. New `fixtures/run-fixtures.sh` (26 assertions); the 1.3.8 `authz.py` fails 24
   of them. New eval case `settings-gap-is-one-paste-before-chores`.
 - **plan-gate: a brainstorm-then-propose request now loads the gate before the first
   proposal.** The description also triggers when the user asks to brainstorm or audit

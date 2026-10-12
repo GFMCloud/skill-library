@@ -8,7 +8,7 @@
 #                "all N granted rules present" when the settings files together hold
 #                every rule (one rule differs only in whitespace); reads a missing
 #                settings file and a file with no permissions.allow as empty, and says so
-#   validate     rejects a 'permissions' that is not an array, and accepts the good file
+#   validate     rejects a 'permissions' that is not an array or sits on a stop entry, and accepts the good file
 #   check-plan   exits 1 and prints the verdict when a step is STOP-LISTED or
 #                NOT-COVERED; exits 0 when every step is ALREADY-GRANTED; with list items
 #                present, other lines are not steps; with none, every non-empty line is
@@ -66,6 +66,9 @@ assert "permissions: says the file without permissions.allow was read as empty" 
 out="$(python3 "$AUTHZ" validate "$HERE/auth-bad-permissions.json")"; code=$?
 [ "$code" -eq 1 ]; assert "validate: a string 'permissions' exits 1 (got $code)" $?
 grep -qF "'permissions' must be a non-empty array" <<<"$out"; assert "validate: names the 'permissions' error" $?
+out="$(python3 "$AUTHZ" validate "$HERE/auth-stop-permissions.json")"; code=$?
+[ "$code" -eq 1 ]; assert "validate: 'permissions' on a stop entry exits 1 (got $code)" $?
+grep -qF "'permissions' belongs on a granted entry" <<<"$out"; assert "validate: names the stop-entry error" $?
 python3 "$AUTHZ" validate "$AUTH" >/dev/null; code=$?
 [ "$code" -eq 0 ]; assert "validate: the good fixture exits 0 (got $code)" $?
 python3 "$AUTHZ" permissions "$HERE/auth-bad-permissions.json" --settings "$HERE/settings-partial.json" \

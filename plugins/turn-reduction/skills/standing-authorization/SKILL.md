@@ -198,9 +198,11 @@ ambiguous rule is the rule that gets ignored: which is how the prose version die
 
 **An empty granted list is an error.** Empty is the state this file exists to leave.
 
-**`permissions` is a non-empty array of non-empty strings, or absent.** Any other shape
-is an error, and `permissions` refuses to run on an invalid file, because a malformed
-rule list cannot be checked as written.
+**`permissions` is a non-empty array of non-empty strings, or absent, and only on a
+granted entry.** Any other shape is an error, and `permissions` refuses to run on an
+invalid file, because a malformed rule list cannot be checked as written. On a stop entry
+it is an error too: a stop-listed action is asked, never run, so it needs no allow rule,
+and a list there would be a grant hiding on the wrong side.
 
 ## Scope
 
