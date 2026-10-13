@@ -1,6 +1,23 @@
 # Changelog
 
 Behavior changes only — not wording tweaks. Newest first.
+
+## 2026-10-13 - deny-destructive: `git branch -D` passes for branches already on origin/main
+
+- **The blanket `git branch -D` deny becomes a fail-closed check.** The hook (home
+  `~/.claude/hooks/deny-destructive.py`, applied by Graham's paste
+  `research-loop/scratch/apply-branch-D-rule-2026-10-13.py`) now runs git in the
+  command's repo and allows the delete only when every named branch is on origin/main
+  by ancestry, or when the patch id of its whole merge-base-to-tip diff equals one commit
+  origin/main gained since that base (a squash merge). An unknown branch, no origin/main,
+  a mixed list, or a command the hook cannot split is denied. The trigger now also
+  matches `git -C <dir> branch -D` and `git --no-pager branch -D`, which the old regex
+  missed. Reason: three squash-merged Readwise-links branches failed `branch -d` on
+  2026-10-13 and the only route was a hand-run `-D` (research-loop DONE.md, "Approval:
+  delete the four stale loop/p1 branches"). Registry row and fixture (one more positive,
+  the `-C` form) updated here; proven by prove-hooks.sh (8 green) and a throwaway-repo
+  proof in the paste's `--check` mode.
+
 ## 2026-10-12 - voice-and-editing 1.4.2: vault-ready-ingest writes repo-relative source_path
 
 - **vault-ready-ingest: new notes carry `source_path` as `articles/<file>`, relative to the Readwise-links
