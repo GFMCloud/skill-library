@@ -171,6 +171,13 @@
   },
   {
    "_raw": "[\"not\", \"an\", \"object\"]"
+  },
+  {
+   "tool_name": "Bash",
+   "tool_input": {
+    "command": "git -C /Users/gfm/work/claude-scout-weekly branch -D feature/x"
+   },
+   "cwd": "/Users/gfm/work"
   }
  ],
  "negative": [

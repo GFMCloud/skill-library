@@ -18,7 +18,7 @@ the pipe escaped (`startup\|clear`).
 | Event | Matcher | Hook | Blocks or warns | Fixture | What it does |
 |---|---|---|---|---|---|
 | PreToolUse | Artifact | `dash-gate.sh` | blocks | `PreToolUse__Artifact.json` | Denies an Artifact publish whose file contains an em dash, en dash or horizontal bar. Fails open on unreadable input. |
-| PreToolUse | Bash | `deny-destructive.py` | blocks | `PreToolUse__Bash__0.json` | Denies listed destructive, catastrophic and credential-reading commands, and `rm -rf` outside the scratchpad. Fails closed on unparseable hook input; an unmatched command is allowed. |
+| PreToolUse | Bash | `deny-destructive.py` | blocks | `PreToolUse__Bash__0.json` | Denies listed destructive, catastrophic and credential-reading commands, and `rm -rf` outside the scratchpad. `git branch -D` is denied unless every named branch is already on origin/main by ancestry or by patch id (squash merges), fail-closed (2026-10-13). Fails closed on unparseable hook input; an unmatched command is allowed. |
 | PreToolUse | Bash | `evidence-guard.py` | warns | `PreToolUse__Bash__1.json` | Adds context when a command shape hides evidence (a pipe masking an exit code, and similar). Never denies. Fails open. |
 | PreToolUse | Read | `route-large-read.py` | blocks | `PreToolUse__Read.json` | While the llama-offload marker exists, denies a Read over 200 KB with no offset or limit. Silent otherwise. Fails open. |
 | PreToolUse | Read | `deny-destructive.py` | blocks | `PreToolUse__Read__1.json` | Denies a Read of a credential path (`.env` and variants, `.pem`, SSH private keys, `.aws/credentials`, `.netrc`, `.npmrc`, `.pypirc`). Second hook on the Read matcher; the fixture index depends on that order. |
