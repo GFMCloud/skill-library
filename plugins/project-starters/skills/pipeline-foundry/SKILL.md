@@ -377,7 +377,7 @@ Recommend from this list, with the constraint attached. Defer model and effort c
 | Subagents | Focused side tasks where only the result matters | Background by default (v2.1.198+). **`Explore` and `Plan` do not see CLAUDE.md** |
 | Custom subagents | Repeated roles | Plugin agents namespaced `<plugin>:<agent>` |
 | Skills | Packaged procedure | Preload with `skills:`; injects full content |
-| Plan mode / `opusplan` | Design before execution | Strong model plans, cheap model executes |
+| Plan mode / `opusplan` | Design before execution | Strong model plans, cheap model executes. Each plan-mode toggle starts a fresh cache |
 | Worktrees | Independent parallel workstreams | Branches from the **default branch**, not parent HEAD |
 | `/goal` | Keep working until a condition holds | Evaluator reads the transcript only; bound it with a turn clause |
 | Monitors | React to a stream instead of polling | Interactive CLI only |

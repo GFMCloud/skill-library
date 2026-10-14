@@ -94,6 +94,7 @@ For infrastructure changes, these three are usually where the damage lives, so s
 - Each phase can be delivered and rolled back on its own. If phase 2 only works once phase 4 exists, the phases are wrong.
 - No value is hardcoded that the repo or the environment already defines (account IDs, regions, paths, limits).
 - The unhappy path is in the plan: what each step does on timeout, partial write or a failed apply.
+- For a non-trivial code change, the plan shows the call path the change sits on: what calls the code being changed, and what it calls in turn.
 
 A worked example of the level of detail expected, for "add a 30-day expiration rule to the logs bucket":
 
@@ -101,6 +102,8 @@ A worked example of the level of detail expected, for "add a 30-day expiration r
 > **Blocking questions (1).** Versioning is on, so expiration leaves noncurrent versions behind. Also expire noncurrent versions after 30 days? Default: yes.
 > **Assumptions.** 1. The bucket is managed by `infra/s3.tf` (`aws_s3_bucket.logs`), confirmed with `terraform state list`. 2. No lifecycle rule exists today, confirmed with `aws s3api get-bucket-lifecycle-configuration` (returned NoSuchLifecycleConfiguration). 3. Nothing reads `logs/` objects older than 30 days; not verifiable from here, please confirm. Blast radius: deletes data by design, in place, no replacement. Reversibility: the rule can be removed, deleted objects cannot be restored. Drift: none found.
 > **Plan.** 1. `infra/s3.tf`: add `aws_s3_bucket_lifecycle_configuration.logs` with one rule, prefix `logs/`, 30 days current and noncurrent. Verify: `terraform plan` shows 1 to add, 0 to change, 0 to destroy. 2. Apply. Verify: `get-bucket-lifecycle-configuration` returns the rule. Rejected: a bucket-wide rule, because `exports/` shares the bucket.
+
+**Blind second plan (opt-in).** For a change on the section 3 trigger list, the user may ask for a second plan before approving. Spawn a fresh subagent on a Claude model other than the one that wrote the first plan, and state that model before the spawn. Give it only the original request, never the first plan. It writes its own plan to a unique path in the scratchpad, not the repo. Then report where the two plans disagree, following `council`'s rules: give your own position first on each point, then the other plan's. The strongest dissent is always printed, even when you reject it.
 
 Then wait. Do not begin implementing.
 

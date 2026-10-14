@@ -22,6 +22,10 @@ changed through 2026-10-06; re-verify before quoting them after a model or CLI r
 
 - Run `/compact` before stepping away from a long session. A compacted context that
   misses the window is a small write; an uncompacted one is a large write.
+- To back out of a wrong path while the cache is warm, prefer `/rewind`: it can pick up
+  the cache you already had, while `/compact` builds a new one. Avoid compacting a
+  session that has already gone cold. (The `/rewind` half rests on a third-party post,
+  read 2026-10-14; the official doc covers only the compaction half.)
 - Keep the prefix stable: tool definitions, system prompt, and CLAUDE.md content sit in
   front of every turn, so editing them mid-session invalidates the cache from that
   point. Since 2.1.260, `/cost` and the status line's `prompt_cache` field name the
@@ -61,8 +65,28 @@ changed through 2026-10-06; re-verify before quoting them after a model or CLI r
   (arXiv 2609.28919: cache-safe model and subagent routing recovers 14 to 21 percent of
   spend) say the same thing from two sides: pin the model and the subagent models at
   session start, and change them at a boundary, not mid-task.
+- Plan mode counts as a model switch: each plan-mode toggle starts a fresh cache
+  (Claude Code prompt-caching doc as summarized by a third party, read 2026-10-14).
+- Automatic model fallback is a model switch too and resets the cache the same way.
+- A skill or command whose frontmatter names a different `model` switches the model
+  when it runs, so it also starts a fresh cache.
 - Measured here: the Agent-tool subagent's starting context fell from about 74k to 63k
   tokens between 2.1.283 and 2.1.289 after the double-load fixes (one probe each).
+
+## More from the prompt-caching doc (read 2026-10-14)
+
+The official Claude Code prompt-caching doc as summarized by a third party; re-check
+against the doc itself.
+
+- Fast mode: turning it on early in a session costs less than turning it on deep into
+  one.
+- Deferred MCP tools: a server connecting or disconnecting mid-session does not disturb
+  anything already cached.
+- Gateways: a gateway that strips the cache markers while still returning success makes
+  the whole conversation history bill as uncached input on every turn. Check the cache
+  read numbers when routing through one.
+- Images: each batch of evicted images costs one slow turn while the prefix is
+  rewritten.
 
 ## Measure it
 
