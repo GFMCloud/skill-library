@@ -2,6 +2,11 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-14 - agent-tooling 0.2.3, verification-kit 0.6.2: intake proposal from saved links #26, #27, #28, #32, #33 (R3)
+
+- **`plugins/agent-tooling/skills/model-effort-advisor/references/cache-economics.md`:** rows 26.2, 26.4, 26.5 of research-loop `decisions/intake/2026-10-11-intake-26-33.md`, applied on Graham's go-ahead (`rulings/2026-10-13-issue-7-6155656711.md`). The reviewer states the behavior change before merge.
+- **`plugins/verification-kit/skills/review-pair/references/reviewer-agent.md`:** rows 32.3 of research-loop `decisions/intake/2026-10-11-intake-26-33.md`, applied on Graham's go-ahead (`rulings/2026-10-13-issue-7-6155656711.md`). The reviewer states the behavior change before merge.
+
 ## 2026-10-13 - deny-destructive: `git branch -D` passes for branches already on origin/main
 
 - **The blanket `git branch -D` deny becomes a fail-closed check.** The hook (home
