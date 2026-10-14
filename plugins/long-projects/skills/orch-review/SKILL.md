@@ -51,14 +51,22 @@ integer appears in a command.
    [templates/reviewer-brief.md](templates/reviewer-brief.md), per "Premises in the
    brief" below, and read the running system's own log for every inferred premise about
    a running system.
-3. **Fan out**, one read-only subagent per dimension, each given the diff, the file
-   list and the Premises table, and nothing else from this conversation. State the model
-   before spawning.
+3. **Fan out**, one subagent per dimension, read-only except as noted below, each given
+   the diff, the file list and the Premises table, and nothing else from this
+   conversation. State the model before spawning.
    - correctness and maintainability against the surrounding code;
    - silent failures: `verification-kit:silent-failure-hunter`;
    - security, only when the file list touches a security trigger (authentication or
      authorization, user input, database queries, file-system paths, external API calls,
-     cryptography, secrets), using `verification-kit:security-checklist` as the reference.
+     cryptography, secrets), using `verification-kit:security-checklist` as the reference;
+   - requirements tests, optional, only when the requirements are written down (the
+     user's request in local mode, the PR description in PR mode). The subagent writes
+     tests from the requirements before it reads the diff, then runs them against the
+     working tree, not a separate worktree. In PR mode it runs only when the PR branch is
+     checked out. It writes only to a scratch path outside the repository, enforced by
+     the spawn's tool permissions, and never edits the target. If that write limit
+     cannot be enforced, do not plan this dimension and list it under not checked. A
+     failing test is a finding: quote the code it exercises and the test output.
    Every finding must carry file, line, severity and the quoted code.
 4. **Deduplicate** on the quoted code, normalized for whitespace. Keep the highest
    severity of each duplicate group.
@@ -85,7 +93,8 @@ result is `incomplete`, the failed dimensions are named, and the verdict is not
 `APPROVE`. Do not fall back to a hand-rolled review and do not imply the diff was
 approved. A concurrency limit means wait; a rate limit means stop.
 
-Known weakness: reviewers read, they do not execute. A finding that needs a test run to
+Known weakness: reviewers read, they do not execute, except the optional requirements
+tests dimension. When that dimension does not run, a finding that needs a test run to
 confirm stays in blocking as could-not-verify, which is noisy by design.
 
 ## Verify

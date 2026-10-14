@@ -2,6 +2,12 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-14 - long-projects 0.19.9, project-starters 0.2.2, turn-reduction 1.4.1: intake proposal from saved links #26, #27, #28, #32, #33 (R3)
+
+- **`plugins/long-projects/skills/orch-review/SKILL.md`:** rows 32.2 of research-loop `decisions/intake/2026-10-11-intake-26-33.md`, applied on Graham's go-ahead (`rulings/2026-10-13-issue-7-6155656711.md`). The reviewer states the behavior change before merge.
+- **`plugins/project-starters/skills/pipeline-foundry/SKILL.md`:** rows 26.3 of research-loop `decisions/intake/2026-10-11-intake-26-33.md`, applied on Graham's go-ahead (`rulings/2026-10-13-issue-7-6155656711.md`). The reviewer states the behavior change before merge.
+- **`plugins/turn-reduction/skills/plan-gate/SKILL.md`:** rows 27.1, 32.1 of research-loop `decisions/intake/2026-10-11-intake-26-33.md`, applied on Graham's go-ahead (`rulings/2026-10-13-issue-7-6155656711.md`). The reviewer states the behavior change before merge.
+
 ## 2026-10-14 - agent-tooling 0.2.3, verification-kit 0.6.2: intake proposal from saved links #26, #27, #28, #32, #33 (R3)
 
 - **`plugins/agent-tooling/skills/model-effort-advisor/references/cache-economics.md`:** rows 26.2, 26.4, 26.5 of research-loop `decisions/intake/2026-10-11-intake-26-33.md`, applied on Graham's go-ahead (`rulings/2026-10-13-issue-7-6155656711.md`). The reviewer states the behavior change before merge.
