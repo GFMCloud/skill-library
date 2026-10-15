@@ -2,6 +2,18 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-15 - migration-2026-10: harness for the two-laptop skill sync
+
+- **New maintainers directory `maintainers/migration-2026-10/`**: the phased harness that
+  makes this repo the one home of every generic skill on both of Graham's laptops. CONFIG
+  with the design's decisions A to F, one state file per machine, a read-only work-laptop
+  survey runbook, Phase 0 to Phase 3 runbooks (each opening with a machine detection step
+  that stops on the wrong GitHub login, each ending with its rollback), and the Gate A
+  direction table listing the 41 skills forked between the two machines. No skill, pack or
+  script changes; the Phase 0 deliverables (branch protection, denylist scan, updater
+  plist) follow in their own PRs. No `/phase` skill: the archived 2026-08 harness owns that
+  name.
+
 ## 2026-10-13 - deny-destructive: `git branch -D` passes for branches already on origin/main
 
 - **The blanket `git branch -D` deny becomes a fail-closed check.** The hook (home
