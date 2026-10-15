@@ -54,6 +54,7 @@ scripts/validate-skills.sh          the validator; CI runs the same script
 scripts/update-installed-plugins.sh updates this machine's installed packs from the marketplace, except a pack whose hooks changed (it prints the diff and exits non-zero); then runs reconcile-installed-plugins.sh to report where each pack stands
 scripts/test-update-installed-plugins.sh proves that refusal against a fixture and a stub `claude`; plugin-hook-surface.py is the updater's helper
 scripts/denylist-scan.sh            fails when a tracked file matches a pattern from a list kept outside this repo (DENYLIST_FILE, default ~/.claude/denylist.txt); CI runs it with the patterns from a repository secret
+scripts/com.gfm.skill-library-plugin-update.plist   the launchd job that runs update-installed-plugins.sh daily at 09:30; install note under "The daily updater" below
 templates/                          blank templates for a SKILL.md, a pack page and a skill page
 ```
 
@@ -111,6 +112,16 @@ bash scripts/denylist-scan.sh
 ```
 
 It fails when any tracked file matches a pattern from a list that is kept outside this repository (company, customer, people, account-ID and hostname shapes that a secret scanner cannot know). The maintainer's copy is at `~/.claude/denylist.txt`, or wherever `DENYLIST_FILE` points; CI takes the same patterns from the `DENYLIST_PATTERNS` repository secret. A pull request from a fork cannot read the secret and fails the job; the maintainer reruns the scan on a branch in this repository. `main` requires this check as well as the validator. The list itself is never committed here, and the script refuses a pattern file inside the repository.
+
+## The daily updater
+
+A maintainer's machine keeps its installed packs current with `scripts/update-installed-plugins.sh`, run daily at 09:30 by the launchd job in `scripts/com.gfm.skill-library-plugin-update.plist`. The committed file carries the home directory of the machine it was written on, so install it with that path substituted:
+
+```bash
+sed "s|/Users/gfm|$HOME|g" ~/skill-library/scripts/com.gfm.skill-library-plugin-update.plist > ~/Library/LaunchAgents/com.gfm.skill-library-plugin-update.plist && launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/com.gfm.skill-library-plugin-update.plist && launchctl print "gui/$(id -u)/com.gfm.skill-library-plugin-update" | grep -E 'state =|program =' && echo "installed: the updater runs daily at 09:30 and logs to ~/Library/Logs/skill-library-plugin-update.log"
+```
+
+It assumes the checkout is at `~/skill-library`. To reinstall after a change to the plist, `launchctl bootout "gui/$(id -u)/com.gfm.skill-library-plugin-update"` first; `bootstrap` refuses a label that is already loaded. The script itself is safe to run by hand at any time.
 
 ## Checklist before you open a pull request
 

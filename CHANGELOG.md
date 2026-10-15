@@ -2,6 +2,15 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-15 - the daily updater's launchd plist is versioned
+
+- **`scripts/com.gfm.skill-library-plugin-update.plist` is the source of the launchd job**
+  that runs `update-installed-plugins.sh` daily at 09:30. Until now the plist existed only
+  in `~/Library/LaunchAgents` on one machine (the design noted "plist not in repo"); a disk
+  loss or a second machine had nothing to install from. `CONTRIBUTING.md` carries the
+  install command with the home directory substituted. Byte-identical to the live job on
+  the home laptop (`diff` empty, 2026-10-15).
+
 ## 2026-10-15 - denylist scan: a tracked file matching a pattern kept outside the repo fails CI
 
 - **New `scripts/denylist-scan.sh` and a `denylist` CI job.** The script reads one
