@@ -48,6 +48,63 @@ clones made by the design session on 2026-10-15 under its scratchpad,
 `.../1c215210-37ed-4365-bae4-7039cf9aa205/scratchpad/work-repos/{awsp-skill-marketplace,
 personal-claude-config,claude-weekly-maintainer}`. They are deleted with that session.
 
+### Phase 0 step 0: machine detection and its negative control (2026-10-15)
+
+```
+$ gh api user --jq .login
+GFMCloud
+$ gh auth switch --user gmorris1221; gh api user --jq .login
+✓ Switched active account for github.com to gmorris1221
+gmorris1221
+$ gh auth switch --user GFMCloud; gh api user --jq .login
+✓ Switched active account for github.com to GFMCloud
+GFMCloud
+```
+
+With the wrong account active the step prints `gmorris1221`, which is the stop condition.
+Nothing was written as gmorris1221.
+
+### Phase 0 step 1: branch protection on main (2026-10-15)
+
+Before:
+
+```
+$ gh api repos/GFMCloud/skill-library/branches/main/protection
+{"message":"Branch not protected","documentation_url":"https://docs.github.com/rest/branches/branch-protection#get-branch-protection","status":"404"}
+gh: Branch not protected (HTTP 404)
+```
+
+Applied (PUT, `auth_branch_protection`) with `{"required_status_checks":{"strict":false,
+"contexts":["validate"]},"enforce_admins":true,"required_pull_request_reviews":null,
+"restrictions":null}`. After:
+
+```
+$ gh api repos/GFMCloud/skill-library/branches/main/protection --jq '{contexts: .required_status_checks.contexts, strict: .required_status_checks.strict, enforce_admins: .enforce_admins.enabled, reviews: (.required_pull_request_reviews != null), restrictions: (.restrictions != null)}'
+{"contexts":["validate"],"enforce_admins":true,"restrictions":false,"reviews":false,"strict":false}
+```
+
+Negative control (6b): fresh clone into the scratchpad, one empty commit, direct push to
+`main`:
+
+```
+$ git clone --quiet https://github.com/GFMCloud/skill-library.git <scratchpad>/sl-negative
+$ git -C <scratchpad>/sl-negative commit --allow-empty -q -m "negative control: direct push to main must be refused"
+$ git -C <scratchpad>/sl-negative push origin main
+remote: error: GH006: Protected branch update failed for refs/heads/main.
+remote:
+remote: - Required status check "validate" is expected.
+To https://github.com/GFMCloud/skill-library.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'https://github.com/GFMCloud/skill-library.git'
+push exit=1
+$ gh api repos/GFMCloud/skill-library/branches/main --jq '.commit.sha[0:7] + " " + (.commit.commit.message | split("\n")[0])'
+90711b2 deny-destructive: forced branch delete passes for branches already on origin/main (registry, fixture, changelog) (#50)
+```
+
+The clone was removed afterwards. Pending: once the denylist PR is merged and `main` carries
+the `denylist` job, add it to the required contexts (Phase 0 home runbook, step 1, last
+paragraph). Owner: the session that merges that PR.
+
 ## Anomalies
 
 <!-- date - what/where - why it does not fit - one-line recommendation. Reviewed at the next
@@ -61,5 +118,7 @@ personal-claude-config,claude-weekly-maintainer}`. They are deleted with that se
 
 <!-- One line per session: date - phase worked - outcome / stopping point. -->
 
-- 2026-10-15 - harness scaffold - directory written on branch `migration-2026-10/harness`;
-  Phase 0 home steps follow in their own PRs.
+- 2026-10-15 - harness scaffold - directory written on branch `migration-2026-10/harness`
+  (PR #52); Phase 0 home steps follow in their own PRs.
+- 2026-10-15 - Phase 0 home step 1 - branch protection applied and proven (direct push
+  refused, GH006); recorded on branch `migration-2026-10/phase-0a-branch-protection`.
