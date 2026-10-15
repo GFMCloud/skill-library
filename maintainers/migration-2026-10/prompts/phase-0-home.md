@@ -80,9 +80,10 @@ secret `denylist_ci_secret`, writes them to `$RUNNER_TEMP`, and runs the same sc
    `.github/workflows/validate.yml`. Add both to the `CONTRIBUTING.md` layout list.
 2. Seed `~/.claude/denylist.txt` on this laptop (covered by `auth_local_denylist`): the
    company name, the work laptop's user name, the brand prefix, plus one fixture-only token
-   `DENYLIST-FIXTURE-TOKEN-2026-10` so the negative control never needs a real name in a
-   public commit. The file's content is never pasted anywhere in this repo; record only
-   `wc -l`. The work laptop builds its own file from the sanitize list in Phase 0 work.
+   as the file's last line, so the negative control never needs a real name in a public
+   commit. The file's content is never pasted anywhere in this repo, the fixture token
+   included (the scan would fail on this runbook); record only `wc -l`. The work laptop
+   builds its own file from the sanitize list in Phase 0 work.
 3. Set the secret (covered by `auth_actions_secret`):
 
    ```bash
@@ -94,7 +95,7 @@ secret `denylist_ci_secret`, writes them to `$RUNNER_TEMP`, and runs the same sc
 **Negative controls (6b), local, all four recorded:**
 
 ```bash
-printf 'planted DENYLIST-FIXTURE-TOKEN-2026-10 here\n' > maintainers/migration-2026-10/fixture.tmp && git add maintainers/migration-2026-10/fixture.tmp && bash scripts/denylist-scan.sh --staged; echo "staged exit=$?"
+printf 'planted %s here\n' "$(tail -1 ~/.claude/denylist.txt)" > maintainers/migration-2026-10/fixture.tmp && git add maintainers/migration-2026-10/fixture.tmp && bash scripts/denylist-scan.sh --staged; echo "staged exit=$?"
 ```
 
 Expected: the match line (file, line number) and `staged exit=1`. Then:
