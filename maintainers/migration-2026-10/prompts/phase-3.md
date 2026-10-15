@@ -40,8 +40,11 @@ Expected: this machine's account per `CONFIG.md`. Record which half runs.
    session touching a matching path lists it under `/memory`; a non-matching session does
    not.
 5. **Fresh-machine restore, for real this time:** `CLAUDE_CONFIG_DIR` at an empty directory,
-   clone the config repo into it, start Claude Code once, confirm the marketplace is cloned
-   and the packs cached (Phase 0 proof 4a's method, now with the real `settings.json`).
+   clone the config repo into it, **sign in interactively first** (`claude login` in that
+   config dir; Phase 0 proof 4a showed that without it nothing clones the declared
+   marketplace), start Claude Code once, confirm the marketplace is cloned and the packs
+   cached (Phase 0 proof 4a's method, now with the real `settings.json`). Record the result;
+   the docs claim is unproven until this passes.
 
 ## Steps, work half
 

@@ -40,13 +40,13 @@ Line counts are the two `SKILL.md` bodies on 2026-10-15 (home / work).
 | 19 | model-effort-advisor | agent-tooling | workbench | ecbab91 | merge | work copy references `<brand>-core:background-task-triggers`; that line out to a work rule file. 108 / 109 | |
 | 20 | orch-pipeline | long-projects | workbench | ecbab91 | merge | 124 / 124 | |
 | 21 | orch-review | long-projects | workbench | ecbab91 | merge | 127 / 105 | |
-| 22 | output-lint | turn-reduction | verification | ecbab91 | merge | Phase 0 dry run row. 114 / 126 | |
+| 22 | output-lint | turn-reduction | verification | ecbab91 | merge | Phase 0 dry run: library unchanged since base, work changed 98 lines in 17 hunks, 0 conflicts (the merge is the work copy). 114 / 126 | |
 | 23 | phased-harness | long-projects | workbench | ecbab91 | merge | work tag: "work pack; rules ported from ecbab91". 295 / 345 | |
 | 24 | pipeline-foundry | project-starters | workbench | ecbab91 | merge | 386 / 285 | |
-| 25 | plan-gate | turn-reduction | workbench | ecbab91 | merge | the design's sample: work added Partner Central and CloudFront context (out to `rules/partner-central.md`), removed homelab paragraphs (out to `rules/homelab.md`), home added "Design and pipeline proposals" 2026-10-10. Phase 0 dry run row. 141 / 159 | |
+| 25 | plan-gate | turn-reduction | workbench | ecbab91 | merge | the design's sample: work added Partner Central and CloudFront context (out to `rules/partner-central.md`), removed homelab paragraphs (out to `rules/homelab.md`), home added "Design and pipeline proposals" 2026-10-10. Phase 0 dry run: library 4 lines in 2 hunks, work 38 lines in 10 hunks, 1 conflict (the `description`), 12 of 13 hunks resolved themselves. 141 / 159 | |
 | 26 | project-kb-builder | project-starters | workbench | ecbab91 | merge | work names a company house convention; out to a work rule file. 212 / 215 | |
 | 27 | project-setup-wizard | project-starters | workbench | ecbab91 | merge | 238 / 240 | |
-| 28 | proof-of-work | foundry-core | workbench | ecbab91 | merge | home 1.6.0 / work 1.1.0. Phase 0 dry run row. 157 / 230 | |
+| 28 | proof-of-work | foundry-core | workbench | ecbab91 | merge | home 1.6.0 / work 1.1.0. Phase 0 dry run: library 18 lines in 4 hunks, work 139 lines in 13 hunks, 2 conflicts (the `metadata` block and one body paragraph), 15 of 17 hunks resolved themselves. 157 / 230 | |
 | 29 | redesign-existing-projects | frontend-design | `<brand>`-design | none | merge | both derive from leonxlnx/taste-skill@ccbc156; work tag names only the upstream. Two-way read with the upstream as base. 184 / 188 | |
 | 30 | retro | long-projects | workbench | none | library wins | work copy has no `source:` tag and no version; confirm nothing work-only in its 93 lines before ruling. 173 / 93 | |
 | 31 | sales-lens-review | decks | `<brand>`-decks | ecbab91 | merge | largest divergence among the tagged rows. 241 / 110 | |
