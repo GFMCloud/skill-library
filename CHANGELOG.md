@@ -2,6 +2,15 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-15 - main is protected: the `validate` check is required, admins included
+
+- **Direct pushes to `main` are refused.** Branch protection (applied by the migration
+  harness, Phase 0 home step 1) requires the `validate` status check, with
+  `enforce_admins` on and no required approvals; `strict` is off so stacked PRs merge
+  without a rebase. Proven: an empty commit pushed from a fresh clone was rejected with
+  `GH006` (evidence in `maintainers/migration-2026-10/STATE-home.md`). Every change now
+  lands through a PR with CI green.
+
 ## 2026-10-15 - migration-2026-10: harness for the two-laptop skill sync
 
 - **New maintainers directory `maintainers/migration-2026-10/`**: the phased harness that
