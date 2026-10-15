@@ -15,3 +15,22 @@ jobs:
         env:
           BASE_REF: origin/${{ github.base_ref || 'main' }}
         run: STRICT=0 bash scripts/validate-skills.sh
+  denylist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Denylist scan
+        # The patterns (company, customer, people, account-ID and hostname shapes) live in
+        # the DENYLIST_PATTERNS repository secret, never in this public repo. A PR from a
+        # fork cannot read the secret and fails here with exit 2; that is intended.
+        env:
+          DENYLIST_PATTERNS: ${{ secrets.DENYLIST_PATTERNS }}
+        run: |
+          if [ -z "$DENYLIST_PATTERNS" ]; then
+            echo "DENYLIST_PATTERNS secret is empty or unavailable; the scan cannot run" >&2
+            exit 2
+          fi
+          printf '%s\n' "$DENYLIST_PATTERNS" > "$RUNNER_TEMP/denylist.txt"
+          DENYLIST_FILE="$RUNNER_TEMP/denylist.txt" bash scripts/denylist-scan.sh

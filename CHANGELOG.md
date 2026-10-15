@@ -2,6 +2,21 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-15 - denylist scan: a tracked file matching a pattern kept outside the repo fails CI
+
+- **New `scripts/denylist-scan.sh` and a `denylist` CI job.** The script reads one
+  extended regex per line from `DENYLIST_FILE` (default `~/.claude/denylist.txt`; a path
+  inside the repository is refused, as is a missing or empty file, exit 2), runs
+  `git grep -I -i -E` over every tracked file (or the index with `--staged`, the shape the
+  work laptop's pre-commit hook uses), and exits 1 on any match. CI writes the
+  `DENYLIST_PATTERNS` repository secret to a temp file and runs the same script; a fork PR
+  cannot read the secret and fails. Reason: a secret scanner cannot know customer names,
+  account IDs or internal hostnames, and once a work-laptop edit lands them in a public
+  repo they cannot be rotated (migration harness, Decision A). Proven locally by a planted
+  fixture (exit 1), the clean tree (exit 0) and both misconfigurations (exit 2), and on CI
+  by a throwaway PR carrying the fixture; the first local run also caught the fixture token
+  spelled out in the Phase 0 runbook itself, which was reworded.
+
 ## 2026-10-15 - main is protected: the `validate` check is required, admins included
 
 - **Direct pushes to `main` are refused.** Branch protection (applied by the migration

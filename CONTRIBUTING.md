@@ -53,6 +53,7 @@ maintainers/                        working records: the authoring add-on, revie
 scripts/validate-skills.sh          the validator; CI runs the same script
 scripts/update-installed-plugins.sh updates this machine's installed packs from the marketplace, except a pack whose hooks changed (it prints the diff and exits non-zero); then runs reconcile-installed-plugins.sh to report where each pack stands
 scripts/test-update-installed-plugins.sh proves that refusal against a fixture and a stub `claude`; plugin-hook-surface.py is the updater's helper
+scripts/denylist-scan.sh            fails when a tracked file matches a pattern from a list kept outside this repo (DENYLIST_FILE, default ~/.claude/denylist.txt); CI runs it with the patterns from a repository secret
 templates/                          blank templates for a SKILL.md, a pack page and a skill page
 ```
 
@@ -102,6 +103,14 @@ bash scripts/validate-skills.sh
 ```
 
 It must exit 0. CI runs the same script on every pull request and every push to `main`. It checks that frontmatter parses, names match folders and are unique, bodies are under 500 lines, relative links resolve, the generated tables and `docs/inventory.md` are current, the contract sections are present, no eval suite sits inside a skill folder, and that a change to a skill or an agent came with a version bump for its pack. It also fails when it finds no skills at all, because a run that checked nothing proves nothing. Set `STRICT=1` to make warnings fail too.
+
+CI also runs a denylist scan on every pull request:
+
+```bash
+bash scripts/denylist-scan.sh
+```
+
+It fails when any tracked file matches a pattern from a list that is kept outside this repository (company, customer, people, account-ID and hostname shapes that a secret scanner cannot know). The maintainer's copy is at `~/.claude/denylist.txt`, or wherever `DENYLIST_FILE` points; CI takes the same patterns from the `DENYLIST_PATTERNS` repository secret. A pull request from a fork cannot read the secret and fails the job; the maintainer reruns the scan on a branch in this repository. `main` requires this check as well as the validator. The list itself is never committed here, and the script refuses a pattern file inside the repository.
 
 ## Checklist before you open a pull request
 
