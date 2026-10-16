@@ -75,6 +75,14 @@ Everything else proceeds under the standing authorizations in `CONFIG.md`. Do no
 "shall I continue?" between phases. Anomalies get logged in `STATE.md` with a
 recommendation and reviewed at the next gate, not raised one-by-one.
 
+## Close-out
+
+When the final phase passes Gate B, its last step closes the harness: `CLAUDE.md` is
+rewritten from the phased-harness `project-CLAUDE-closed.template.md`, and this
+skill's description is replaced with "ARCHIVED `<YYYY-MM-DD>` - do not run. Kept as the
+record of how `<PROJECT-NAME>` was dispatched; if invoked, say the harness is archived
+and point at `STATE.md`." with `maturity: archived`.
+
 Prefer ending this session at a phase or gate boundary over grinding one session long;
 resume is disk-based and free. This is not a "shall I continue?" prompt: it is
 closing cleanly with `STATE.md` current so the next `/phase` picks up cold.

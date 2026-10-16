@@ -77,4 +77,11 @@ named successor, or dropped with the reason written next to it. A final phase th
 closes without naming a destination converts its own open gaps into "done".
 Also: any generated catalog, inventory, or index is regenerated here, after the last
 content edit of the run, and its --check (or a diff against a fresh regeneration) is
-part of Gate B. Regenerating it in an earlier phase leaves it stale by the finish. -->
+part of Gate B. Regenerating it in an earlier phase leaves it stale by the finish.
+Last step, after Gate B and the residue are recorded: close the harness. Rewrite
+CLAUDE.md from the phased-harness `project-CLAUDE-closed.template.md` (pointer line,
+CLOSED date, STATE.md as the record, "do not run `/phase`", at most five rules that
+still bind the live artifact), and set the description in
+`.claude/skills/phase/SKILL.md` to start with "ARCHIVED <date>" and `maturity:
+archived`. A finished harness that keeps its live protocol tells the next session to
+run phases that are over. -->

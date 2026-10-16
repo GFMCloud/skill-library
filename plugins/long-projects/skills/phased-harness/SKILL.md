@@ -10,8 +10,8 @@ description: >-
   sessions that ends in an irreversible step.
 metadata:
   maturity: stable
-  version: 1.2.6
-  reviewed: 2026-09-12
+  version: 1.3.0
+  reviewed: 2026-10-16
 ---
 
 # Phased harness: scaffold a gated, resumable project
@@ -102,7 +102,9 @@ Templates: [CONFIG](templates/CONFIG.template.md) ·
 [end-state](templates/end-state.template.md) ·
 [phase runbook](templates/phase-runbook.template.md) ·
 [project CLAUDE.md](templates/project-CLAUDE.template.md) ·
-[dispatch SKILL.md](templates/dispatch-SKILL.template.md)
+[dispatch SKILL.md](templates/dispatch-SKILL.template.md) ·
+[closed CLAUDE.md](templates/project-CLAUDE-closed.template.md) (used at close-out, not
+at scaffold)
 
 Rules while instantiating:
 
@@ -225,6 +227,14 @@ residue goes before the harness may close: onto `STATE.md` as an open item with 
 owner, into a named successor project's state file, or explicitly dropped with the
 reason written next to it. "Nobody owns this" is a legitimate destination only when it
 is written down as one.
+
+### Close-out: a finished harness retires its own protocol
+
+The final phase's last step rewrites the harness `CLAUDE.md` from
+`project-CLAUDE-closed.template.md` and marks the dispatch skill ARCHIVED. Both the
+phase runbook template (final-phase comment) and the dispatch template carry the step.
+Without it a closed harness keeps telling every session opened there to run `/phase`:
+the 2026-10 CLAUDE.md audit found ten finished harnesses still carrying a live protocol.
 
 ### Evidence discipline
 

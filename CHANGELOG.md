@@ -2,6 +2,24 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-16 - long-projects 0.20.0: phased-harness 1.3.0 closes its harnesses and stops restating global rules
+
+- **New close-out step.** A new `project-CLAUDE-closed.template.md` (pointer line,
+  CLOSED date, `STATE.md` as the record, "do not run `/phase`", at most five rules that
+  still bind the live artifact). The final-phase runbook comment, the dispatch skill
+  template and the generated CLAUDE.md now say the last step rewrites `CLAUDE.md` from
+  it and marks the dispatch skill ARCHIVED. Reason: the 2026-10 CLAUDE.md audit found
+  ten finished harnesses still telling sessions to run `/phase`
+  (`~/work/claude-md-consolidation/audit-2026-10/advisor/RECOMMENDATION.md` section 3.1).
+- **The generated CLAUDE.md binds global rules instead of restating them.** The deletion
+  guardrail becomes "Deletion gate: Phase N (global supersede rule)"; the resume-point
+  convention becomes one line naming `STATE.md` (the rule moves to the global file); the
+  delegation convention becomes a slot naming what no subagent receives.
+- **The commit-conventions slot is pre-filled** with the default (path-scoped staging,
+  `git diff --cached --stat` read before each commit, no push without the global
+  carve-out), leaving only the repo names and message style to fill. The raw
+  placeholder was referred here at Gate A on 2026-08-12.
+
 ## 2026-10-13 - deny-destructive: `git branch -D` passes for branches already on origin/main
 
 - **The blanket `git branch -D` deny becomes a fail-closed check.** The hook (home
