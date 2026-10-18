@@ -2,6 +2,18 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-18 - capability-index names the four disabled packs (voice-and-editing 1.4.3)
+
+- **`capability-index` now fires on video, deploy, GitHub-MCP and TypeScript type-safety
+  requests** and offers `claude plugin enable` for the pack that covers them. A
+  `/skill-doctor` run on the home laptop listed 106 skills, 62 never invoked, so
+  `hyperframes`, `deploy-ops`, `github` and `typesafe` were disabled in
+  `~/.claude/settings.json` (the listing cost falls by about 30 lines a turn; `decks:brag`
+  stays on but needs `hyperframes` re-enabled first, and the row says so). The skill's
+  table had said no pack was disabled since 2026-09-19, which was true then and would
+  have made the four packs invisible now. The install-versus-enable wording is swapped to
+  match: enable is the common case, install the exception.
+
 ## 2026-10-16 - long-projects 0.20.0: phased-harness 1.3.0 closes its harnesses and stops restating global rules
 
 - **New close-out step.** A new `project-CLAUDE-closed.template.md` (pointer line,
