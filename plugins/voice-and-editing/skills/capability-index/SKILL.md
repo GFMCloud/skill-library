@@ -1,10 +1,10 @@
 ---
 name: capability-index
 description: >-
-  Points at capability that exists on this machine but is not loaded in the current session, so it does not become invisible. Consult whenever the user asks for something no loaded skill covers, specifically: anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys; or a skill in a skill-library plugin that is not installed here (none as of 2026-09-19, all twelve packs are installed and enabled). Do not attempt those tasks unaided. Say what covers it and where it lives, and offer to load it.
+  Points at capability that exists on this machine but is not loaded in the current session, so it does not become invisible. Consult whenever the user asks for something no loaded skill covers, specifically: making a video or launch clip (hyperframes, and decks:brag which needs it); deploying a site and checking it live, or moving one to Cloudflare Pages (deploy-ops); GitHub work through an MCP server rather than the gh CLI (github); TypeScript type-safety review (typesafe); anything about the Sloshball Champions League (SCL) keeper rules, session startup, or module deploys. Those packs are installed but disabled since 2026-10-18. Do not attempt those tasks unaided. Say what covers it and where it lives, and offer to enable it.
 metadata:
   maturity: incubator
-  reviewed: 2026-09-19
+  reviewed: 2026-10-18
 ---
 
 # Capability index
@@ -17,17 +17,17 @@ answer.
 
 ## What is not loaded, and where it actually lives
 
-Verified against `claude plugin list` and `~/.claude/plugins/installed_plugins.json`
-on 2026-09-19, after the regroup into twelve packs (`workbench` split into
-`long-projects`, `project-starters` and `agent-tooling`; `graham-voice` became
-`voice-and-editing`). The former `_incubator` pack is gone: its skills live inside the
-packs they belong to and load with them. All twelve `skill-library` packs are installed
-and enabled at user scope, so no pack has a row. The `decks` pack had one until
-2026-09-18: the row called it "installed but disabled" when it was not installed at all,
-and it was then installed and enabled.
+Verified against `~/.claude/settings.json` (`enabledPlugins`) and
+`~/.claude/plugins/installed_plugins.json` on 2026-10-18, when a `/skill-doctor` run
+showed 106 listed skills, 62 never invoked, and four packs were disabled to shrink the
+listing. Every pack below is still installed, so enabling is one command and no download.
 
 | Not loaded | Covers | Where it lives | How to reach it |
 |---|---|---|---|
+| `hyperframes` pack (21 skills) | videos: launch clips, explainers, slideshows, music videos, PR-to-video, captions, the Hyperframes CLI | `~/.claude/plugins/cache/claude-plugins-official/hyperframes/` | `claude plugin enable hyperframes@claude-plugins-official`, then a new session. `decks:brag` stays enabled but reads five hyperframes skills, so a `/brag` request needs this pack on first |
+| `deploy-ops` pack | deploy, check the result as a visitor would, fix, repeat; moving a site to Cloudflare Pages | `~/skill-library/plugins/deploy-ops/` | `claude plugin enable deploy-ops@skill-library` |
+| `github` pack | GitHub through an MCP server (issues, PRs, files). The `gh` CLI covers the same ground without it, and the server failed to connect with a 400 on 2026-10-18 | `~/.claude/plugins/cache/claude-plugins-official/github/` | `claude plugin enable github@claude-plugins-official`; try `gh` first |
+| `typesafe` pack | TypeScript type-safety review (`typesafe-ai`) | `~/.claude/plugins/cache/typesafe-ai/typesafe/` | `claude plugin enable typesafe@typesafe-ai` |
 | SCL project skills | keeper rules, session startup, module deploy checklist | **project-scoped** in `~/work/GitHub/sloshball-champions-league-v2/.claude/skills/`, not a plugin and not installable | open a session in that repo, where they load automatically |
 
 ## How to respond
@@ -36,9 +36,9 @@ When a request matches, do not silently proceed. Say what covers it and offer. F
 pack row, check `claude plugin list` first, because "not installed" and "installed but
 disabled" take different commands:
 
-> That is covered by the `<pack>` pack, which is not installed here.
-> Install it? `claude plugin install <pack>@skill-library`
-> (If it is listed as disabled instead: `claude plugin enable <pack>@skill-library`)
+> That is covered by the `<pack>` pack, which is installed but disabled here.
+> Enable it? `claude plugin enable <pack>@<marketplace>`
+> (If it is not installed at all: `claude plugin install <pack>@<marketplace>`)
 
 If the user agrees, run the command. The change takes effect for subsequent sessions,
 so if the skill does not appear immediately, tell the user to restart rather than
@@ -66,9 +66,11 @@ that had been superseded by `skill-library`. Check it against reality with:
 
 ```bash
 claude plugin list
-cat ~/.claude/plugins/installed_plugins.json
+jq '.enabledPlugins' ~/.claude/settings.json
 ls ~/skill-library/plugins/
 ```
 
 A pack that appears in `claude plugin list` as enabled does **not** belong in the table
-above. The table is only for capability that a current session cannot reach.
+above. The table is only for capability that a current session cannot reach. When a
+pack is enabled again, remove its row and its clause in the description in the same
+commit; when `/skill-doctor` shows another pack idle for a month, disable it and add a row.
