@@ -4,6 +4,8 @@ Reasoning effort is a separate dial from model choice, a strong model at low eff
 
 Measure cost per completed task rather than per model call: a cheaper model that needs more turns, or fails more often, is not cheaper (Anthropic commerce-agents review, 2026-09-03). Cache behavior changes the per-task figure more than the tier does on long sessions; see `cache-economics.md`.
 
+Break-even for Opus over Sonnet in an agent loop: Opus is cheaper per task when `Opus turns < Sonnet turns / (Opus turn cost / Sonnet turn cost)`. The turn-cost ratio is not fixed. In one worked example it falls from 1.88x to 1.26x as context grows. That example assumes a turn of 5,500 tokens written and 1,500 output; the turn shape is the author's assumption, not a measurement. The ratios come from a price sheet dated 2026-10-03 (Opus 5.5 vs Sonnet 5.5 agent-loop cost article). Recompute them from current pricing before relying on them.
+
 Every effort sweep is re-run on a new model. Opus 5.5 moved its default from `high` to `medium` and thinks more per level; Sonnet 5.5 recalibrated every level (see `model-catalog.md`). A setting carried over from the previous model is a guess until the sweep says otherwise.
 
 ## Effort Levels

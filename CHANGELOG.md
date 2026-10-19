@@ -2,6 +2,13 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-19 - agent-tooling 0.2.3, decks 0.4.3, long-projects 0.20.1: intake proposal from saved links #29, #30, #31 (R3)
+
+- **`plugins/agent-tooling/skills/model-effort-advisor/references/effort-sizing.md`:** rows 31.2 of research-loop `decisions/intake/2026-10-10-intake-29-31.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-8-6253862425.md`). The reviewer states the behavior change before merge.
+- **`plugins/agent-tooling/skills/model-effort-advisor/references/subagent-routing.md`:** rows 31.3 of research-loop `decisions/intake/2026-10-10-intake-29-31.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-8-6253862425.md`). The reviewer states the behavior change before merge.
+- **`plugins/decks/skills/brag/SKILL.md`:** rows 29.4 of research-loop `decisions/intake/2026-10-10-intake-29-31.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-8-6253862425.md`). The reviewer states the behavior change before merge.
+- **`plugins/long-projects/skills/orch-pipeline/SKILL.md`:** rows 30.3 of research-loop `decisions/intake/2026-10-10-intake-29-31.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-8-6253862425.md`). The reviewer states the behavior change before merge.
+
 ## 2026-10-16 - long-projects 0.20.0: phased-harness 1.3.0 closes its harnesses and stops restating global rules
 
 - **New close-out step.** A new `project-CLAUDE-closed.template.md` (pointer line,
