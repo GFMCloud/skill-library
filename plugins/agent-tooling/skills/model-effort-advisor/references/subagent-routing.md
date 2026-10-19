@@ -27,6 +27,12 @@ Use this pairing when Risk is high on the decision rubric and a single self-revi
 
 Each subagent gets its own model/effort call using the same rubric, a subagent doing one narrow, mechanical slice of a larger fan-out can run Haiku/low even if the parent orchestration is Sonnet/medium. Don't default every subagent to the parent's model tier; size each one to its own actual job.
 
+## Early-Check Escalation
+
+When a cheaper model runs a long loop, pick one cheap observable to check in its first few turns. Good checks: the code compiles, the first targeted test passes, the edits touch the files the task names. Decide the check before the run starts and write it into the prompt or the parent's plan. A model cannot be told to "notice the task is hard" and be trusted to do it.
+
+If the check fails, stop the run. Restart it cleanly on a stronger model with the original prompt and inputs, not the failed run's history. Example: a Sonnet subagent fixing a failing test should have that test passing within its first few turns; if it does not, hand the same task to Opus from scratch.
+
 ## Fan-Out Mechanics
 
 - Batch subagents into a single message with multiple tool calls when they're independent, don't run them one at a time if nothing blocks parallelism.

@@ -58,6 +58,8 @@ Parse these options:
 | `--title` | string | inferred from project |
 | `--voice` | flag | narration off |
 
+A `vertical` or `square` format is re-laid out and re-checked for that aspect ratio, not cropped from a landscape cut.
+
 Voice is opt-in. If `--voice` is present, use Kokoro via Hyperframes and do
 not add any provider-selection logic. The voice workflow is intentionally
 single-provider.

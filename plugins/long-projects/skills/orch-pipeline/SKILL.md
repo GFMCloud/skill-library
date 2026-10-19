@@ -63,7 +63,10 @@ whatever the file count.
 2. **Research and reuse.** Look for an existing implementation in the repo, then in
    the ecosystem, before writing new code. Say what was searched.
 3. **Plan.** Produce a task list of thin vertical slices. For anything with real blast
-   radius use `turn-reduction:plan-gate` instead of an ad-hoc plan. **Gate 1.**
+   radius use `turn-reduction:plan-gate` instead of an ad-hoc plan. When two owners will
+   build against one interface, check the contract before it locks: run a read-only
+   reviewer through `verification-kit:review-pair` with the interface as the goal block.
+   Both sides agree on the contract before either builds against it. **Gate 1.**
 4. **Implement, test-first.** Per task: a failing test that was actually run, the change,
    the passing run. A test that was written but never executed does not count as red.
    When the check must be run until it passes, run the loop under
