@@ -42,6 +42,10 @@ The high-yield classes, ordered by how often they actually break:
 | Identifiers | SHAs, versions, byte counts, paths | `git log`, `stat`, `wc -c` |
 | Arithmetic | percentage splits, "N of M", subtotals | add it up |
 
+A status word backed by a count can still be wrong. The count can be real and
+measure a proxy: items wired, not items working. Find what the number counts
+before accepting the status word.
+
 A quantifier is a claim about **every** member of a set. Checking one member
 and generalising is how "one placeholder component each" survived a review over
 a set that was unevenly distributed.
