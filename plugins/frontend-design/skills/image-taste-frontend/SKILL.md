@@ -220,6 +220,11 @@ Ask directly:
 - Did any banned pattern from `ai-tells.md` creep in?
 - Does every interactive element have loading, empty, error, and active states?
 
+When a generated asset uses a supplied brand mark or brand font, also check these:
+
+- Logo fidelity. Lay the source SVG over each generated mark at the same scale and position. Look for drift in shape, spacing, and proportion. Before release, replace every generated logo with the source SVG. Skip this when no source mark was supplied. It passes when no generated logo remains in the shipped work. Weakness: alignment is manual, and the overlay shows a difference without measuring it.
+- Glyph construction. In raster or generated type, compare distinctive letters against the supplied brand font, such as a W whose inner diagonals cross. Generated type often changes that construction. Skip this when no brand font was supplied. It passes when each checked letter matches the font's construction. Weakness: this is a human visual check, and it only covers the letters you chose to inspect.
+
 If any answer is no, fix it before presenting the work.
 
 ## 10. How to respond

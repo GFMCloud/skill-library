@@ -15,6 +15,8 @@ For a visual gut-check before rendering, optionally capture key frames:
 npx hyperframes snapshot   # PNG key frames
 ```
 
+For a vertical render, this check is not optional. Capture key frames with `snapshot` and view each one at phone size. Mark the safe zones on each frame. Platform UI covers the top and bottom of a vertical video, so keep text and the hero element inside the safe zone. Move anything that falls outside it, then re-run `check`.
+
 ## Preview
 
 ```bash

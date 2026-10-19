@@ -57,10 +57,16 @@ Jev judges only against what these say. The question id is never sent to the mod
    ownership rules out of a dispute check.
 7. **Choose the type by what code does with the answer.** Choice picks a branch, Score is
    compared to a threshold, Noul feeds an `if`. A Noul of 0.5 is a coin flip, not a
-   medium amount.
+   medium amount. A Choice always has a winner; a Noul can be low for every candidate.
+   So a threshold set on one type does not carry over to the other (article #43,
+   reasoned, not measured here).
 8. **Escape options.** The docs advise an `other` or `none` on every Choice. Not measured
    here: in Lesson 1 `other` was offered and not chosen; the useful signal was the 0.24
    confidence.
+9. **Never let null mean fine.** When an evidence field can be null, give the question a
+   "data absent" option with its own consequence in code. It is not `other`, which means
+   no option fits. Adding it shifts the question's thresholds until they are re-measured
+   (article #43, not measured here).
 
 ## Reading the answers
 

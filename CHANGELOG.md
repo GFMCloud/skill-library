@@ -2,6 +2,17 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-19 - agent-tooling 0.2.3, decks 0.4.3, foundry-core 0.6.9, frontend-design 0.5.3: intake proposal from saved links #43, #45, #48, #49, #51 (R3)
+
+- **`plugins/agent-tooling/skills/jev/references/question-design.md`:** rows 43.1, 43.2 of research-loop `decisions/intake/2026-10-11-intake-43-51.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-10-6253878456.md`). The reviewer states the behavior change before merge.
+- **`plugins/decks/skills/brag/references/step-2-plan.md`:** rows 49.2 of research-loop `decisions/intake/2026-10-11-intake-43-51.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-10-6253878456.md`). The reviewer states the behavior change before merge.
+- **`plugins/decks/skills/brag/references/step-3-compose.md`:** rows 49.1 of research-loop `decisions/intake/2026-10-11-intake-43-51.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-10-6253878456.md`). The reviewer states the behavior change before merge.
+- **`plugins/decks/skills/brag/references/step-4-deliver.md`:** rows 49.3 of research-loop `decisions/intake/2026-10-11-intake-43-51.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-10-6253878456.md`). The reviewer states the behavior change before merge.
+- **`plugins/foundry-core/skills/eval-harness/SKILL.md`:** rows 51.3 of research-loop `decisions/intake/2026-10-11-intake-43-51.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-10-6253878456.md`). The reviewer states the behavior change before merge.
+- **`plugins/frontend-design/skills/frontend-design/SKILL.md`:** rows 45.1 of research-loop `decisions/intake/2026-10-11-intake-43-51.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-10-6253878456.md`). The reviewer states the behavior change before merge.
+- **`plugins/frontend-design/skills/image-taste-frontend/SKILL.md`:** rows 51.1, 51.2 of research-loop `decisions/intake/2026-10-11-intake-43-51.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-10-6253878456.md`). The reviewer states the behavior change before merge.
+- **`plugins/frontend-design/skills/redesign-existing-projects/SKILL.md`:** rows 48.7 of research-loop `decisions/intake/2026-10-11-intake-43-51.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-10-6253878456.md`). The reviewer states the behavior change before merge.
+
 ## 2026-10-16 - long-projects 0.20.0: phased-harness 1.3.0 closes its harnesses and stops restating global rules
 
 - **New close-out step.** A new `project-CLAUDE-closed.template.md` (pointer line,

@@ -18,6 +18,8 @@ If the brief does not pin down what the product or subject is, pin it yourself b
 
 For web designs, the hero is a thesis. Open with the most characteristic thing in the subject's world, in whatever form makes sense for it: a headline, an image, an animation, a live demo, an interactive moment. Be deliberate with your choice: a big number with a small label, supporting stats, and a gradient accent is the template answer, only use if that's truly the best option.
 
+For app and workflow UI, the first screen shows the user's own work, not step one of a procedure. Open on the objects the user works with, already populated. A form under a step bar is the wrong first screen for a workflow app. If real data is not available yet, use sample data that is clearly labelled as sample data and includes the edge cases the workflow cares about. When an agent acts on something, show its result on the object it acted on, ready to accept, edit, or retry.
+
 Typography carries the personality of the page. Pair the display and body faces deliberately, not the same families you would reach for on any other project, and set a clear type scale with intentional weights, widths, and spacing. Make the type treatment itself a memorable part of the design, not a neutral delivery vehicle for the content.
 
 Structure is information. Structural devices, numbering, eyebrows, dividers, labels, should encode something true about the content, not decorate it. Many generic designs use numbered markers (01 / 02 / 03), but that's only appropriate if the content actually is a sequence - like a real process or a typed timeline where order carries information the reader needs. Question if choices like numbered markers actually make sense before incorporating them.

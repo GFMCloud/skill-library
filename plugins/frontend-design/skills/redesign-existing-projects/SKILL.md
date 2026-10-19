@@ -33,7 +33,7 @@ Check for these problems and fix them:
 - **Numbers in proportional font.** Use a monospace font or enable tabular figures (`font-variant-numeric: tabular-nums`) for data-heavy interfaces.
 - **Missing letter-spacing adjustments.** Use negative tracking for large headers, positive tracking for small caps or labels.
 - **All-caps subheaders everywhere.** Try lowercase italics, sentence case, or small-caps instead.
-- **Orphaned words.** Single words sitting alone on the last line. Fix with `text-wrap: balance` or `text-wrap: pretty`.
+- **Orphaned words.** Single words sitting alone on the last line. Fix with `text-wrap: balance` or `text-wrap: pretty`. Give typed or live-updating text `text-wrap: stable`, so it does not inherit `pretty` and reflow as it changes.
 
 ### Color and Surfaces
 

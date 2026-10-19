@@ -82,7 +82,8 @@ credited to the change (placebo review, 2026-09-28, `maintainers/reviews/2026-09
 Run every case `k` independent times and record every trial, including failures. When
 the trials span hours, interleave the arms (shuffled case-and-arm pairs with the seed
 recorded) rather than running every baseline trial first, so that drift in the model,
-the cache or the machine lands on both arms alike.
+the cache or the machine lands on both arms alike. Within a case, every arm gets the
+same inputs: the same task text, references and files.
 
 - **pass@k**: at least one of k trials passed. Reliability with retries. Target for
   capability evals: pass@3 at or above 0.90 across the cases.
