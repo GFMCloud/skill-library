@@ -45,7 +45,8 @@ landing-page-only, write "none — landing-page only" and rely on Key moments in
 - Creative direction: [freeform phrase, inferred or user-provided]
 - Interpretation: [one sentence on how this affects pacing, writing, visual energy, and restraint]
 
-## Format: [landscape / vertical / square] — [width]x[height]
+## Format: [landscape / vertical / square], [width]x[height]
+[Vertical only: keep essential content out of the top 250px and bottom 420px. Platform UI overlays sit there. Unsourced heuristic; overlays differ by platform.]
 ## Duration: [target seconds]
 
 ## Visual identity (from the project)

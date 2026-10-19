@@ -118,7 +118,13 @@ transcribe audio, duck music, add a voice track, or merge narration into the
 video. The normal video export must remain entirely voice-agnostic.
 
 When voice is enabled, write the narration lines into `brag-plan.md` under a
-`## Voiceover script` section, then generate the audio through Kokoro:
+`## Voiceover script` section. Write them to be spoken:
+
+- Do not use colons in narration lines.
+- Spell out acronyms the way they should be spoken.
+- When a list has more than three items, give each item its own sentence.
+
+Then generate the audio through Kokoro:
 
 ```bash
 npx hyperframes tts "<narration text or path to script>" \
