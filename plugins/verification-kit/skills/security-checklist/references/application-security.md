@@ -66,9 +66,22 @@ db.query(`SELECT * FROM users WHERE email = '${email}'`);
 db.query("SELECT * FROM users WHERE email = $1", [email]);
 ```
 
+```typescript
+// FAIL: a name fetched from a registry becomes a path as-is
+await writeFile(path.join(targetDir, entry.name), entry.body);
+
+// PASS: the resolved path stays inside the target, the name and content are checked first
+const root = path.resolve(targetDir);
+const dest = path.resolve(root, entry.name);
+if (!dest.startsWith(root + path.sep)) throw new Error("path escape");
+if (/[\x00-\x1f\x7f]/.test(entry.name)) throw new Error("control character in name");
+if (!isText(entry.body)) throw new Error("non-text content");
+```
+
 - [ ] Every query is parameterized or goes through a query builder used as designed
 - [ ] No user input concatenated into SQL, shell commands, file paths or templates
 - [ ] A command-line argument from a user is validated to a type (an integer, an enum) before it reaches a shell
+- [ ] Content fetched from a registry or URL and written to disk stays inside the target directory, has names free of control characters, is text-only, and any package name is validated before use
 
 ## 4. Authentication and authorization
 
@@ -153,9 +166,22 @@ Read-only checks the reviewer may run: `npm audit`, `npm outdated`, `pip-audit`,
 `pip list --outdated`. Commands that change the tree (`npm audit fix`, `npm update`) are
 proposed actions, never run as part of the review.
 
+```html
+<!-- FAIL: third-party script, no version pin, no integrity check -->
+<script type="module" src="https://ascii.rest/ascii.js"></script>
+
+<!-- PASS: an exact version, and a hash the browser checks before running it -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/example-lib@1.2.3/dist/example-lib.js"
+  integrity="sha384-..." crossorigin="anonymous"></script>
+```
+
+This is the browser-side twin of `cloud-security.md` §5, where third-party actions are
+pinned to a commit.
+
 - [ ] A lock file is committed and CI installs from it (`npm ci`, not `npm install`)
 - [ ] The audit is clean, or each open advisory has a stated reason
 - [ ] Automated update PRs are enabled (not verifiable from code alone: say where to look)
+- [ ] Every third-party `<script>` and `<link>` is version-pinned and carries `integrity=`
 
 ## Tests worth asking for
 

@@ -63,7 +63,12 @@ Run `scripts/watch-step.py <seen-index> <source> <current-state>` for the
 current cycle's observed state. It prints `REPORT <source> <old> -> <new>` on
 a transition or `NO-REPORT` otherwise, and updates the seen-index in place:
 `last_seen` advances on every call; `last_state` and `last_reported` do not
-move on a `REPORT`. Once the report has been delivered to the report mode,
+move on a `REPORT`. Just before sending, re-read the source for each
+transition in the report. If it has resolved since you read it, drop it. If
+it is still open but changed, fix its line to the current state. If you
+cannot confirm it, drop it and name it in the report's one-line failure
+footer (see Stop when), so the drop reaches the reader. Once the report has
+been delivered to the report mode,
 run `scripts/watch-step.py --confirm <seen-index> <source> <new>` with the
 new state from the `REPORT` line; only that records the transition. If
 delivery fails, do not confirm: the next cycle prints the same `REPORT`
@@ -95,7 +100,10 @@ since its last report.
 
 - The source cannot be read (the command errors, the API call fails, the
   marker file's parent directory does not exist): report the read failure
-  itself as an exception, do not silently skip the cycle.
+  itself as an exception, do not silently skip the cycle. Do not advance
+  that source's seen-index on a failed read. Still run every other source
+  in the cycle. End the report with one line naming each source it could
+  not read.
 - The report cannot be delivered (the channel, file or PR comment write
   fails): do not run `--confirm`; report the delivery failure where you can
   and end the cycle. The next cycle reports the same transition again.

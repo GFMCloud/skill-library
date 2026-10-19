@@ -116,6 +116,9 @@ your response, and let the session (with the user, for anything that isn't a
 pure one-off) actually make the edit. Writing the retro is not the same as
 acting on it.
 
+Report the staging, not the outcome: write "proposed", never "applied", for
+anything a later session lands.
+
 ## 4. Where retros land
 
 Always `.claude/retros/` under the project root, one file per session that
@@ -169,5 +172,13 @@ this version and note the migration in this file.
   code at review time (the fact is gone: delete the rule; it changed: rewrite it;
   unsure: list it as could-not-verify), because a stale rule is worse than no
   rule, it is confidently wrong. That route does not work for process preferences
-  (learning-plugin review, 2026-09-21). Delete this note once the check exists.
+  (learning-plugin review, 2026-09-21). A usage-based check has its own problems
+  to solve. It must measure use against opportunity, counting only the requests
+  that arrived since the entry was created, so idle time ages nothing out. It
+  needs a probation period before any eviction. It must count loads and views
+  apart, and archive only an entry that was never loaded and never viewed. It
+  archives, it never deletes. Zero use can mean the entry was never offered, not
+  that it was useless, and the check must not punish that. All of this needs
+  counters that persist across sessions, which a stateless skill cannot keep
+  (compare-52 review). Delete this note once the check exists.
 - No scheduled task. Nothing in this skill or plugin creates one.
