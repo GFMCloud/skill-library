@@ -60,6 +60,13 @@ through it. Then match each to a shape in
 from the TypeSafe docs, cookbooks and the repos reviewed, with fit signals for each. Do
 not stop at the first candidate: two or three candidates with a ranked verdict beat one.
 
+For a mixed workflow, mark each step as code, Jev or a stronger model before matching it
+to a shape. For example:
+
+- code: fetch the new papers and pull each abstract in full;
+- Jev: does this abstract report a measured result on the named task;
+- stronger model: summarise the papers that passed.
+
 ## Step 2: the fit check (a gate, not a formality)
 
 For each candidate answer these, in order. The first is decisive.
@@ -118,6 +125,8 @@ contract, proven in the lessons:
 - a missing answer or a different model raises; nothing defaults to a safe-looking value;
 - routes in code, with a middle band that goes to review, never a guess;
 - thresholds labelled provisional until a held-out run supports them;
+- a production run logs item id, route, confidence and model for every call, so
+  thresholds can be re-tuned from real decisions later;
 - `test_questions.py` proves the gate by deliberate failure with a fake client, no API
   call, before any real run.
 
@@ -135,6 +144,9 @@ held-out set once. Report:
 - agreement with past decisions, per class, never "accuracy" (the labels are someone's
   past calls, not ground truth);
 - how many answers cleared the confidence or margin gate, and how many of those were right;
+- when Jev filters items in front of a stronger model, the items it cut, in full or as a
+  sample, with how many of them should have passed: a recall check reported beside
+  agreement;
 - spend from `usage.input_tokens`, printed at the end of every run;
 - for any difference under about 3 items in 25, a rerun before believing it (identical
   inputs moved by 3 items across runs in the lessons).

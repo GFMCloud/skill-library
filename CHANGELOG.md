@@ -2,6 +2,11 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-19 - agent-tooling 0.2.3, consistency-checker 0.1.3: intake proposal from saved links #34, #39, #40, #41, #42 (R3)
+
+- **`plugins/agent-tooling/skills/jev/SKILL.md`:** rows 39.1, 39.2, 39.3 of research-loop `decisions/intake/2026-10-11-intake-34-42.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-9-6253874929.md`). The reviewer states the behavior change before merge.
+- **`plugins/consistency-checker/skills/spec-artifact-diff/SKILL.md`:** rows 42.1 of research-loop `decisions/intake/2026-10-11-intake-34-42.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-9-6253874929.md`). The reviewer states the behavior change before merge.
+
 ## 2026-10-16 - long-projects 0.20.0: phased-harness 1.3.0 closes its harnesses and stops restating global rules
 
 - **New close-out step.** A new `project-CLAUDE-closed.template.md` (pointer line,
