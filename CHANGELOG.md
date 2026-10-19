@@ -2,6 +2,14 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-19 - agent-tooling 0.2.3, long-projects 0.20.1, verification-kit 0.6.2, voice-and-editing 1.4.3: intake proposal from saved links #52, #53, #55, #56, #57 (R3)
+
+- **`plugins/agent-tooling/skills/jev/references/use-cases.md`:** rows 53.1, 53.2 of research-loop `decisions/intake/2026-10-11-intake-52-57.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-11-6253881913.md`). The reviewer states the behavior change before merge.
+- **`plugins/long-projects/skills/change-watch/SKILL.md`:** rows 56.1, 56.5 of research-loop `decisions/intake/2026-10-11-intake-52-57.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-11-6253881913.md`). The reviewer states the behavior change before merge.
+- **`plugins/long-projects/skills/retro/SKILL.md`:** rows 52.1, 52.4 of research-loop `decisions/intake/2026-10-11-intake-52-57.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-11-6253881913.md`). The reviewer states the behavior change before merge.
+- **`plugins/verification-kit/skills/security-checklist/references/application-security.md`:** rows 55.1, 55.2 of research-loop `decisions/intake/2026-10-11-intake-52-57.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-11-6253881913.md`). The reviewer states the behavior change before merge.
+- **`plugins/voice-and-editing/skills/schedule-harness/SKILL.md`:** rows 56.4 of research-loop `decisions/intake/2026-10-11-intake-52-57.md`, applied on Graham's go-ahead (`rulings/2026-10-18-issue-11-6253881913.md`). The reviewer states the behavior change before merge.
+
 ## 2026-10-16 - long-projects 0.20.0: phased-harness 1.3.0 closes its harnesses and stops restating global rules
 
 - **New close-out step.** A new `project-CLAUDE-closed.template.md` (pointer line,

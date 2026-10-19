@@ -163,6 +163,10 @@ scheduled time: state in the instructions what the run should do if it is firing
 cutoff). See [references/platform-facts.md](references/platform-facts.md), "Catch-up",
 for the platform's own worked example of this guard.
 
+Name the time zone the run should use for dates beside the time guard. Put it in the
+prompt's guardrail text or in the registration values, not in the pointer body, which
+`check-pointer.py` holds to a fixed shape.
+
 ## Worktree toggle
 
 Offer the worktree toggle whenever the scheduled phase does not need to commit to the

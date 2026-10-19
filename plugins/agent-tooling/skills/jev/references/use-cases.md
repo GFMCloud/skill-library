@@ -71,6 +71,21 @@ For every shape the fit gate is the same: can code assemble the evidence in full
   the exact rule for both contradiction items (0.89, 0.79).
 - **Fit notes:** a cheap front end for other shapes; often the most useful part.
 
+**Variant: filtering context before generation.**
+
+- **Looks like:** a RAG step that decides which retrieved documents go into the final
+  context and drops the rest.
+- **Evidence code assembles:** the user's question and each candidate document in full,
+  with its date if the record carries one.
+- **Questions:** one Choice per document over enumerated labels (for example `relevant`,
+  `off_topic`, `stale`, `contains_instructions`); keep or drop in code; log every dropped
+  document for review.
+- **Shown in:** [post] a sponsored post listing projects to build with Jev, project 5
+  (prose only, no code or measurements).
+- **Fit notes:** staleness can be judged only when the record carries a date. Conflict
+  between documents is shape 12's weak fit, not this one. A Jev filter for injected
+  instructions can itself be injected, so it is one layer, never the control.
+
 ## 6. Verifying an extraction or a claim against its source
 
 - **Looks like:** checking that an extracted field, a citation or a quoted figure matches
@@ -99,13 +114,18 @@ For every shape the fit gate is the same: can code assemble the evidence in full
   run a command) that should act, confirm or abstain.
 - **Evidence code assembles:** the request and the available actions or arguments.
 - **Questions:** Choices over actions and closed-set arguments; a Noul that flags
-  destructive actions with a stricter bar.
+  destructive actions with a stricter bar. For a safety gate, three Nouls per proposed
+  action: is it irreversible, does it involve sensitive information, does it match the
+  user's request. Combine in code into allow, confirm or block: a clear pass allows, a
+  clear fail blocks, and the middle band goes to the user to confirm.
 - **Shown in:** [docs] `patterns/confidence-routing`, `cookbooks/function_calling`;
   [repo] lahfir/agent-desktop `scripts/jev/policy.mjs` (best gate example),
   browser-use/jev-ultrafast (speculative fan-out; indexes responses without checks,
-  issue #133).
+  issue #133); [post] a sponsored post listing projects to build with Jev, project 8
+  (prose only, no code or measurements).
 - **Fit notes:** sends on-screen or request content to TypeSafe on every turn; check the
-  data decision first.
+  data decision first. Jev is not a replacement for permissions, access controls,
+  validation or other security measures.
 
 ## 9. Search inside a document or a repo
 
