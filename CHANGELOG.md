@@ -2,6 +2,16 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-22 - long-projects 0.20.1: handoff 0.6.6 checks claims without PyYAML
+
+- **`scripts/check-claims.py` no longer needs PyYAML.** It reads the Typed claim v1
+  block with a stdlib parser for the fixed layout and uses PyYAML only when it is
+  importable, so it runs on the Mac's system Python 3.9. Before, it exited 2 there and
+  resumed sessions in the 2026-10 window checked claims by hand (R5 change cycle
+  2026-10-22). A new `nopyyaml` fixture runs the match and mismatch cases under
+  `python3 -I -S`. Resume Mode now says: on exit 2, report the checker as not run with
+  its reason and build the table by hand, never skip it.
+
 ## 2026-10-16 - long-projects 0.20.0: phased-harness 1.3.0 closes its harnesses and stops restating global rules
 
 - **New close-out step.** A new `project-CLAUDE-closed.template.md` (pointer line,

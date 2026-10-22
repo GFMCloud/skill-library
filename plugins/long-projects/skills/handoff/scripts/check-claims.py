@@ -21,6 +21,9 @@ claim mismatches, exits 0 if every checkable claim matches (this is a re-check, 
 one question Resume Mode calls for when a claim is ambiguous - that judgment stays with
 the session, not this script).
 
+The block is read with PyYAML when it is importable, else with a stdlib parser for the
+fixed Typed claim v1 layout (since 0.6.6), so the checker runs on a bare system Python.
+
 This implements the read side described in
 plugins/long-projects/skills/handoff/references/claims.md, steps 2-4. The shape itself
 (Typed claim v1) is defined once in the toolkit interface spec, section 4; this script
@@ -69,6 +72,82 @@ def extract_claims_yaml(text: str) -> str:
     if not match:
         raise ValueError("no fenced ```yaml claims: v1 block found in the handoff file")
     return match.group(1)
+
+
+def _scalar(raw: str):
+    """One YAML scalar from the Typed claim v1 layout: a quoted string (single or
+    double), or a plain string with any trailing ` #` comment dropped."""
+    raw = raw.strip()
+    if raw[:1] == '"':
+        end = raw.find('"', 1)
+        while end != -1 and raw[end - 1] == "\\":
+            end = raw.find('"', end + 1)
+        if end == -1:
+            raise ValueError(f"unterminated double-quoted value: {raw}")
+        return raw[1:end].replace('\\"', '"').replace("\\\\", "\\")
+    if raw[:1] == "'":
+        m = re.match(r"'((?:[^']|'')*)'", raw)
+        if not m:
+            raise ValueError(f"unterminated single-quoted value: {raw}")
+        return m.group(1).replace("''", "'")
+    return re.sub(r"\s+#.*$", "", raw)
+
+
+KEY_RE = re.compile(r"^([A-Za-z_][\w-]*):(?:\s+(.*))?$")
+
+
+def parse_claims_block(block: str) -> dict:
+    """Stdlib parser for the fixed Typed claim v1 layout: top-level `key: value`
+    lines, and lists of flat mappings (`  - key: value`, then `    key: value`).
+    Every value comes back a string. Added 0.6.6: this Mac's /usr/bin/python3 3.9 has
+    no PyYAML, and resumed sessions in 2026-10 hit exit 2 and checked claims by hand."""
+    doc, current_list, item = {}, None, None
+    for lineno, line in enumerate(block.splitlines(), 1):
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        indent = len(line) - len(line.lstrip(" "))
+        body = line.strip()
+        if indent == 0:
+            m = KEY_RE.match(body)
+            if not m:
+                raise ValueError(f"claims block line {lineno} is not `key: value`: {line}")
+            key, value = m.group(1), m.group(2)
+            if value is None or value.strip() == "":
+                current_list = doc.setdefault(key, [])
+            elif value.strip() == "[]":
+                doc[key], current_list = [], None
+            else:
+                doc[key], current_list = _scalar(value), None
+            item = None
+            continue
+        if current_list is None:
+            raise ValueError(f"claims block line {lineno} is indented outside a list: {line}")
+        if body.startswith("- "):
+            item = {}
+            current_list.append(item)
+            body = body[2:].strip()
+        elif item is None:
+            raise ValueError(f"claims block line {lineno} has no `- ` list item: {line}")
+        m = KEY_RE.match(body)
+        if not m:
+            raise ValueError(f"claims block line {lineno} is not `key: value`: {line}")
+        item[m.group(1)] = _scalar(m.group(2) or "")
+    return doc
+
+
+def load_claims(block: str) -> dict:
+    """The claims block as a dict: PyYAML when it is importable, else the stdlib parser."""
+    try:
+        import yaml
+    except ImportError:
+        return parse_claims_block(block)
+    try:
+        doc = yaml.safe_load(block)
+    except yaml.YAMLError as e:
+        raise ValueError(f"claims block is not valid YAML: {e}")
+    if not isinstance(doc, dict):
+        raise ValueError("claims block is not a mapping")
+    return doc
 
 
 def run_check(command: str) -> str:
@@ -178,18 +257,16 @@ def main(argv):
         text = f.read()
 
     try:
-        import yaml
-    except ImportError:
-        print("PyYAML is required: pip install pyyaml", file=sys.stderr)
-        return 2
-
-    try:
         claims_yaml = extract_claims_yaml(text)
     except ValueError as e:
         print(f"ERROR: {e}", file=sys.stderr)
         return 2
 
-    doc = yaml.safe_load(claims_yaml)
+    try:
+        doc = load_claims(claims_yaml)
+    except ValueError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 2
     if doc.get("claims") != "v1":
         print(f"ERROR: expected claims: v1, got claims: {doc.get('claims')!r}", file=sys.stderr)
         return 2
