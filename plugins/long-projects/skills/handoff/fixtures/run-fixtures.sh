@@ -12,6 +12,7 @@
 #             names the touched file; a read-only `git merge-base` check runs, not refused
 #   offset    written_at's UTC offset has no colon (-0500): staleness is still judged from
 #             written_at, never from the handoff file's mtime
+#   nopyyaml  run with PyYAML unavailable (python3 -I -S): match exits 0, mismatch exits 1
 # Exits 0 only when every assertion holds. Pass an older check-claims.py as the argument
 # to see the stale case fail without the staleness check, or the offset case fail before
 # 0.6.5.
@@ -80,6 +81,18 @@ out="$(python3 "$CHECK" "$HERE/FIXTURE-offset-handoff.md" --project "$REPO" 2>&1
 grep -q "after written_at 2026-09-11T00:00:00-05:00" <<<"$out"; assert "offset: staleness is judged from the parsed written_at" $?
 ! grep -q "no usable written_at" <<<"$out"; assert "offset: no fallback to the handoff file's mtime" $?
 grep -q "^fresh: no file" <<<"$out"; assert "offset: verdict is fresh, as in the match case" $?
+
+# nopyyaml: this Mac's /usr/bin/python3 3.9 has no PyYAML, and until 0.6.6 the checker
+# exited 2 there. `-I -S` drops site-packages, so the stdlib parser must read the block
+# and the match and mismatch cases keep their exit codes.
+python3 -I -S -c "import yaml" 2>/dev/null; [ $? -ne 0 ]; assert "nopyyaml: PyYAML is not importable under -I -S" $?
+bash "$HERE/setup-fixture-repo.sh" >/dev/null
+out="$(python3 -I -S "$CHECK" "$HERE/FIXTURE-match-handoff.md" --project "$REPO" 2>&1)"; code=$?
+[ "$code" -eq 0 ]; assert "nopyyaml: match exits 0 (got $code)" $?
+[ "$(grep -c "^status:  match" <<<"$out")" -eq 2 ]; assert "nopyyaml: both match rows ran and matched" $?
+grep -q "^\[decision\] FIXTURE - this row is unverified" <<<"$out"; assert "nopyyaml: the not_checkable row is listed" $?
+out="$(python3 -I -S "$CHECK" "$HERE/FIXTURE-mismatch-handoff.md" --project "$REPO" 2>&1)"; code=$?
+[ "$code" -eq 1 ]; assert "nopyyaml: mismatch exits 1 (got $code)" $?
 
 echo
 if [ "$fails" -eq 0 ]; then echo "RESULT: all fixture assertions pass."; else echo "RESULT: $fails assertion(s) failed."; fi
