@@ -2,6 +2,17 @@
 
 Behavior changes only — not wording tweaks. Newest first.
 
+## 2026-10-22 - verification-kit 0.7.0: new incubator skill web-research
+
+- **New skill `web-research` (incubator).** A budgeted research loop on the built-in
+  WebSearch and WebFetch: a search-or-skip gate, a one-line plan, up to 3 keyword queries
+  per round (quick 1 round, standard 3, deep 8), 1-3 picked pages read through a
+  fact-extractor prompt, and a cited answer with a `Sources:` list. Deep mode writes
+  `research-ledger.md` and runs fact-currency-check on load-bearing claims before
+  answering. Adapted from Vane (ItzCrazyKns/Vane at 348feca) without its SearxNG and
+  Docker stack. Reason: Vane's research procedure was worth having without running the
+  app.
+
 ## 2026-10-16 - long-projects 0.20.0: phased-harness 1.3.0 closes its harnesses and stops restating global rules
 
 - **New close-out step.** A new `project-CLAUDE-closed.template.md` (pointer line,
